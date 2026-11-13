@@ -9,6 +9,17 @@ export const BRAND = {
   emailPlaceholder: 'Seu melhor e-mail comercial',
 };
 
+export const SPECIALIST_CONTACT = {
+  name: 'Francisco (AI Agency OS)',
+  phoneDisplay: '(94) 98442-3948',
+  phoneRaw: '5594984423948',
+  email: 'contato@vocalis.ai',
+  getWhatsAppUrl: (customMsg) => {
+    const text = customMsg || 'Olá Francisco! Vim pelo site da Vocalis AI e gostaria de falar com um especialista sobre atendimento com inteligência artificial para minha empresa.';
+    return `https://wa.me/5594984423948?text=${encodeURIComponent(text)}`;
+  }
+};
+
 export const CHANNELS = [
   {
     id: 'telefone',

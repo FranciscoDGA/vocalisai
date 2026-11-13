@@ -1,9 +1,10 @@
 import React, { useState } from 'react';
 import { X, Phone, CheckCircle2, Sparkles, Building, Mail, User, PhoneCall, Volume2 } from 'lucide-react';
 import confetti from 'canvas-confetti';
-import { BRAND } from '../data/content';
+import { BRAND, SPECIALIST_CONTACT } from '../data/content';
 import { formatPhoneMask } from '../utils/phoneUtils';
 import { speakFemalePt } from '../utils/voiceUtils';
+import { saveLead } from '../utils/supabaseClient';
 
 export default function DemoModal({ isOpen, onClose }) {
   const [formData, setFormData] = useState({
@@ -23,6 +24,13 @@ export default function DemoModal({ isOpen, onClose }) {
   const handleSubmit = (e) => {
     e.preventDefault();
     setSubmitted(true);
+
+    // Salva o lead no Supabase
+    saveLead({
+      phone: formData.phone,
+      niche: formData.niche,
+      notes: `Lead DemoModal: ${formData.name} · Empresa: ${formData.company || 'N/A'} · Email: ${formData.email || 'N/A'}`
+    });
 
     // Trigger confetti
     try {
@@ -222,12 +230,24 @@ export default function DemoModal({ isOpen, onClose }) {
               </div>
             )}
 
-            <button
-              onClick={handleReset}
-              className="px-6 py-2.5 rounded-xl bg-white/10 hover:bg-white/20 text-white font-semibold text-xs transition-colors cursor-pointer"
-            >
-              Fechar Demonstração
-            </button>
+            <div className="flex flex-col sm:flex-row gap-3 justify-center items-center">
+              <a
+                href={SPECIALIST_CONTACT.getWhatsAppUrl(`Olá Francisco! Meu nome é ${formData.name || ''} da empresa ${formData.company || ''} (${formData.niche}). Gostaria de agendar a demonstração da Vocalis AI.`)}
+                target="_blank"
+                rel="noreferrer"
+                className="w-full sm:w-auto px-6 py-2.5 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white font-bold text-xs transition-colors flex items-center justify-center gap-2 cursor-pointer shadow-lg shadow-emerald-600/30"
+              >
+                <span>Falar no WhatsApp do Especialista</span>
+                <span>(94) 98442-3948</span>
+              </a>
+
+              <button
+                onClick={handleReset}
+                className="w-full sm:w-auto px-6 py-2.5 rounded-xl bg-white/10 hover:bg-white/20 text-white font-semibold text-xs transition-colors cursor-pointer"
+              >
+                Fechar
+              </button>
+            </div>
           </div>
         )}
 

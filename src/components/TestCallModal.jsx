@@ -611,6 +611,16 @@ export default function TestCallModal({ isOpen, phoneNumber, countryCode = '+55'
                   <ArrowRight className="w-3.5 h-3.5" />
                 </button>
               </div>
+
+              <a
+                href={`https://wa.me/5594984423948?text=${encodeURIComponent(`Olá Francisco! Acabei de fazer o diagnóstico na Vocalis AI para o segmento ${userNiche || 'Geral'} e gostaria de falar com um especialista.`)}`}
+                target="_blank"
+                rel="noreferrer"
+                className="w-full py-2.5 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-xs font-bold text-white flex items-center justify-center gap-2 transition-colors cursor-pointer shadow-lg shadow-emerald-600/20"
+              >
+                <MessageSquare className="w-3.5 h-3.5" />
+                <span>Conversar com Especialista Humano no WhatsApp: (94) 98442-3948</span>
+              </a>
             </div>
           )}
 
@@ -721,6 +731,17 @@ export default function TestCallModal({ isOpen, phoneNumber, countryCode = '+55'
                 <span>Ativar na Minha Empresa Agora</span>
                 <ArrowRight className="w-3.5 h-3.5" />
               </button>
+
+              {/* Botão de Falar com Especialista Humano no WhatsApp */}
+              <a
+                href={`https://wa.me/5594984423948?text=${encodeURIComponent(`Olá Francisco! Acabei de ver o diagnóstico da Roberta na Vocalis AI para ${userNiche || 'minha empresa'} e gostaria de falar com um especialista.`)}`}
+                target="_blank"
+                rel="noreferrer"
+                className="w-full py-2.5 rounded-xl bg-[#25D366] hover:bg-[#20bd5a] text-white font-bold text-xs transition-colors flex items-center justify-center gap-2 cursor-pointer shadow-md text-center"
+              >
+                <MessageSquare className="w-3.5 h-3.5" />
+                <span>Falar com Especialista no WhatsApp</span>
+              </a>
 
             </div>
 

@@ -2279,12 +2279,14 @@ export default function InsideDashboardSection({ onOpenDemo, onOpenLegal, onOpen
                             </td>
                             <td className="py-2.5 text-[#5C5955] text-[11px]">{lead.status}</td>
                             <td className="py-2.5 text-right">
-                              <button 
-                                onClick={onOpenDemo}
-                                className="px-2.5 py-1 rounded-lg bg-[#C84B1F] text-white font-bold text-[10px] hover:bg-[#A83812] cursor-pointer"
+                              <a 
+                                href={`https://wa.me/${lead.phone.replace(/\D/g, '').startsWith('55') ? lead.phone.replace(/\D/g, '') : '55' + lead.phone.replace(/\D/g, '')}?text=${encodeURIComponent(`Olá! Aqui é o Francisco do AI Agency OS (Vocalis AI). Vi que você fez o diagnóstico para ${lead.seg}. Gostaria de te mostrar como implantar isso na sua empresa.`)}`}
+                                target="_blank"
+                                rel="noreferrer"
+                                className="inline-block px-2.5 py-1 rounded-lg bg-[#C84B1F] text-white font-bold text-[10px] hover:bg-[#A83812] cursor-pointer"
                               >
-                                Disparar WhatsApp VIP
-                              </button>
+                                Chamar no WhatsApp VIP
+                              </a>
                             </td>
                           </tr>
                         ))}

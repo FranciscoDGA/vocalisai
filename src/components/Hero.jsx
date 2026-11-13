@@ -199,13 +199,15 @@ export default function Hero({ onOpenDemo, onOpenAuth }) {
 
         {/* Link: Prefiro conversar com uma pessoa */}
         <div className="mb-6">
-          <button
-            onClick={onOpenDemo}
-            className="text-xs text-[#5C5955] hover:text-[#1A1816] underline underline-offset-2 font-medium transition-colors inline-flex items-center gap-1"
+          <a
+            href="https://wa.me/5594984423948?text=Ol%C3%A1%20Francisco!%20Vim%20pelo%20site%20da%20Vocalis%20AI%20e%20prefiro%20conversar%20diretamente%20com%20um%20especialista."
+            target="_blank"
+            rel="noreferrer"
+            className="text-xs text-[#5C5955] hover:text-[#1A1816] underline underline-offset-2 font-medium transition-colors inline-flex items-center gap-1 cursor-pointer"
           >
-            <span>Prefiro conversar com uma pessoa</span>
+            <span>Prefiro conversar com uma pessoa no WhatsApp</span>
             <span className="text-[10px]">↗</span>
-          </button>
+          </a>
         </div>
 
         {/* Social Proof Checklist (Exact replica of user's uploaded print) */}
