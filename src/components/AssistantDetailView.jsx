@@ -89,6 +89,24 @@ export default function AssistantDetailView({
     assistant?.prompt || getPromptForType(assistant?.type || 'hibrido', assistant?.name || 'Francisco Gomes')
   );
 
+  // Form State - Técnico (12 cards exatos do Print 2 de Técnico)
+  const [maxDuration, setMaxDuration] = useState('20');
+  const [maxWait, setMaxWait] = useState('10');
+  const [recordAudio, setRecordAudio] = useState(false);
+  const [autoDelete, setAutoDelete] = useState(false);
+  const [ambientSound, setAmbientSound] = useState('Sem sons ambiente');
+  const [ambientVolume, setAmbientVolume] = useState(25);
+  const [technicalTerms, setTechnicalTerms] = useState('');
+  const [speechSpeed, setSpeechSpeed] = useState(50);
+  const [sensitivity, setSensitivity] = useState(45);
+  const [temperature, setTemperature] = useState(15);
+  const [freeTransfer, setFreeTransfer] = useState(false);
+  const [dtmfEnabled, setDtmfEnabled] = useState(false);
+  const [blockInitialInterrupt, setBlockInitialInterrupt] = useState(true);
+  const [blockAllInterrupts, setBlockAllInterrupts] = useState(false);
+  const [responsePace, setResponsePace] = useState('Normal');
+  const [infoExtractionList, setInfoExtractionList] = useState([]);
+
   // Interactive Live Test Chat State
   const [chatMessages, setChatMessages] = useState([
     { sender: 'assistant', text: `Olá! Sou a ${name}, assistente virtual da empresa. Como posso te ajudar hoje?` }
@@ -920,34 +938,316 @@ export default function AssistantDetailView({
         )}
 
         {/* ========================================================
-            SUB-TAB 5: TÉCNICO (Novo para Chat + Ligação e Voz)
+            SUB-TAB 5: TÉCNICO (Réplica 1:1 Completa Prints 1 e 2 de Técnico)
            ======================================================== */}
         {subTab === 'tecnico' && (
-          <div className="max-w-3xl space-y-6 animate-fadeIn">
-            <h2 className="text-2xl font-bold text-[#1A1816]">Parâmetros Técnicos de Telefonia</h2>
-            <div className="rounded-2xl border border-[#E7E4DC] overflow-hidden divide-y divide-[#EBE8E2]">
-              <div className="p-4 flex items-center justify-between">
-                <div>
-                  <h4 className="text-xs font-bold text-[#1A1816]">Sensibilidade de interrupção</h4>
-                  <p className="text-xs text-[#736F69] mt-0.5">O quão rápido a IA pausa quando o cliente fala durante a fala dela</p>
-                </div>
-                <span className="text-xs font-bold text-[#1A1816]">Média (0.4s)</span>
-              </div>
-              <div className="p-4 flex items-center justify-between">
-                <div>
-                  <h4 className="text-xs font-bold text-[#1A1816]">Detecção de secretária eletrônica</h4>
-                  <p className="text-xs text-[#736F69] mt-0.5">Desliga automaticamente ao cair em caixa postal</p>
-                </div>
-                <span className="text-xs font-bold text-emerald-600">Ativado</span>
-              </div>
-              <div className="p-4 flex items-center justify-between">
-                <div>
-                  <h4 className="text-xs font-bold text-[#1A1816]">Gravação de chamadas</h4>
-                  <p className="text-xs text-[#736F69] mt-0.5">Grava áudio em duas faixas e gera transcrição neural com Whisper</p>
-                </div>
-                <span className="text-xs font-bold text-emerald-600">Ativado</span>
+          <div className="max-w-3xl space-y-4 animate-fadeIn pb-12">
+            <h2 className="text-2xl font-bold text-[#1A1816]">Técnico</h2>
+
+            {/* 1. Guardrails e moderação de conteúdo */}
+            <div className="p-4 rounded-2xl border border-[#E7E4DC] bg-white flex items-start gap-3">
+              <input 
+                type="checkbox" 
+                checked={true} 
+                readOnly 
+                className="w-4 h-4 rounded text-[#1A1816] mt-0.5 accent-[#1A1816]"
+              />
+              <div>
+                <h4 className="text-xs font-bold text-[#1A1816]">Guardrails e moderação de conteúdo</h4>
+                <p className="text-xs text-[#736F69] mt-1 leading-relaxed">
+                  Monitora automaticamente as conversas em busca de violência, conteúdo sexual, assédio, discurso de ódio e outros conteúdos prejudiciais. Sempre ativado para garantir que cada conversa permaneça segura e profissional.
+                </p>
               </div>
             </div>
+
+            {/* 2. Duração máxima da ligação & Tempo máximo de espera */}
+            <div className="p-4 rounded-2xl border border-[#E7E4DC] bg-white grid grid-cols-1 sm:grid-cols-2 gap-4">
+              <div>
+                <h4 className="text-xs font-bold text-[#1A1816]">Duração máxima da ligação</h4>
+                <p className="text-xs text-[#736F69] mt-0.5 mb-2 leading-relaxed">
+                  Depois desse tempo (em minutos), a ligação é encerrada automaticamente
+                </p>
+                <input 
+                  type="text" 
+                  value={maxDuration} 
+                  onChange={(e) => setMaxDuration(e.target.value)}
+                  className="w-full px-3 py-2 rounded-xl border border-[#D0CBC0] text-xs font-bold text-[#1A1816] focus:outline-none focus:border-[#1A1816]"
+                />
+              </div>
+
+              <div>
+                <h4 className="text-xs font-bold text-[#1A1816]">Tempo máximo de espera</h4>
+                <p className="text-xs text-[#736F69] mt-0.5 mb-2 leading-relaxed">
+                  Depois desse tempo (em segundos) sem resposta, a ligação é encerrada
+                </p>
+                <input 
+                  type="text" 
+                  value={maxWait} 
+                  onChange={(e) => setMaxWait(e.target.value)}
+                  className="w-full px-3 py-2 rounded-xl border border-[#D0CBC0] text-xs font-bold text-[#1A1816] focus:outline-none focus:border-[#1A1816]"
+                />
+              </div>
+            </div>
+
+            {/* 3. Gravar áudio */}
+            <div className="p-4 rounded-2xl border border-[#E7E4DC] bg-white flex items-start gap-3">
+              <input 
+                type="checkbox" 
+                checked={recordAudio} 
+                onChange={(e) => setRecordAudio(e.target.checked)}
+                className="w-4 h-4 rounded text-[#1A1816] mt-0.5 accent-[#1A1816] cursor-pointer"
+              />
+              <div>
+                <h4 className="text-xs font-bold text-[#1A1816]">Gravar áudio</h4>
+                <p className="text-xs text-[#736F69] mt-1 leading-relaxed">
+                  Um arquivo de áudio será gravado e ficará disponível por 30 dias. O assistente deve informar no começo da conversa que a ligação está sendo gravada!
+                </p>
+              </div>
+            </div>
+
+            {/* 4. Exclusão automática (recomendado) */}
+            <div className="p-4 rounded-2xl border border-[#E7E4DC] bg-white flex items-start gap-3">
+              <input 
+                type="checkbox" 
+                checked={autoDelete} 
+                onChange={(e) => setAutoDelete(e.target.checked)}
+                className="w-4 h-4 rounded text-[#1A1816] mt-0.5 accent-[#1A1816] cursor-pointer"
+              />
+              <div>
+                <h4 className="text-xs font-bold text-[#1A1816]">Exclusão automática (recomendado)</h4>
+                <p className="text-xs text-[#736F69] mt-1 leading-relaxed">
+                  Se a pessoa recusar a gravação, a gravação e a transcrição serão excluídas automaticamente, e nenhuma ação pós-ligação ou extração será executada. Recomendamos escrever no prompt que, em caso de recusa, a ligação deve ser encerrada ou transferida!
+                </p>
+              </div>
+            </div>
+
+            {/* 5. Sons ambiente & Volume do som ambiente */}
+            <div className="p-4 rounded-2xl border border-[#E7E4DC] bg-white grid grid-cols-1 sm:grid-cols-2 gap-4">
+              <div>
+                <h4 className="text-xs font-bold text-[#1A1816]">Sons ambiente</h4>
+                <select 
+                  value={ambientSound}
+                  onChange={(e) => setAmbientSound(e.target.value)}
+                  className="w-full px-3 py-2 rounded-xl border border-[#D0CBC0] text-xs text-[#1A1816] mt-2 bg-white focus:outline-none cursor-pointer"
+                >
+                  <option value="Sem sons ambiente">Sem sons ambiente</option>
+                  <option value="Escritório suave">Escritório suave</option>
+                  <option value="Central de atendimento / Call center">Central de atendimento / Call center</option>
+                  <option value="Cafeteria">Cafeteria</option>
+                </select>
+                <button 
+                  onClick={() => setAmbientSound('Sem sons ambiente')}
+                  className="text-[11px] text-[#8C8881] hover:text-[#1A1816] mt-1.5 inline-block cursor-pointer"
+                >
+                  Limpar seleção
+                </button>
+              </div>
+
+              <div>
+                <h4 className="text-xs font-bold text-[#1A1816]">Volume do som ambiente</h4>
+                <div className="mt-3">
+                  <input 
+                    type="range" 
+                    min="0" 
+                    max="100" 
+                    value={ambientVolume} 
+                    onChange={(e) => setAmbientVolume(e.target.value)}
+                    className="w-full accent-[#1A1816] cursor-pointer"
+                  />
+                  <div className="flex justify-between text-[10px] text-[#8C8881] mt-1">
+                    <span>Baixo</span>
+                    <span>Alto</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            {/* 6. Termos técnicos, Velocidade da fala & Sensibilidade */}
+            <div className="p-4 rounded-2xl border border-[#E7E4DC] bg-white space-y-4">
+              <div>
+                <h4 className="text-xs font-bold text-[#1A1816]">Termos técnicos</h4>
+                <p className="text-xs text-[#736F69] mt-0.5 mb-2 leading-relaxed">
+                  Armazene palavras raras e termos técnicos (por exemplo: nomes de produtos, ruas ou colaboradores) para que a IA os reconheça corretamente. Confirme com Enter.
+                </p>
+                <input 
+                  type="text" 
+                  value={technicalTerms}
+                  onChange={(e) => setTechnicalTerms(e.target.value)}
+                  placeholder="Ex: Omnichannel, Francisco, Vocalis..."
+                  className="w-full px-3 py-2 rounded-xl border border-[#D0CBC0] text-xs text-[#1A1816] focus:outline-none focus:border-[#1A1816]"
+                />
+              </div>
+
+              <div>
+                <h4 className="text-xs font-bold text-[#1A1816]">Velocidade da fala</h4>
+                <div className="mt-2">
+                  <input 
+                    type="range" 
+                    min="20" 
+                    max="80" 
+                    value={speechSpeed} 
+                    onChange={(e) => setSpeechSpeed(e.target.value)}
+                    className="w-full accent-[#1A1816] cursor-pointer"
+                  />
+                  <div className="flex justify-between text-[10px] text-[#8C8881] mt-1">
+                    <span>Lento</span>
+                    <span>Rápido</span>
+                  </div>
+                </div>
+              </div>
+
+              <div>
+                <h4 className="text-xs font-bold text-[#1A1816]">Sensibilidade</h4>
+                <p className="text-xs text-[#736F69] mt-0.5 mb-2 leading-relaxed">
+                  Com maior sensibilidade, o assistente reage mais facilmente a interrupções, mas também a ruídos.
+                </p>
+                <input 
+                  type="range" 
+                  min="10" 
+                  max="90" 
+                  value={sensitivity} 
+                  onChange={(e) => setSensitivity(e.target.value)}
+                  className="w-full accent-[#1A1816] cursor-pointer"
+                />
+                <div className="flex justify-between text-[10px] text-[#8C8881] mt-1">
+                  <span>Baixa</span>
+                  <span>Alta</span>
+                </div>
+              </div>
+            </div>
+
+            {/* 7. Criatividade & Processamento preciso de informações */}
+            <div className="p-4 rounded-2xl border border-[#E7E4DC] bg-white space-y-4">
+              <div>
+                <h4 className="text-xs font-bold text-[#1A1816]">Criatividade (temperatura)</h4>
+                <div className="mt-2">
+                  <input 
+                    type="range" 
+                    min="0" 
+                    max="100" 
+                    value={temperature} 
+                    onChange={(e) => setTemperature(e.target.value)}
+                    className="w-full accent-[#1A1816] cursor-pointer"
+                  />
+                  <div className="flex justify-between text-[10px] text-[#8C8881] mt-1">
+                    <span>Segue o prompt à risca</span>
+                    <span>Muito criativo</span>
+                  </div>
+                </div>
+              </div>
+
+              <div className="pt-2 border-t border-[#F0EDE8]">
+                <div className="flex items-center justify-between">
+                  <h4 className="text-xs font-bold text-[#1A1816]">Processamento preciso de informações</h4>
+                  <a href="#tutorial" className="text-xs text-[#C84B1F] hover:underline">— Vídeo tutorial</a>
+                </div>
+                <p className="text-xs text-[#736F69] mt-1 leading-relaxed">
+                  Defina quais informações o assistente deve coletar com precisão na ligação. Ele pede cada uma e confirma o valor com a pessoa (soletrando e-mails e números, por exemplo).
+                </p>
+                <div className="mt-3">
+                  <button 
+                    onClick={() => {
+                      const info = prompt("Digite o nome da informação a coletar (ex: CPF, E-mail, CEP):");
+                      if (info) setInfoExtractionList(prev => [...prev, info]);
+                    }}
+                    className="px-4 py-1.5 rounded-xl border border-[#D0CBC0] hover:bg-[#FAF9F5] text-xs font-semibold text-[#1A1816] cursor-pointer"
+                  >
+                    Adicionar informação
+                  </button>
+                  {infoExtractionList.length > 0 && (
+                    <div className="flex flex-wrap gap-1.5 mt-2">
+                      {infoExtractionList.map((item, idx) => (
+                        <span key={idx} className="px-2.5 py-1 rounded-lg bg-[#FAF5EE] text-[#C84B1F] text-xs font-semibold border border-[#EDE5D8]">
+                          {item}
+                        </span>
+                      ))}
+                    </div>
+                  )}
+                </div>
+              </div>
+            </div>
+
+            {/* 8. Transferência livre de ligações */}
+            <div className="p-4 rounded-2xl border border-[#E7E4DC] bg-white flex items-start gap-3">
+              <input 
+                type="checkbox" 
+                checked={freeTransfer} 
+                onChange={(e) => setFreeTransfer(e.target.checked)}
+                className="w-4 h-4 rounded text-[#1A1816] mt-0.5 accent-[#1A1816] cursor-pointer"
+              />
+              <div>
+                <h4 className="text-xs font-bold text-[#1A1816]">Transferência livre de ligações</h4>
+                <p className="text-xs text-[#736F69] mt-1 leading-relaxed">
+                  O assistente pode transferir ligações livremente para outros números conforme definido no prompt. Atenção: isso deve ser bem restrito para que quem liga não consiga determinar esse comportamento.
+                </p>
+              </div>
+            </div>
+
+            {/* 9. Envio de tons DTMF / discagem por tom */}
+            <div className="p-4 rounded-2xl border border-[#E7E4DC] bg-white flex items-start gap-3">
+              <input 
+                type="checkbox" 
+                checked={dtmfEnabled} 
+                onChange={(e) => setDtmfEnabled(e.target.checked)}
+                className="w-4 h-4 rounded text-[#1A1816] mt-0.5 accent-[#1A1816] cursor-pointer"
+              />
+              <div>
+                <h4 className="text-xs font-bold text-[#1A1816]">Envio de tons DTMF / discagem por tom</h4>
+                <p className="text-xs text-[#736F69] mt-1 leading-relaxed">
+                  Permite que o assistente envie códigos de discagem por tom (por exemplo, dígitos) durante a ligação.
+                </p>
+              </div>
+            </div>
+
+            {/* 10. Impedir interrupção da mensagem inicial */}
+            <div className="p-4 rounded-2xl border border-[#E7E4DC] bg-white flex items-start gap-3">
+              <input 
+                type="checkbox" 
+                checked={blockInitialInterrupt} 
+                onChange={(e) => setBlockInitialInterrupt(e.target.checked)}
+                className="w-4 h-4 rounded text-[#1A1816] mt-0.5 accent-[#1A1816] cursor-pointer"
+              />
+              <div>
+                <h4 className="text-xs font-bold text-[#1A1816]">Impedir interrupção da mensagem inicial</h4>
+                <p className="text-xs text-[#736F69] mt-1 leading-relaxed">
+                  Quem liga não pode interromper a mensagem inicial. Isso pode garantir, por exemplo, que informações legais sejam transmitidas.
+                </p>
+              </div>
+            </div>
+
+            {/* 11. Impedir interrupções */}
+            <div className="p-4 rounded-2xl border border-[#E7E4DC] bg-white flex items-start gap-3">
+              <input 
+                type="checkbox" 
+                checked={blockAllInterrupts} 
+                onChange={(e) => setBlockAllInterrupts(e.target.checked)}
+                className="w-4 h-4 rounded text-[#1A1816] mt-0.5 accent-[#1A1816] cursor-pointer"
+              />
+              <div>
+                <h4 className="text-xs font-bold text-[#1A1816]">Impedir interrupções</h4>
+                <p className="text-xs text-[#736F69] mt-1 leading-relaxed">
+                  Quem liga não pode interromper o agente em nenhum momento da chamada — ele sempre termina de falar. Útil quando quem liga precisa ser totalmente instruído, por exemplo, para orientações de serviço ou informações legais.
+                </p>
+              </div>
+            </div>
+
+            {/* 12. Rapidez de resposta */}
+            <div className="p-4 rounded-2xl border border-[#E7E4DC] bg-white space-y-2">
+              <h4 className="text-xs font-bold text-[#1A1816]">Rapidez de resposta</h4>
+              <p className="text-xs text-[#736F69] leading-relaxed">
+                Com que rapidez o assistente toma a palavra quando quem liga faz uma pausa. "Paciente" espera mais antes de responder, o que ajuda com pessoas que pausam no meio da frase, ao custo de respostas um pouco mais lentas.
+              </p>
+              <select 
+                value={responsePace}
+                onChange={(e) => setResponsePace(e.target.value)}
+                className="w-full px-3 py-2 rounded-xl border border-[#D0CBC0] text-xs text-[#1A1816] bg-white focus:outline-none cursor-pointer mt-1"
+              >
+                <option value="Rápido">Rápido (0.2s)</option>
+                <option value="Normal">Normal</option>
+                <option value="Paciente">Paciente (0.7s)</option>
+              </select>
+            </div>
+
           </div>
         )}
 
