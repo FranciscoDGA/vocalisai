@@ -44,7 +44,7 @@ export default function CtaSection({ onOpenDemo, onOpenAuth }) {
             </h2>
 
             <p className="text-base sm:text-lg text-[#B5B0A8] max-w-2xl mx-auto leading-relaxed">
-              Pare de perder clientes por demora no WhatsApp ou telefone ocupado. Coloque a inteligência da sua empresa (AI Agency OS) para atender 24 horas por dia com voz humana ultra-realista.
+              Pare de perder clientes por demora no WhatsApp ou telefone ocupado. Coloque a inteligência da (AI Agency OS) para atender sua empresa 24/7 horas por dia com voz humana ultra-realista.
             </p>
 
             {/* Quick Test Call Form (Pill matching Kloel) */}
