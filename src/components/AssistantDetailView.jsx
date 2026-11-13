@@ -5,7 +5,8 @@ import {
   Sliders, Settings, Mail, Calendar, Plug, Check, CheckCircle2, 
   Info, ExternalLink, Send, ArrowLeft, MessageCircle, MoreHorizontal,
   FileText, Shield, AlertCircle, ToggleLeft, ToggleRight, Radio, RefreshCw,
-  Clock, Trash2, UserCheck, Bell, PhoneForwarded, Users
+  Clock, Trash2, UserCheck, Bell, PhoneForwarded, Users,
+  ChevronsLeft, ChevronsUpDown
 } from 'lucide-react';
 
 export default function AssistantDetailView({ 
@@ -131,40 +132,43 @@ export default function AssistantDetailView({
     <div className="flex-1 flex flex-col md:flex-row min-h-screen bg-white relative">
       
       {/* ========================================================
-          SUB-SIDEBAR (Sidebar 2 - Detalhes do Agente)
+          SUB-SIDEBAR (Sidebar 2 - Detalhes do Agente - Réplica Exata 1:1 Kloel)
          ======================================================== */}
       <div className="w-full md:w-64 bg-[#FAF9F5] border-r border-[#EBE8E2] p-4 flex flex-col justify-between shrink-0">
         <div>
-          {/* Header com Nome do Agente + Botão Voltar + Troca de Agente */}
+          {/* Header com Nome do Agente + Botão « + Seletor ChevronsUpDown + Botão + (Réplica Exata Print Zoom) */}
           <div className="flex items-center justify-between pb-4 mb-4 border-b border-[#EBE8E2]">
-            <div className="flex items-center gap-2 overflow-hidden">
+            <div className="flex items-center gap-2.5 overflow-hidden">
               <button 
                 onClick={onBack}
-                className="w-7 h-7 rounded-lg border border-[#E7E4DC] hover:border-[#D0CBC0] bg-white flex items-center justify-center text-[#736F69] hover:text-[#1A1816] transition-colors cursor-pointer shrink-0"
+                className="w-7 h-7 rounded-lg border border-[#E7E4DC] hover:border-[#D0CBC0] bg-white flex items-center justify-center text-[#736F69] hover:text-[#1A1816] transition-colors cursor-pointer shrink-0 shadow-xs"
                 title="Voltar para a lista de assistentes"
               >
-                <ArrowLeft className="w-3.5 h-3.5" />
+                <ChevronsLeft className="w-3.5 h-3.5" />
               </button>
-              <div className="text-left overflow-hidden">
-                <div className="text-xs font-bold text-[#1A1816] truncate max-w-[120px]">{name}</div>
-                <div className="text-[10px] text-[#736F69]">
-                  {type === 'hibrido' ? 'Chat + Ligação' : type === 'chat' ? 'Chat Agent' : 'Voice Agent'}
-                </div>
-              </div>
-            </div>
 
-            <div className="flex items-center gap-1">
               <div className="relative">
                 <button
+                  type="button"
                   onClick={() => setAssistantDropdownOpen(!assistantDropdownOpen)}
-                  className="w-6 h-6 rounded-md hover:bg-[#EFECE6] flex items-center justify-center text-[#736F69] cursor-pointer"
-                  title="Trocar assistente"
+                  className="flex items-center gap-2 text-left group cursor-pointer"
                 >
-                  <ChevronDown className="w-3.5 h-3.5" />
+                  <div className="overflow-hidden">
+                    <h3 className="text-sm font-bold text-[#1A1816] truncate max-w-[110px] leading-tight">
+                      {name}
+                    </h3>
+                    <span className="text-[11px] text-[#736F69] block leading-tight">
+                      {type === 'hibrido' ? 'Chat + Ligação' : type === 'chat' ? 'Assistente de chat' : 'Assistente de voz'}
+                    </span>
+                  </div>
+                  <ChevronsUpDown className="w-3.5 h-3.5 text-[#8C8881] group-hover:text-[#1A1816] shrink-0" />
                 </button>
+
                 {assistantDropdownOpen && (
-                  <div className="absolute top-8 left-0 w-48 bg-white rounded-xl border border-[#E7E4DC] shadow-xl p-1 z-50 text-xs animate-fadeIn">
-                    <div className="px-2 py-1 text-[10px] font-bold text-[#8C8881] uppercase">Seus assistentes</div>
+                  <div className="absolute top-10 left-0 w-52 bg-white rounded-xl border border-[#E7E4DC] shadow-xl p-1 z-50 text-xs animate-fadeIn">
+                    <div className="px-2.5 py-1 text-[10px] font-bold text-[#8C8881] uppercase tracking-wider">
+                      Seus assistentes
+                    </div>
                     {allAssistants.map(a => (
                       <button
                         key={a.id}
@@ -172,7 +176,9 @@ export default function AssistantDetailView({
                           if (onSelectAssistant) onSelectAssistant(a);
                           setAssistantDropdownOpen(false);
                         }}
-                        className="w-full px-2 py-1.5 rounded-lg text-left hover:bg-[#FAF9F5] flex items-center justify-between font-medium cursor-pointer"
+                        className={`w-full px-2.5 py-2 rounded-lg text-left flex items-center justify-between font-medium cursor-pointer transition-colors ${
+                          assistant?.id === a.id ? 'bg-[#FAF5EE] text-[#C84B1F] font-bold' : 'hover:bg-[#FAF9F5] text-[#1A1816]'
+                        }`}
                       >
                         <span className="truncate">{a.name}</span>
                         <span className="text-[10px] text-[#736F69]">{a.type}</span>
@@ -181,65 +187,39 @@ export default function AssistantDetailView({
                   </div>
                 )}
               </div>
-              <button
-                onClick={onOpenCreateModal}
-                className="w-6 h-6 rounded-md hover:bg-[#EFECE6] flex items-center justify-center text-[#1A1816] font-bold cursor-pointer"
-                title="Novo assistente"
-              >
-                <Plus className="w-3.5 h-3.5" />
-              </button>
             </div>
+
+            {/* Botão + no canto superior direito do sub-sidebar */}
+            <button
+              onClick={onOpenCreateModal}
+              className="w-8 h-8 rounded-xl border border-[#E7E4DC] hover:border-[#D0CBC0] bg-white flex items-center justify-center text-[#1A1816] font-bold cursor-pointer transition-colors shadow-xs"
+              title="Novo assistente"
+            >
+              <Plus className="w-4 h-4" />
+            </button>
           </div>
 
           {/* Sub-menu Tabs (Geral, Regras, Conhecimento, Prompt personalizado, Técnico) */}
           <div className="space-y-1">
-            <button
-              onClick={() => setSubTab('geral')}
-              className={`w-full flex items-center gap-2.5 px-3 py-2 rounded-xl text-xs font-semibold transition-colors cursor-pointer ${
-                subTab === 'geral' ? 'bg-[#EFECE6] text-[#1A1816]' : 'text-[#5C5955] hover:text-[#1A1816] hover:bg-[#F3EFE8]'
-              }`}
-            >
-              <span>Geral</span>
-            </button>
-
-            <button
-              onClick={() => setSubTab('regras')}
-              className={`w-full flex items-center gap-2.5 px-3 py-2 rounded-xl text-xs font-semibold transition-colors cursor-pointer ${
-                subTab === 'regras' ? 'bg-[#EFECE6] text-[#1A1816]' : 'text-[#5C5955] hover:text-[#1A1816] hover:bg-[#F3EFE8]'
-              }`}
-            >
-              <span>Regras</span>
-            </button>
-
-            <button
-              onClick={() => setSubTab('conhecimento')}
-              className={`w-full flex items-center gap-2.5 px-3 py-2 rounded-xl text-xs font-semibold transition-colors cursor-pointer ${
-                subTab === 'conhecimento' ? 'bg-[#EFECE6] text-[#1A1816]' : 'text-[#5C5955] hover:text-[#1A1816] hover:bg-[#F3EFE8]'
-              }`}
-            >
-              <span>Conhecimento</span>
-            </button>
-
-            <button
-              onClick={() => setSubTab('prompt')}
-              className={`w-full flex items-center gap-2.5 px-3 py-2 rounded-xl text-xs font-semibold transition-colors cursor-pointer ${
-                subTab === 'prompt' ? 'bg-[#EFECE6] text-[#1A1816]' : 'text-[#5C5955] hover:text-[#1A1816] hover:bg-[#F3EFE8]'
-              }`}
-            >
-              <span>Prompt personalizado</span>
-            </button>
-
-            {/* Nova Aba Técnica presente no Chat + Ligação do Kloel */}
-            {(type === 'hibrido' || type === 'voz') && (
+            {[
+              { id: 'geral', label: 'Geral' },
+              { id: 'regras', label: 'Regras' },
+              { id: 'conhecimento', label: 'Conhecimento' },
+              { id: 'prompt', label: 'Prompt personalizado' },
+              ...((type === 'hibrido' || type === 'voz') ? [{ id: 'tecnico', label: 'Técnico' }] : [])
+            ].map(tab => (
               <button
-                onClick={() => setSubTab('tecnico')}
-                className={`w-full flex items-center gap-2.5 px-3 py-2 rounded-xl text-xs font-semibold transition-colors cursor-pointer ${
-                  subTab === 'tecnico' ? 'bg-[#EFECE6] text-[#1A1816]' : 'text-[#5C5955] hover:text-[#1A1816] hover:bg-[#F3EFE8]'
+                key={tab.id}
+                onClick={() => setSubTab(tab.id)}
+                className={`w-full flex items-center gap-2.5 px-3 py-2.5 rounded-xl text-xs font-semibold transition-colors cursor-pointer text-left ${
+                  subTab === tab.id 
+                    ? 'bg-[#EFECE6] text-[#1A1816]' 
+                    : 'text-[#5C5955] hover:text-[#1A1816] hover:bg-[#F3EFE8]'
                 }`}
               >
-                <span>Técnico</span>
+                <span>{tab.label}</span>
               </button>
-            )}
+            ))}
           </div>
         </div>
 
