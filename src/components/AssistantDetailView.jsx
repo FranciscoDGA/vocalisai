@@ -4,7 +4,8 @@ import {
   ChevronRight, ChevronDown, ChevronUp, Globe, Upload, BookOpen, 
   Sliders, Settings, Mail, Calendar, Plug, Check, CheckCircle2, 
   Info, ExternalLink, Send, ArrowLeft, MessageCircle, MoreHorizontal,
-  FileText, Shield, AlertCircle, ToggleLeft, ToggleRight, Radio, RefreshCw
+  FileText, Shield, AlertCircle, ToggleLeft, ToggleRight, Radio, RefreshCw,
+  Clock, Trash2, UserCheck, Bell, PhoneForwarded, Users
 } from 'lucide-react';
 
 export default function AssistantDetailView({ 
@@ -15,19 +16,46 @@ export default function AssistantDetailView({
   onOpenCreateModal, 
   onOpenPricing 
 }) {
-  const [subTab, setSubTab] = useState('geral'); // 'geral' | 'regras' | 'conhecimento' | 'prompt'
+  const [subTab, setSubTab] = useState('geral'); // 'geral' | 'regras' | 'conhecimento' | 'prompt' | 'tecnico'
   const [assistantDropdownOpen, setAssistantDropdownOpen] = useState(false);
+  const [typeDropdownOpen, setTypeDropdownOpen] = useState(false);
   const [promoBannerVisible, setPromoBannerVisible] = useState(true);
   const [testChatOpen, setTestChatOpen] = useState(false);
   const [addSourceDropdownOpen, setAddSourceDropdownOpen] = useState(false);
   const [activeStatus, setActiveStatus] = useState(true);
 
-  // Form State - Geral
+  // Modais Interativos das Imagens 4 a 9
+  const [voiceModalOpen, setVoiceModalOpen] = useState(false);
+  const [agendaModalOpen, setAgendaModalOpen] = useState(false);
+  const [horarioModalOpen, setHorarioModalOpen] = useState(false);
+  const [entradaModalOpen, setEntradaModalOpen] = useState(false);
+  const [transferenciaModalOpen, setTransferenciaModalOpen] = useState(false);
+  const [notificacoesModalOpen, setNotificacoesModalOpen] = useState(false);
+
+  // Form State - Geral (Básico)
   const [name, setName] = useState(assistant?.name || 'Francisco Gomes');
-  const [type, setType] = useState(assistant?.type || 'chat');
-  const [language, setLanguage] = useState('pt-BR');
+  const [type, setType] = useState(assistant?.type || 'hibrido'); // 'chat' | 'voz' | 'hibrido'
+  const [selectedVoice, setSelectedVoice] = useState({ name: 'Camila', gender: 'Feminino', accent: 'Português', avatar: 'C' });
+  const [language, setLanguage] = useState('Português (Brasil)');
   const [timeout, setTimeoutVal] = useState('1 hora');
   const [sellerProfile, setSellerProfile] = useState(false);
+
+  // Mensagens iniciais (Novo card do Chat + Ligação)
+  const [welcomeMessageActive, setWelcomeMessageActive] = useState(true);
+  const [welcomeMessage, setWelcomeMessage] = useState(`Olá, aqui é a ${name} da Q&C STORES. Como posso te ajudar?`);
+
+  // Gestão de conversas
+  const [entradaConversa, setEntradaConversa] = useState('A IA atende todas as conversas'); // 'ia' | 'equipe' | 'condicao'
+  const [agendaResposta, setAgendaResposta] = useState('Sempre'); // 'sempre' | 'horario' | 'fora'
+  const [transferenciaHabilitada, setTransferenciaHabilitada] = useState(true);
+  const [transferenciaModo, setTransferenciaModo] = useState('Condições padrão'); // 'padrao' | 'personalizado' | 'apenas_personalizado'
+  const [notificarEquipe, setNotificarEquipe] = useState(false);
+  const [notificarEmail, setNotificarEmail] = useState(true);
+
+  // Horário de funcionamento
+  const [diasSemana, setDiasSemana] = useState(['Seg', 'Ter', 'Qua', 'Qui', 'Sex']);
+  const [horarioInicio, setHorarioInicio] = useState('08:00');
+  const [horarioFim, setHorarioFim] = useState('18:00');
 
   // Form State - Regras (Sistema)
   const [shortAnswers, setShortAnswers] = useState(true);
@@ -35,16 +63,18 @@ export default function AssistantDetailView({
   const [politeTone, setPoliteTone] = useState(true);
   const [objectiveQuestions, setObjectiveQuestions] = useState(true);
 
-  // Form State - Regras (Suas regras)
+  // Form State - Regras (Suas regras - Dropdowns das Imagens 12 e 13)
   const [aiNotice, setAiNotice] = useState('Somente se perguntado');
+  const [aiNoticeDropdownOpen, setAiNoticeDropdownOpen] = useState(false);
   const [commStyle, setCommStyle] = useState('Padrão');
+  const [commStyleDropdownOpen, setCommStyleDropdownOpen] = useState(false);
 
   // Form State - Conhecimento
   const [knowledgeActive, setKnowledgeActive] = useState(true);
   const [knowledgeTab, setKnowledgeTab] = useState('fontes');
 
   // Form State - Prompt
-  const defaultPrompt = assistant?.prompt || `Você é a ${name} – uma assistente de chat que responde às perguntas de forma amigável, ágil e focada em converter visitantes em clientes.`;
+  const defaultPrompt = assistant?.prompt || `Você é a ${name} – uma assistente de chat e telefone (Chat + Ligação) que atende clientes de forma amigável, entende necessidades e agenda consultas e atendimentos.`;
   const [promptText, setPromptText] = useState(defaultPrompt);
 
   // Interactive Live Test Chat State
@@ -53,6 +83,20 @@ export default function AssistantDetailView({
   ]);
   const [chatInput, setChatInput] = useState('');
   const [chatTyping, setChatTyping] = useState(false);
+
+  // Lista de Vozes 1:1 do Kloel (Imagem 4)
+  const brazilianVoices = [
+    { name: 'Joana', gender: 'Feminino', accent: 'Português', avatar: '👩🏾' },
+    { name: 'Joana (Mineiro)', gender: 'Feminino', accent: 'Português (Mineiro)', avatar: '👩🏾' },
+    { name: 'Marcelo', gender: 'Masculino', accent: 'Português', avatar: '👨🏻' },
+    { name: 'Marcelo (Carioca)', gender: 'Masculino', accent: 'Português (Carioca)', avatar: '👨🏻' },
+    { name: 'Eduardo', gender: 'Masculino', accent: 'Português', avatar: '👨🏾' },
+    { name: 'Eduardo (Gaúcho)', gender: 'Masculino', accent: 'Português (Gaúcho)', avatar: '👨🏾' },
+    { name: 'Gabriela', gender: 'Feminino', accent: 'Português', avatar: '👩🏼' },
+    { name: 'Bruna', gender: 'Feminino', accent: 'Português', avatar: '👩🏻' },
+    { name: 'Carla', gender: 'Feminino', accent: 'Português', avatar: '👩🏽' },
+    { name: 'Camila', gender: 'Feminino', accent: 'Português', avatar: '👩🏻' }
+  ];
 
   const handleSendChatMessage = (e) => {
     e.preventDefault();
@@ -64,15 +108,23 @@ export default function AssistantDetailView({
     setChatTyping(true);
 
     setTimeout(() => {
-      let reply = `Com certeza! Entendi perfeitamente sua dúvida sobre "${userMsg}". Estou consultando a base de conhecimento para te passar a informação mais precisa agora mesmo.`;
+      let reply = `Com certeza! Entendi perfeitamente sua dúvida sobre "${userMsg}". Como sou uma assistente completa de Chat + Ligação, posso tanto te responder por aqui no WhatsApp quanto te ligar agora mesmo se preferir!`;
       if (userMsg.toLowerCase().includes('preço') || userMsg.toLowerCase().includes('valor') || userMsg.toLowerCase().includes('plano')) {
-        reply = `Temos planos a partir de R$ 209/mês para WhatsApp e Chatbot, e planos completos com ligações de voz a partir de R$ 503/mês. Gostaria que eu te envie o link direto no WhatsApp?`;
+        reply = `Temos planos a partir de R$ 209/mês para WhatsApp e Chatbot, e planos completos com ligações de voz a partir de R$ 503/mês. Gostaria que eu reserve uma demonstração gratuita ou prefere receber o resumo?`;
       } else if (userMsg.toLowerCase().includes('olá') || userMsg.toLowerCase().includes('oi')) {
-        reply = `Olá! Que bom falar com você! Me conta: você procura atendimento automatizado para WhatsApp, telefone ou site?`;
+        reply = welcomeMessage;
       }
       setChatMessages(prev => [...prev, { sender: 'assistant', text: reply }]);
       setChatTyping(false);
-    }, 900);
+    }, 800);
+  };
+
+  const toggleDiaSemana = (dia) => {
+    if (diasSemana.includes(dia)) {
+      setDiasSemana(diasSemana.filter(d => d !== dia));
+    } else {
+      setDiasSemana([...diasSemana, dia]);
+    }
   };
 
   return (
@@ -96,7 +148,7 @@ export default function AssistantDetailView({
               <div className="text-left overflow-hidden">
                 <div className="text-xs font-bold text-[#1A1816] truncate max-w-[120px]">{name}</div>
                 <div className="text-[10px] text-[#736F69]">
-                  {type === 'voz' ? 'Voice Agent' : type === 'chat' ? 'Chat Agent' : 'Hybrid Agent'}
+                  {type === 'hibrido' ? 'Chat + Ligação' : type === 'chat' ? 'Chat Agent' : 'Voice Agent'}
                 </div>
               </div>
             </div>
@@ -111,7 +163,7 @@ export default function AssistantDetailView({
                   <ChevronDown className="w-3.5 h-3.5" />
                 </button>
                 {assistantDropdownOpen && (
-                  <div className="absolute top-8 left-0 w-48 bg-white rounded-xl border border-[#E7E4DC] shadow-xl p-1 z-50 text-xs">
+                  <div className="absolute top-8 left-0 w-48 bg-white rounded-xl border border-[#E7E4DC] shadow-xl p-1 z-50 text-xs animate-fadeIn">
                     <div className="px-2 py-1 text-[10px] font-bold text-[#8C8881] uppercase">Seus assistentes</div>
                     {allAssistants.map(a => (
                       <button
@@ -120,7 +172,7 @@ export default function AssistantDetailView({
                           if (onSelectAssistant) onSelectAssistant(a);
                           setAssistantDropdownOpen(false);
                         }}
-                        className="w-full px-2 py-1.5 rounded-lg text-left hover:bg-[#FAF9F5] flex items-center justify-between font-medium"
+                        className="w-full px-2 py-1.5 rounded-lg text-left hover:bg-[#FAF9F5] flex items-center justify-between font-medium cursor-pointer"
                       >
                         <span className="truncate">{a.name}</span>
                         <span className="text-[10px] text-[#736F69]">{a.type}</span>
@@ -139,7 +191,7 @@ export default function AssistantDetailView({
             </div>
           </div>
 
-          {/* Sub-menu Tabs (Geral, Regras, Conhecimento, Prompt personalizado) */}
+          {/* Sub-menu Tabs (Geral, Regras, Conhecimento, Prompt personalizado, Técnico) */}
           <div className="space-y-1">
             <button
               onClick={() => setSubTab('geral')}
@@ -176,6 +228,18 @@ export default function AssistantDetailView({
             >
               <span>Prompt personalizado</span>
             </button>
+
+            {/* Nova Aba Técnica presente no Chat + Ligação do Kloel */}
+            {(type === 'hibrido' || type === 'voz') && (
+              <button
+                onClick={() => setSubTab('tecnico')}
+                className={`w-full flex items-center gap-2.5 px-3 py-2 rounded-xl text-xs font-semibold transition-colors cursor-pointer ${
+                  subTab === 'tecnico' ? 'bg-[#EFECE6] text-[#1A1816]' : 'text-[#5C5955] hover:text-[#1A1816] hover:bg-[#F3EFE8]'
+                }`}
+              >
+                <span>Técnico</span>
+              </button>
+            )}
           </div>
         </div>
 
@@ -184,7 +248,7 @@ export default function AssistantDetailView({
           <div className="mt-8 p-3.5 rounded-2xl bg-gradient-to-b from-[#FFF5F0] to-[#FAF5EE] border border-[#F3E2D5] relative animate-fadeIn">
             <button 
               onClick={() => setPromoBannerVisible(false)}
-              className="absolute right-2.5 top-2.5 text-[#8C8881] hover:text-[#1A1816]"
+              className="absolute right-2.5 top-2.5 text-[#8C8881] hover:text-[#1A1816] cursor-pointer"
             >
               <X className="w-3.5 h-3.5" />
             </button>
@@ -218,7 +282,7 @@ export default function AssistantDetailView({
       <div className="flex-1 p-6 sm:p-10 overflow-y-auto pb-28 bg-white min-h-screen">
         
         {/* ========================================================
-            SUB-TAB 1: GERAL (Réplica Exata Print 1)
+            SUB-TAB 1: GERAL (Réplica Exata Prints 1 e 2)
            ======================================================== */}
         {subTab === 'geral' && (
           <div className="max-w-3xl space-y-8 animate-fadeIn">
@@ -233,6 +297,8 @@ export default function AssistantDetailView({
             <div className="space-y-3">
               <span className="text-[11px] font-bold text-[#8C8881] uppercase tracking-wider">Básico</span>
               <div className="rounded-2xl border border-[#E7E4DC] overflow-hidden divide-y divide-[#EBE8E2]">
+                
+                {/* 1. Nome */}
                 <div className="p-3.5 flex items-center justify-between">
                   <label className="text-xs font-semibold text-[#1A1816]">Nome</label>
                   <input 
@@ -243,19 +309,63 @@ export default function AssistantDetailView({
                   />
                 </div>
 
-                <div className="p-3.5 flex items-center justify-between">
+                {/* 2. Tipo (com dropdown customizado 1:1 Print 3) */}
+                <div className="p-3.5 flex items-center justify-between relative">
                   <label className="text-xs font-semibold text-[#1A1816]">Tipo</label>
-                  <select 
-                    value={type} 
-                    onChange={(e) => setType(e.target.value)}
-                    className="px-3 py-1.5 rounded-xl border border-[#E7E4DC] text-xs text-[#1A1816] bg-white focus:outline-none cursor-pointer"
-                  >
-                    <option value="chat">Assistente de chat</option>
-                    <option value="voz">Assistente de voz</option>
-                    <option value="hibrido">Chat + Ligação</option>
-                  </select>
+                  <div className="relative">
+                    <button
+                      type="button"
+                      onClick={() => setTypeDropdownOpen(!typeDropdownOpen)}
+                      className="px-3 py-1.5 rounded-xl border border-[#E7E4DC] text-xs text-[#1A1816] bg-white flex items-center gap-1.5 hover:border-[#D0CBC0] cursor-pointer"
+                    >
+                      <span>{type === 'voz' ? 'Assistente de voz' : type === 'chat' ? 'Assistente de chat' : 'Chat + Ligação'}</span>
+                      <ChevronDown className="w-3.5 h-3.5 text-[#8C8881]" />
+                    </button>
+
+                    {typeDropdownOpen && (
+                      <div className="absolute right-0 top-10 w-52 bg-white rounded-xl border border-[#E7E4DC] shadow-xl p-1 z-50 text-xs animate-fadeIn">
+                        {[
+                          { id: 'voz', label: 'Assistente de voz' },
+                          { id: 'chat', label: 'Assistente de chat' },
+                          { id: 'hibrido', label: 'Chat + Ligação' }
+                        ].map((opt) => (
+                          <button
+                            key={opt.id}
+                            type="button"
+                            onClick={() => {
+                              setType(opt.id);
+                              setTypeDropdownOpen(false);
+                            }}
+                            className="w-full px-3 py-2 rounded-lg text-left hover:bg-[#FAF9F5] flex items-center justify-between font-medium cursor-pointer"
+                          >
+                            <span>{opt.label}</span>
+                            {type === opt.id && <Check className="w-3.5 h-3.5 text-[#1A1816]" />}
+                          </button>
+                        ))}
+                      </div>
+                    )}
+                  </div>
                 </div>
 
+                {/* 3. Voz (Apenas quando Chat + Ligação ou Assistente de voz - Print 1 & 4) */}
+                {(type === 'hibrido' || type === 'voz') && (
+                  <div className="p-3.5 flex items-center justify-between">
+                    <label className="text-xs font-semibold text-[#1A1816]">Voz</label>
+                    <button
+                      type="button"
+                      onClick={() => setVoiceModalOpen(true)}
+                      className="px-3 py-1.5 rounded-xl border border-[#E7E4DC] text-xs text-[#1A1816] bg-white flex items-center gap-2 hover:border-[#D0CBC0] cursor-pointer"
+                    >
+                      <span className="w-5 h-5 rounded-full bg-emerald-600 text-white flex items-center justify-center text-[10px] font-bold">
+                        {selectedVoice.name[0]}
+                      </span>
+                      <span className="font-medium">{selectedVoice.name}</span>
+                      <ChevronDown className="w-3.5 h-3.5 text-[#8C8881]" />
+                    </button>
+                  </div>
+                )}
+
+                {/* 4. Idioma */}
                 <div className="p-3.5 flex items-center justify-between">
                   <div className="flex items-center gap-1.5">
                     <label className="text-xs font-semibold text-[#1A1816]">Idioma</label>
@@ -266,12 +376,13 @@ export default function AssistantDetailView({
                     onChange={(e) => setLanguage(e.target.value)}
                     className="px-3 py-1.5 rounded-xl border border-[#E7E4DC] text-xs text-[#1A1816] bg-white focus:outline-none cursor-pointer"
                   >
-                    <option value="pt-BR">Português (Brasil)</option>
-                    <option value="en-US">English (US)</option>
-                    <option value="es-ES">Español</option>
+                    <option value="Português (Brasil)">Português (Brasil)</option>
+                    <option value="English (US)">English (US)</option>
+                    <option value="Español">Español</option>
                   </select>
                 </div>
 
+                {/* 5. Tempo limite da conversa */}
                 <div className="p-3.5 flex items-center justify-between">
                   <label className="text-xs font-semibold text-[#1A1816]">Tempo limite da conversa</label>
                   <select 
@@ -288,23 +399,54 @@ export default function AssistantDetailView({
               </div>
             </div>
 
-            {/* Seção: Gestão de conversas */}
+            {/* Seção: Gestão de conversas (Com modais interativos 1:1 Prints 5 a 9) */}
             <div className="space-y-3">
               <span className="text-[11px] font-bold text-[#8C8881] uppercase tracking-wider">Gestão de conversas</span>
               <div className="rounded-2xl border border-[#E7E4DC] overflow-hidden divide-y divide-[#EBE8E2]">
-                {[
-                  { label: 'Entrada da conversa', val: 'IA' },
-                  { label: 'Agenda de resposta', val: 'Sempre' },
-                  { label: 'Transferência de conversa ativa', val: 'Padrão' },
-                  { label: 'Notificações da equipe', val: 'Desligado' }
-                ].map((item, idx) => (
-                  <div key={idx} className="p-3.5 flex items-center justify-between hover:bg-[#FAF9F5] cursor-pointer transition-colors">
-                    <span className="text-xs font-semibold text-[#1A1816]">{item.label}</span>
-                    <span className="text-xs text-[#736F69] flex items-center gap-1 font-medium">
-                      {item.val} <ChevronRight className="w-3.5 h-3.5 text-[#8C8881]" />
-                    </span>
-                  </div>
-                ))}
+                
+                {/* Entrada da conversa */}
+                <div 
+                  onClick={() => setEntradaModalOpen(true)}
+                  className="p-3.5 flex items-center justify-between hover:bg-[#FAF9F5] cursor-pointer transition-colors"
+                >
+                  <span className="text-xs font-semibold text-[#1A1816]">Entrada da conversa</span>
+                  <span className="text-xs text-[#736F69] flex items-center gap-1 font-medium">
+                    {entradaConversa.includes('IA') ? 'IA' : 'Equipe'} <ChevronRight className="w-3.5 h-3.5 text-[#8C8881]" />
+                  </span>
+                </div>
+
+                {/* Agenda de resposta */}
+                <div 
+                  onClick={() => setAgendaModalOpen(true)}
+                  className="p-3.5 flex items-center justify-between hover:bg-[#FAF9F5] cursor-pointer transition-colors"
+                >
+                  <span className="text-xs font-semibold text-[#1A1816]">Agenda de resposta</span>
+                  <span className="text-xs text-[#736F69] flex items-center gap-1 font-medium">
+                    {agendaResposta} <ChevronRight className="w-3.5 h-3.5 text-[#8C8881]" />
+                  </span>
+                </div>
+
+                {/* Transferência de conversa ativa */}
+                <div 
+                  onClick={() => setTransferenciaModalOpen(true)}
+                  className="p-3.5 flex items-center justify-between hover:bg-[#FAF9F5] cursor-pointer transition-colors"
+                >
+                  <span className="text-xs font-semibold text-[#1A1816]">Transferência de conversa ativa</span>
+                  <span className="text-xs text-[#736F69] flex items-center gap-1 font-medium">
+                    Padrão <ChevronRight className="w-3.5 h-3.5 text-[#8C8881]" />
+                  </span>
+                </div>
+
+                {/* Notificações da equipe */}
+                <div 
+                  onClick={() => setNotificacoesModalOpen(true)}
+                  className="p-3.5 flex items-center justify-between hover:bg-[#FAF9F5] cursor-pointer transition-colors"
+                >
+                  <span className="text-xs font-semibold text-[#1A1816]">Notificações da equipe</span>
+                  <span className="text-xs text-[#736F69] flex items-center gap-1 font-medium">
+                    {notificarEquipe ? 'Ligado' : 'Desligado'} <ChevronRight className="w-3.5 h-3.5 text-[#8C8881]" />
+                  </span>
+                </div>
               </div>
             </div>
 
@@ -332,7 +474,43 @@ export default function AssistantDetailView({
               </div>
             </div>
 
-            {/* Seção: Recursos (6 Cards) */}
+            {/* Seção: Mensagens iniciais (Exclusivo do Chat + Ligação - Print 2) */}
+            <div className="space-y-3">
+              <div className="p-4 rounded-2xl border border-[#E7E4DC] bg-white space-y-3">
+                <span className="text-[11px] font-bold text-[#8C8881] uppercase tracking-wider block">Mensagens iniciais</span>
+                <p className="text-xs text-[#1A1816] leading-relaxed">
+                  {welcomeMessage}
+                </p>
+                <div className="pt-2 border-t border-[#F0EDE8] flex items-center justify-between">
+                  <span className="text-xs font-semibold text-[#1A1816]">Personalizar</span>
+                  <div className="flex items-center gap-2">
+                    <button 
+                      onClick={() => {
+                        const newMsg = prompt("Digite a nova mensagem inicial:", welcomeMessage);
+                        if (newMsg) setWelcomeMessage(newMsg);
+                      }}
+                      className="p-1.5 rounded-lg hover:bg-[#FAF9F5] text-[#736F69] cursor-pointer"
+                      title="Editar mensagem inicial"
+                    >
+                      <Settings className="w-4 h-4" />
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() => setWelcomeMessageActive(!welcomeMessageActive)}
+                      className={`w-11 h-6 rounded-full transition-colors relative cursor-pointer ${
+                        welcomeMessageActive ? 'bg-[#C84B1F]' : 'bg-[#E7E4DC]'
+                      }`}
+                    >
+                      <span className={`w-5 h-5 rounded-full bg-white shadow-sm absolute top-0.5 transition-transform ${
+                        welcomeMessageActive ? 'left-5.5' : 'left-0.5'
+                      }`} />
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            {/* Seção: Recursos (8 Cards no Chat + Ligação - Print 2) */}
             <div className="space-y-3">
               <span className="text-[11px] font-bold text-[#8C8881] uppercase tracking-wider">Recursos</span>
               <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
@@ -350,7 +528,20 @@ export default function AssistantDetailView({
                   <span className="text-xs font-bold text-[#1A1816] mt-3">Conectar contatos</span>
                 </div>
 
-                {/* 2. Enviar e-mail */}
+                {/* 2. Transferir ligações (Novo do Chat + Ligação) */}
+                <div className="p-4 rounded-2xl border border-[#E7E4DC] border-dashed bg-white flex flex-col justify-between min-h-[95px] hover:border-[#D0CBC0] transition-colors cursor-pointer">
+                  <div className="flex items-center justify-between">
+                    <div className="w-7 h-7 rounded-lg bg-gray-50 text-[#736F69] flex items-center justify-center">
+                      <PhoneForwarded className="w-4 h-4" />
+                    </div>
+                    <span className="w-5 h-5 rounded-full border border-[#D0CBC0] text-[#736F69] flex items-center justify-center text-xs">
+                      +
+                    </span>
+                  </div>
+                  <span className="text-xs font-semibold text-[#5C5955] mt-3">Transferir ligações</span>
+                </div>
+
+                {/* 3. Enviar e-mail */}
                 <div className="p-4 rounded-2xl border border-[#E7E4DC] border-dashed bg-white flex flex-col justify-between min-h-[95px] hover:border-[#D0CBC0] transition-colors cursor-pointer">
                   <div className="flex items-center justify-between">
                     <div className="w-7 h-7 rounded-lg bg-gray-50 text-[#736F69] flex items-center justify-center">
@@ -363,7 +554,20 @@ export default function AssistantDetailView({
                   <span className="text-xs font-semibold text-[#5C5955] mt-3">Enviar e-mail</span>
                 </div>
 
-                {/* 3. Agendar compromissos */}
+                {/* 4. Enviar WhatsApp (Novo do Chat + Ligação) */}
+                <div className="p-4 rounded-2xl border border-[#E7E4DC] border-dashed bg-white flex flex-col justify-between min-h-[95px] hover:border-[#D0CBC0] transition-colors cursor-pointer">
+                  <div className="flex items-center justify-between">
+                    <div className="w-7 h-7 rounded-lg bg-gray-50 text-[#736F69] flex items-center justify-center">
+                      <MessageSquare className="w-4 h-4" />
+                    </div>
+                    <span className="w-5 h-5 rounded-full border border-[#D0CBC0] text-[#736F69] flex items-center justify-center text-xs">
+                      +
+                    </span>
+                  </div>
+                  <span className="text-xs font-semibold text-[#5C5955] mt-3">Enviar WhatsApp</span>
+                </div>
+
+                {/* 5. Agendar compromissos */}
                 <div className="p-4 rounded-2xl border border-[#E7E4DC] border-dashed bg-white flex flex-col justify-between min-h-[95px] hover:border-[#D0CBC0] transition-colors cursor-pointer">
                   <div className="flex items-center justify-between">
                     <div className="w-7 h-7 rounded-lg bg-gray-50 text-[#736F69] flex items-center justify-center">
@@ -376,7 +580,7 @@ export default function AssistantDetailView({
                   <span className="text-xs font-semibold text-[#5C5955] mt-3">Agendar compromissos</span>
                 </div>
 
-                {/* 4. Pesquisa na web */}
+                {/* 6. Pesquisa na web */}
                 <div className="p-4 rounded-2xl border border-[#E7E4DC] border-dashed bg-white flex flex-col justify-between min-h-[95px] hover:border-[#D0CBC0] transition-colors cursor-pointer">
                   <div className="flex items-center justify-between">
                     <div className="w-7 h-7 rounded-lg bg-gray-50 text-[#736F69] flex items-center justify-center">
@@ -389,7 +593,7 @@ export default function AssistantDetailView({
                   <span className="text-xs font-semibold text-[#5C5955] mt-3">Pesquisa na web</span>
                 </div>
 
-                {/* 5. Integrações */}
+                {/* 7. Integrações */}
                 <div className="p-4 rounded-2xl border border-[#E7E4DC] border-dashed bg-white flex flex-col justify-between min-h-[95px] hover:border-[#D0CBC0] transition-colors cursor-pointer">
                   <div className="flex items-center justify-between">
                     <div className="w-7 h-7 rounded-lg bg-gray-50 text-[#736F69] flex items-center justify-center">
@@ -402,7 +606,7 @@ export default function AssistantDetailView({
                   <span className="text-xs font-semibold text-[#5C5955] mt-3">Integrações</span>
                 </div>
 
-                {/* 6. Webhooks */}
+                {/* 8. Webhooks */}
                 <div className="p-4 rounded-2xl border border-[#E7E4DC] border-dashed bg-white flex flex-col justify-between min-h-[95px] hover:border-[#D0CBC0] transition-colors cursor-pointer">
                   <div className="flex items-center justify-between">
                     <div className="w-7 h-7 rounded-lg bg-gray-50 text-[#736F69] flex items-center justify-center">
@@ -421,7 +625,7 @@ export default function AssistantDetailView({
         )}
 
         {/* ========================================================
-            SUB-TAB 2: REGRAS (Réplica Exata Prints 2 e 3)
+            SUB-TAB 2: REGRAS (Réplica Exata Prints 10 a 13)
            ======================================================== */}
         {subTab === 'regras' && (
           <div className="max-w-3xl space-y-8 animate-fadeIn">
@@ -478,41 +682,94 @@ export default function AssistantDetailView({
               </div>
             </div>
 
-            {/* Seção: Suas regras */}
+            {/* Seção: Suas regras (Com dropdowns 1:1 Prints 12 e 13) */}
             <div className="space-y-3">
               <span className="text-[11px] font-bold text-[#8C8881] uppercase tracking-wider">Suas regras</span>
               <div className="rounded-2xl border border-[#E7E4DC] overflow-hidden divide-y divide-[#EBE8E2]">
-                <div className="p-4 flex items-center justify-between">
+                
+                {/* Aviso de IA (Dropdown 1:1 Print 12) */}
+                <div className="p-4 flex items-center justify-between relative">
                   <div>
                     <h4 className="text-xs font-bold text-[#1A1816]">Aviso de IA</h4>
                     <p className="text-xs text-[#736F69] mt-0.5">Se e quando o seu assistente menciona que é uma IA</p>
                   </div>
-                  <select 
-                    value={aiNotice} 
-                    onChange={(e) => setAiNotice(e.target.value)}
-                    className="px-3 py-1.5 rounded-xl border border-[#E7E4DC] text-xs text-[#1A1816] bg-white focus:outline-none cursor-pointer"
-                  >
-                    <option value="Somente se perguntado">Somente se perguntado</option>
-                    <option value="Sempre no início">Sempre no início</option>
-                    <option value="Nunca mencionar">Nunca mencionar</option>
-                  </select>
+                  <div className="relative">
+                    <button
+                      type="button"
+                      onClick={() => setAiNoticeDropdownOpen(!aiNoticeDropdownOpen)}
+                      className="px-3 py-1.5 rounded-xl border border-[#E7E4DC] text-xs text-[#1A1816] bg-white flex items-center gap-1.5 hover:border-[#D0CBC0] cursor-pointer"
+                    >
+                      <span>{aiNotice}</span>
+                      <ChevronDown className="w-3.5 h-3.5 text-[#8C8881]" />
+                    </button>
+
+                    {aiNoticeDropdownOpen && (
+                      <div className="absolute right-0 top-10 w-64 bg-white rounded-xl border border-[#E7E4DC] shadow-xl p-1 z-50 text-xs animate-fadeIn">
+                        {[
+                          'Não mencionar',
+                          'Somente se perguntado',
+                          'No início da conversa',
+                          'No início, consentimento obrigatório'
+                        ].map((opt) => (
+                          <button
+                            key={opt}
+                            type="button"
+                            onClick={() => {
+                              setAiNotice(opt);
+                              setAiNoticeDropdownOpen(false);
+                            }}
+                            className="w-full px-3 py-2 rounded-lg text-left hover:bg-[#FAF9F5] flex items-center justify-between font-medium cursor-pointer"
+                          >
+                            <span>{opt}</span>
+                            {aiNotice === opt && <Check className="w-3.5 h-3.5 text-[#1A1816]" />}
+                          </button>
+                        ))}
+                      </div>
+                    )}
+                  </div>
                 </div>
 
-                <div className="p-4 flex items-center justify-between">
+                {/* Estilo de comunicação (Dropdown 1:1 Print 13) */}
+                <div className="p-4 flex items-center justify-between relative">
                   <div>
                     <h4 className="text-xs font-bold text-[#1A1816]">Estilo de comunicação</h4>
                     <p className="text-xs text-[#736F69] mt-0.5">Tom com que o seu assistente se comunica</p>
                   </div>
-                  <select 
-                    value={commStyle} 
-                    onChange={(e) => setCommStyle(e.target.value)}
-                    className="px-3 py-1.5 rounded-xl border border-[#E7E4DC] text-xs text-[#1A1816] bg-white focus:outline-none cursor-pointer"
-                  >
-                    <option value="Padrão">Padrão</option>
-                    <option value="Formal">Formal</option>
-                    <option value="Descontraído">Descontraído</option>
-                    <option value="Empático e acolhedor">Empático e acolhedor</option>
-                  </select>
+                  <div className="relative">
+                    <button
+                      type="button"
+                      onClick={() => setCommStyleDropdownOpen(!commStyleDropdownOpen)}
+                      className="px-3 py-1.5 rounded-xl border border-[#E7E4DC] text-xs text-[#1A1816] bg-white flex items-center gap-1.5 hover:border-[#D0CBC0] cursor-pointer"
+                    >
+                      <span>{commStyle}</span>
+                      <ChevronDown className="w-3.5 h-3.5 text-[#8C8881]" />
+                    </button>
+
+                    {commStyleDropdownOpen && (
+                      <div className="absolute right-0 top-10 w-56 bg-white rounded-xl border border-[#E7E4DC] shadow-xl p-1 z-50 text-xs animate-fadeIn">
+                        {[
+                          'Padrão',
+                          'Profissional e amigável',
+                          'Casual e descontraído',
+                          'Formal e objetivo',
+                          'Empático e acolhedor'
+                        ].map((opt) => (
+                          <button
+                            key={opt}
+                            type="button"
+                            onClick={() => {
+                              setCommStyle(opt);
+                              setCommStyleDropdownOpen(false);
+                            }}
+                            className="w-full px-3 py-2 rounded-lg text-left hover:bg-[#FAF9F5] flex items-center justify-between font-medium cursor-pointer"
+                          >
+                            <span>{opt}</span>
+                            {commStyle === opt && <Check className="w-3.5 h-3.5 text-[#1A1816]" />}
+                          </button>
+                        ))}
+                      </div>
+                    )}
+                  </div>
                 </div>
 
                 {[
@@ -543,7 +800,7 @@ export default function AssistantDetailView({
         )}
 
         {/* ========================================================
-            SUB-TAB 3: CONHECIMENTO (Réplica Exata Print 4)
+            SUB-TAB 3: CONHECIMENTO
            ======================================================== */}
         {subTab === 'conhecimento' && (
           <div className="max-w-3xl space-y-6 animate-fadeIn">
@@ -569,7 +826,10 @@ export default function AssistantDetailView({
                 </button>
               </div>
 
-              <button className="text-xs font-medium text-[#736F69] hover:text-[#1A1816] flex items-center gap-1">
+              <button 
+                onClick={() => setHorarioModalOpen(true)}
+                className="text-xs font-medium text-[#736F69] hover:text-[#1A1816] flex items-center gap-1 cursor-pointer"
+              >
                 <span>Horário de funcionamento</span>
                 <ChevronRight className="w-3.5 h-3.5" />
               </button>
@@ -615,14 +875,14 @@ export default function AssistantDetailView({
                   <div className="absolute top-12 left-1/2 -translate-x-1/2 w-48 bg-white rounded-xl border border-[#E7E4DC] shadow-xl p-1.5 z-50 text-xs animate-fadeIn">
                     <button 
                       onClick={() => setAddSourceDropdownOpen(false)}
-                      className="w-full px-3 py-2 rounded-lg text-left hover:bg-[#FAF9F5] flex items-center gap-2 font-medium"
+                      className="w-full px-3 py-2 rounded-lg text-left hover:bg-[#FAF9F5] flex items-center gap-2 font-medium cursor-pointer"
                     >
                       <Globe className="w-4 h-4 text-[#0284C7]" />
                       <span>Site</span>
                     </button>
                     <button 
                       onClick={() => setAddSourceDropdownOpen(false)}
-                      className="w-full px-3 py-2 rounded-lg text-left hover:bg-[#FAF9F5] flex items-center gap-2 font-medium"
+                      className="w-full px-3 py-2 rounded-lg text-left hover:bg-[#FAF9F5] flex items-center gap-2 font-medium cursor-pointer"
                     >
                       <Upload className="w-4 h-4 text-[#16A34A]" />
                       <span>Mídias</span>
@@ -635,13 +895,12 @@ export default function AssistantDetailView({
         )}
 
         {/* ========================================================
-            SUB-TAB 4: PROMPT PERSONALIZADO (Réplica Exata Print 5)
+            SUB-TAB 4: PROMPT PERSONALIZADO
            ======================================================== */}
         {subTab === 'prompt' && (
           <div className="max-w-3xl space-y-6 animate-fadeIn">
             <h2 className="text-2xl font-bold text-[#1A1816]">Prompt personalizado</h2>
 
-            {/* Dica de Prompt */}
             <div className="p-4 rounded-2xl bg-[#FAF9F5] border border-[#E7E4DC] flex items-start gap-3">
               <span className="text-amber-500 mt-0.5">💡</span>
               <div className="text-xs text-[#5C5955] leading-relaxed">
@@ -652,14 +911,13 @@ export default function AssistantDetailView({
               </div>
             </div>
 
-            {/* Editor de Prompt Grande */}
             <div className="rounded-2xl border border-[#E7E4DC] p-4 bg-white focus-within:border-[#1A1816] transition-colors">
               <textarea 
                 value={promptText}
                 onChange={(e) => setPromptText(e.target.value)}
                 rows={14}
                 className="w-full text-sm text-[#1A1816] placeholder-[#8C8881] focus:outline-none resize-none leading-relaxed"
-                placeholder="Ex: Você é a Maria – uma assistente de chat que responde às perguntas de forma amigável..."
+                placeholder="Ex: Você é a Francisco Gomes – uma assistente de chat e telefone..."
               />
               <div className="pt-2 text-right border-t border-[#F0EDE8]">
                 <span className="text-[11px] text-[#8C8881]">
@@ -670,10 +928,42 @@ export default function AssistantDetailView({
           </div>
         )}
 
+        {/* ========================================================
+            SUB-TAB 5: TÉCNICO (Novo para Chat + Ligação e Voz)
+           ======================================================== */}
+        {subTab === 'tecnico' && (
+          <div className="max-w-3xl space-y-6 animate-fadeIn">
+            <h2 className="text-2xl font-bold text-[#1A1816]">Parâmetros Técnicos de Telefonia</h2>
+            <div className="rounded-2xl border border-[#E7E4DC] overflow-hidden divide-y divide-[#EBE8E2]">
+              <div className="p-4 flex items-center justify-between">
+                <div>
+                  <h4 className="text-xs font-bold text-[#1A1816]">Sensibilidade de interrupção</h4>
+                  <p className="text-xs text-[#736F69] mt-0.5">O quão rápido a IA pausa quando o cliente fala durante a fala dela</p>
+                </div>
+                <span className="text-xs font-bold text-[#1A1816]">Média (0.4s)</span>
+              </div>
+              <div className="p-4 flex items-center justify-between">
+                <div>
+                  <h4 className="text-xs font-bold text-[#1A1816]">Detecção de secretária eletrônica</h4>
+                  <p className="text-xs text-[#736F69] mt-0.5">Desliga automaticamente ao cair em caixa postal</p>
+                </div>
+                <span className="text-xs font-bold text-emerald-600">Ativado</span>
+              </div>
+              <div className="p-4 flex items-center justify-between">
+                <div>
+                  <h4 className="text-xs font-bold text-[#1A1816]">Gravação de chamadas</h4>
+                  <p className="text-xs text-[#736F69] mt-0.5">Grava áudio em duas faixas e gera transcrição neural com Whisper</p>
+                </div>
+                <span className="text-xs font-bold text-emerald-600">Ativado</span>
+              </div>
+            </div>
+          </div>
+        )}
+
       </div>
 
       {/* ========================================================
-          BOTTOM FLOATING BAR (Sticky Réplica Exata Prints 3, 4, 5)
+          BOTTOM FLOATING BAR (Sticky Réplica 1:1 Chat + Ligação - Prints 1 e 10)
          ======================================================== */}
       <div className="fixed bottom-6 right-6 z-40 animate-fadeIn">
         <div className="bg-[#1A1816] text-white rounded-2xl px-4 py-2.5 shadow-2xl flex items-center gap-3.5 border border-white/10">
@@ -715,19 +1005,495 @@ export default function AssistantDetailView({
             </button>
           </div>
 
-          {/* Orange Test Chat Button */}
+          {/* Atribuir número Pill (Exclusivo do Chat + Ligação e Voz - Prints 1 e 10) */}
+          {(type === 'hibrido' || type === 'voz') && (
+            <>
+              <div className="h-4 w-[1px] bg-white/20" />
+              <button 
+                onClick={onOpenPricing}
+                className="flex items-center gap-1 text-xs text-white hover:text-white/80 cursor-pointer font-medium"
+              >
+                <Phone className="w-3.5 h-3.5 text-[#C84B1F]" />
+                <span>Atribuir número</span>
+              </button>
+            </>
+          )}
+
+          {/* Orange Test Button */}
           <button
             onClick={() => setTestChatOpen(true)}
             className="ml-2 px-4 py-1.5 rounded-xl bg-[#C84B1F] hover:bg-[#B34018] text-white text-xs font-bold transition-all shadow flex items-center gap-1.5 cursor-pointer"
           >
             <MessageSquare className="w-3.5 h-3.5" />
-            <span>Testar chat</span>
+            <span>Testar</span>
           </button>
         </div>
       </div>
 
       {/* ========================================================
-          SIMULADOR INTERATIVO: TESTAR CHAT (Modal / Drawer)
+          MODAL 1: SELECIONAR VOZ (Réplica 1:1 Imagem 4)
+         ======================================================== */}
+      {voiceModalOpen && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm animate-fadeIn">
+          <div 
+            className="bg-white rounded-3xl max-w-sm w-full p-6 border border-[#E7E4DC] shadow-2xl relative flex flex-col max-h-[85vh]"
+            onClick={(e) => e.stopPropagation()}
+          >
+            <div className="flex items-center justify-between pb-4 border-b border-[#EBE8E2]">
+              <h3 className="text-lg font-bold text-[#1A1816]">Selecionar voz</h3>
+              <button 
+                onClick={() => setVoiceModalOpen(false)}
+                className="w-8 h-8 rounded-full hover:bg-[#FAF9F5] flex items-center justify-center text-[#736F69] cursor-pointer"
+              >
+                <X className="w-4 h-4" />
+              </button>
+            </div>
+
+            <div className="py-3 flex items-center justify-between border-b border-[#EBE8E2]">
+              <div className="flex items-center gap-4 text-xs font-semibold">
+                <span className="text-[#1A1816] border-b-2 border-[#1A1816] pb-1">Todas</span>
+                <span className="text-[#736F69] pb-1">Voz personalizada</span>
+              </div>
+              <span className="px-2.5 py-1 rounded-lg bg-[#FAF9F5] border border-[#E7E4DC] text-xs font-medium text-[#1A1816]">
+                Português (Brasil) ▾
+              </span>
+            </div>
+
+            <div className="flex-1 overflow-y-auto divide-y divide-[#F0EDE8] my-2 pr-1">
+              {brazilianVoices.map((v, i) => (
+                <div 
+                  key={i}
+                  onClick={() => {
+                    setSelectedVoice(v);
+                    setVoiceModalOpen(false);
+                  }}
+                  className="py-3 flex items-center justify-between hover:bg-[#FAF9F5] px-2 rounded-xl cursor-pointer transition-colors"
+                >
+                  <div className="flex items-center gap-3">
+                    <span className="text-2xl">{v.avatar}</span>
+                    <div>
+                      <h4 className="text-xs font-bold text-[#1A1816]">{v.name}</h4>
+                      <span className="text-[10px] text-[#736F69] flex items-center gap-1">
+                        🇧🇷 {v.accent} • {v.gender}
+                      </span>
+                    </div>
+                  </div>
+                  <div className={`w-4 h-4 rounded-full border flex items-center justify-center ${
+                    selectedVoice.name === v.name ? 'border-[#C84B1F] bg-[#C84B1F]' : 'border-[#D0CBC0]'
+                  }`}>
+                    {selectedVoice.name === v.name && <span className="w-1.5 h-1.5 rounded-full bg-white" />}
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* ========================================================
+          MODAL 2: AGENDA DE RESPOSTA (Réplica 1:1 Imagem 5)
+         ======================================================== */}
+      {agendaModalOpen && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm animate-fadeIn">
+          <div 
+            className="bg-white rounded-3xl max-w-md w-full p-6 border border-[#E7E4DC] shadow-2xl relative space-y-4"
+            onClick={(e) => e.stopPropagation()}
+          >
+            <div className="flex items-start justify-between">
+              <div>
+                <h3 className="text-lg font-bold text-[#1A1816]">Agenda de resposta</h3>
+                <p className="text-xs text-[#736F69] mt-1">Escolha quando a IA deve responder usando o horário de funcionamento da sua empresa.</p>
+              </div>
+              <button onClick={() => setAgendaModalOpen(false)} className="text-[#736F69] hover:text-[#1A1816] cursor-pointer">
+                <X className="w-4 h-4" />
+              </button>
+            </div>
+
+            <div className="space-y-3 pt-2">
+              {[
+                { id: 'Sempre', title: 'Sempre', desc: 'A IA responde a toda nova mensagem.' },
+                { id: 'Durante o horário de funcionamento', title: 'Durante o horário de funcionamento', desc: 'A IA responde somente enquanto a sua empresa está aberta. As outras mensagens ficam não lidas para a sua equipe.' },
+                { id: 'Fora do horário de funcionamento', title: 'Fora do horário de funcionamento', desc: 'A IA responde somente enquanto a sua empresa está fechada. As outras mensagens ficam não lidas para a sua equipe.' }
+              ].map((opt) => (
+                <div 
+                  key={opt.id}
+                  onClick={() => setAgendaResposta(opt.id)}
+                  className={`p-4 rounded-2xl border cursor-pointer transition-all ${
+                    agendaResposta === opt.id 
+                      ? 'border-[#C84B1F] bg-[#FAF5EE]' 
+                      : 'border-[#E7E4DC] hover:border-[#D0CBC0]'
+                  }`}
+                >
+                  <div className="flex items-center gap-2.5 mb-1">
+                    <span className={`w-4 h-4 rounded-full border flex items-center justify-center shrink-0 ${
+                      agendaResposta === opt.id ? 'border-[#C84B1F] bg-[#C84B1F]' : 'border-[#D0CBC0]'
+                    }`}>
+                      {agendaResposta === opt.id && <span className="w-1.5 h-1.5 rounded-full bg-white" />}
+                    </span>
+                    <h4 className="text-xs font-bold text-[#1A1816]">{opt.title}</h4>
+                  </div>
+                  <p className="text-xs text-[#736F69] pl-6.5 leading-relaxed">{opt.desc}</p>
+                </div>
+              ))}
+            </div>
+
+            {/* Box: Horário de funcionamento da empresa */}
+            <div className="p-4 rounded-2xl border border-[#E7E4DC] bg-[#FAF9F5] space-y-2">
+              <div className="flex items-center justify-between">
+                <div>
+                  <h5 className="text-xs font-bold text-[#1A1816]">Horário de funcionamento da empresa</h5>
+                  <span className="text-[10px] text-[#736F69]">Fuso horário: America/Sao_Paulo</span>
+                </div>
+                <button 
+                  onClick={() => {
+                    setAgendaModalOpen(false);
+                    setHorarioModalOpen(true);
+                  }}
+                  className="px-3 py-1 rounded-xl bg-white border border-[#D0CBC0] text-xs font-semibold text-[#1A1816] flex items-center gap-1 hover:bg-[#FAF9F5] cursor-pointer"
+                >
+                  <Calendar className="w-3.5 h-3.5" />
+                  <span>Editar horário</span>
+                </button>
+              </div>
+              <p className="text-[11px] text-[#8C8881] leading-relaxed">
+                Nenhum horário configurado: "Durante o horário" nunca responde e "Fora do horário" responde sempre.
+              </p>
+            </div>
+
+            <div className="flex items-center justify-end gap-2.5 pt-2">
+              <button 
+                onClick={() => setAgendaModalOpen(false)}
+                className="px-5 py-2 rounded-xl bg-[#F5F4F0] text-xs font-semibold text-[#1A1816] cursor-pointer"
+              >
+                Cancelar
+              </button>
+              <button 
+                onClick={() => setAgendaModalOpen(false)}
+                className="px-6 py-2 rounded-xl bg-[#1A1816] text-xs font-bold text-white hover:bg-black cursor-pointer shadow-sm"
+              >
+                Salvar
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* ========================================================
+          MODAL 3: HORÁRIO DE FUNCIONAMENTO (Réplica 1:1 Imagem 6)
+         ======================================================== */}
+      {horarioModalOpen && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm animate-fadeIn">
+          <div 
+            className="bg-white rounded-3xl max-w-sm w-full p-6 border border-[#E7E4DC] shadow-2xl relative space-y-5"
+            onClick={(e) => e.stopPropagation()}
+          >
+            <div className="flex items-center justify-between">
+              <h3 className="text-lg font-bold text-[#1A1816]">Horário de funcionamento</h3>
+              <button onClick={() => setHorarioModalOpen(false)} className="text-[#736F69] hover:text-[#1A1816] cursor-pointer">
+                <X className="w-4 h-4" />
+              </button>
+            </div>
+
+            {/* Pílulas dos Dias da Semana */}
+            <div className="flex items-center justify-between gap-1">
+              {['Seg', 'Ter', 'Qua', 'Qui', 'Sex', 'Sáb', 'Dom'].map(dia => (
+                <button
+                  key={dia}
+                  onClick={() => toggleDiaSemana(dia)}
+                  className={`w-9 h-9 rounded-full text-xs font-semibold transition-all cursor-pointer ${
+                    diasSemana.includes(dia)
+                      ? 'bg-[#1A1816] text-white'
+                      : 'border border-[#E7E4DC] text-[#736F69] hover:border-[#D0CBC0]'
+                  }`}
+                >
+                  {dia}
+                </button>
+              ))}
+            </div>
+
+            {/* Inputs de Horário */}
+            <div className="flex items-center justify-center gap-3 py-2">
+              <input 
+                type="text" 
+                value={horarioInicio} 
+                onChange={(e) => setHorarioInicio(e.target.value)}
+                className="w-20 px-3 py-2 rounded-xl border border-[#D0CBC0] text-center text-xs font-bold text-[#1A1816] focus:outline-none"
+              />
+              <span className="text-[#736F69]">—</span>
+              <input 
+                type="text" 
+                value={horarioFim} 
+                onChange={(e) => setHorarioFim(e.target.value)}
+                className="w-20 px-3 py-2 rounded-xl border border-[#D0CBC0] text-center text-xs font-bold text-[#1A1816] focus:outline-none"
+              />
+              <button className="text-[#8C8881] hover:text-red-500 cursor-pointer">
+                <Trash2 className="w-4 h-4" />
+              </button>
+            </div>
+
+            <div className="text-center">
+              <button className="text-xs font-bold text-[#1A1816] hover:underline cursor-pointer">
+                Adicionar intervalo de horário +
+              </button>
+            </div>
+
+            <div className="border-t border-[#F0EDE8] pt-4 flex items-center justify-between">
+              <button 
+                onClick={() => setHorarioModalOpen(false)}
+                className="px-5 py-2 rounded-xl bg-[#F5F4F0] text-xs font-semibold text-[#1A1816] cursor-pointer"
+              >
+                Cancelar
+              </button>
+              <button 
+                onClick={() => setHorarioModalOpen(false)}
+                className="w-10 h-10 rounded-xl bg-[#1A1816] text-white flex items-center justify-center hover:bg-black cursor-pointer shadow-sm"
+              >
+                <Check className="w-4 h-4" />
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* ========================================================
+          MODAL 4: ENTRADA DA CONVERSA (Réplica 1:1 Imagem 7)
+         ======================================================== */}
+      {entradaModalOpen && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm animate-fadeIn">
+          <div 
+            className="bg-white rounded-3xl max-w-md w-full p-6 border border-[#E7E4DC] shadow-2xl relative space-y-4"
+            onClick={(e) => e.stopPropagation()}
+          >
+            <div className="flex items-start justify-between">
+              <div>
+                <h3 className="text-lg font-bold text-[#1A1816]">Entrada da conversa</h3>
+                <p className="text-xs text-[#736F69] mt-1">Decida se uma nova conversa começa com a IA ou com a sua equipe.</p>
+              </div>
+              <button onClick={() => setEntradaModalOpen(false)} className="text-[#736F69] hover:text-[#1A1816] cursor-pointer">
+                <X className="w-4 h-4" />
+              </button>
+            </div>
+
+            <div className="space-y-3 pt-2">
+              {[
+                { id: 'A IA atende todas as conversas', title: 'A IA atende todas as conversas', desc: 'Toda nova conversa começa com a IA.' },
+                { id: 'A equipe atende todas as conversas', title: 'A equipe atende todas as conversas', desc: 'Toda nova conversa começa sem atribuição para a sua equipe. A IA fica em silêncio.' },
+                { id: 'Decidir usando uma condição', title: 'Decidir usando uma condição', desc: 'A IA começa, a menos que a sua condição corresponda. Conversas que correspondem vão para a equipe.' }
+              ].map((opt) => (
+                <div 
+                  key={opt.id}
+                  onClick={() => setEntradaConversa(opt.id)}
+                  className={`p-4 rounded-2xl border cursor-pointer transition-all ${
+                    entradaConversa === opt.id 
+                      ? 'border-[#C84B1F] bg-[#FAF5EE]' 
+                      : 'border-[#E7E4DC] hover:border-[#D0CBC0]'
+                  }`}
+                >
+                  <div className="flex items-center gap-2.5 mb-1">
+                    <span className={`w-4 h-4 rounded-full border flex items-center justify-center shrink-0 ${
+                      entradaConversa === opt.id ? 'border-[#C84B1F] bg-[#C84B1F]' : 'border-[#D0CBC0]'
+                    }`}>
+                      {entradaConversa === opt.id && <span className="w-1.5 h-1.5 rounded-full bg-white" />}
+                    </span>
+                    <h4 className="text-xs font-bold text-[#1A1816]">{opt.title}</h4>
+                  </div>
+                  <p className="text-xs text-[#736F69] pl-6.5 leading-relaxed">{opt.desc}</p>
+                </div>
+              ))}
+            </div>
+
+            <div className="flex items-center justify-end gap-2.5 pt-2">
+              <button 
+                onClick={() => setEntradaModalOpen(false)}
+                className="px-5 py-2 rounded-xl bg-[#F5F4F0] text-xs font-semibold text-[#1A1816] cursor-pointer"
+              >
+                Cancelar
+              </button>
+              <button 
+                onClick={() => setEntradaModalOpen(false)}
+                className="px-6 py-2 rounded-xl bg-[#1A1816] text-xs font-bold text-white hover:bg-black cursor-pointer shadow-sm"
+              >
+                Salvar
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* ========================================================
+          MODAL 5: TRANSFERÊNCIA DE CONVERSA ATIVA (Réplica 1:1 Imagem 8)
+         ======================================================== */}
+      {transferenciaModalOpen && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm animate-fadeIn">
+          <div 
+            className="bg-white rounded-3xl max-w-md w-full p-6 border border-[#E7E4DC] shadow-2xl relative space-y-4 max-h-[90vh] overflow-y-auto"
+            onClick={(e) => e.stopPropagation()}
+          >
+            <div className="flex items-start justify-between">
+              <div>
+                <h3 className="text-lg font-bold text-[#1A1816]">Transferência de conversa ativa</h3>
+                <p className="text-xs text-[#736F69] mt-1">Estas configurações valem depois que a IA começou a atender uma conversa.</p>
+              </div>
+              <button onClick={() => setTransferenciaModalOpen(false)} className="text-[#736F69] hover:text-[#1A1816] cursor-pointer">
+                <X className="w-4 h-4" />
+              </button>
+            </div>
+
+            <div className="p-4 rounded-2xl border border-[#E7E4DC] flex items-center justify-between">
+              <div>
+                <h4 className="text-xs font-bold text-[#1A1816]">Habilitar transferência para a equipe</h4>
+                <p className="text-xs text-[#736F69] mt-0.5">A IA pode passar uma conversa ativa para uma pessoa quando uma condição é atendida.</p>
+              </div>
+              <button
+                type="button"
+                onClick={() => setTransferenciaHabilitada(!transferenciaHabilitada)}
+                className={`w-11 h-6 rounded-full transition-colors relative cursor-pointer shrink-0 ml-3 ${
+                  transferenciaHabilitada ? 'bg-[#D97757]' : 'bg-[#E7E4DC]'
+                }`}
+              >
+                <span className={`w-5 h-5 rounded-full bg-white shadow-sm absolute top-0.5 transition-transform ${
+                  transferenciaHabilitada ? 'left-5.5' : 'left-0.5'
+                }`} />
+              </button>
+            </div>
+
+            <div className="space-y-3">
+              {[
+                { id: 'Condições padrão', title: 'Condições padrão', desc: 'Use as condições integradas para situações comuns de transferência.' },
+                { id: 'Condições padrão e personalizadas', title: 'Condições padrão e personalizadas', desc: 'Mantenha as condições padrão e adicione as suas próprias regras.' },
+                { id: 'Apenas condições personalizadas', title: 'Apenas condições personalizadas', desc: 'Ignore as condições padrão e use somente as suas próprias regras.' }
+              ].map((opt) => (
+                <div 
+                  key={opt.id}
+                  onClick={() => setTransferenciaModo(opt.id)}
+                  className={`p-4 rounded-2xl border cursor-pointer transition-all ${
+                    transferenciaModo === opt.id 
+                      ? 'border-[#C84B1F] bg-[#FAF5EE]' 
+                      : 'border-[#E7E4DC] hover:border-[#D0CBC0]'
+                  }`}
+                >
+                  <div className="flex items-center gap-2.5 mb-1">
+                    <span className={`w-4 h-4 rounded-full border flex items-center justify-center shrink-0 ${
+                      transferenciaModo === opt.id ? 'border-[#C84B1F] bg-[#C84B1F]' : 'border-[#D0CBC0]'
+                    }`}>
+                      {transferenciaModo === opt.id && <span className="w-1.5 h-1.5 rounded-full bg-white" />}
+                    </span>
+                    <h4 className="text-xs font-bold text-[#1A1816]">{opt.title}</h4>
+                  </div>
+                  <p className="text-xs text-[#736F69] pl-6.5 leading-relaxed">{opt.desc}</p>
+                </div>
+              ))}
+            </div>
+
+            <div className="p-4 rounded-2xl border border-[#E7E4DC] bg-[#FAF9F5] space-y-1">
+              <h5 className="text-xs font-bold text-[#1A1816]">Condições padrão</h5>
+              <p className="text-[11px] text-[#736F69] leading-relaxed">
+                O assistente transfere quando o cliente pede uma pessoa ou o suporte da equipe, fica irritado ou escala o problema, tem uma solicitação urgente ou sensível, ou quando o assistente não consegue resolver a solicitação.
+              </p>
+            </div>
+
+            <div className="flex items-center justify-end gap-2.5 pt-2">
+              <button 
+                onClick={() => setTransferenciaModalOpen(false)}
+                className="px-5 py-2 rounded-xl bg-[#F5F4F0] text-xs font-semibold text-[#1A1816] cursor-pointer"
+              >
+                Cancelar
+              </button>
+              <button 
+                onClick={() => setTransferenciaModalOpen(false)}
+                className="px-6 py-2 rounded-xl bg-[#1A1816] text-xs font-bold text-white hover:bg-black cursor-pointer shadow-sm"
+              >
+                Salvar
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* ========================================================
+          MODAL 6: NOTIFICAÇÕES DA EQUIPE (Réplica 1:1 Imagem 9)
+         ======================================================== */}
+      {notificacoesModalOpen && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm animate-fadeIn">
+          <div 
+            className="bg-white rounded-3xl max-w-md w-full p-6 border border-[#E7E4DC] shadow-2xl relative space-y-5"
+            onClick={(e) => e.stopPropagation()}
+          >
+            <div className="flex items-start justify-between">
+              <div>
+                <h3 className="text-lg font-bold text-[#1A1816]">Notificações da equipe</h3>
+                <p className="text-xs text-[#736F69] mt-1">Avise a sua equipe quando uma conversa precisar de uma pessoa.</p>
+              </div>
+              <button onClick={() => setNotificacoesModalOpen(false)} className="text-[#736F69] hover:text-[#1A1816] cursor-pointer">
+                <X className="w-4 h-4" />
+              </button>
+            </div>
+
+            <div className="p-4 rounded-2xl border border-[#E7E4DC] flex items-center justify-between">
+              <div>
+                <h4 className="text-xs font-bold text-[#1A1816]">Notificar a equipe</h4>
+                <p className="text-xs text-[#736F69] mt-0.5">Envia um e-mail às pessoas escolhidas.</p>
+              </div>
+              <button
+                type="button"
+                onClick={() => setNotificarEquipe(!notificarEquipe)}
+                className={`w-11 h-6 rounded-full transition-colors relative cursor-pointer shrink-0 ml-3 ${
+                  notificarEquipe ? 'bg-[#D97757]' : 'bg-[#E7E4DC]'
+                }`}
+              >
+                <span className={`w-5 h-5 rounded-full bg-white shadow-sm absolute top-0.5 transition-transform ${
+                  notificarEquipe ? 'left-5.5' : 'left-0.5'
+                }`} />
+              </button>
+            </div>
+
+            <div className="space-y-3">
+              <span className="text-[11px] font-bold text-[#8C8881] uppercase tracking-wider block">Avisar quando</span>
+              <div className="space-y-2">
+                <label className="flex items-center gap-2.5 text-xs text-[#1A1816] font-medium cursor-pointer">
+                  <input type="checkbox" defaultChecked className="w-4 h-4 rounded text-[#C84B1F]" />
+                  <span>Uma nova conversa começar com a equipe</span>
+                </label>
+                <label className="flex items-center gap-2.5 text-xs text-[#1A1816] font-medium cursor-pointer">
+                  <input type="checkbox" defaultChecked className="w-4 h-4 rounded text-[#C84B1F]" />
+                  <span>A IA transferir uma conversa ativa</span>
+                </label>
+              </div>
+            </div>
+
+            <div className="space-y-3">
+              <span className="text-[11px] font-bold text-[#8C8881] uppercase tracking-wider block">Quem recebe</span>
+              <label className="flex items-center gap-2.5 text-xs text-[#1A1816] font-medium cursor-pointer">
+                <input 
+                  type="checkbox" 
+                  checked={notificarEmail} 
+                  onChange={(e) => setNotificarEmail(e.target.checked)} 
+                  className="w-4 h-4 rounded text-[#C84B1F]" 
+                />
+                <span>fc_go@hotmail.com</span>
+              </label>
+            </div>
+
+            <div className="flex items-center justify-end gap-2.5 pt-2">
+              <button 
+                onClick={() => setNotificacoesModalOpen(false)}
+                className="px-5 py-2 rounded-xl bg-[#F5F4F0] text-xs font-semibold text-[#1A1816] cursor-pointer"
+              >
+                Cancelar
+              </button>
+              <button 
+                onClick={() => setNotificacoesModalOpen(false)}
+                className="px-6 py-2 rounded-xl bg-[#1A1816] text-xs font-bold text-white hover:bg-black cursor-pointer shadow-sm"
+              >
+                Salvar
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* ========================================================
+          SIMULADOR INTERATIVO: TESTAR CHAT / LIGAÇÃO
          ======================================================== */}
       {testChatOpen && (
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm animate-fadeIn">
@@ -745,7 +1511,7 @@ export default function AssistantDetailView({
                   <h4 className="text-xs font-bold text-[#1A1816]">{name}</h4>
                   <span className="text-[10px] text-emerald-600 flex items-center gap-1">
                     <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse"></span>
-                    Online • WhatsApp / Chatbot IA
+                    Online • Chat + Ligação ({selectedVoice.name})
                   </span>
                 </div>
               </div>
