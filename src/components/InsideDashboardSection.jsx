@@ -11,6 +11,7 @@ import {
 import { BRAND } from '../data/content';
 import { getLeads, getAssistants, saveAssistant } from '../utils/supabaseClient';
 import DashboardPricingModal from './DashboardPricingModal';
+import KnowledgeBaseTab from './KnowledgeBaseTab';
 
 export default function InsideDashboardSection({ onOpenDemo, onOpenLegal, onOpenAuth, onOpenDocs, isStandalone = false, onLogout, currentUser, onNavigateHome }) {
   const [activeTab, setActiveTab] = useState('inicio');
@@ -89,6 +90,47 @@ export default function InsideDashboardSection({ onOpenDemo, onOpenLegal, onOpen
       calls: 38
     }
   ]);
+
+  // Knowledge Base State (Base de Conhecimento RAG - PDFs, FAQs, URLs)
+  const [knowledgeList, setKnowledgeList] = useState([
+    {
+      id: 1,
+      name: 'Tabela_de_Precos_e_Servicos_2026.pdf',
+      type: 'documento',
+      fileType: 'PDF',
+      size: '2.4 MB',
+      updatedAt: 'Hoje às 10:15',
+      status: 'Indexado',
+      target: 'Todas as assistentes',
+      tokens: 4200,
+      description: 'Preços oficiais de consultas, procedimentos, formas de pagamento via Pix/Cartão e políticas de agendamento.'
+    },
+    {
+      id: 2,
+      name: 'FAQ_Atendimento_e_Convenios.txt',
+      type: 'faq',
+      fileType: 'FAQ',
+      size: '34 KB',
+      updatedAt: 'Ontem',
+      status: 'Indexado',
+      target: 'Roberta (Voz Neural)',
+      tokens: 1850,
+      description: '18 respostas calibradas para dúvidas recorrentes sobre convênios aceitos, estacionamento gratuito e preparo de exames.'
+    },
+    {
+      id: 3,
+      name: 'https://suaempresa.com.br/sobre',
+      type: 'url',
+      fileType: 'URL',
+      size: '12 páginas',
+      updatedAt: '11/11/2026',
+      status: 'Indexado',
+      target: 'Todas as assistentes',
+      tokens: 8600,
+      description: 'Sincronização automática contínua do site institucional com especialidades, corpo clínico e horário de atendimento.'
+    }
+  ]);
+  const [moreMenuOpen, setMoreMenuOpen] = useState(false);
 
   // Telephony State
   const [phoneFilter, setPhoneFilter] = useState('Tudo');
@@ -416,19 +458,52 @@ export default function InsideDashboardSection({ onOpenDemo, onOpenLegal, onOpen
                   <MessageSquare className="w-4 h-4 text-[#C84B1F]" />
                   <span>Conversas</span>
                 </button>
+
+                {/* Nova Aba: Conhecimento (Kloel 1:1) */}
+                <button
+                  onClick={() => setActiveTab('conhecimento')}
+                  className={`w-full flex items-center justify-between px-3 py-2 rounded-xl text-xs font-semibold transition-colors cursor-pointer ${
+                    activeTab === 'conhecimento' ? 'bg-[#EFECE6] text-[#1A1816]' : 'text-[#5C5955] hover:text-[#1A1816] hover:bg-[#F3EFE8]'
+                  }`}
+                >
+                  <span className="flex items-center gap-2.5">
+                    <BookOpen className="w-4 h-4 text-[#C84B1F]" />
+                    <span>Conhecimento</span>
+                  </span>
+                  <span className="w-5 h-5 rounded-full bg-[#E0DCD4] text-[10px] font-bold flex items-center justify-center text-[#1A1816]">
+                    {knowledgeList.length}
+                  </span>
+                </button>
+
+                {/* Botão Mais (Dropdown igual ao screenshot do Kloel) */}
+                <button
+                  onClick={() => setMoreMenuOpen(!moreMenuOpen)}
+                  className={`w-full flex items-center justify-between px-3 py-2 rounded-xl text-xs font-semibold transition-colors cursor-pointer ${
+                    moreMenuOpen || ['templates', 'auditoria', 'telefonia', 'usuarios', 'api'].includes(activeTab)
+                      ? 'bg-[#EFECE6] text-[#1A1816]'
+                      : 'text-[#5C5955] hover:text-[#1A1816] hover:bg-[#F3EFE8]'
+                  }`}
+                >
+                  <span className="flex items-center gap-2.5">
+                    <Sliders className="w-4 h-4 text-[#736F69]" />
+                    <span>Mais</span>
+                  </span>
+                  {moreMenuOpen ? <ChevronUp className="w-3.5 h-3.5" /> : <ChevronDown className="w-3.5 h-3.5" />}
+                </button>
               </div>
 
-              {/* Diferenciais AI Agency OS Submenu */}
-              <div className="mt-5 pt-3 border-t border-[#EBE8E2]">
-                <div className="px-3 flex items-center justify-between mb-2">
-                  <span className="text-[10px] font-bold uppercase tracking-wider text-[#C84B1F]">
-                    AI Agency OS Pro
-                  </span>
-                  <span className="px-1.5 py-0.2 rounded text-[8px] font-bold bg-[#C84B1F]/10 text-[#C84B1F]">
-                    EXCLUSIVO
-                  </span>
-                </div>
-                <div className="space-y-0.5 text-xs">
+              {/* Submenu Expandido de 'Mais' (ou AI Agency OS) */}
+              {moreMenuOpen && (
+                <div className="mt-3 pt-3 border-t border-[#EBE8E2] space-y-1 animate-fadeIn">
+                  <div className="px-3 flex items-center justify-between mb-2">
+                    <span className="text-[10px] font-bold uppercase tracking-wider text-[#C84B1F]">
+                      Recursos Avançados
+                    </span>
+                    <span className="px-1.5 py-0.2 rounded text-[8px] font-bold bg-[#C84B1F]/10 text-[#C84B1F]">
+                      PRO
+                    </span>
+                  </div>
+                  <div className="space-y-0.5 text-xs">
                   <button 
                     onClick={() => setActiveTab('templates')}
                     className={`w-full flex items-center justify-between px-3 py-1.5 rounded-lg transition-colors cursor-pointer ${
@@ -477,15 +552,13 @@ export default function InsideDashboardSection({ onOpenDemo, onOpenLegal, onOpen
                       <span>White-Label & OpenBot</span>
                     </span>
                   </button>
-                </div>
-              </div>
 
-              {/* Mais Submenu */}
-              <div className="mt-5 pt-3 border-t border-[#EBE8E2]">
-                <div className="px-3 text-[10px] font-bold uppercase tracking-wider text-[#8C8881] mb-2">
-                  Mais
-                </div>
-                <div className="space-y-0.5 text-xs">
+                  <div className="pt-2 mt-2 border-t border-[#EBE8E2]">
+                    <div className="px-3 text-[10px] font-bold uppercase tracking-wider text-[#8C8881] mb-2">
+                      Configurações & Canais
+                    </div>
+                  </div>
+
                   <button 
                     onClick={() => setActiveTab('telefonia')}
                     className={`w-full flex items-center justify-between px-3 py-1.5 rounded-lg transition-colors ${
@@ -583,6 +656,7 @@ export default function InsideDashboardSection({ onOpenDemo, onOpenLegal, onOpen
                   </button>
                 </div>
               </div>
+            )}
             </div>
 
             {/* Bottom section with Referral Banner & Profile Dropdown */}
@@ -983,6 +1057,18 @@ export default function InsideDashboardSection({ onOpenDemo, onOpenLegal, onOpen
                   </p>
                 </div>
               </div>
+            )}
+
+            {/* ========================================================
+                3. TAB: CONHECIMENTO (BASE DE CONHECIMENTO RAG - KLOEL 1:1)
+               ======================================================== */}
+            {activeTab === 'conhecimento' && (
+              <KnowledgeBaseTab 
+                knowledgeList={knowledgeList}
+                setKnowledgeList={setKnowledgeList}
+                createdAssistants={createdAssistants}
+                onOpenDemo={onOpenDemo}
+              />
             )}
 
             {/* ========================================================
@@ -1734,15 +1820,30 @@ export default function InsideDashboardSection({ onOpenDemo, onOpenLegal, onOpen
                   </div>
                   <button 
                     onClick={() => setCreateModalOpen(true)}
-                    className="px-4 py-2 rounded-xl bg-[#1A1816] text-white text-xs font-bold hover:bg-black transition-colors flex items-center gap-1.5"
+                    className="px-4 py-2 rounded-xl bg-[#1A1816] text-white text-xs font-bold hover:bg-black transition-colors flex items-center gap-1.5 cursor-pointer"
                   >
                     <Plus className="w-3.5 h-3.5" />
                     <span>Criar assistente</span>
                   </button>
                 </div>
 
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                  {createdAssistants.map((ass) => (
+                {createdAssistants.length === 0 ? (
+                  <div className="py-20 flex flex-col items-center justify-center text-center max-w-xl mx-auto bg-white rounded-3xl border border-[#E7E4DC] p-12 shadow-sm animate-fadeIn">
+                    <div className="w-14 h-14 rounded-full bg-[#FAF5EE] border border-[#EDE5D8] flex items-center justify-center text-[#8C8881] mb-4">
+                      <Bot className="w-7 h-7 text-[#736F69]" />
+                    </div>
+                    <h4 className="text-lg font-bold text-[#1A1816] mb-5">Nenhum assistente ainda</h4>
+                    <button
+                      onClick={() => setCreateModalOpen(true)}
+                      className="px-6 py-2.5 rounded-xl bg-[#1A1816] hover:bg-black text-white text-xs font-bold transition-colors flex items-center gap-2 cursor-pointer shadow-sm hover:shadow"
+                    >
+                      <Plus className="w-3.5 h-3.5" />
+                      <span>Criar assistente</span>
+                    </button>
+                  </div>
+                ) : (
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    {createdAssistants.map((ass) => (
                     <div key={ass.id} className="p-5 rounded-2xl border border-[#E7E4DC] bg-white space-y-4 hover:border-[#D0CBC0] transition-colors">
                       <div className="flex items-start justify-between">
                         <div className="flex items-center gap-3">
@@ -1781,6 +1882,7 @@ export default function InsideDashboardSection({ onOpenDemo, onOpenLegal, onOpen
                     </div>
                   ))}
                 </div>
+                )}
               </div>
             )}
 
