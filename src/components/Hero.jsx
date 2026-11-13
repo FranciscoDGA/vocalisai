@@ -7,13 +7,58 @@ import TestCallModal from './TestCallModal';
 import VoiceWaveformHeroCard from './VoiceWaveformHeroCard';
 import { formatPhoneMask, cleanRawPhone } from '../utils/phoneUtils';
 
+const ROTATING_PHRASES = [
+  'a qualquer hora.',
+  'na sua imobiliária.',
+  'na sua clínica.',
+  'na sua advocacia.',
+  'no seu consultório.',
+  '24 horas por dia.'
+];
+
 export default function Hero({ onOpenDemo, onOpenAuth }) {
   const [phoneInput, setPhoneInput] = useState('');
   const [selectedCountry, setSelectedCountry] = useState({ name: 'Brasil', code: '+55', flag: '🇧🇷' });
   const [countryPickerOpen, setCountryPickerOpen] = useState(false);
   const [testCallModalOpen, setTestCallModalOpen] = useState(false);
 
+  // Typewriter effect state for dynamic niche rotation
+  const [phraseIndex, setPhraseIndex] = useState(0);
+  const [displayedPhrase, setDisplayedPhrase] = useState(ROTATING_PHRASES[0]);
+  const [isDeleting, setIsDeleting] = useState(false);
+  const [typingSpeed, setTypingSpeed] = useState(75);
+
   const countryPickerRef = useRef(null);
+
+  // Typewriter effect controller
+  useEffect(() => {
+    const currentFullPhrase = ROTATING_PHRASES[phraseIndex];
+
+    const timer = setTimeout(() => {
+      if (!isDeleting) {
+        if (displayedPhrase.length < currentFullPhrase.length) {
+          setDisplayedPhrase(currentFullPhrase.slice(0, displayedPhrase.length + 1));
+          setTypingSpeed(60 + Math.random() * 25);
+        } else {
+          // Pause when word is completely typed
+          setTypingSpeed(2200);
+          setIsDeleting(true);
+        }
+      } else {
+        if (displayedPhrase.length > 0) {
+          setDisplayedPhrase(currentFullPhrase.slice(0, displayedPhrase.length - 1));
+          setTypingSpeed(30);
+        } else {
+          // Finished deleting, proceed to next niche phrase
+          setIsDeleting(false);
+          setPhraseIndex((prev) => (prev + 1) % ROTATING_PHRASES.length);
+          setTypingSpeed(300);
+        }
+      }
+    }, typingSpeed);
+
+    return () => clearTimeout(timer);
+  }, [displayedPhrase, isDeleting, phraseIndex, typingSpeed]);
 
   const countries = [
     { name: 'Brasil', code: '+55', flag: '🇧🇷' },
@@ -70,10 +115,13 @@ export default function Hero({ onOpenDemo, onOpenAuth }) {
           <span>IA DE VOZ FEITA NO BRASIL</span>
         </div>
 
-        {/* Headline (Exact replica of user's uploaded print) */}
+        {/* Headline with dynamic typewriter niche rotation */}
         <h1 className="text-5xl sm:text-6xl md:text-7xl font-normal tracking-tight text-[#1A1816] max-w-4xl mx-auto leading-[1.08] mb-6">
           A voz da sua empresa,<br />
-          <span className="font-serif-title italic font-normal text-[#1A1816]">a qualquer hora.</span>
+          <span className="font-serif-title italic font-normal text-[#1A1816] inline-block min-h-[1.12em]">
+            {displayedPhrase}
+            <span className="inline-block w-[3px] h-[0.78em] bg-[#C84B1F] ml-1.5 align-baseline animate-pulse rounded-full" />
+          </span>
         </h1>
 
         {/* Subtitle (Exact replica of user's uploaded print) */}
