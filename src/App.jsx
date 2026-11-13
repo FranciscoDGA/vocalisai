@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import Navbar from './components/Navbar';
 import Hero from './components/Hero';
 import ChannelsSection from './components/ChannelsSection';
@@ -30,15 +30,47 @@ import CentralAjudaPage from './components/CentralAjudaPage';
 import CarreirasPage from './components/CarreirasPage';
 import ImprensaPage from './components/ImprensaPage';
 import ContatoPage from './components/ContatoPage';
+import { supabase, getCurrentUser, signOutUser } from './utils/supabaseClient';
 
 export default function App() {
-  const [currentPage, setCurrentPage] = useState('home'); // 'home' | 'parceiros' | 'whatsapp' | 'webchat' | 'agente-suporte' | 'agendamentos' | 'recepcionista-virtual' | 'atendedor-automatico' | 'equipe-externa' | 'webinars' | 'integracoes'
+  const [currentPage, setCurrentPage] = useState('home'); // 'home' | 'dashboard' | 'parceiros' | 'whatsapp' | ...
+  const [currentUser, setCurrentUser] = useState(null);
   const [demoModalOpen, setDemoModalOpen] = useState(false);
   const [authModalOpen, setAuthModalOpen] = useState(false);
   const [legalModalOpen, setLegalModalOpen] = useState(false);
   const [legalInitialTab, setLegalInitialTab] = useState('privacidade');
   const [docsPortalOpen, setDocsPortalOpen] = useState(false);
   const [docsInitialDoc, setDocsInitialDoc] = useState('privacidade');
+
+  useEffect(() => {
+    // Carrega usuário da sessão atual ao iniciar
+    getCurrentUser().then(user => {
+      if (user) {
+        setCurrentUser(user);
+      }
+    });
+
+    // Escuta mudanças de autenticação (login, logout, refresh token)
+    const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, session) => {
+      setCurrentUser(session?.user || null);
+    });
+
+    return () => {
+      subscription?.unsubscribe();
+    };
+  }, []);
+
+  const handleLogout = async () => {
+    await signOutUser();
+    setCurrentUser(null);
+    setCurrentPage('home');
+  };
+
+  const handleLoginSuccess = (user) => {
+    setCurrentUser(user);
+    setCurrentPage('dashboard');
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  };
 
   const handleOpenLegal = (tab = 'privacidade') => {
     setDocsInitialDoc(tab);
@@ -61,6 +93,8 @@ export default function App() {
       {currentPage !== 'central-ajuda' && (
         <Navbar 
           currentPage={currentPage}
+          currentUser={currentUser}
+          onLogout={handleLogout}
           onNavigate={handleNavigate}
           onOpenDemo={() => setDemoModalOpen(true)} 
           onOpenAuth={() => setAuthModalOpen(true)}
@@ -70,7 +104,20 @@ export default function App() {
       )}
 
       {/* Main Page Stream */}
-      {currentPage === 'parceiros' ? (
+      {currentPage === 'dashboard' ? (
+        <main className="flex-1 animate-fadeIn">
+          <InsideDashboardSection 
+            isStandalone={true}
+            currentUser={currentUser}
+            onLogout={handleLogout}
+            onNavigateHome={() => handleNavigate('home')}
+            onOpenDemo={() => setDemoModalOpen(true)}
+            onOpenLegal={handleOpenLegal}
+            onOpenAuth={() => setAuthModalOpen(true)}
+            onOpenDocs={handleOpenDocs}
+          />
+        </main>
+      ) : currentPage === 'parceiros' ? (
         <main className="flex-1">
           <ParceirosPage 
             onOpenDemo={() => setDemoModalOpen(true)}
@@ -277,6 +324,8 @@ export default function App() {
       <AuthModal 
         isOpen={authModalOpen} 
         onClose={() => setAuthModalOpen(false)} 
+        onOpenLegal={handleOpenLegal}
+        onSuccessLogin={handleLoginSuccess}
       />
 
       {/* Demo Modal */}

@@ -11,11 +11,15 @@ import {
 import { BRAND } from '../data/content';
 import { getLeads, getAssistants, saveAssistant } from '../utils/supabaseClient';
 
-export default function InsideDashboardSection({ onOpenDemo, onOpenLegal, onOpenAuth, onOpenDocs }) {
+export default function InsideDashboardSection({ onOpenDemo, onOpenLegal, onOpenAuth, onOpenDocs, isStandalone = false, onLogout, currentUser, onNavigateHome }) {
   const [activeTab, setActiveTab] = useState('inicio');
   const [profileMenuOpen, setProfileMenuOpen] = useState(false);
   const [copiedLink, setCopiedLink] = useState(false);
   const [realLeads, setRealLeads] = useState([]);
+
+  const userEmail = currentUser?.email || 'afiliadopebas@gmail.com';
+  const userName = currentUser?.user_metadata?.company_name || userEmail.split('@')[0] || 'Francisco';
+  const userInitial = (userName[0] || 'F').toUpperCase();
   
   // Efeito para carregar leads e assistentes reais do Supabase
   React.useEffect(() => {
@@ -300,22 +304,54 @@ export default function InsideDashboardSection({ onOpenDemo, onOpenLegal, onOpen
   };
 
   return (
-    <section id="dashboard" className="py-24 bg-[#FAF9F5] border-t border-[#EBE8E2]">
-      <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+    <section id="dashboard" className={isStandalone ? "py-6 bg-[#FAF9F5] min-h-screen" : "py-24 bg-[#FAF9F5] border-t border-[#EBE8E2]"}>
+      <div className={isStandalone ? "max-w-7xl mx-auto px-4 sm:px-6 lg:px-8" : "max-w-6xl mx-auto px-4 sm:px-6 lg:px-8"}>
         
-        {/* Section Header */}
-        <div className="text-center max-w-2xl mx-auto mb-14">
-          <span className="inline-block text-xs font-semibold text-[#C84B1F] uppercase tracking-wider mb-3">
-            SISTEMA OPERACIONAL VOCALIS
-          </span>
-          <h2 className="text-4xl sm:text-5xl font-normal text-[#1A1816] tracking-tight leading-[1.12]">
-            Tudo o que sua empresa precisa<br />
-            <span className="font-serif-title italic text-[#C84B1F]">em um só lugar.</span>
-          </h2>
-          <p className="mt-4 text-base sm:text-lg text-[#5C5955] leading-relaxed">
-            Navegue pelo painel completo da Vocalis: crie assistentes, conecte números, configure o WhatsApp Business, gerencie membros e faturamento.
-          </p>
-        </div>
+        {/* Section Header (Apenas na Landing Page) */}
+        {!isStandalone ? (
+          <div className="text-center max-w-2xl mx-auto mb-14">
+            <span className="inline-block text-xs font-semibold text-[#C84B1F] uppercase tracking-wider mb-3">
+              SISTEMA OPERACIONAL VOCALIS
+            </span>
+            <h2 className="text-4xl sm:text-5xl font-normal text-[#1A1816] tracking-tight leading-[1.12]">
+              Tudo o que sua empresa precisa<br />
+              <span className="font-serif-title italic text-[#C84B1F]">em um só lugar.</span>
+            </h2>
+            <p className="mt-4 text-base sm:text-lg text-[#5C5955] leading-relaxed">
+              Navegue pelo painel completo da Vocalis: crie assistentes, conecte números, configure o WhatsApp Business, gerencie membros e faturamento.
+            </p>
+          </div>
+        ) : (
+          <div className="mb-4 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 bg-white p-4 rounded-2xl border border-[#E7E4DC] shadow-sm">
+            <div className="flex items-center gap-3">
+              <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-emerald-50 text-emerald-700 text-xs font-semibold border border-emerald-200">
+                <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
+                Painel Oficial • Conectado como <strong>{userEmail}</strong>
+              </span>
+              <span className="text-xs text-[#5C5955] hidden md:inline">
+                Supabase & IA Ativos
+              </span>
+            </div>
+            <div className="flex items-center gap-3">
+              {onNavigateHome && (
+                <button
+                  onClick={onNavigateHome}
+                  className="px-3 py-1.5 rounded-xl border border-[#D0CBC0] hover:bg-[#FAF9F5] text-xs font-semibold text-[#1A1816] transition-colors cursor-pointer"
+                >
+                  ← Ver Página Inicial
+                </button>
+              )}
+              {onLogout && (
+                <button
+                  onClick={onLogout}
+                  className="px-3 py-1.5 rounded-xl bg-red-50 hover:bg-red-100 text-xs font-semibold text-red-700 border border-red-200 transition-colors cursor-pointer"
+                >
+                  Sair da Conta
+                </button>
+              )}
+            </div>
+          </div>
+        )}
 
         {/* Dashboard Shell Frame */}
         <div className="bg-white rounded-3xl border border-[#E7E4DC] shadow-2xl overflow-hidden flex flex-col md:flex-row min-h-[750px] relative">
@@ -564,7 +600,7 @@ export default function InsideDashboardSection({ onOpenDemo, onOpenLegal, onOpen
                 )}
               </div>
 
-              {/* Francisco Profile Popover (Exact replica of screenshot 2) */}
+              {/* User Profile Popover */}
               <div className="relative">
                 <button
                   onClick={() => setProfileMenuOpen(!profileMenuOpen)}
@@ -572,10 +608,11 @@ export default function InsideDashboardSection({ onOpenDemo, onOpenLegal, onOpen
                 >
                   <div className="flex items-center gap-2.5">
                     <div className="w-7 h-7 rounded-full bg-[#1A1816] text-white flex items-center justify-center text-xs font-bold">
-                      F
+                      {userInitial}
                     </div>
-                    <div className="text-left">
-                      <div className="text-xs font-bold text-[#1A1816] leading-none">Francisco</div>
+                    <div className="text-left overflow-hidden">
+                      <div className="text-xs font-bold text-[#1A1816] leading-none truncate max-w-[130px]">{userName}</div>
+                      <div className="text-[10px] text-[#8C8881] truncate max-w-[130px]">{userEmail}</div>
                     </div>
                   </div>
                   {profileMenuOpen ? (
@@ -589,7 +626,7 @@ export default function InsideDashboardSection({ onOpenDemo, onOpenLegal, onOpen
                 {profileMenuOpen && (
                   <div className="absolute bottom-14 left-0 w-64 bg-white rounded-2xl border border-[#E7E4DC] shadow-2xl p-2 z-50 animate-fadeIn text-xs space-y-1">
                     <div className="px-3 py-1 text-[10px] font-bold uppercase tracking-wider text-[#8C8881]">
-                      Admin
+                      Admin • {userEmail}
                     </div>
                     <button 
                       onClick={() => { setActiveTab('faturamento'); setProfileMenuOpen(false); }}
@@ -662,11 +699,15 @@ export default function InsideDashboardSection({ onOpenDemo, onOpenLegal, onOpen
                       <span>Política de Privacidade</span>
                     </button>
                     <button 
-                      onClick={() => { setProfileMenuOpen(false); onOpenAuth(); }}
-                      className="w-full flex items-center gap-2.5 px-3 py-2 rounded-lg text-[#C84B1F] hover:bg-[#FAF5EE] text-left font-medium"
+                      onClick={() => { 
+                        setProfileMenuOpen(false); 
+                        if (onLogout) onLogout();
+                        else if (onOpenAuth) onOpenAuth(); 
+                      }}
+                      className="w-full flex items-center gap-2.5 px-3 py-2 rounded-lg text-[#C84B1F] hover:bg-[#FAF5EE] text-left font-medium cursor-pointer"
                     >
                       <LogOut className="w-3.5 h-3.5" />
-                      <span>Sair</span>
+                      <span>Sair da conta</span>
                     </button>
                   </div>
                 )}

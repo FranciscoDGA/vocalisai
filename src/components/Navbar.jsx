@@ -8,7 +8,7 @@ import {
 } from 'lucide-react';
 import { BRAND } from '../data/content';
 
-export default function Navbar({ onOpenDemo, onOpenAuth, onOpenLegal, onOpenDocs, currentPage = 'home', onNavigate }) {
+export default function Navbar({ onOpenDemo, onOpenAuth, onOpenLegal, onOpenDocs, currentPage = 'home', onNavigate, currentUser, onLogout }) {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [activeDropdown, setActiveDropdown] = useState(null); // 'produtos' | 'solucoes' | 'recursos' | null
   const navRef = useRef(null);
@@ -480,33 +480,72 @@ export default function Navbar({ onOpenDemo, onOpenAuth, onOpenLegal, onOpenDocs
             {/* Falar com a gente */}
             <button 
               onClick={onOpenDemo}
-              className="text-[13.5px] font-medium text-[#1A1816] hover:text-[#C84B1F] transition-colors"
+              className="text-[13.5px] font-medium text-[#1A1816] hover:text-[#C84B1F] transition-colors cursor-pointer"
             >
               Falar com a gente
             </button>
 
-            {/* Criar minha Vocalis (Pill button) */}
-            <button
-              onClick={onOpenAuth}
-              className="inline-flex items-center gap-2 px-5 py-2.5 rounded-full bg-[#11100F] text-white text-[13.5px] font-semibold hover:bg-black transition-all shadow-sm hover:shadow"
-            >
-              <span>Criar minha {BRAND.name.toLowerCase()}</span>
-              <ArrowRight className="w-3.5 h-3.5 text-white/80" />
-            </button>
+            {currentUser ? (
+              <div className="flex items-center gap-3">
+                <button
+                  onClick={() => { if (onNavigate) onNavigate('dashboard'); }}
+                  className={`inline-flex items-center gap-2 px-5 py-2.5 rounded-full text-[13.5px] font-semibold transition-all shadow-sm cursor-pointer ${
+                    currentPage === 'dashboard'
+                      ? 'bg-[#C84B1F] text-white shadow-md'
+                      : 'bg-[#11100F] text-white hover:bg-[#C84B1F]'
+                  }`}
+                >
+                  <Sparkles className="w-3.5 h-3.5" />
+                  <span>Meu Painel</span>
+                </button>
+                <button
+                  onClick={onLogout}
+                  className="text-xs font-semibold text-[#8C8881] hover:text-red-600 transition-colors cursor-pointer px-2 py-1 rounded-lg hover:bg-red-50"
+                  title="Sair da conta"
+                >
+                  Sair
+                </button>
+              </div>
+            ) : (
+              <div className="flex items-center gap-3">
+                <button 
+                  onClick={onOpenAuth}
+                  className="text-[13.5px] font-medium text-[#5C5955] hover:text-[#1A1816] transition-colors cursor-pointer"
+                >
+                  Entrar
+                </button>
+                <button
+                  onClick={onOpenAuth}
+                  className="inline-flex items-center gap-2 px-5 py-2.5 rounded-full bg-[#11100F] text-white text-[13.5px] font-semibold hover:bg-black transition-all shadow-sm hover:shadow cursor-pointer"
+                >
+                  <span>Criar minha {BRAND.name.toLowerCase()}</span>
+                  <ArrowRight className="w-3.5 h-3.5 text-white/80" />
+                </button>
+              </div>
+            )}
 
           </div>
 
           {/* Mobile menu trigger */}
           <div className="flex md:hidden items-center gap-2">
-            <button
-              onClick={onOpenAuth}
-              className="px-3.5 py-1.5 rounded-full bg-[#11100F] text-white text-xs font-semibold"
-            >
-              Criar
-            </button>
+            {currentUser ? (
+              <button
+                onClick={() => { if (onNavigate) onNavigate('dashboard'); }}
+                className="px-3.5 py-1.5 rounded-full bg-[#C84B1F] text-white text-xs font-semibold cursor-pointer"
+              >
+                Painel
+              </button>
+            ) : (
+              <button
+                onClick={onOpenAuth}
+                className="px-3.5 py-1.5 rounded-full bg-[#11100F] text-white text-xs font-semibold cursor-pointer"
+              >
+                Entrar
+              </button>
+            )}
             <button
               onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-              className="p-2 rounded-lg text-[#1A1816] hover:bg-[#EBE8E2]"
+              className="p-2 rounded-lg text-[#1A1816] hover:bg-[#EBE8E2] cursor-pointer"
             >
               {mobileMenuOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
             </button>
@@ -650,18 +689,37 @@ export default function Navbar({ onOpenDemo, onOpenAuth, onOpenLegal, onOpenDocs
           <button onClick={() => { setMobileMenuOpen(false); if (onNavigate) { onNavigate('precos'); window.scrollTo({ top: 0, behavior: 'smooth' }); } }} className="block py-1 text-left text-[#5C5955] cursor-pointer">Preços & Planos</button>
           
           <div className="pt-4 border-t border-[#EBE8E2] flex flex-col gap-2">
-            <button
-              onClick={() => { setMobileMenuOpen(false); onOpenDemo(); }}
-              className="w-full py-2.5 rounded-xl border border-[#D0CBC0] text-center font-bold text-[#1A1816]"
-            >
-              Falar com a gente
-            </button>
-            <button
-              onClick={() => { setMobileMenuOpen(false); onOpenAuth(); }}
-              className="w-full py-2.5 rounded-xl bg-[#11100F] text-white text-center font-bold"
-            >
-              Criar minha {BRAND.name.toLowerCase()}
-            </button>
+            {currentUser ? (
+              <>
+                <button
+                  onClick={() => { setMobileMenuOpen(false); if (onNavigate) onNavigate('dashboard'); }}
+                  className="w-full py-2.5 rounded-xl bg-[#C84B1F] text-white text-center font-bold text-sm cursor-pointer"
+                >
+                  Acessar Meu Painel
+                </button>
+                <button
+                  onClick={() => { setMobileMenuOpen(false); if (onLogout) onLogout(); }}
+                  className="w-full py-2.5 rounded-xl border border-red-200 bg-red-50 text-red-700 text-center font-bold text-xs cursor-pointer"
+                >
+                  Sair da Conta ({currentUser.email})
+                </button>
+              </>
+            ) : (
+              <>
+                <button
+                  onClick={() => { setMobileMenuOpen(false); onOpenDemo(); }}
+                  className="w-full py-2.5 rounded-xl border border-[#D0CBC0] text-center font-bold text-[#1A1816]"
+                >
+                  Falar com a gente
+                </button>
+                <button
+                  onClick={() => { setMobileMenuOpen(false); onOpenAuth(); }}
+                  className="w-full py-2.5 rounded-xl bg-[#11100F] text-white text-center font-bold"
+                >
+                  Entrar ou Criar Conta
+                </button>
+              </>
+            )}
           </div>
         </div>
       )}
