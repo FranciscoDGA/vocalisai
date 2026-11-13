@@ -157,33 +157,33 @@ export default function Footer({ onOpenDocs, onOpenDemo, onNavigate }) {
         </div>
 
         {/* Bottom Bar (Exact replica of user's uploaded print) */}
-        <div className="pt-8 flex flex-col sm:flex-row items-center justify-between text-xs text-[#8C8881] gap-4">
+        <div className="pt-8 flex flex-col sm:flex-row items-start sm:items-center justify-between text-xs text-[#8C8881] gap-4">
           
           {/* Left: Copyright + Legal Links */}
-          <div className="flex flex-wrap items-center gap-4 text-[#8C8881]">
+          <div className="flex flex-wrap items-center gap-x-4 gap-y-2 text-[#8C8881]">
             <span>© 2026 {BRAND.name}. Todos os direitos reservados.</span>
             <button 
               onClick={() => onOpenDocs('termos')}
-              className="hover:text-[#1A1816] transition-colors"
+              className="hover:text-[#1A1816] transition-colors cursor-pointer"
             >
               Aviso legal
             </button>
             <button 
               onClick={() => onOpenDocs('privacidade')}
-              className="hover:text-[#1A1816] transition-colors"
+              className="hover:text-[#1A1816] transition-colors cursor-pointer"
             >
               Proteção de dados
             </button>
             <button 
               onClick={() => onOpenDocs('dpa')}
-              className="hover:text-[#1A1816] transition-colors"
+              className="hover:text-[#1A1816] transition-colors cursor-pointer"
             >
               Exclusão de dados
             </button>
           </div>
 
           {/* Right: dados tratados conforme a LGPD badge */}
-          <div className="flex items-center gap-1.5 text-xs text-[#8C8881]">
+          <div className="flex items-center gap-1.5 text-xs text-[#8C8881] pt-1 sm:pt-0">
             <span>dados tratados conforme a LGPD</span>
           </div>
 

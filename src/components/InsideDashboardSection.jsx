@@ -406,8 +406,118 @@ export default function InsideDashboardSection({ onOpenDemo, onOpenLegal, onOpen
         {/* Dashboard Shell Frame */}
         <div className={isStandalone ? "w-full min-h-screen flex flex-col md:flex-row bg-white relative" : "bg-white rounded-3xl border border-[#E7E4DC] shadow-2xl overflow-hidden flex flex-col md:flex-row min-h-[750px] relative"}>
           
-          {/* Left Sidebar (Réplica 1:1 Kloel com Botão Recolher « na borda) */}
-          <div className={`w-full ${sidebarCollapsed ? 'md:w-20' : 'md:w-64'} bg-[#FAF9F5] border-r border-[#EBE8E2] p-4 flex flex-col justify-between shrink-0 relative ${isStandalone ? 'min-h-screen' : ''} transition-all duration-300`}>
+          {/* Mobile Navigation Header (Visível apenas em telas menores que md) */}
+          <div className="md:hidden bg-[#FAF9F5] border-b border-[#EBE8E2] p-3 space-y-2.5 shrink-0">
+            <div className="flex items-center justify-between">
+              <div className="flex items-center gap-2">
+                <div className="w-7 h-7 rounded-lg bg-[#C84B1F]/10 flex items-center justify-center border border-[#C84B1F]/20">
+                  <div className="flex items-center gap-[2px] h-3">
+                    <span className="w-[2px] h-1.5 bg-[#C84B1F] rounded-full"></span>
+                    <span className="w-[2px] h-3 bg-[#C84B1F] rounded-full"></span>
+                    <span className="w-[2px] h-2 bg-[#C84B1F] rounded-full"></span>
+                  </div>
+                </div>
+                <span className="font-bold text-sm text-[#1A1816] tracking-tight">{BRAND.name.toLowerCase()}</span>
+              </div>
+
+              {/* Workspace Profile Button Mobile */}
+              <div className="relative">
+                <button
+                  type="button"
+                  onClick={() => setProfileMenuOpen(!profileMenuOpen)}
+                  className="flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-white border border-[#E7E4DC] text-xs font-bold text-[#1A1816]"
+                >
+                  <div className="w-5 h-5 rounded-full bg-[#1A1816] text-white flex items-center justify-center text-[9px] font-bold">
+                    QS
+                  </div>
+                  <span className="truncate max-w-[100px] uppercase text-[11px]">
+                    {currentUser?.user_metadata?.company_name || 'Q&C STORES'}
+                  </span>
+                  <ChevronDown className="w-3 h-3 text-[#736F69]" />
+                </button>
+              </div>
+            </div>
+
+            {/* Mobile Scrollable Horizontal Nav Tabs */}
+            <div className="flex items-center gap-1.5 overflow-x-auto no-scrollbar pb-1">
+              <button
+                onClick={() => { setActiveTab('inicio'); setSelectedAssistant(null); }}
+                className={`px-3 py-1.5 rounded-xl text-xs font-semibold whitespace-nowrap transition-colors shrink-0 ${
+                  activeTab === 'inicio' ? 'bg-[#EFECE6] text-[#1A1816]' : 'text-[#5C5955] bg-white border border-[#E7E4DC]'
+                }`}
+              >
+                Visão geral
+              </button>
+              <button
+                onClick={() => { setActiveTab('assistentes'); setSelectedAssistant(null); }}
+                className={`px-3 py-1.5 rounded-xl text-xs font-semibold whitespace-nowrap transition-colors shrink-0 ${
+                  activeTab === 'assistentes' ? 'bg-[#EFECE6] text-[#1A1816]' : 'text-[#5C5955] bg-white border border-[#E7E4DC]'
+                }`}
+              >
+                Assistentes
+              </button>
+              <button
+                onClick={() => { setActiveTab('conversas'); setSelectedAssistant(null); }}
+                className={`px-3 py-1.5 rounded-xl text-xs font-semibold whitespace-nowrap transition-colors shrink-0 ${
+                  activeTab === 'conversas' ? 'bg-[#EFECE6] text-[#1A1816]' : 'text-[#5C5955] bg-white border border-[#E7E4DC]'
+                }`}
+              >
+                Conversas
+              </button>
+              <button
+                onClick={() => { setActiveTab('conhecimento'); setSelectedAssistant(null); }}
+                className={`px-3 py-1.5 rounded-xl text-xs font-semibold whitespace-nowrap transition-colors shrink-0 ${
+                  activeTab === 'conhecimento' ? 'bg-[#EFECE6] text-[#1A1816]' : 'text-[#5C5955] bg-white border border-[#E7E4DC]'
+                }`}
+              >
+                Conhecimento
+              </button>
+              <button
+                onClick={() => setMoreMenuOpen(!moreMenuOpen)}
+                className={`px-3 py-1.5 rounded-xl text-xs font-semibold whitespace-nowrap transition-colors flex items-center gap-1 shrink-0 ${
+                  moreMenuOpen || ['telefonia', 'whatsapp', 'agendador', 'email-ia', 'contatos', 'integracoes-hub', 'campanhas'].includes(activeTab)
+                    ? 'bg-[#EFECE6] text-[#1A1816]' : 'text-[#5C5955] bg-white border border-[#E7E4DC]'
+                }`}
+              >
+                <Menu className="w-3.5 h-3.5 text-[#736F69]" />
+                <span>Mais</span>
+              </button>
+            </div>
+
+            {/* Submenu Mais on Mobile */}
+            {moreMenuOpen && (
+              <div className="grid grid-cols-2 gap-1.5 pt-2 border-t border-[#EBE8E2] text-xs animate-fadeIn">
+                <button onClick={() => { setActiveTab('telefonia'); setMoreMenuOpen(false); }} className={`p-2 rounded-lg text-left truncate transition-colors ${activeTab === 'telefonia' ? 'bg-[#EFECE6] font-bold text-[#1A1816]' : 'bg-white border border-[#E7E4DC] text-[#5C5955]'}`}>
+                  Números de telefone
+                </button>
+                <button onClick={() => { setActiveTab('whatsapp'); setMoreMenuOpen(false); }} className={`p-2 rounded-lg text-left truncate transition-colors ${activeTab === 'whatsapp' ? 'bg-[#EFECE6] font-bold text-[#1A1816]' : 'bg-white border border-[#E7E4DC] text-[#5C5955]'}`}>
+                  WhatsApp
+                </button>
+                <button onClick={() => { setActiveTab('agendador'); setMoreMenuOpen(false); }} className={`p-2 rounded-lg text-left truncate transition-colors ${activeTab === 'agendador' ? 'bg-[#EFECE6] font-bold text-[#1A1816]' : 'bg-white border border-[#E7E4DC] text-[#5C5955]'}`}>
+                  Agendador
+                </button>
+                <button onClick={() => { setActiveTab('email-ia'); setMoreMenuOpen(false); }} className={`p-2 rounded-lg text-left flex items-center justify-between transition-colors ${activeTab === 'email-ia' ? 'bg-[#EFECE6] font-bold text-[#1A1816]' : 'bg-white border border-[#E7E4DC] text-[#5C5955]'}`}>
+                  <span className="truncate">E-Mail IA</span>
+                  <span className="text-[8px] bg-[#C84B1F] text-white px-1 py-0.2 rounded font-bold">BETA</span>
+                </button>
+                <button onClick={() => { setActiveTab('contatos'); setMoreMenuOpen(false); }} className={`p-2 rounded-lg text-left truncate transition-colors ${activeTab === 'contatos' ? 'bg-[#EFECE6] font-bold text-[#1A1816]' : 'bg-white border border-[#E7E4DC] text-[#5C5955]'}`}>
+                  Contatos
+                </button>
+                <button onClick={() => { setActiveTab('integracoes-hub'); setMoreMenuOpen(false); }} className={`p-2 rounded-lg text-left truncate transition-colors ${activeTab === 'integracoes-hub' ? 'bg-[#EFECE6] font-bold text-[#1A1816]' : 'bg-white border border-[#E7E4DC] text-[#5C5955]'}`}>
+                  Integrações
+                </button>
+                <button onClick={() => { setActiveTab('campanhas'); setMoreMenuOpen(false); }} className={`p-2 rounded-lg text-left truncate transition-colors ${activeTab === 'campanhas' ? 'bg-[#EFECE6] font-bold text-[#1A1816]' : 'bg-white border border-[#E7E4DC] text-[#5C5955]'}`}>
+                  Campanhas outbound
+                </button>
+                <button onClick={() => { if (onOpenDocs) onOpenDocs(); else onOpenLegal('privacidade'); setMoreMenuOpen(false); }} className="p-2 rounded-lg text-left truncate bg-white border border-[#E7E4DC] text-[#5C5955]">
+                  Central de ajuda
+                </button>
+              </div>
+            )}
+          </div>
+
+          {/* Left Sidebar (Desktop Réplica 1:1 Kloel com Botão Recolher « na borda) */}
+          <div className={`hidden md:flex ${sidebarCollapsed ? 'md:w-20' : 'md:w-64'} bg-[#FAF9F5] border-r border-[#EBE8E2] p-4 flex-col justify-between shrink-0 relative ${isStandalone ? 'min-h-screen' : ''} transition-all duration-300`}>
             {/* Botão « de 02 setas recolher/expandir fixado exatamente na linha divisória da borda */}
             <button 
               type="button"
@@ -719,7 +829,7 @@ export default function InsideDashboardSection({ onOpenDemo, onOpenLegal, onOpen
           </div>
 
           {/* Main Dashboard Canvas Area */}
-          <div className={`flex-1 p-6 sm:p-8 ${isStandalone ? 'md:p-10 min-h-screen' : ''} overflow-y-auto bg-white relative`}>
+          <div className={`flex-1 p-4 sm:p-8 ${isStandalone ? 'md:p-10 min-h-screen' : ''} overflow-y-auto bg-white relative`}>
             
             {/* ========================================================
                 1. TAB: INÍCIO (Exact replica of screenshot 3)
@@ -799,9 +909,9 @@ export default function InsideDashboardSection({ onOpenDemo, onOpenLegal, onOpen
                   </div>
                   <div className="flex justify-between text-[10px] text-[#8C8881] px-2">
                     <span>13/10</span>
-                    <span>18/10</span>
+                    <span className="hidden sm:inline">18/10</span>
                     <span>23/10</span>
-                    <span>28/10</span>
+                    <span className="hidden sm:inline">28/10</span>
                     <span>02/11</span>
                     <span>07/11</span>
                   </div>

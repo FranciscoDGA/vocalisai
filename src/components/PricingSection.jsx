@@ -73,7 +73,7 @@ export default function PricingSection({ onOpenAuth, onOpenDemo }) {
         <div className="flex flex-col sm:flex-row items-center justify-between gap-4 mb-10 pb-6 border-b border-[#EBE8E2]">
           
           {/* Channel Selector Pills */}
-          <div className="inline-flex items-center p-1 bg-[#EBE8E2] rounded-2xl gap-1 text-xs sm:text-sm font-semibold">
+          <div className="w-full sm:w-auto overflow-x-auto no-scrollbar flex items-center p-1 bg-[#EBE8E2] rounded-2xl gap-1 text-xs sm:text-sm font-semibold whitespace-nowrap">
             <button
               onClick={() => setSelectedChannel('telefone')}
               className={`flex items-center gap-2 px-4 py-2 rounded-xl transition-all ${
@@ -263,16 +263,21 @@ export default function PricingSection({ onOpenAuth, onOpenDemo }) {
         {/* ========================================================
             5. FULL COMPARISON TABLE (Exact replica of Screenshot 1)
            ======================================================== */}
-        <div className="bg-white rounded-3xl border border-[#E7E4DC] shadow-xl p-6 sm:p-10 mb-20 overflow-x-auto">
+        <div className="bg-white rounded-3xl border border-[#E7E4DC] shadow-xl p-4 sm:p-10 mb-20 overflow-hidden">
           
-          <div className="text-center max-w-xl mx-auto mb-10">
+          <div className="text-center max-w-xl mx-auto mb-6 sm:mb-10">
             <h3 className="text-2xl sm:text-3xl font-bold text-[#1A1816]">
-              Comparar planos do Assistente telefônico IA
+              Comparar planos do {currentChannelData?.name || 'Assistente telefônico IA'}
             </h3>
+            <p className="sm:hidden text-[11px] text-[#8C8881] mt-2 flex items-center justify-center gap-1.5 font-medium">
+              <span>👉</span>
+              <span>Deslize a tabela para o lado para ver todos os planos</span>
+            </p>
           </div>
 
           {/* Sticky Header Row */}
-          <div className="min-w-[650px]">
+          <div className="overflow-x-auto -mx-4 px-4 sm:mx-0 sm:px-0">
+            <div className="min-w-[650px]">
             <div className="grid grid-cols-4 pb-4 border-b border-[#EBE8E2] text-xs font-bold text-[#1A1816] sticky top-16 bg-white z-20">
               <div className="col-span-1 text-sm font-bold text-[#736F69]">Recursos</div>
               
@@ -369,8 +374,9 @@ export default function PricingSection({ onOpenAuth, onOpenDemo }) {
                 </div>
               ))}
             </div>
-
           </div>
+
+        </div>
 
         </div>
 

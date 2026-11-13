@@ -133,58 +133,61 @@ export default function Hero({ onOpenDemo, onOpenAuth }) {
             PHONE TEST INPUT CONTAINER (Exact replica of Kloel print)
            ======================================================== */}
         <form onSubmit={handleTestCallSubmit} className="max-w-xl mx-auto mb-3">
-          <div className="flex items-center bg-white rounded-full p-1.5 pl-3 border border-[#DCD8D0] shadow-md focus-within:border-[#C84B1F] focus-within:ring-2 focus-within:ring-[#C84B1F]/15 transition-all relative">
+          <div className="flex flex-col sm:flex-row items-stretch sm:items-center bg-white rounded-2xl sm:rounded-full p-1.5 sm:pl-3 border border-[#DCD8D0] shadow-md focus-within:border-[#C84B1F] focus-within:ring-2 focus-within:ring-[#C84B1F]/15 transition-all relative gap-2 sm:gap-0">
             
-            {/* Country Flag Selector with Dropdown */}
-            <div className="relative" ref={countryPickerRef}>
-              <button
-                type="button"
-                onClick={() => setCountryPickerOpen(!countryPickerOpen)}
-                className="flex items-center gap-1 text-sm font-medium text-[#1A1816] pr-2.5 py-1 hover:opacity-80 transition-opacity shrink-0"
-              >
-                <span className="text-base leading-none">{selectedCountry.flag}</span>
-                <ChevronDown className="w-3.5 h-3.5 text-[#8C8881]" />
-              </button>
+            {/* Input Row on mobile / inline on desktop */}
+            <div className="flex items-center flex-1 px-2 sm:px-0">
+              {/* Country Flag Selector with Dropdown */}
+              <div className="relative" ref={countryPickerRef}>
+                <button
+                  type="button"
+                  onClick={() => setCountryPickerOpen(!countryPickerOpen)}
+                  className="flex items-center gap-1 text-sm font-medium text-[#1A1816] pr-2.5 py-1 hover:opacity-80 transition-opacity shrink-0"
+                >
+                  <span className="text-base leading-none">{selectedCountry.flag}</span>
+                  <ChevronDown className="w-3.5 h-3.5 text-[#8C8881]" />
+                </button>
 
-              {/* Country Picker Dropdown (Exact match to user's uploaded print) */}
-              {countryPickerOpen && (
-                <div className="absolute top-10 left-0 w-60 bg-white rounded-2xl border border-[#E7E4DC] shadow-2xl p-2 z-50 animate-fadeIn text-left space-y-0.5">
-                  {countries.map((c) => (
-                    <button
-                      key={c.code}
-                      type="button"
-                      onClick={() => {
-                        setSelectedCountry(c);
-                        setCountryPickerOpen(false);
-                      }}
-                      className="w-full flex items-center justify-between px-3 py-2 rounded-xl text-xs font-medium text-[#1A1816] hover:bg-[#FAF9F5] transition-colors"
-                    >
-                      <span className="flex items-center gap-2.5">
-                        <span className="text-base leading-none">{c.flag}</span>
-                        <span>{c.name}</span>
-                      </span>
-                      <span className="text-[11px] text-[#8C8881] font-mono">{c.code}</span>
-                    </button>
-                  ))}
-                </div>
-              )}
+                {/* Country Picker Dropdown (Exact match to user's uploaded print) */}
+                {countryPickerOpen && (
+                  <div className="absolute top-10 left-0 w-60 bg-white rounded-2xl border border-[#E7E4DC] shadow-2xl p-2 z-50 animate-fadeIn text-left space-y-0.5">
+                    {countries.map((c) => (
+                      <button
+                        key={c.code}
+                        type="button"
+                        onClick={() => {
+                          setSelectedCountry(c);
+                          setCountryPickerOpen(false);
+                        }}
+                        className="w-full flex items-center justify-between px-3 py-2 rounded-xl text-xs font-medium text-[#1A1816] hover:bg-[#FAF9F5] transition-colors"
+                      >
+                        <span className="flex items-center gap-2.5">
+                          <span className="text-base leading-none">{c.flag}</span>
+                          <span>{c.name}</span>
+                        </span>
+                        <span className="text-[11px] text-[#8C8881] font-mono">{c.code}</span>
+                      </button>
+                    ))}
+                  </div>
+                )}
+              </div>
+
+              <div className="w-[1px] h-5 bg-[#EBE8E2] mx-1"></div>
+
+              {/* Phone Number Input */}
+              <input
+                type="tel"
+                value={phoneInput}
+                onChange={handlePhoneChange}
+                placeholder="Seu celular com DDD"
+                className="flex-1 px-3 py-2.5 bg-transparent text-[#1A1816] placeholder-[#9E9B95] text-sm focus:outline-none"
+              />
             </div>
-
-            <div className="w-[1px] h-5 bg-[#EBE8E2] mx-1"></div>
-
-            {/* Phone Number Input */}
-            <input
-              type="tel"
-              value={phoneInput}
-              onChange={handlePhoneChange}
-              placeholder="Seu celular com DDD"
-              className="flex-1 px-3 py-2.5 bg-transparent text-[#1A1816] placeholder-[#9E9B95] text-sm focus:outline-none"
-            />
 
             {/* CTA Button: Receber ligação da Roberta agora */}
             <button
               type="submit"
-              className="shrink-0 px-6 py-3 rounded-full bg-[#11100F] text-white text-xs sm:text-sm font-semibold hover:bg-black transition-all flex items-center gap-2 shadow-sm cursor-pointer hover:scale-[1.02]"
+              className="w-full sm:w-auto shrink-0 px-6 py-3 rounded-xl sm:rounded-full bg-[#11100F] text-white text-xs sm:text-sm font-semibold hover:bg-black transition-all flex items-center justify-center gap-2 shadow-sm cursor-pointer hover:scale-[1.01]"
             >
               <Phone className="w-4 h-4 text-[#FF8E6B]" />
               <span>Receber ligação da Roberta</span>

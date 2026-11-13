@@ -49,18 +49,20 @@ export default function CtaSection({ onOpenDemo, onOpenAuth }) {
 
             {/* Quick Test Call Form (Pill matching Kloel) */}
             <form onSubmit={handleTestCall} className="max-w-md mx-auto pt-4">
-              <div className="flex items-center bg-[#1F1E1B] border border-[#383531] rounded-full p-1.5 pl-4 focus-within:border-[#C84B1F] transition-all">
-                <span className="text-base mr-2">🇧🇷</span>
-                <input
-                  type="tel"
-                  placeholder="Seu celular com DDD"
-                  value={phoneNumber}
-                  onChange={handlePhoneChange}
-                  className="w-full bg-transparent text-white text-sm placeholder-[#736F69] focus:outline-none"
-                />
+              <div className="flex flex-col sm:flex-row items-stretch sm:items-center bg-[#1F1E1B] border border-[#383531] rounded-2xl sm:rounded-full p-1.5 sm:pl-4 focus-within:border-[#C84B1F] transition-all gap-2 sm:gap-0">
+                <div className="flex items-center flex-1 px-2 sm:px-0">
+                  <span className="text-base mr-2 shrink-0">🇧🇷</span>
+                  <input
+                    type="tel"
+                    placeholder="Seu celular com DDD"
+                    value={phoneNumber}
+                    onChange={handlePhoneChange}
+                    className="w-full bg-transparent text-white text-sm placeholder-[#736F69] focus:outline-none py-1.5 sm:py-0"
+                  />
+                </div>
                 <button
                   type="submit"
-                  className="px-6 py-3 rounded-full bg-[#C84B1F] text-white text-xs sm:text-sm font-bold hover:bg-[#B34018] transition-all whitespace-nowrap flex items-center gap-2 shrink-0 shadow-md"
+                  className="w-full sm:w-auto px-6 py-3 rounded-xl sm:rounded-full bg-[#C84B1F] text-white text-xs sm:text-sm font-bold hover:bg-[#B34018] transition-all whitespace-nowrap flex items-center justify-center gap-2 shrink-0 shadow-md cursor-pointer"
                 >
                   <Phone className="w-4 h-4" />
                   <span>Ouvir a Vocalis agora</span>
