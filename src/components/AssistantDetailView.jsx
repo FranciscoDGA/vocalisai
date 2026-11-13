@@ -74,9 +74,20 @@ export default function AssistantDetailView({
   const [knowledgeActive, setKnowledgeActive] = useState(true);
   const [knowledgeTab, setKnowledgeTab] = useState('fontes');
 
-  // Form State - Prompt
-  const defaultPrompt = assistant?.prompt || `Você é a ${name} – uma assistente de chat e telefone (Chat + Ligação) que atende clientes de forma amigável, entende necessidades e agenda consultas e atendimentos.`;
-  const [promptText, setPromptText] = useState(defaultPrompt);
+  // Form State - Prompt (Frase exata 1:1 do Kloel para Chat + Ligação, Chat e Voz)
+  const getPromptForType = (t, n) => {
+    if (t === 'hibrido') {
+      return `Você é a ${n} – a mesma assistente no chat e na ligação, com a mesma memória e o mesmo tom.`;
+    }
+    if (t === 'chat') {
+      return `Você é a ${n} – uma assistente de chat que responde às perguntas de forma amigável.`;
+    }
+    return `Você é a ${n} – uma assistente de voz baseada em telefone que atende chamadas com naturalidade.`;
+  };
+
+  const [promptText, setPromptText] = useState(
+    assistant?.prompt || getPromptForType(assistant?.type || 'hibrido', assistant?.name || 'Francisco Gomes')
+  );
 
   // Interactive Live Test Chat State
   const [chatMessages, setChatMessages] = useState([
