@@ -1,11 +1,11 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { 
-  Play, Pause, Phone, ChevronDown, Check, Volume2, ArrowRight, ExternalLink 
+  Phone, ChevronDown, Check, ArrowRight, ExternalLink 
 } from 'lucide-react';
 import { BRAND } from '../data/content';
 import TestCallModal from './TestCallModal';
+import VoiceWaveformHeroCard from './VoiceWaveformHeroCard';
 import { formatPhoneMask, cleanRawPhone } from '../utils/phoneUtils';
-import { speakFemalePt } from '../utils/voiceUtils';
 
 export default function Hero({ onOpenDemo, onOpenAuth }) {
   const [phoneInput, setPhoneInput] = useState('');
@@ -13,10 +13,6 @@ export default function Hero({ onOpenDemo, onOpenAuth }) {
   const [countryPickerOpen, setCountryPickerOpen] = useState(false);
   const [testCallModalOpen, setTestCallModalOpen] = useState(false);
 
-  // Audio player state
-  const [isPlaying, setIsPlaying] = useState(false);
-  const [progress, setProgress] = useState(14); // seconds
-  const progressTimerRef = useRef(null);
   const countryPickerRef = useRef(null);
 
   const countries = [
@@ -58,51 +54,7 @@ export default function Hero({ onOpenDemo, onOpenAuth }) {
     setTestCallModalOpen(true);
   };
 
-  // Web Speech API for dark card audio demonstration (Lia - Female Voice)
-  const handleTogglePlay = () => {
-    if (isPlaying) {
-      if (typeof window !== 'undefined' && 'speechSynthesis' in window) {
-        window.speechSynthesis.cancel();
-      }
-      setIsPlaying(false);
-      clearInterval(progressTimerRef.current);
-    } else {
-      setIsPlaying(true);
-      const text = "Boa noite! Consultório Vila Verde, aqui é a Lia da Vocalis. Tenho um horário na quinta-feira às 14h30 ou na sexta às 10h. Já deixei pré-agendado no sistema e enviei a confirmação para o seu WhatsApp.";
-      
-      speakFemalePt(
-        text,
-        () => setIsPlaying(true),
-        () => {
-          setIsPlaying(false);
-          clearInterval(progressTimerRef.current);
-          setProgress(54);
-        },
-        () => {
-          setIsPlaying(false);
-          clearInterval(progressTimerRef.current);
-        }
-      );
 
-      progressTimerRef.current = setInterval(() => {
-        setProgress(prev => {
-          if (prev >= 54) {
-            clearInterval(progressTimerRef.current);
-            setIsPlaying(false);
-            return 14;
-          }
-          return prev + 1;
-        });
-      }, 1000);
-    }
-  };
-
-  useEffect(() => {
-    return () => {
-      if (progressTimerRef.current) clearInterval(progressTimerRef.current);
-      if ('speechSynthesis' in window) window.speechSynthesis.cancel();
-    };
-  }, []);
 
   return (
     <section className="relative pt-12 pb-24 md:pt-16 md:pb-32 overflow-hidden bg-[#FAF9F5] font-sans">
@@ -230,111 +182,17 @@ export default function Hero({ onOpenDemo, onOpenAuth }) {
         </div>
 
         {/* ========================================================
-            THE ICONIC DARK HERO AUDIO / TRANSCRIPT CARD (Exact match)
+            THE ICONIC DARK HERO AUDIO / TRANSCRIPT CARD
+            Live Voice Frequency Waveform (Orange Vocalis / White Cliente)
+            + Sub-400ms Latency Simulation & Real-time Action Badges
            ======================================================== */}
-        <div className="max-w-5xl mx-auto rounded-3xl bg-[#11100F] text-stone-100 p-6 sm:p-8 md:p-10 shadow-2xl border border-stone-800 text-left relative overflow-hidden">
-          
-          <div className="absolute top-0 right-1/4 w-80 h-80 bg-amber-500/10 rounded-full blur-3xl pointer-events-none" />
-          <div className="absolute bottom-0 left-10 w-60 h-60 bg-[#C84B1F]/10 rounded-full blur-3xl pointer-events-none" />
-
-          {/* Top Status Bar inside Card */}
-          <div className="flex flex-wrap items-center justify-between pb-6 border-b border-stone-800 gap-4 text-xs">
-            <div className="flex items-center gap-3">
-              <div className="w-8 h-8 rounded-full bg-stone-800 flex items-center justify-center text-stone-300">
-                <Phone className="w-4 h-4" />
-              </div>
-              <div>
-                <p className="font-bold text-stone-200">
-                  Ligação recebida · 23:12
-                </p>
-                <p className="text-[11px] text-stone-400 font-mono">
-                  Fora do horário comercial · +55 11 9••••-4821
-                </p>
-              </div>
-            </div>
-
-            <div className="flex items-center gap-2">
-              <span className="flex items-center gap-1.5 px-3 py-1 rounded-full bg-stone-800/80 border border-stone-700 text-[11px] text-stone-300 font-mono">
-                <span className="w-2 h-2 rounded-full bg-red-500 animate-pulse"></span>
-                <span>Ao vivo · 00:54</span>
-              </span>
-            </div>
-          </div>
-
-          {/* Card Body: Live Transcript */}
-          <div className="py-6 space-y-4 text-xs sm:text-sm">
-            <div className="flex items-center justify-between text-[10px] font-bold uppercase tracking-wider text-stone-400 mb-2">
-              <span>TRANSCRIÇÃO AO VIVO</span>
-              <span>Conversa ilustrativa</span>
-            </div>
-
-            <div className="space-y-3 font-sans">
-              <div className="p-3.5 rounded-2xl bg-stone-900/80 border border-stone-800 max-w-xl">
-                <span className="text-[11px] font-bold uppercase tracking-wider text-[#FF9E7D] block mb-1">
-                  {BRAND.name.toUpperCase()} (LIA)
-                </span>
-                <p className="text-stone-200 leading-relaxed">
-                  Boa noite! Consultório Vila Verde, aqui é a Lia. Como posso ajudar?
-                </p>
-              </div>
-
-              <div className="p-3.5 rounded-2xl bg-stone-800/60 border border-stone-700/60 max-w-xl ml-auto text-right">
-                <span className="text-[11px] font-bold uppercase tracking-wider text-stone-400 block mb-1">
-                  CLIENTE
-                </span>
-                <p className="text-stone-200 leading-relaxed">
-                  Oi, eu precisava de uma consulta com o Dr. Marcos pra essa semana ainda, é possível?
-                </p>
-              </div>
-
-              <div className="p-3.5 rounded-2xl bg-stone-900/80 border border-stone-800 max-w-xl">
-                <span className="text-[11px] font-bold uppercase tracking-wider text-[#FF9E7D] block mb-1">
-                  {BRAND.name.toUpperCase()} (LIA)
-                </span>
-                <p className="text-stone-200 leading-relaxed">
-                  Com certeza! Tenho um horário na quinta-feira às 14h30 ou na sexta às 10h. Qual fica melhor para você?
-                </p>
-              </div>
-            </div>
-          </div>
-
-          {/* Bottom Audio Player Bar */}
-          <div className="pt-4 border-t border-stone-800 flex flex-col sm:flex-row items-center justify-between gap-4">
-            <div className="flex items-center gap-3 w-full sm:w-auto">
-              <button
-                onClick={handleTogglePlay}
-                className="w-11 h-11 rounded-full bg-white text-[#11100F] hover:bg-stone-200 flex items-center justify-center transition-all shrink-0 shadow-lg"
-              >
-                {isPlaying ? <Pause className="w-4 h-4 fill-current" /> : <Play className="w-4 h-4 fill-current ml-0.5" />}
-              </button>
-
-              <div className="flex-1 sm:w-64 space-y-1">
-                <div className="w-full bg-stone-800 h-1.5 rounded-full overflow-hidden">
-                  <div
-                    className="bg-[#C84B1F] h-full transition-all duration-300"
-                    style={{ width: `${(progress / 54) * 100}%` }}
-                  />
-                </div>
-                <div className="flex justify-between text-[10px] text-stone-400 font-mono">
-                  <span>00:{String(progress).padStart(2, '0')}</span>
-                  <span>00:54</span>
-                </div>
-              </div>
-            </div>
-
-            <button
-              onClick={() => {
-                setPhoneInput('(11) 98765-4321');
-                setTestCallModalOpen(true);
-              }}
-              className="w-full sm:w-auto px-5 py-2.5 rounded-full bg-stone-800 hover:bg-stone-700 text-xs font-semibold text-white transition-all flex items-center justify-center gap-2 border border-stone-700"
-            >
-              <span>Testar com a inteligência da minha empresa</span>
-              <ArrowRight className="w-3.5 h-3.5 text-stone-400" />
-            </button>
-          </div>
-
-        </div>
+        <VoiceWaveformHeroCard 
+          onTestCall={() => {
+            setPhoneInput('(11) 98765-4321');
+            setTestCallModalOpen(true);
+          }}
+          onOpenAuth={onOpenAuth}
+        />
 
       </div>
 
