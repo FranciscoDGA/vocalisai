@@ -184,20 +184,20 @@ export default function Hero({ onOpenDemo, onOpenAuth }) {
               />
             </div>
 
-            {/* CTA Button: Receber ligação da Roberta agora */}
+            {/* CTA Button: Receber ligação da Débora agora */}
             <button
               type="submit"
               className="w-full sm:w-auto shrink-0 px-6 py-3 rounded-xl sm:rounded-full bg-[#11100F] text-white text-xs sm:text-sm font-semibold hover:bg-black transition-all flex items-center justify-center gap-2 shadow-sm cursor-pointer hover:scale-[1.01]"
             >
               <Phone className="w-4 h-4 text-[#FF8E6B]" />
-              <span>Receber ligação da Roberta</span>
+              <span>Receber ligação da Débora</span>
             </button>
 
           </div>
         </form>
 
         <p className="text-[11px] text-[#8C8881] font-medium mb-4">
-          ⚡ A Roberta ligará para seu número para diagnosticar sua empresa e enviar uma demonstração no WhatsApp.
+          ⚡ A Débora ligará para seu número para diagnosticar sua empresa e enviar uma demonstração no WhatsApp.
         </p>
 
         {/* Link: Prefiro conversar com uma pessoa */}

@@ -4,7 +4,7 @@
 
 const GEMINI_API_KEY = import.meta.env.VITE_GEMINI_API_KEY;
 
-const SYSTEM_PROMPT = `Você é Roberta, especialista em atendimento e inteligência artificial da Vocalis AI (parceira oficial do AI Agency OS).
+const SYSTEM_PROMPT = `Você é Débora, especialista em atendimento e inteligência artificial da Vocalis AI (parceira oficial do AI Agency OS).
 Sua missão é responder de forma conversacional, calorosa, elegante e sucinta (máximo 2 a 3 frases) em Português do Brasil.
 Você conversa com donos de empresas (médicos, imobiliárias, advogados, lojistas e prestadores de serviços) explicando como a IA de voz e omnichannel elimina filas, recupera vendas perdidas fora do horário e agenda clientes 24h por dia.
 Lembre-se: sua resposta será falada em voz alta para o cliente, então use linguagem natural, sem asteriscos, sem bullets, sem formatações complexas e com pontuação clara.`;
@@ -12,7 +12,7 @@ Lembre-se: sua resposta será falada em voz alta para o cliente, então use ling
 /**
  * Envia uma mensagem para o Gemini e retorna a resposta formatada para voz
  */
-export async function askRobertaAI(userMessage, context = {}) {
+export async function askDeboraAI(userMessage, context = {}) {
   const apiKey = GEMINI_API_KEY;
 
   if (!apiKey) {
@@ -80,3 +80,6 @@ export async function askRobertaAI(userMessage, context = {}) {
     text: "Compreendi perfeitamente a sua dúvida. Com a nossa solução de voz da Vocalis, conseguimos resolver exatamente esse ponto no primeiro toque da chamada, garantindo que nenhum cliente seu fique sem atendimento."
   };
 }
+
+
+export const askRobertaAI = askDeboraAI;

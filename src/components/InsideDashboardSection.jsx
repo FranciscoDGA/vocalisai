@@ -82,25 +82,37 @@ export default function InsideDashboardSection({ onOpenDemo, onOpenLegal, onOpen
 
   // Assistant State
   const [selectedType, setSelectedType] = useState('voz');
-  const [assistantName, setAssistantName] = useState('Roberta');
+  const [assistantName, setAssistantName] = useState('Débora');
   const [createdAssistants, setCreatedAssistants] = useState([
     {
       id: 1,
-      name: 'Roberta',
+      name: 'Débora',
       type: 'voz',
-      typeName: 'Assistente de voz',
+      typeName: 'Assistente de voz (Telefone)',
       status: 'Ativo',
       channel: 'Telefone (11) 4003-9821',
-      calls: 38
+      calls: 58,
+      description: 'Primeiros atendimentos via telefone, triagem humanizada e qualificação com voz neural.'
     },
     {
       id: 2,
-      name: 'Francisco Gomes',
+      name: 'Camila',
       type: 'chat',
-      typeName: 'Assistente de chat',
+      typeName: 'Assistente de WhatsApp',
       status: 'Ativo',
-      channel: 'WhatsApp + Chatbot de IA',
-      calls: 142
+      channel: 'WhatsApp Oficial (+55 11 98412-****)',
+      calls: 142,
+      description: 'Atendimento, orçamentos e agendamentos no WhatsApp 24/7 com geração de Pix.'
+    },
+    {
+      id: 3,
+      name: 'Beatriz',
+      type: 'hibrido',
+      typeName: 'Webchat do Site',
+      status: 'Ativo',
+      channel: 'Webchat Widget Institucional',
+      calls: 89,
+      description: 'Concierge virtual do site, tira dúvidas com base de conhecimento RAG e captura contatos.'
     }
   ]);
 
@@ -126,7 +138,7 @@ export default function InsideDashboardSection({ onOpenDemo, onOpenLegal, onOpen
       size: '34 KB',
       updatedAt: 'Ontem',
       status: 'Indexado',
-      target: 'Roberta (Voz Neural)',
+      target: 'Débora (Voz Neural)',
       tokens: 1850,
       description: '18 respostas calibradas para dúvidas recorrentes sobre convênios aceitos, estacionamento gratuito e preparo de exames.'
     },
@@ -157,7 +169,7 @@ export default function InsideDashboardSection({ onOpenDemo, onOpenLegal, onOpen
       name: 'Linha Principal SP',
       number: '+55 11 4003-9821',
       uso: 'Entrada & Saída',
-      vinculacao: 'Roberta (Voz Neural)',
+      vinculacao: 'Débora (Voz Neural)',
       type: 'Entrada'
     }
   ]);
@@ -275,11 +287,11 @@ export default function InsideDashboardSection({ onOpenDemo, onOpenLegal, onOpen
   const openCreateModal = (type = 'voz') => {
     setSelectedType(type);
     if (type === 'voz') {
-      setAssistantName('Roberta');
+      setAssistantName('Débora');
     } else if (type === 'chat') {
-      setAssistantName('Maria');
+      setAssistantName('Camila');
     } else if (type === 'hibrido') {
-      setAssistantName('Ana');
+      setAssistantName('Beatriz');
     }
     setCreateModalOpen(true);
   };
@@ -2719,7 +2731,7 @@ export default function InsideDashboardSection({ onOpenDemo, onOpenLegal, onOpen
                 {/* 3 Large Cards Grid with information below title */}
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-3.5">
                   
-                  {/* Card 1: Assistente de voz (Roberta) */}
+                  {/* Card 1: Assistente de voz (Débora) */}
                   <div
                     onClick={() => handleSelectAssistantType('voz')}
                     className={`p-4 rounded-xl flex flex-col justify-start min-h-[140px] text-left cursor-pointer transition-all ${
@@ -2735,11 +2747,11 @@ export default function InsideDashboardSection({ onOpenDemo, onOpenLegal, onOpen
                       <h4 className="text-sm font-bold text-[#1A1816]">Assistente de voz</h4>
                     </div>
                     <p className="text-xs text-[#736F69] leading-relaxed">
-                      Assistente baseado em telefone para chamadas.
+                      Primeiros atendimentos via telefone com voz neural.
                     </p>
                   </div>
 
-                  {/* Card 2: Assistente de chat (Maria) */}
+                  {/* Card 2: Assistente de WhatsApp (Camila) */}
                   <div
                     onClick={() => handleSelectAssistantType('chat')}
                     className={`p-4 rounded-xl flex flex-col justify-start min-h-[140px] text-left cursor-pointer transition-all ${
@@ -2769,7 +2781,7 @@ export default function InsideDashboardSection({ onOpenDemo, onOpenLegal, onOpen
                     </div>
                   </div>
 
-                  {/* Card 3: Chat + Ligação (Ana) */}
+                  {/* Card 3: Webchat do Site (Beatriz) */}
                   <div
                     onClick={() => handleSelectAssistantType('hibrido')}
                     className={`p-4 rounded-xl flex flex-col justify-start min-h-[140px] text-left cursor-pointer transition-all ${
@@ -2785,7 +2797,7 @@ export default function InsideDashboardSection({ onOpenDemo, onOpenLegal, onOpen
                       <h4 className="text-sm font-bold text-[#1A1816]">Chat + Ligação</h4>
                     </div>
                     <p className="text-xs text-[#736F69] leading-relaxed">
-                      O mesmo assistente no WhatsApp, no chatbot e no telefone.
+                      Concierge virtual do site institucional para tirar dúvidas e capturar contatos.
                     </p>
                   </div>
 

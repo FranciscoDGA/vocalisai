@@ -9,7 +9,7 @@ import { formatPhoneMask, formatPhoneForVoice, cleanRawPhone } from '../utils/ph
 import { speakFemalePt } from '../utils/voiceUtils';
 import { saveLead, updateLead } from '../utils/supabaseClient';
 import { sendWhatsAppMessage } from '../utils/uazapiClient';
-import { askRobertaAI } from '../utils/aiService';
+import { askDeboraAI } from '../utils/aiService';
 
 export default function TestCallModal({ isOpen, phoneNumber, countryCode = '+55', onClose, onOpenAuth }) {
   const [callState, setCallState] = useState('calling'); // 'calling' | 'connected' | 'ended'
@@ -33,13 +33,13 @@ export default function TestCallModal({ isOpen, phoneNumber, countryCode = '+55'
   const formattedDisplayPhone = formatPhoneMask(phoneNumber) || '(11) 98765-4321';
   const spokenPhone = formatPhoneForVoice(phoneNumber);
 
-  // Roteiro estruturado de Diagnóstico Empresarial ao Vivo (Estilo demonstração ao vivo da Roberta)
+  // Roteiro estruturado de Diagnóstico Empresarial ao Vivo (Estilo demonstração ao vivo da Débora)
   const conversationScript = [
     {
       step: 0,
-      speaker: 'Roberta (Vocalis · AI Agency OS)',
-      spokenText: `Olá! Aqui é a Roberta da inteligência da Vocalis e do AI Agency OS. Liguei para o seu número ${spokenPhone} para fazer um diagnóstico rápido da sua empresa em menos de um minuto. Me conta: qual é o ramo da sua empresa hoje e como funciona o seu atendimento?`,
-      displayText: `Olá! Aqui é a Roberta da inteligência da Vocalis (AI Agency OS). Estou ligando para o seu número ${countryCode} ${formattedDisplayPhone} para fazer um diagnóstico rápido da sua empresa ao vivo. Me conta: qual é o ramo da sua empresa hoje e como funciona o seu atendimento?`,
+      speaker: 'Débora (Vocalis · AI Agency OS)',
+      spokenText: `Olá! Aqui é a Débora da inteligência da Vocalis e do AI Agency OS. Liguei para o seu número ${spokenPhone} para fazer um diagnóstico rápido da sua empresa em menos de um minuto. Me conta: qual é o ramo da sua empresa hoje e como funciona o seu atendimento?`,
+      displayText: `Olá! Aqui é a Débora da inteligência da Vocalis (AI Agency OS). Estou ligando para o seu número ${countryCode} ${formattedDisplayPhone} para fazer um diagnóstico rápido da sua empresa ao vivo. Me conta: qual é o ramo da sua empresa hoje e como funciona o seu atendimento?`,
       promptHint: 'Selecione o ramo da sua empresa ou fale no microfone:',
       options: [
         { label: '🏥 Clínica Médica / Consultório Odontológico', niche: 'Clínica Médica' },
@@ -51,7 +51,7 @@ export default function TestCallModal({ isOpen, phoneNumber, countryCode = '+55'
     },
     {
       step: 1,
-      speaker: 'Roberta (Vocalis · AI Agency OS)',
+      speaker: 'Débora (Vocalis · AI Agency OS)',
       spokenText: (niche) => `Perfeito! No setor de ${niche || 'empresas e serviços'}, a maior perda de faturamento acontece quando o cliente liga e cai na caixa postal ou quando a resposta no WhatsApp demora mais de três minutos. Qual é hoje a sua maior dificuldade? Perder vendas fora do horário, equipe sobrecarregada ou faltas de clientes agendados?`,
       displayText: (niche) => `Perfeito! No setor de ${niche || 'empresas e serviços'}, a maior perda de faturamento acontece quando o cliente liga e cai na caixa postal ou quando a resposta no WhatsApp demora mais de 3 minutos. Qual é hoje a maior dor no atendimento de vocês?`,
       promptHint: 'Qual é o maior gargalo no seu atendimento hoje?',
@@ -64,7 +64,7 @@ export default function TestCallModal({ isOpen, phoneNumber, countryCode = '+55'
     },
     {
       step: 2,
-      speaker: 'Roberta (Vocalis · AI Agency OS)',
+      speaker: 'Débora (Vocalis · AI Agency OS)',
       spokenText: (niche, pain) => `Entendi perfeitamente. Com a Vocalis, a sua IA atende no primeiro toque com voz humana, agenda consultas e resolve dúvidas no ato. E quer ver o poder do nosso sistema em tempo real? Enquanto estamos conversando aqui no telefone, eu acabei de gerar um Pix de teste de um real e mandei uma mensagem no seu WhatsApp com o resumo completo desse diagnóstico! Dá uma olhada na sua tela.`,
       displayText: (niche, pain) => `Entendi perfeitamente! Com a nossa IA, você resolve o problema de ${pain || 'atendimento'} no primeiro segundo. E olha que incrível: enquanto estamos conversando aqui no telefone, eu acabei de gerar um Pix de teste no valor de R$ 1,00 e mandei uma mensagem no seu WhatsApp com o resumo completo desse diagnóstico! Dá uma olhada na sua tela agora.`,
       promptHint: 'Ação executada em tempo real na ligação!',
@@ -77,7 +77,7 @@ export default function TestCallModal({ isOpen, phoneNumber, countryCode = '+55'
     },
     {
       step: 3,
-      speaker: 'Roberta (Vocalis · AI Agency OS)',
+      speaker: 'Débora (Vocalis · AI Agency OS)',
       spokenText: () => `Essa é a diferença entre um robô comum e uma IA executora de alto nível. Ela fala como humano, cobra, agenda e fecha negócios para você vinte e quatro horas por dia. Temos a condição especial de lançamento com trinta por cento de desconto e garantia de trinta dias. Quer liberar o seu acesso agora?`,
       displayText: () => `Essa é a diferença entre um robô genérico e a nossa IA executora. Ela fala como humano, cobra, agenda e fecha negócios 24 horas por dia. Hoje temos a condição de lançamento com 30% OFF nos 3 primeiros meses e 30 dias de garantia total. Quer ativar agora?`,
       promptHint: 'Ativação imediata da plataforma:',
@@ -98,7 +98,7 @@ export default function TestCallModal({ isOpen, phoneNumber, countryCode = '+55'
     );
   };
 
-  // Reconhecimento de fala nativo (Speech-to-Text) para falar diretamente com a Roberta
+  // Reconhecimento de fala nativo (Speech-to-Text) para falar diretamente com a Débora
   useEffect(() => {
     const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
     if (SpeechRecognition) {
@@ -161,13 +161,13 @@ export default function TestCallModal({ isOpen, phoneNumber, countryCode = '+55'
       // Registra pergunta do usuário no log
       setCallLog(prev => [...prev, { speaker: 'Você', text, time: formatDuration(callDuration) }]);
       
-      // Resposta dinâmica da Roberta via Gemini AI
-      const aiResponse = await askRobertaAI(text, { niche: userNiche, pain: userPain });
+      // Resposta dinâmica da Débora via Gemini AI
+      const aiResponse = await askDeboraAI(text, { niche: userNiche, pain: userPain });
       const replyText = aiResponse.text;
 
       setTimeout(() => {
         setCallLog(prev => [...prev, {
-          speaker: 'Roberta (Vocalis · Gemini AI)',
+          speaker: 'Débora (Vocalis · Gemini AI)',
           text: replyText,
           time: formatDuration(callDuration + 1)
         }]);
@@ -214,7 +214,7 @@ export default function TestCallModal({ isOpen, phoneNumber, countryCode = '+55'
       // Inicia a primeira fala com voz feminina
       const firstStep = conversationScript[0];
       setCallLog([{ 
-        speaker: 'Roberta (Vocalis · AI Agency OS)', 
+        speaker: 'Débora (Vocalis · AI Agency OS)', 
         text: firstStep.displayText, 
         time: '00:01' 
       }]);
@@ -259,7 +259,7 @@ export default function TestCallModal({ isOpen, phoneNumber, countryCode = '+55'
         }, 1500);
 
         // Disparo real via UazAPI
-        const whatsappMsg = `👋 Olá! Aqui é a Roberta da *Vocalis AI*.\n\nAcabei de falar com você na demonstração ao vivo e organizei o seu diagnóstico:\n🏢 *Segmento:* ${chosenNiche || 'Empresa & Serviços'}\n🎯 *Gargalo:* ${chosenPain || 'Atendimento fora do horário'}\n⚡ *Solução:* Atendimento com voz neural em 450ms, agendamento e geração de Pix em tempo real.\n\n💬 Este é um contato de validação. Caso queira ativar essa IA na sua empresa ou agendar uma reunião, basta responder esta mensagem!`;
+        const whatsappMsg = `👋 Olá! Aqui é a Débora da *Vocalis AI*.\n\nAcabei de falar com você na demonstração ao vivo e organizei o seu diagnóstico:\n🏢 *Segmento:* ${chosenNiche || 'Empresa & Serviços'}\n🎯 *Gargalo:* ${chosenPain || 'Atendimento fora do horário'}\n⚡ *Solução:* Atendimento com voz neural em 450ms, agendamento e geração de Pix em tempo real.\n\n💬 Este é um contato de validação. Caso queira ativar essa IA na sua empresa ou agendar uma reunião, basta responder esta mensagem!`;
 
         sendWhatsAppMessage({
           phone: phoneNumber,
@@ -282,7 +282,7 @@ export default function TestCallModal({ isOpen, phoneNumber, countryCode = '+55'
 
       setTimeout(() => {
         setCallLog(prev => [...prev, { 
-          speaker: 'Roberta (Vocalis · AI Agency OS)', 
+          speaker: 'Débora (Vocalis · AI Agency OS)', 
           text: nextDisplay, 
           time: formatDuration(callDuration + 1) 
         }]);
@@ -351,7 +351,7 @@ export default function TestCallModal({ isOpen, phoneNumber, countryCode = '+55'
 
     const firstStep = conversationScript[0];
     setCallLog([{ 
-      speaker: 'Roberta (Vocalis · AI Agency OS)', 
+      speaker: 'Débora (Vocalis · AI Agency OS)', 
       text: firstStep.displayText, 
       time: '00:01' 
     }]);
@@ -386,7 +386,7 @@ export default function TestCallModal({ isOpen, phoneNumber, countryCode = '+55'
           </div>
           <div className="text-left text-xs pr-2">
             <div className="font-bold flex items-center gap-1.5">
-              <span>WhatsApp de Roberta (Vocalis)</span>
+              <span>WhatsApp de Débora (Vocalis)</span>
               <span className="text-[10px] bg-white/20 px-1.5 py-0.2 rounded font-mono">agora</span>
             </div>
             <p className="text-emerald-100 text-[11px] truncate max-w-xs sm:max-w-sm">
@@ -420,7 +420,7 @@ export default function TestCallModal({ isOpen, phoneNumber, countryCode = '+55'
               {callState === 'calling' && 'Discando para seu celular em tempo real...'}
               {callState === 'connected' && (
                 <>
-                  <span>Diagnóstico ao Vivo com Roberta</span>
+                  <span>Diagnóstico ao Vivo com Débora</span>
                   <span className="text-stone-500">•</span>
                   <span className="text-emerald-400 font-mono font-bold">{formatDuration(callDuration)}</span>
                 </>
@@ -458,7 +458,7 @@ export default function TestCallModal({ isOpen, phoneNumber, countryCode = '+55'
           </div>
 
           <h3 className="text-lg sm:text-xl font-bold text-white mt-1 flex items-center justify-center gap-2">
-            <span>Roberta · Consultora de IA</span>
+            <span>Débora · Consultora de IA</span>
             <span className="text-[10px] font-mono px-2 py-0.5 rounded bg-emerald-500/20 text-emerald-400 border border-emerald-500/30">
               Voz Neural
             </span>
@@ -521,7 +521,7 @@ export default function TestCallModal({ isOpen, phoneNumber, countryCode = '+55'
             {callLog.map((log, idx) => (
               <div key={idx} className="space-y-0.5">
                 <div className="flex items-center justify-between text-[10px] text-stone-400 font-mono">
-                  <span className={log.speaker.includes('Roberta') ? 'text-[#FF9E7D] font-bold' : 'text-stone-300'}>
+                  <span className={log.speaker.includes('Débora') ? 'text-[#FF9E7D] font-bold' : 'text-stone-300'}>
                     {log.speaker}
                   </span>
                   <span>{log.time}</span>
@@ -550,7 +550,7 @@ export default function TestCallModal({ isOpen, phoneNumber, countryCode = '+55'
                       ? 'bg-rose-600 text-white animate-pulse' 
                       : 'bg-stone-800 hover:bg-stone-700 text-stone-300'
                   }`}
-                  title="Falar com a Roberta usando seu microfone"
+                  title="Falar com a Débora usando seu microfone"
                 >
                   {isListeningMic ? (
                     <>
@@ -668,7 +668,7 @@ export default function TestCallModal({ isOpen, phoneNumber, countryCode = '+55'
                 </div>
                 <div className="text-left">
                   <div className="text-xs font-bold text-stone-100 flex items-center gap-1">
-                    <span>Roberta · Vocalis AI</span>
+                    <span>Débora · Vocalis AI</span>
                     <span className="text-[10px] text-emerald-400 font-normal">● Online</span>
                   </div>
                   <div className="text-[10px] text-stone-400">Conta Oficial Verificada</div>
@@ -688,7 +688,7 @@ export default function TestCallModal({ isOpen, phoneNumber, countryCode = '+55'
               {/* Balão 1: Resumo do Diagnóstico */}
               <div className="bg-[#202C33] p-3 rounded-2xl rounded-tl-sm border border-stone-800 max-w-[90%] text-xs space-y-2">
                 <p className="text-stone-200 leading-relaxed">
-                  👋 Olá! Aqui é a <strong>Roberta da Vocalis (AI Agency OS)</strong>. Acabei de falar com você no telefone e organizei seu diagnóstico:
+                  👋 Olá! Aqui é a <strong>Débora da Vocalis (AI Agency OS)</strong>. Acabei de falar com você no telefone e organizei seu diagnóstico:
                 </p>
                 <div className="p-2 rounded-xl bg-[#111B21] text-[11px] space-y-1 border border-stone-800">
                   <div>🏢 <strong>Segmento:</strong> {userNiche || 'Empresa & Serviços'}</div>
@@ -734,7 +734,7 @@ export default function TestCallModal({ isOpen, phoneNumber, countryCode = '+55'
 
               {/* Botão de Falar com Especialista Humano no WhatsApp */}
               <a
-                href={`https://wa.me/5594984423948?text=${encodeURIComponent(`Olá Francisco! Acabei de ver o diagnóstico da Roberta na Vocalis AI para ${userNiche || 'minha empresa'} e gostaria de falar com um especialista.`)}`}
+                href={`https://wa.me/5594984423948?text=${encodeURIComponent(`Olá Francisco! Acabei de ver o diagnóstico da Débora na Vocalis AI para ${userNiche || 'minha empresa'} e gostaria de falar com um especialista.`)}`}
                 target="_blank"
                 rel="noreferrer"
                 className="w-full py-2.5 rounded-xl bg-[#25D366] hover:bg-[#20bd5a] text-white font-bold text-xs transition-colors flex items-center justify-center gap-2 cursor-pointer shadow-md text-center"

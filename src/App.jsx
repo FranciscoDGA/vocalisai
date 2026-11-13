@@ -30,6 +30,7 @@ import CentralAjudaPage from './components/CentralAjudaPage';
 import CarreirasPage from './components/CarreirasPage';
 import ImprensaPage from './components/ImprensaPage';
 import ContatoPage from './components/ContatoPage';
+import WebchatWidget from './components/WebchatWidget';
 import { supabase, getCurrentUser, signOutUser } from './utils/supabaseClient';
 
 export default function App() {
@@ -304,6 +305,14 @@ export default function App() {
           onOpenDocs={handleOpenDocs}
           onOpenDemo={() => setDemoModalOpen(true)}
           onNavigate={handleNavigate}
+        />
+      )}
+
+      {/* Floating Webchat Widget com a Beatriz */}
+      {currentPage !== 'dashboard' && (
+        <WebchatWidget 
+          onOpenDemo={() => setDemoModalOpen(true)}
+          onOpenAuth={() => setAuthModalOpen(true)}
         />
       )}
 
