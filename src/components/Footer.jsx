@@ -37,16 +37,30 @@ export default function Footer({ onOpenDocs, onOpenDemo, onNavigate }) {
                 </a>
               </div>
               
-              <div className="flex items-center gap-2">
-                <Phone className="w-3.5 h-3.5 text-[#5C5955]" />
-                <span className="font-medium">(11) 3230-3340</span>
-                <span className="text-[#8C8881]">· ligue para a Joana</span>
+              <div>
+                <a 
+                  href="tel:+5594984478168"
+                  className="flex items-center gap-2 hover:text-[#C84B1F] transition-colors group cursor-pointer"
+                  title="Falar ou receber ligação da Roberta"
+                >
+                  <Phone className="w-3.5 h-3.5 text-[#5C5955] group-hover:text-[#C84B1F] shrink-0" />
+                  <span className="font-semibold text-[#1A1816] group-hover:text-[#C84B1F]">(94) 98447-8168</span>
+                  <span className="text-[#8C8881]">· Falar ou receber ligação da Roberta</span>
+                </a>
               </div>
 
-              <div className="flex items-center gap-2">
-                <MessageCircle className="w-3.5 h-3.5 text-[#5C5955]" />
-                <span className="font-medium">(11) 3230-3340</span>
-                <span className="text-[#8C8881]">· WhatsApp</span>
+              <div>
+                <a 
+                  href="https://wa.me/5594984423948?text=Ol%C3%A1!%20Vim%20pelo%20site%20da%20Vocalis%20AI%20e%20gostaria%20de%20falar%20com%20um%20especialista."
+                  target="_blank"
+                  rel="noreferrer"
+                  className="flex items-center gap-2 hover:text-[#16A34A] transition-colors group cursor-pointer"
+                  title="Falar com Especialista WhatsApp"
+                >
+                  <MessageCircle className="w-3.5 h-3.5 text-[#5C5955] group-hover:text-[#16A34A] shrink-0" />
+                  <span className="font-semibold text-[#1A1816] group-hover:text-[#16A34A]">(94) 98442-3948</span>
+                  <span className="text-[#8C8881]">· Falar com Especialista WhatsApp</span>
+                </a>
               </div>
             </div>
 

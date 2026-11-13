@@ -208,26 +208,25 @@ export default function ContatoPage({ onOpenDemo, onOpenAuth, onNavigate }) {
 
               <div className="flex items-center gap-2">
                 <Phone className="w-3.5 h-3.5 text-[#8C8881]" />
-                <span className="text-[#5C5955]">Ligue para a Joana:</span>
-                <button
-                  onClick={handleCopyPhone}
+                <span className="text-[#5C5955]">Falar ou receber ligação da Roberta:</span>
+                <a
+                  href="tel:+5594984478168"
                   className="font-bold text-[#1A1816] hover:text-[#C84B1F] transition-colors cursor-pointer inline-flex items-center gap-1"
                 >
-                  <span>(11) 3230-3340</span>
-                  {copiedPhone ? <Check className="w-3 h-3 text-emerald-600" /> : <Copy className="w-3 h-3 text-[#8C8881]" />}
-                </button>
+                  <span>(94) 98447-8168</span>
+                </a>
               </div>
 
               <div className="flex items-center gap-2">
                 <MessageCircle className="w-3.5 h-3.5 text-[#8C8881]" />
-                <span className="text-[#5C5955]">WhatsApp Comercial:</span>
+                <span className="text-[#5C5955]">Falar com Especialista WhatsApp:</span>
                 <a
                   href="https://wa.me/5594984423948?text=Ol%C3%A1%20Francisco!%20Vim%20pelo%20site%20da%20Vocalis%20AI%20e%20gostaria%20de%20um%20or%C3%A7amento."
                   target="_blank"
                   rel="noreferrer"
-                  className="font-bold text-[#1A1816] hover:text-[#C84B1F] transition-colors"
+                  className="font-bold text-[#1A1816] hover:text-[#16A34A] transition-colors"
                 >
-                  (94) 98442-3948 (AI Agency OS)
+                  (94) 98442-3948
                 </a>
               </div>
             </div>

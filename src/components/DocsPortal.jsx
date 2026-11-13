@@ -558,7 +558,7 @@ export default function DocsPortal({ isOpen, initialDoc = 'privacidade', onClose
                 <h4 className="font-bold text-[#1A1816]">Canais para solicitação imediata:</h4>
                 <ul className="list-disc pl-5 space-y-1 text-[#5C5955]">
                   <li>E-mail direto ao Encarregado (DPO): <a href="mailto:dpo@vocalis.ai" className="text-[#C84B1F] underline">dpo@vocalis.ai</a></li>
-                  <li>WhatsApp de Privacidade: <strong>(11) 3230-3340</strong></li>
+                  <li>WhatsApp de Privacidade: <strong>(94) 98442-3948</strong></li>
                   <li>Painel do Usuário: aba <em>Configurações da Conta &gt; Privacidade &gt; Solicitar Exclusão</em></li>
                 </ul>
               </div>
