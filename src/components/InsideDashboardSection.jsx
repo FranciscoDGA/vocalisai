@@ -10,9 +10,11 @@ import {
 } from 'lucide-react';
 import { BRAND } from '../data/content';
 import { getLeads, getAssistants, saveAssistant } from '../utils/supabaseClient';
+import DashboardPricingModal from './DashboardPricingModal';
 
 export default function InsideDashboardSection({ onOpenDemo, onOpenLegal, onOpenAuth, onOpenDocs, isStandalone = false, onLogout, currentUser, onNavigateHome }) {
   const [activeTab, setActiveTab] = useState('inicio');
+  const [pricingModalOpen, setPricingModalOpen] = useState(isStandalone);
   const [profileMenuOpen, setProfileMenuOpen] = useState(false);
   const [copiedLink, setCopiedLink] = useState(false);
   const [realLeads, setRealLeads] = useState([]);
@@ -332,7 +334,14 @@ export default function InsideDashboardSection({ onOpenDemo, onOpenLegal, onOpen
                 Supabase & IA Ativos
               </span>
             </div>
-            <div className="flex items-center gap-3">
+            <div className="flex items-center gap-2.5">
+              <button
+                onClick={() => setPricingModalOpen(true)}
+                className="px-3.5 py-1.5 rounded-xl bg-[#C84B1F] hover:bg-[#B34018] text-xs font-bold text-white transition-all shadow-sm hover:shadow cursor-pointer flex items-center gap-1.5"
+              >
+                <Sparkles className="w-3.5 h-3.5" />
+                <span>Planos (30% OFF)</span>
+              </button>
               {onNavigateHome && (
                 <button
                   onClick={onNavigateHome}
@@ -346,7 +355,7 @@ export default function InsideDashboardSection({ onOpenDemo, onOpenLegal, onOpen
                   onClick={onLogout}
                   className="px-3 py-1.5 rounded-xl bg-red-50 hover:bg-red-100 text-xs font-semibold text-red-700 border border-red-200 transition-colors cursor-pointer"
                 >
-                  Sair da Conta
+                  Sair
                 </button>
               )}
             </div>
@@ -629,11 +638,11 @@ export default function InsideDashboardSection({ onOpenDemo, onOpenLegal, onOpen
                       Admin • {userEmail}
                     </div>
                     <button 
-                      onClick={() => { setActiveTab('faturamento'); setProfileMenuOpen(false); }}
+                      onClick={() => { setPricingModalOpen(true); setProfileMenuOpen(false); }}
                       className={`w-full flex items-center gap-2.5 px-3 py-2 rounded-lg text-left transition-colors ${activeTab === 'faturamento' ? 'bg-[#FAF5EE] text-[#C84B1F] font-bold' : 'text-[#1A1816] hover:bg-[#FAF9F5]'}`}
                     >
                       <CreditCard className="w-3.5 h-3.5 text-[#5C5955]" />
-                      <span>Assinatura e faturamento</span>
+                      <span>Assinatura e planos</span>
                     </button>
                     <button 
                       onClick={() => { setActiveTab('bonus'); setProfileMenuOpen(false); }}
@@ -2824,6 +2833,13 @@ export default function InsideDashboardSection({ onOpenDemo, onOpenLegal, onOpen
           </div>
         </div>
       )}
+
+      {/* Modal de Escolha de Planos Onboarding (Réplica 1:1 Kloel) */}
+      <DashboardPricingModal 
+        isOpen={pricingModalOpen}
+        onClose={() => setPricingModalOpen(false)}
+        onOpenDemo={onOpenDemo}
+      />
 
     </section>
   );
