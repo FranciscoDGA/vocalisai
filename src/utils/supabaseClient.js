@@ -11,10 +11,12 @@ export const supabase = createClient(supabaseUrl, supabaseAnonKey);
 
 export async function signUpUser({ email, password, companyName = '' }) {
   try {
+    const redirectUrl = typeof window !== 'undefined' ? window.location.origin : 'https://vocalisai-phi.vercel.app';
     const { data, error } = await supabase.auth.signUp({
       email,
       password,
       options: {
+        emailRedirectTo: redirectUrl,
         data: {
           company_name: companyName,
           platform: 'Vocalis AI'
