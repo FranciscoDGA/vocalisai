@@ -8,12 +8,12 @@ import VoiceWaveformHeroCard from './VoiceWaveformHeroCard';
 import { formatPhoneMask, cleanRawPhone } from '../utils/phoneUtils';
 
 const ROTATING_PHRASES = [
-  'a qualquer hora.',
-  'na sua imobiliária.',
-  'na sua clínica.',
-  'na sua advocacia.',
-  'no seu consultório.',
-  '24 horas por dia.'
+  'da sua empresa,',
+  'da sua clínica,',
+  'da sua imobiliária,',
+  'da sua advocacia,',
+  'do seu consultório,',
+  'do seu negócio,'
 ];
 
 export default function Hero({ onOpenDemo, onOpenAuth }) {
@@ -115,12 +115,16 @@ export default function Hero({ onOpenDemo, onOpenAuth }) {
           <span>IA DE VOZ FEITA NO BRASIL</span>
         </div>
 
-        {/* Headline with dynamic typewriter niche rotation */}
+        {/* Headline with dynamic typewriter niche rotation in signature Vocalis Orange */}
         <h1 className="text-5xl sm:text-6xl md:text-7xl font-normal tracking-tight text-[#1A1816] max-w-4xl mx-auto leading-[1.08] mb-6">
-          A voz da sua empresa,<br />
-          <span className="font-serif-title italic font-normal text-[#1A1816] inline-block min-h-[1.12em]">
+          A voz{' '}
+          <span className="text-[#C84B1F] font-medium inline-block min-h-[1.12em]">
             {displayedPhrase}
             <span className="inline-block w-[3px] h-[0.78em] bg-[#C84B1F] ml-1.5 align-baseline animate-pulse rounded-full" />
+          </span>
+          <br />
+          <span className="font-serif-title italic font-normal text-[#1A1816]">
+            a qualquer hora.
           </span>
         </h1>
 
