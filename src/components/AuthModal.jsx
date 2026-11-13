@@ -227,15 +227,22 @@ export default function AuthModal({ isOpen, onClose, onOpenLegal, onSuccessLogin
               </div>
             ) : (
               <form onSubmit={handleSubmit} className="space-y-4">
-                {/* Botão de Acesso Imediato ao Painel (Garante que você nunca fique travado) */}
-                <button
-                  type="button"
-                  onClick={handleAdminBypass}
-                  className="w-full py-3 px-4 rounded-xl border border-emerald-300 bg-emerald-50 hover:bg-emerald-100 text-sm font-semibold text-emerald-900 flex items-center justify-center gap-2 transition-colors shadow-sm cursor-pointer"
-                >
-                  <Sparkles className="w-4 h-4 text-emerald-600" />
-                  <span>Entrar Imediato no Painel (Acesso Direto)</span>
-                </button>
+                {/* Acesso de Administrador (Visível exclusivamente quando você digita seu e-mail de admin) */}
+                {(email.trim().toLowerCase() === 'afiliadopebas@gmail.com' || (typeof window !== 'undefined' && window.location.search.includes('admin'))) && (
+                  <div className="p-3 rounded-xl bg-amber-50 border border-amber-200 text-amber-900 text-xs flex items-center justify-between gap-2 animate-fadeIn">
+                    <div className="flex items-center gap-1.5 font-medium">
+                      <Sparkles className="w-4 h-4 text-amber-600 shrink-0" />
+                      <span>Conta de Administrador detectada</span>
+                    </div>
+                    <button
+                      type="button"
+                      onClick={handleAdminBypass}
+                      className="px-3 py-1.5 rounded-lg bg-[#1A1816] text-white text-xs font-bold hover:bg-[#C84B1F] transition-colors cursor-pointer"
+                    >
+                      Acesso Imediato
+                    </button>
+                  </div>
+                )}
 
                 {errorMessage && (
                   <div className="p-3.5 rounded-xl bg-red-50 border border-red-200 text-red-800 text-xs flex flex-col gap-2">
