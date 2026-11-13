@@ -184,6 +184,20 @@ export default function App() {
             onNavigate={handleNavigate}
           />
         </main>
+      ) : currentPage === 'precos' ? (
+        <main className="flex-1 animate-fadeIn">
+          {/* Página Dedicada de Preços & Planos (Exclusiva) */}
+          <PricingSection 
+            onOpenAuth={() => setAuthModalOpen(true)}
+            onOpenDemo={() => setDemoModalOpen(true)}
+          />
+          <GuaranteesSection />
+          <FaqSection />
+          <CtaSection 
+            onOpenDemo={() => setDemoModalOpen(true)}
+            onOpenAuth={() => setAuthModalOpen(true)}
+          />
+        </main>
       ) : (
         <main className="flex-1">
           {/* 1. Hero with dark voice demo player & direct test */}
@@ -223,19 +237,13 @@ export default function App() {
             onOpenDemo={() => setDemoModalOpen(true)}
           />
 
-          {/* 8. Pricing Plans */}
-          <PricingSection 
-            onOpenAuth={() => setAuthModalOpen(true)}
-            onOpenDemo={() => setDemoModalOpen(true)}
-          />
-
-          {/* 9. Guarantees (30 Days, LGPD, You in control) */}
+          {/* 8. Guarantees (30 Days, LGPD, You in control) */}
           <GuaranteesSection />
 
-          {/* 10. FAQ Accordions */}
+          {/* 9. FAQ Accordions */}
           <FaqSection />
 
-          {/* 11. Final Conversion CTA Card & Big Quote */}
+          {/* 10. Final Conversion CTA Card & Big Quote */}
           <CtaSection 
             onOpenDemo={() => setDemoModalOpen(true)}
             onOpenAuth={() => setAuthModalOpen(true)}

@@ -414,14 +414,13 @@ export default function Navbar({ onOpenDemo, onOpenAuth, onOpenLegal, onOpenDocs
                 Parceiros
               </button>
 
-              {/* 6. Planos */}
-              <a 
-                href="#precos" 
-                onClick={() => handleNavClick('precos')} 
-                className="text-[13.5px] font-medium text-[#5C5955] hover:text-[#1A1816] transition-colors"
+              {/* 6. Preços / Planos */}
+              <button 
+                onClick={() => { if (onNavigate) { onNavigate('precos'); window.scrollTo({ top: 0, behavior: 'smooth' }); } }} 
+                className="text-[13.5px] font-medium text-[#5C5955] hover:text-[#1A1816] transition-colors cursor-pointer"
               >
-                Planos
-              </a>
+                Preços
+              </button>
             </nav>
 
           </div>
@@ -648,7 +647,7 @@ export default function Navbar({ onOpenDemo, onOpenAuth, onOpenLegal, onOpenDocs
           <div className="pt-2 font-bold text-xs uppercase tracking-wider text-[#8C8881]">Navegação</div>
           <a href="#casos-de-uso" onClick={() => setMobileMenuOpen(false)} className="block py-1 text-[#5C5955]">Casos de uso</a>
           <button onClick={() => { setMobileMenuOpen(false); if (onNavigate) onNavigate('parceiros'); }} className="block py-1 text-[#5C5955] text-left">Parceiros</button>
-          <a href="#precos" onClick={() => setMobileMenuOpen(false)} className="block py-1 text-[#5C5955]">Planos</a>
+          <button onClick={() => { setMobileMenuOpen(false); if (onNavigate) { onNavigate('precos'); window.scrollTo({ top: 0, behavior: 'smooth' }); } }} className="block py-1 text-left text-[#5C5955] cursor-pointer">Preços & Planos</button>
           
           <div className="pt-4 border-t border-[#EBE8E2] flex flex-col gap-2">
             <button

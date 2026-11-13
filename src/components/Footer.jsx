@@ -104,13 +104,12 @@ export default function Footer({ onOpenDocs, onOpenDemo, onNavigate }) {
                 </a>
               </li>
               <li>
-                <a 
-                  href="#precos" 
-                  onClick={() => { if (onNavigate) onNavigate('home'); }}
-                  className="text-[#5C5955] hover:text-[#1A1816] transition-colors block"
+                <button 
+                  onClick={() => { if (onNavigate) { onNavigate('precos'); window.scrollTo({ top: 0, behavior: 'smooth' }); } }}
+                  className="text-[#5C5955] hover:text-[#1A1816] transition-colors block text-left cursor-pointer"
                 >
-                  Planos
-                </a>
+                  Preços & Planos
+                </button>
               </li>
             </ul>
           </div>
