@@ -7,18 +7,20 @@ import {
   BarChart2, Clock, Activity, ArrowUpRight, Search, Radio, Globe, AlertCircle,
   ExternalLink, Sliders, Inbox, UserPlus, Database, Layers, Check, Video, Play, 
   MoreHorizontal, Info, Eye, EyeOff, Building, RefreshCw, Smartphone,
-  ChevronsLeft, ChevronsRight
+  ChevronsLeft, ChevronsRight, BookOpen
 } from 'lucide-react';
 import { BRAND } from '../data/content';
 import { getLeads, getAssistants, saveAssistant } from '../utils/supabaseClient';
 import DashboardPricingModal from './DashboardPricingModal';
 import KnowledgeBaseTab from './KnowledgeBaseTab';
+import AssistantDetailView from './AssistantDetailView';
 
 export default function InsideDashboardSection({ onOpenDemo, onOpenLegal, onOpenAuth, onOpenDocs, isStandalone = false, onLogout, currentUser, onNavigateHome }) {
   const [activeTab, setActiveTab] = useState('inicio');
   const [pricingModalOpen, setPricingModalOpen] = useState(isStandalone);
   const [profileMenuOpen, setProfileMenuOpen] = useState(false);
   const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
+  const [selectedAssistant, setSelectedAssistant] = useState(null);
   const [copiedLink, setCopiedLink] = useState(false);
   const [realLeads, setRealLeads] = useState([]);
 
@@ -90,6 +92,15 @@ export default function InsideDashboardSection({ onOpenDemo, onOpenLegal, onOpen
       status: 'Ativo',
       channel: 'Telefone (11) 4003-9821',
       calls: 38
+    },
+    {
+      id: 2,
+      name: 'Francisco Gomes',
+      type: 'chat',
+      typeName: 'Assistente de chat',
+      status: 'Ativo',
+      channel: 'WhatsApp + Chatbot de IA',
+      calls: 142
     }
   ]);
 
@@ -1839,78 +1850,101 @@ export default function InsideDashboardSection({ onOpenDemo, onOpenLegal, onOpen
                 9. TAB: ASSISTENTES
                ======================================================== */}
             {activeTab === 'assistentes' && (
-              <div className="space-y-6 animate-fadeIn">
-                <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-4 border-b border-[#EBE8E2]">
-                  <div>
-                    <h3 className="text-2xl font-bold text-[#1A1816]">Assistentes Virtuais</h3>
-                    <p className="text-xs text-[#5C5955] mt-1">Crie e configure agentes de voz neural, WhatsApp e Webchat.</p>
-                  </div>
-                  <button 
-                    onClick={() => openCreateModal('voz')}
-                    className="px-4 py-2 rounded-xl bg-[#1A1816] text-white text-xs font-bold hover:bg-black transition-colors flex items-center gap-1.5 cursor-pointer"
-                  >
-                    <Plus className="w-3.5 h-3.5" />
-                    <span>Criar assistente</span>
-                  </button>
-                </div>
-
-                {createdAssistants.length === 0 ? (
-                  <div className="py-20 flex flex-col items-center justify-center text-center max-w-xl mx-auto bg-white rounded-3xl border border-[#E7E4DC] p-12 shadow-sm animate-fadeIn">
-                    <div className="w-14 h-14 rounded-full bg-[#FAF5EE] border border-[#EDE5D8] flex items-center justify-center text-[#8C8881] mb-4">
-                      <Bot className="w-7 h-7 text-[#736F69]" />
+              selectedAssistant ? (
+                <AssistantDetailView 
+                  assistant={selectedAssistant}
+                  allAssistants={createdAssistants}
+                  onBack={() => setSelectedAssistant(null)}
+                  onSelectAssistant={(a) => setSelectedAssistant(a)}
+                  onOpenCreateModal={() => openCreateModal('chat')}
+                  onOpenPricing={() => setPricingModalOpen(true)}
+                />
+              ) : (
+                <div className="space-y-6 animate-fadeIn">
+                  <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-4 border-b border-[#EBE8E2]">
+                    <div>
+                      <h3 className="text-2xl font-bold text-[#1A1816]">Assistentes Virtuais</h3>
+                      <p className="text-xs text-[#5C5955] mt-1">Crie e configure agentes de voz neural, WhatsApp e Webchat.</p>
                     </div>
-                    <h4 className="text-lg font-bold text-[#1A1816] mb-5">Nenhum assistente ainda</h4>
-                    <button
+                    <button 
                       onClick={() => openCreateModal('voz')}
-                      className="px-6 py-2.5 rounded-xl bg-[#1A1816] hover:bg-black text-white text-xs font-bold transition-colors flex items-center gap-2 cursor-pointer shadow-sm hover:shadow"
+                      className="px-4 py-2 rounded-xl bg-[#1A1816] text-white text-xs font-bold hover:bg-black transition-colors flex items-center gap-1.5 cursor-pointer"
                     >
                       <Plus className="w-3.5 h-3.5" />
                       <span>Criar assistente</span>
                     </button>
                   </div>
-                ) : (
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                    {createdAssistants.map((ass) => (
-                    <div key={ass.id} className="p-5 rounded-2xl border border-[#E7E4DC] bg-white space-y-4 hover:border-[#D0CBC0] transition-colors">
-                      <div className="flex items-start justify-between">
-                        <div className="flex items-center gap-3">
-                          <div className="w-10 h-10 rounded-xl bg-[#FAF5EE] border border-[#F2E8DC] flex items-center justify-center text-[#C84B1F]">
-                            <Bot className="w-5 h-5" />
-                          </div>
-                          <div>
-                            <h4 className="text-sm font-bold text-[#1A1816]">{ass.name}</h4>
-                            <span className="text-[11px] text-[#736F69]">{ass.typeName}</span>
-                          </div>
-                        </div>
-                        <span className="px-2 py-0.5 rounded-full text-[10px] font-bold bg-emerald-50 text-emerald-700 border border-emerald-200">
-                          {ass.status}
-                        </span>
-                      </div>
 
-                      <div className="text-xs text-[#5C5955] space-y-1">
-                        <div>Canal: <strong className="text-[#1A1816]">{ass.channel}</strong></div>
-                        <div>Chamadas atendidas: <strong className="text-[#1A1816]">{ass.calls} ligações</strong></div>
+                  {createdAssistants.length === 0 ? (
+                    <div className="py-20 flex flex-col items-center justify-center text-center max-w-xl mx-auto bg-white rounded-3xl border border-[#E7E4DC] p-12 shadow-sm animate-fadeIn">
+                      <div className="w-14 h-14 rounded-full bg-[#FAF5EE] border border-[#EDE5D8] flex items-center justify-center text-[#8C8881] mb-4">
+                        <Bot className="w-7 h-7 text-[#736F69]" />
                       </div>
-
-                      <div className="pt-2 flex items-center gap-2 border-t border-[#F0EDE8]">
-                        <button 
-                          onClick={() => setTestCallModalOpen(true)}
-                          className="flex-1 py-1.5 rounded-lg border border-[#D0CBC0] text-xs font-semibold text-[#1A1816] hover:bg-[#FAF9F5]"
-                        >
-                          Testar voz
-                        </button>
-                        <button 
-                          onClick={onOpenDemo}
-                          className="px-3 py-1.5 rounded-lg bg-[#FAF9F5] border border-[#E7E4DC] text-xs font-semibold text-[#5C5955] hover:text-[#1A1816]"
-                        >
-                          Configurar
-                        </button>
-                      </div>
+                      <h4 className="text-lg font-bold text-[#1A1816] mb-5">Nenhum assistente ainda</h4>
+                      <button
+                        onClick={() => openCreateModal('voz')}
+                        className="px-6 py-2.5 rounded-xl bg-[#1A1816] hover:bg-black text-white text-xs font-bold transition-colors flex items-center gap-2 cursor-pointer shadow-sm hover:shadow"
+                      >
+                        <Plus className="w-3.5 h-3.5" />
+                        <span>Criar assistente</span>
+                      </button>
                     </div>
-                  ))}
+                  ) : (
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                      {createdAssistants.map((ass) => (
+                      <div 
+                        key={ass.id} 
+                        onClick={() => setSelectedAssistant(ass)}
+                        className="p-5 rounded-2xl border border-[#E7E4DC] bg-white space-y-4 hover:border-[#1A1816] hover:shadow-sm transition-all cursor-pointer"
+                      >
+                        <div className="flex items-start justify-between">
+                          <div className="flex items-center gap-3">
+                            <div className="w-10 h-10 rounded-xl bg-[#FAF5EE] border border-[#F2E8DC] flex items-center justify-center text-[#C84B1F]">
+                              <Bot className="w-5 h-5" />
+                            </div>
+                            <div>
+                              <h4 className="text-sm font-bold text-[#1A1816]">{ass.name}</h4>
+                              <span className="text-[11px] text-[#736F69]">{ass.typeName}</span>
+                            </div>
+                          </div>
+                          <span className="px-2 py-0.5 rounded-full text-[10px] font-bold bg-emerald-50 text-emerald-700 border border-emerald-200">
+                            {ass.status}
+                          </span>
+                        </div>
+
+                        <div className="text-xs text-[#5C5955] space-y-1">
+                          <div>Canal: <strong className="text-[#1A1816]">{ass.channel}</strong></div>
+                          <div>Chamadas atendidas: <strong className="text-[#1A1816]">{ass.calls} ligações</strong></div>
+                        </div>
+
+                        <div className="pt-2 flex items-center gap-2 border-t border-[#F0EDE8]">
+                          <button 
+                            type="button"
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              setTestCallModalOpen(true);
+                            }}
+                            className="flex-1 py-1.5 rounded-lg border border-[#D0CBC0] text-xs font-semibold text-[#1A1816] hover:bg-[#FAF9F5]"
+                          >
+                            {ass.type === 'voz' ? 'Testar voz' : 'Testar conversa'}
+                          </button>
+                          <button 
+                            type="button"
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              setSelectedAssistant(ass);
+                            }}
+                            className="px-4 py-1.5 rounded-lg bg-[#1A1816] hover:bg-black text-white text-xs font-semibold transition-colors"
+                          >
+                            Configurar
+                          </button>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                  )}
                 </div>
-                )}
-              </div>
+              )
             )}
 
             {/* ========================================================
