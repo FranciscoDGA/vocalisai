@@ -196,7 +196,7 @@ export default function DashboardPricingModal({ isOpen, onClose, onOpenDemo }) {
               <span className="w-[3px] h-3 bg-[#C84B1F] rounded-full"></span>
             </div>
             <span className="text-xl font-bold tracking-tight text-[#1A1816]">
-              {BRAND.name.toLowerCase()}
+              Vocalis <span className="text-[#C84B1F]">AI</span>
             </span>
           </div>
 

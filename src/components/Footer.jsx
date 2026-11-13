@@ -16,12 +16,12 @@ export default function Footer({ onOpenDocs, onOpenDemo, onNavigate }) {
             {/* Logo clean soundwave bars */}
             <div className="flex items-center gap-2.5">
               <div className="flex items-center gap-[3px] h-5">
-                <span className="w-[3px] h-3.5 bg-[#C84B1F] rounded-full"></span>
-                <span className="w-[3px] h-5 bg-[#C84B1F] rounded-full"></span>
-                <span className="w-[3px] h-3 bg-[#C84B1F] rounded-full"></span>
+                <span className="w-[3px] h-3.5 bg-gradient-to-t from-[#C84B1F] to-[#EA580C] rounded-full"></span>
+                <span className="w-[3px] h-5 bg-gradient-to-t from-[#C84B1F] to-[#EA580C] rounded-full"></span>
+                <span className="w-[3px] h-3 bg-gradient-to-t from-[#C84B1F] to-[#EA580C] rounded-full"></span>
               </div>
               <span className="text-2xl font-bold tracking-tight text-[#1A1816] font-sans">
-                {BRAND.name.toLowerCase()}
+                Vocalis <span className="text-[#C84B1F] font-extrabold">AI</span>
               </span>
             </div>
 

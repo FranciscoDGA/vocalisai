@@ -51,18 +51,18 @@ export default function Navbar({ onOpenDemo, onOpenAuth, onOpenLegal, onOpenDocs
           {/* Left Group: Logo + Desktop Navigation */}
           <div className="flex items-center gap-8 lg:gap-10">
             
-            {/* Clean Modern Logo (Matching user's print) */}
+            {/* Clean Modern Logo (Matching user's print with Vocalis AI) */}
             <button 
               onClick={() => { if (onNavigate) onNavigate('home'); }} 
               className="flex items-center gap-2.5 group shrink-0 text-left"
             >
               <div className="flex items-center gap-[3px] h-5">
-                <span className="w-[3px] h-3.5 bg-[#C84B1F] rounded-full"></span>
-                <span className="w-[3px] h-5 bg-[#C84B1F] rounded-full"></span>
-                <span className="w-[3px] h-3 bg-[#C84B1F] rounded-full"></span>
+                <span className="w-[3px] h-3.5 bg-gradient-to-t from-[#C84B1F] to-[#EA580C] rounded-full"></span>
+                <span className="w-[3px] h-5 bg-gradient-to-t from-[#C84B1F] to-[#EA580C] rounded-full"></span>
+                <span className="w-[3px] h-3 bg-gradient-to-t from-[#C84B1F] to-[#EA580C] rounded-full"></span>
               </div>
               <span className="text-xl font-bold tracking-tight text-[#1A1816] font-sans">
-                {BRAND.name.toLowerCase()}
+                Vocalis <span className="text-[#C84B1F] font-extrabold">AI</span>
               </span>
             </button>
 
@@ -518,7 +518,7 @@ export default function Navbar({ onOpenDemo, onOpenAuth, onOpenLegal, onOpenDocs
                   onClick={onOpenAuth}
                   className="inline-flex items-center gap-2 px-5 py-2.5 rounded-full bg-[#11100F] text-white text-[13.5px] font-semibold hover:bg-black transition-all shadow-sm hover:shadow cursor-pointer"
                 >
-                  <span>Criar minha {BRAND.name.toLowerCase()}</span>
+                  <span>Criar minha Vocalis AI</span>
                   <ArrowRight className="w-3.5 h-3.5 text-white/80" />
                 </button>
               </div>

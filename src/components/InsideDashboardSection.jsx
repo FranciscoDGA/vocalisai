@@ -429,7 +429,7 @@ export default function InsideDashboardSection({ onOpenDemo, onOpenLegal, onOpen
                     <span className="w-[2px] h-2 bg-[#C84B1F] rounded-full"></span>
                   </div>
                 </div>
-                <span className="font-bold text-sm text-[#1A1816] tracking-tight">{BRAND.name.toLowerCase()}</span>
+                <span className="font-bold text-sm text-[#1A1816] tracking-tight">Vocalis <span className="text-[#C84B1F]">AI</span></span>
               </div>
 
               {/* Workspace Profile Button Mobile */}
@@ -555,7 +555,7 @@ export default function InsideDashboardSection({ onOpenDemo, onOpenLegal, onOpen
                   </div>
                 </div>
                 {!sidebarCollapsed && (
-                  <span className="font-bold text-lg text-[#1A1816] tracking-tight truncate">{BRAND.name.toLowerCase()}</span>
+                  <span className="font-bold text-lg text-[#1A1816] tracking-tight truncate">Vocalis <span className="text-[#C84B1F]">AI</span></span>
                 )}
               </div>
 

@@ -1,5 +1,5 @@
 export const BRAND = {
-  name: 'Vocalis',
+  name: 'Vocalis AI',
   tagline: 'A voz da sua empresa, a qualquer hora.',
   subtitle: 'IA que atende telefone e WhatsApp na voz e no tom da sua marca. Nunca mais perca um cliente que ligou fora de hora, demorou para ser atendido ou caiu numa fila.',
   ctaPrimary: 'Criar assistente',
