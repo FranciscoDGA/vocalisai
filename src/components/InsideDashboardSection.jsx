@@ -259,6 +259,29 @@ export default function InsideDashboardSection({ onOpenDemo, onOpenLegal, onOpen
     setTimeout(() => setCopiedLink(false), 2000);
   };
 
+  const openCreateModal = (type = 'voz') => {
+    setSelectedType(type);
+    if (type === 'voz') {
+      setAssistantName('Roberta');
+    } else if (type === 'chat') {
+      setAssistantName('Maria');
+    } else if (type === 'hibrido') {
+      setAssistantName('Ana');
+    }
+    setCreateModalOpen(true);
+  };
+
+  const handleSelectAssistantType = (type) => {
+    setSelectedType(type);
+    if (type === 'voz') {
+      setAssistantName('Roberta');
+    } else if (type === 'chat') {
+      setAssistantName('Maria');
+    } else if (type === 'hibrido') {
+      setAssistantName('Ana');
+    }
+  };
+
   const handleCreateAssistant = async (e) => {
     e.preventDefault();
     const typeNames = {
@@ -1819,7 +1842,7 @@ export default function InsideDashboardSection({ onOpenDemo, onOpenLegal, onOpen
                     <p className="text-xs text-[#5C5955] mt-1">Crie e configure agentes de voz neural, WhatsApp e Webchat.</p>
                   </div>
                   <button 
-                    onClick={() => setCreateModalOpen(true)}
+                    onClick={() => openCreateModal('voz')}
                     className="px-4 py-2 rounded-xl bg-[#1A1816] text-white text-xs font-bold hover:bg-black transition-colors flex items-center gap-1.5 cursor-pointer"
                   >
                     <Plus className="w-3.5 h-3.5" />
@@ -1834,7 +1857,7 @@ export default function InsideDashboardSection({ onOpenDemo, onOpenLegal, onOpen
                     </div>
                     <h4 className="text-lg font-bold text-[#1A1816] mb-5">Nenhum assistente ainda</h4>
                     <button
-                      onClick={() => setCreateModalOpen(true)}
+                      onClick={() => openCreateModal('voz')}
                       className="px-6 py-2.5 rounded-xl bg-[#1A1816] hover:bg-black text-white text-xs font-bold transition-colors flex items-center gap-2 cursor-pointer shadow-sm hover:shadow"
                     >
                       <Plus className="w-3.5 h-3.5" />
@@ -2607,70 +2630,133 @@ export default function InsideDashboardSection({ onOpenDemo, onOpenLegal, onOpen
           MODALS
          ======================================================== */}
 
-      {/* 1. Modal: Criar Assistente */}
+      {/* 1. Modal: Criar Assistente (Réplica Exata 1:1 Kloel Screenshots) */}
       {createModalOpen && (
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm animate-fadeIn">
-          <div className="bg-white rounded-3xl max-w-lg w-full p-6 sm:p-8 border border-[#E7E4DC] shadow-2xl relative">
+          <div 
+            className="bg-white rounded-3xl max-w-3xl w-full p-6 sm:p-8 border border-[#E7E4DC] shadow-2xl relative"
+            onClick={(e) => e.stopPropagation()}
+          >
             <button 
               onClick={() => setCreateModalOpen(false)}
-              className="absolute right-5 top-5 w-8 h-8 rounded-full bg-[#FAF9F5] border border-[#E7E4DC] flex items-center justify-center text-[#5C5955] hover:text-[#1A1816]"
+              className="absolute right-6 top-6 w-8 h-8 rounded-full bg-white hover:bg-[#FAF9F5] border border-[#E7E4DC] flex items-center justify-center text-[#736F69] hover:text-[#1A1816] transition-colors cursor-pointer"
             >
               <X className="w-4 h-4" />
             </button>
-            <h3 className="text-xl font-bold text-[#1A1816] mb-1">Criar novo assistente</h3>
-            <p className="text-xs text-[#5C5955] mb-6">Escolha a modalidade de atendimento e defina os parâmetros básicos.</p>
+            
+            <h3 className="text-xl font-bold text-[#1A1816] mb-6">Criar assistente</h3>
 
-            <form onSubmit={handleCreateAssistant} className="space-y-4">
+            <form onSubmit={handleCreateAssistant}>
               <div>
-                <label className="block text-xs font-semibold text-[#1A1816] mb-1">Nome do assistente</label>
+                <label className="block text-xs font-bold text-[#1A1816] mb-3">
+                  Tipo de assistente
+                </label>
+
+                {/* 3 Large Cards Grid with information below title */}
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-3.5">
+                  
+                  {/* Card 1: Assistente de voz (Roberta) */}
+                  <div
+                    onClick={() => handleSelectAssistantType('voz')}
+                    className={`p-4 rounded-xl flex flex-col justify-start min-h-[140px] text-left cursor-pointer transition-all ${
+                      selectedType === 'voz'
+                        ? 'border-2 border-[#1A1816] bg-white shadow-sm'
+                        : 'border border-[#E7E4DC] bg-white hover:border-[#D0CBC0]'
+                    }`}
+                  >
+                    <div className="flex items-center gap-2.5 mb-2">
+                      <div className="w-7 h-7 rounded-lg bg-[#E0F2FE] text-[#0284C7] flex items-center justify-center shrink-0">
+                        <Phone className="w-3.5 h-3.5" />
+                      </div>
+                      <h4 className="text-sm font-bold text-[#1A1816]">Assistente de voz</h4>
+                    </div>
+                    <p className="text-xs text-[#736F69] leading-relaxed">
+                      Assistente baseado em telefone para chamadas.
+                    </p>
+                  </div>
+
+                  {/* Card 2: Assistente de chat (Maria) */}
+                  <div
+                    onClick={() => handleSelectAssistantType('chat')}
+                    className={`p-4 rounded-xl flex flex-col justify-start min-h-[140px] text-left cursor-pointer transition-all ${
+                      selectedType === 'chat'
+                        ? 'border-2 border-[#1A1816] bg-white shadow-sm'
+                        : 'border border-[#E7E4DC] bg-white hover:border-[#D0CBC0]'
+                    }`}
+                  >
+                    <div className="flex items-center gap-2.5 mb-2">
+                      <div className="w-7 h-7 rounded-lg bg-[#F3E8FF] text-[#9333EA] flex items-center justify-center shrink-0">
+                        <MessageCircle className="w-3.5 h-3.5" />
+                      </div>
+                      <h4 className="text-sm font-bold text-[#1A1816]">Assistente de chat</h4>
+                    </div>
+                    <p className="text-xs text-[#736F69] leading-relaxed mb-2.5">
+                      Assistente baseado em chat para:
+                    </p>
+                    <div className="flex flex-wrap items-center gap-2">
+                      <span className="px-2.5 py-1 rounded-md bg-[#DCFCE7] text-[#16A34A] text-[11px] font-semibold flex items-center gap-1.5">
+                        <MessageSquare className="w-3 h-3 text-[#16A34A]" />
+                        <span>WhatsApp</span>
+                      </span>
+                      <span className="px-2.5 py-1 rounded-md bg-[#F3E8FF] text-[#9333EA] text-[11px] font-semibold flex items-center gap-1.5">
+                        <Bot className="w-3 h-3 text-[#9333EA]" />
+                        <span>Chatbot de IA</span>
+                      </span>
+                    </div>
+                  </div>
+
+                  {/* Card 3: Chat + Ligação (Ana) */}
+                  <div
+                    onClick={() => handleSelectAssistantType('hibrido')}
+                    className={`p-4 rounded-xl flex flex-col justify-start min-h-[140px] text-left cursor-pointer transition-all ${
+                      selectedType === 'hibrido'
+                        ? 'border-2 border-[#1A1816] bg-white shadow-sm'
+                        : 'border border-[#E7E4DC] bg-white hover:border-[#D0CBC0]'
+                    }`}
+                  >
+                    <div className="flex items-center gap-2.5 mb-2">
+                      <div className="w-7 h-7 rounded-lg bg-[#DCFCE7] text-[#16A34A] flex items-center justify-center shrink-0">
+                        <Headphones className="w-3.5 h-3.5" />
+                      </div>
+                      <h4 className="text-sm font-bold text-[#1A1816]">Chat + Ligação</h4>
+                    </div>
+                    <p className="text-xs text-[#736F69] leading-relaxed">
+                      O mesmo assistente no WhatsApp, no chatbot e no telefone.
+                    </p>
+                  </div>
+
+                </div>
+              </div>
+
+              {/* Field 2: Nome Input (com nomes automáticos: Roberta, Maria, Ana) */}
+              <div className="mt-6">
+                <label className="block text-xs font-bold text-[#1A1816] mb-2">
+                  Nome
+                </label>
                 <input 
                   type="text" 
                   value={assistantName} 
                   onChange={(e) => setAssistantName(e.target.value)}
-                  placeholder="Ex: Roberta, Lucas, Dra. Clara"
-                  className="w-full px-3 py-2 rounded-xl border border-[#D0CBC0] text-xs focus:outline-none focus:border-[#C84B1F]"
+                  placeholder="Nome do assistente"
+                  className="w-full px-4 py-2.5 rounded-xl border border-[#D0CBC0] text-sm text-[#1A1816] focus:outline-none focus:border-[#1A1816] bg-white"
                   required
                 />
               </div>
 
-              <div>
-                <label className="block text-xs font-semibold text-[#1A1816] mb-2">Canal principal</label>
-                <div className="grid grid-cols-3 gap-2">
-                  {[
-                    { id: 'voz', label: 'Telefone (Voz)', icon: Phone },
-                    { id: 'chat', label: 'WhatsApp', icon: MessageCircle },
-                    { id: 'hibrido', label: 'Voz + Chat', icon: Sparkles }
-                  ].map(opt => (
-                    <button
-                      type="button"
-                      key={opt.id}
-                      onClick={() => setSelectedType(opt.id)}
-                      className={`p-3 rounded-xl border text-center transition-all ${
-                        selectedType === opt.id 
-                          ? 'border-[#C84B1F] bg-[#FAF5EE] text-[#C84B1F] font-bold' 
-                          : 'border-[#E7E4DC] hover:border-[#D0CBC0] text-[#5C5955]'
-                      }`}
-                    >
-                      <opt.icon className="w-4 h-4 mx-auto mb-1.5" />
-                      <span className="text-[11px] block">{opt.label}</span>
-                    </button>
-                  ))}
-                </div>
-              </div>
-
-              <div className="pt-4 flex gap-3">
+              {/* Action Buttons (Cancelar / Criar assistente) */}
+              <div className="pt-8 flex items-center justify-end gap-3">
                 <button 
                   type="button"
                   onClick={() => setCreateModalOpen(false)}
-                  className="flex-1 py-2.5 rounded-xl border border-[#D0CBC0] text-xs font-bold text-[#5C5955] hover:bg-[#FAF9F5]"
+                  className="px-5 py-2.5 rounded-xl bg-[#F5F4F0] hover:bg-[#EFECE6] text-xs font-semibold text-[#1A1816] transition-colors cursor-pointer"
                 >
                   Cancelar
                 </button>
                 <button 
                   type="submit"
-                  className="flex-1 py-2.5 rounded-xl bg-[#1A1816] text-white text-xs font-bold hover:bg-black"
+                  className="px-6 py-2.5 rounded-xl bg-[#1A1816] hover:bg-black text-white text-xs font-bold transition-colors cursor-pointer shadow-sm hover:shadow"
                 >
-                  Criar agora
+                  Criar assistente
                 </button>
               </div>
             </form>
