@@ -328,25 +328,88 @@ Você tem duas fontes de receita massiva com essa plataforma:
 
 ---
 
-## 10. PAUTA E SPRINT DE EXECUÇÃO PARA AMANHÃ (CHECKLIST PRONTO)
+## 10. PAUTA E SPRINT DE EXECUÇÃO REALIZADA (STATUS ATUAL)
 
-Quando você abrir o projeto amanhã, este é o plano de execução imediato que vamos consultar e implementar passo a passo:
+### ✅ Entregas Concluídas e Homologadas em Produção:
+1. **Banco de Dados Supabase Conectado:**
+   * Projeto: `https://gikfoieyrbqnuxhmhtag.supabase.co`;
+   * Tabelas criadas e ativas com RLS: `leads`, `assistants`, `calls`;
+   * Captura automática de leads na Landing Page e no modal ao vivo;
+   * Autenticação real com Supabase Auth (`AuthModal.jsx`).
+2. **Cérebro de Inteligência Artificial Ativo:**
+   * Conexão com Google Gemini via Google AI Studio (`src/utils/aiService.js`);
+   * Prompt mestre da Roberta calibrado para voz e negócios em Português do Brasil;
+   * Diálogo interativo e dinâmico habilitado via microfone e texto no modal.
+3. **Deploy em Produção (Vercel & GitHub):**
+   * Repositório oficial no GitHub: `https://github.com/FranciscoDGA/vocalisai`;
+   * Aplicação online na Vercel com HTTPS: `https://vocalisai-phi.vercel.app`;
+   * Variáveis de ambiente de produção configuradas (`VITE_SUPABASE_URL`, `VITE_SUPABASE_ANON_KEY`, `VITE_GEMINI_API_KEY`).
+4. **Alinhamento Visual 1:1 com o Kloel:**
+   * A Landing Page foi limpa e otimizada (removendo a seção de preços gigante da home);
+   * Nova página dedicada e exclusiva de **Preços & Planos** acessível pelo menu e rodapé (`/precos`).
+5. **Canal Oficial de Transbordo & WhatsApp AI Agency OS:**
+   * Número comercial oficial integrado: **(94) 98442-3948**;
+   * Botões de contato direto no WhatsApp no Hero, ContatoPage, DemoModal e TestCallModal.
+6. **Integração de Telefonia Vapi:**
+   * Assistente de Saída criado: `5907a01b-07c9-4f00-977e-e828d913ee37`;
+   * Voz da Clara em Português configurada com a primeira mensagem da Roberta;
+   * Número de saída ativado: `+19256034058`.
 
-- [ ] **1. Conexão e Modelagem do Banco de Dados:**
-  * Configurar a persistência real de dados (Supabase / PostgreSQL / SQLite);
-  * Criar as tabelas: `workspaces`, `assistants`, `calls`, `contacts`, `leads_scoring` e `api_keys`;
-  * Salvar e carregar os assistentes criados e histórico real de chamadas.
-- [ ] **2. Integração Prática com o OpenBot (`openbot.run`):**
-  * Conectar os webhooks de entrada e saída com o motor do OpenBot;
-  * Testar o envio de variáveis contextuais (nome do cliente, nicho, histórico) para o fluxo do OpenBot;
-  * Receber a resposta dinâmica do OpenBot e sintetizá-la na voz neural da assistente.
-- [ ] **3. Disparo Real de Notificações e Webhooks:**
-  * Conectar provedor de envio de WhatsApp (Evolution API, Z-API ou Meta Cloud API oficial);
-  * Conectar gateway de pagamentos (Mercado Pago / Asaas / Stripe) para geração de cobrança Pix real em produção.
-- [ ] **4. Treinamento Prático & Simulação de Vendas Guiada:**
-  * Sessão passo a passo ensinando você a operar cada recurso do painel;
-  * Simulação de atendimento de um cliente real;
-  * Script de abordagem de vendas validado para prospectar os primeiros 5 clientes pagantes da sua agência.
+---
+
+## 11. ANÁLISE DE CUSTOS, UNIT ECONOMICS & MODELOS DE NEGÓCIO
+
+### 11.1 A Matemática Real por Minuto de Voz
+| Componente | Função | Custo Médio por Minuto |
+| :--- | :--- | :--- |
+| **Transcrição (STT)** | Escuta e transcrição da fala do cliente | ~R$ 0,02 / min |
+| **Inteligência (LLM)** | Raciocínio (Gemini / GPT) | ~R$ 0,03 / min |
+| **Síntese de Voz (TTS)** | Voz humana neural em português | ~R$ 0,15 a R$ 0,25 / min |
+| **Telefonia / Operadora** | Tráfego e comutação da chamada | ~R$ 0,10 a R$ 0,15 / min |
+| **Custo Total por Minuto** | **Chamada Completa de Voz** | **~R$ 0,35 a R$ 0,55 / min** |
+
+> **Alerta Crítico de Precificação:** Cobrar R$ 197/mês com consumo ilimitado ou franquia alta causa **prejuízo líquido**, pois um cliente que fale 800 minutos no mês custa ~R$ 396,00 de infraestrutura direta.
+
+---
+
+### 11.2 Comparação dos 02 Modelos de Faturamento
+
+#### CASO 1: Modelo "Tudo Incluso" (SaaS / Sua Conta e Risco)
+* **Como funciona:** O cliente não sabe o que é Vapi ou servidor; ele só passa o cartão e usa.
+* **Preço:** **R$ 497,00 a R$ 503,00/mês**.
+* **Regra Fundamental:** Franquia controlada de até **500 a 600 minutos/mês** (~300 atendimentos).
+* **Excedente:** Se o cliente passar da franquia, adquire pacote extra de R$ 70,00 por hora adicional.
+* **Economia Unitária:**
+  * Entrada: R$ 503,00
+  * Custo dos minutos (600 min × R$ 0,35): ~R$ 210,00
+  * **Lucro Líquido Limpo no Bolso:** **~R$ 293,00/mês por cliente**.
+* **Público:** PMEs e clientes que querem contratar sozinhos online com cartão de crédito.
+
+#### CASO 2: Modelo "Agência & Manutenção" (Conta e Cartão do Cliente)
+* **Como funciona:** Você atua como Arquiteto de IA do **AI Agency OS**. O cliente arca diretamente com o consumo dos minutos.
+* **Preço de Entrada (Setup):** **R$ 1.500,00 a R$ 3.500,00 à vista** (para treinar a IA, cadastrar regras da clínica e homologar os canais).
+* **Mensalidade de Gestão:** **R$ 397,00 a R$ 697,00/mês** para manutenção, atualizações de catálogo e suporte.
+* **Custos de Telefonia/IA:** Cobrados no cartão de crédito da clínica do cliente (Vapi / Twilio).
+* **Economia Unitária:**
+  * Risco financeiro de tráfego para sua agência: **Zero**.
+  * **Margem de Lucro:** **100% líquida** sobre o setup e sobre a mensalidade de gestão.
+* **Público:** Clínicas médicas/odontológicas, imobiliárias, escritórios de advocacia e empresas de médio porte.
+
+---
+
+## 12. PAUTA E CHECKLIST PARA O PRÓXIMO ENCONTRO (AMANHÃ)
+
+Quando você abrir o projeto amanhã, este é o roteiro exato para continuarmos sem perder tempo:
+
+- [ ] **1. Decisão e Cadastro na Kiwify:**
+  * Cadastrar o Plano 1 na Kiwify (recomendado R$ 497,00/mês para o Caso 1, ou link de Setup de R$ 2.500 para o Caso 2);
+  * Inserir o link de checkout nos botões da página de preços (`PricingSection.jsx`);
+  * Configurar o webhook da Kiwify para aprovação de contas.
+- [ ] **2. Ativação da Telefonia & WhatsApp:**
+  * Inserir recarga mínima ($5 ou $10) na Vapi para destravar ligações para celulares do Brasil (+55);
+  * Conectar a instância da UazAPI para disparo de mensagens e áudios instantâneos no WhatsApp.
+- [ ] **3. Domínio Próprio:**
+  * Registro de `vocalisai.com.br` no Registro.br e apontamento CNAME na Vercel.
 
 ---
 
