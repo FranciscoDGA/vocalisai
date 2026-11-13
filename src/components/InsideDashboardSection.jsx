@@ -1961,6 +1961,41 @@ export default function InsideDashboardSection({ onOpenDemo, onOpenLegal, onOpen
             )}
 
             {/* ========================================================
+                12. TAB: CAMPANHAS OUTBOUND (Réplica 1:1 Kloel Screenshot)
+               ======================================================== */}
+            {activeTab === 'campanhas' && (
+              <div className="space-y-6 animate-fadeIn w-full max-w-5xl">
+                <div className="flex items-center justify-between pb-2">
+                  <h2 className="text-3xl font-bold text-[#1A1816] tracking-tight">Campanhas outbound</h2>
+                  <button 
+                    onClick={() => setCreateModalOpen(true)}
+                    className="flex items-center gap-2 px-4 py-2.5 rounded-xl bg-[#1A1816] text-white text-xs font-bold hover:bg-black transition-colors cursor-pointer shadow-sm"
+                  >
+                    <Plus className="w-3.5 h-3.5" />
+                    <span>Nova campanha</span>
+                  </button>
+                </div>
+
+                <div className="bg-white rounded-2xl border border-[#E7E4DC] p-16 text-center max-w-xl mx-auto my-12 shadow-xs">
+                  <div className="w-12 h-12 rounded-full bg-[#FAF9F5] border border-[#E7E4DC] flex items-center justify-center mx-auto mb-4 text-[#736F69]">
+                    <Megaphone className="w-5 h-5" />
+                  </div>
+                  <h3 className="text-base font-bold text-[#1A1816] mb-1.5">Nenhuma campanha ainda</h3>
+                  <p className="text-xs text-[#736F69] max-w-md mx-auto mb-6 leading-relaxed">
+                    O assistente liga para uma lista de contatos no horário que você definir e registra cada conversa.
+                  </p>
+                  <button 
+                    onClick={() => setCreateModalOpen(true)}
+                    className="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl bg-[#1A1816] text-white text-xs font-bold hover:bg-black transition-colors cursor-pointer shadow-sm"
+                  >
+                    <Plus className="w-3.5 h-3.5" />
+                    <span>Criar primeira campanha</span>
+                  </button>
+                </div>
+              </div>
+            )}
+
+            {/* ========================================================
                 12. OTHER TABS (Agendador, E-Mail IA, Contatos, Integrações, Campanhas)
                ======================================================== */}
             {['agendador', 'email-ia', 'contatos', 'integracoes-hub'].includes(activeTab) && (
