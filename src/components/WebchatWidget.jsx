@@ -10,7 +10,7 @@ export default function WebchatWidget({ onOpenDemo, onOpenAuth }) {
     {
       id: 1,
       sender: 'beatriz',
-      text: 'Olá! 👋 Eu sou a Beatriz, assistente virtual do site da Vocalis. Como posso te ajudar hoje?',
+      text: 'Olá! 👋 Eu sou a Beatriz, assistente virtual da Vocalis AI. Como posso te ajudar hoje?',
       time: 'Agora'
     }
   ]);
