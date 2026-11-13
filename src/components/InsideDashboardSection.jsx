@@ -6,7 +6,8 @@ import {
   Mail, Send, Megaphone, Share2, Copy, Plus, X, MessageCircle, Headphones,
   BarChart2, Clock, Activity, ArrowUpRight, Search, Radio, Globe, AlertCircle,
   ExternalLink, Sliders, Inbox, UserPlus, Database, Layers, Check, Video, Play, 
-  MoreHorizontal, Info, Eye, EyeOff, Building, RefreshCw, Smartphone
+  MoreHorizontal, Info, Eye, EyeOff, Building, RefreshCw, Smartphone,
+  ChevronsLeft, ChevronsRight
 } from 'lucide-react';
 import { BRAND } from '../data/content';
 import { getLeads, getAssistants, saveAssistant } from '../utils/supabaseClient';
@@ -17,6 +18,7 @@ export default function InsideDashboardSection({ onOpenDemo, onOpenLegal, onOpen
   const [activeTab, setActiveTab] = useState('inicio');
   const [pricingModalOpen, setPricingModalOpen] = useState(isStandalone);
   const [profileMenuOpen, setProfileMenuOpen] = useState(false);
+  const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
   const [copiedLink, setCopiedLink] = useState(false);
   const [realLeads, setRealLeads] = useState([]);
 
@@ -371,11 +373,11 @@ export default function InsideDashboardSection({ onOpenDemo, onOpenLegal, onOpen
   };
 
   return (
-    <section id="dashboard" className={isStandalone ? "py-6 bg-[#FAF9F5] min-h-screen" : "py-24 bg-[#FAF9F5] border-t border-[#EBE8E2]"}>
-      <div className={isStandalone ? "max-w-7xl mx-auto px-4 sm:px-6 lg:px-8" : "max-w-6xl mx-auto px-4 sm:px-6 lg:px-8"}>
+    <div id="dashboard" className={isStandalone ? "w-full min-h-screen bg-white" : "py-24 bg-[#FAF9F5] border-t border-[#EBE8E2]"}>
+      <div className={isStandalone ? "w-full min-h-screen" : "max-w-6xl mx-auto px-4 sm:px-6 lg:px-8"}>
         
         {/* Section Header (Apenas na Landing Page) */}
-        {!isStandalone ? (
+        {!isStandalone && (
           <div className="text-center max-w-2xl mx-auto mb-14">
             <span className="inline-block text-xs font-semibold text-[#C84B1F] uppercase tracking-wider mb-3">
               SISTEMA OPERACIONAL VOCALIS
@@ -388,130 +390,120 @@ export default function InsideDashboardSection({ onOpenDemo, onOpenLegal, onOpen
               Navegue pelo painel completo da Vocalis: crie assistentes, conecte números, configure o WhatsApp Business, gerencie membros e faturamento.
             </p>
           </div>
-        ) : (
-          <div className="mb-4 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 bg-white p-4 rounded-2xl border border-[#E7E4DC] shadow-sm">
-            <div className="flex items-center gap-3">
-              <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-emerald-50 text-emerald-700 text-xs font-semibold border border-emerald-200">
-                <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
-                Painel Oficial • Conectado como <strong>{userEmail}</strong>
-              </span>
-              <span className="text-xs text-[#5C5955] hidden md:inline">
-                Supabase & IA Ativos
-              </span>
-            </div>
-            <div className="flex items-center gap-2.5">
-              <button
-                onClick={() => setPricingModalOpen(true)}
-                className="px-3.5 py-1.5 rounded-xl bg-[#C84B1F] hover:bg-[#B34018] text-xs font-bold text-white transition-all shadow-sm hover:shadow cursor-pointer flex items-center gap-1.5"
-              >
-                <Sparkles className="w-3.5 h-3.5" />
-                <span>Planos (30% OFF)</span>
-              </button>
-              {onNavigateHome && (
-                <button
-                  onClick={onNavigateHome}
-                  className="px-3 py-1.5 rounded-xl border border-[#D0CBC0] hover:bg-[#FAF9F5] text-xs font-semibold text-[#1A1816] transition-colors cursor-pointer"
-                >
-                  ← Ver Página Inicial
-                </button>
-              )}
-              {onLogout && (
-                <button
-                  onClick={onLogout}
-                  className="px-3 py-1.5 rounded-xl bg-red-50 hover:bg-red-100 text-xs font-semibold text-red-700 border border-red-200 transition-colors cursor-pointer"
-                >
-                  Sair
-                </button>
-              )}
-            </div>
-          </div>
         )}
 
         {/* Dashboard Shell Frame */}
-        <div className="bg-white rounded-3xl border border-[#E7E4DC] shadow-2xl overflow-hidden flex flex-col md:flex-row min-h-[750px] relative">
+        <div className={isStandalone ? "w-full min-h-screen flex flex-col md:flex-row bg-white relative" : "bg-white rounded-3xl border border-[#E7E4DC] shadow-2xl overflow-hidden flex flex-col md:flex-row min-h-[750px] relative"}>
           
-          {/* Left Sidebar */}
-          <div className="w-full md:w-64 bg-[#FAF9F5] border-r border-[#EBE8E2] p-4 flex flex-col justify-between shrink-0">
+          {/* Left Sidebar (Réplica 1:1 Kloel com Botão Recolher «) */}
+          <div className={`w-full ${sidebarCollapsed ? 'md:w-20' : 'md:w-64'} bg-[#FAF9F5] border-r border-[#EBE8E2] p-4 flex flex-col justify-between shrink-0 ${isStandalone ? 'min-h-screen' : ''} transition-all duration-300`}>
             <div>
-              {/* Vocalis Logo */}
-              <div className="flex items-center gap-2.5 px-3 py-3 mb-6">
-                <div className="w-8 h-8 rounded-lg bg-[#C84B1F]/10 flex items-center justify-center border border-[#C84B1F]/20">
-                  <div className="flex items-center gap-[2px] h-3.5">
-                    <span className="w-[2.5px] h-2 bg-[#C84B1F] rounded-full"></span>
-                    <span className="w-[2.5px] h-3.5 bg-[#C84B1F] rounded-full"></span>
-                    <span className="w-[2.5px] h-2.5 bg-[#C84B1F] rounded-full"></span>
+              {/* Vocalis Logo + Botão « de Recolher/Expandir */}
+              <div className="flex items-center justify-between px-2 py-2 mb-6">
+                <div className="flex items-center gap-2.5 overflow-hidden">
+                  <div className="w-8 h-8 rounded-lg bg-[#C84B1F]/10 flex items-center justify-center border border-[#C84B1F]/20 shrink-0">
+                    <div className="flex items-center gap-[2px] h-3.5">
+                      <span className="w-[2.5px] h-2 bg-[#C84B1F] rounded-full"></span>
+                      <span className="w-[2.5px] h-3.5 bg-[#C84B1F] rounded-full"></span>
+                      <span className="w-[2.5px] h-2.5 bg-[#C84B1F] rounded-full"></span>
+                    </div>
                   </div>
+                  {!sidebarCollapsed && (
+                    <span className="font-bold text-lg text-[#1A1816] tracking-tight truncate">{BRAND.name}</span>
+                  )}
                 </div>
-                <span className="font-bold text-lg text-[#1A1816]">{BRAND.name}</span>
+                <button 
+                  type="button"
+                  onClick={() => setSidebarCollapsed(!sidebarCollapsed)}
+                  className="w-7 h-7 rounded-lg border border-[#E7E4DC] hover:border-[#D0CBC0] bg-white flex items-center justify-center text-[#736F69] hover:text-[#1A1816] transition-colors cursor-pointer shrink-0 ml-1"
+                  title={sidebarCollapsed ? "Expandir menu lateral" : "Recolher menu lateral"}
+                >
+                  {sidebarCollapsed ? (
+                    <ChevronsRight className="w-3.5 h-3.5" />
+                  ) : (
+                    <ChevronsLeft className="w-3.5 h-3.5" />
+                  )}
+                </button>
               </div>
 
               {/* Main Nav Items */}
               <div className="space-y-1">
                 <button
                   onClick={() => setActiveTab('inicio')}
-                  className={`w-full flex items-center gap-2.5 px-3 py-2 rounded-xl text-xs font-semibold transition-colors ${
+                  className={`w-full flex items-center ${sidebarCollapsed ? 'justify-center px-2' : 'gap-2.5 px-3'} py-2 rounded-xl text-xs font-semibold transition-colors ${
                     activeTab === 'inicio' ? 'bg-[#EFECE6] text-[#1A1816]' : 'text-[#5C5955] hover:text-[#1A1816] hover:bg-[#F3EFE8]'
                   }`}
+                  title="Visão geral"
                 >
-                  <BarChart2 className="w-4 h-4 text-[#C84B1F]" />
-                  <span>Visão geral</span>
+                  <BarChart2 className="w-4 h-4 text-[#C84B1F] shrink-0" />
+                  {!sidebarCollapsed && <span>Visão geral</span>}
                 </button>
 
                 <button
                   onClick={() => setActiveTab('assistentes')}
-                  className={`w-full flex items-center justify-between px-3 py-2 rounded-xl text-xs font-semibold transition-colors ${
+                  className={`w-full flex items-center ${sidebarCollapsed ? 'justify-center px-2' : 'justify-between px-3'} py-2 rounded-xl text-xs font-semibold transition-colors ${
                     activeTab === 'assistentes' ? 'bg-[#EFECE6] text-[#1A1816]' : 'text-[#5C5955] hover:text-[#1A1816] hover:bg-[#F3EFE8]'
                   }`}
+                  title="Assistentes"
                 >
-                  <span className="flex items-center gap-2.5">
-                    <Bot className="w-4 h-4 text-[#C84B1F]" />
-                    <span>Assistentes</span>
+                  <span className={`flex items-center ${sidebarCollapsed ? 'justify-center' : 'gap-2.5'}`}>
+                    <Bot className="w-4 h-4 text-[#C84B1F] shrink-0" />
+                    {!sidebarCollapsed && <span>Assistentes</span>}
                   </span>
-                  <span className="w-5 h-5 rounded-full bg-[#E0DCD4] text-[10px] font-bold flex items-center justify-center text-[#1A1816]">
-                    {createdAssistants.length}
-                  </span>
+                  {!sidebarCollapsed && (
+                    <span className="w-5 h-5 rounded-full bg-[#E0DCD4] text-[10px] font-bold flex items-center justify-center text-[#1A1816]">
+                      {createdAssistants.length}
+                    </span>
+                  )}
                 </button>
 
                 <button
                   onClick={() => setActiveTab('conversas')}
-                  className={`w-full flex items-center gap-2.5 px-3 py-2 rounded-xl text-xs font-semibold transition-colors ${
+                  className={`w-full flex items-center ${sidebarCollapsed ? 'justify-center px-2' : 'gap-2.5 px-3'} py-2 rounded-xl text-xs font-semibold transition-colors ${
                     activeTab === 'conversas' ? 'bg-[#EFECE6] text-[#1A1816]' : 'text-[#5C5955] hover:text-[#1A1816] hover:bg-[#F3EFE8]'
                   }`}
+                  title="Conversas"
                 >
-                  <MessageSquare className="w-4 h-4 text-[#C84B1F]" />
-                  <span>Conversas</span>
+                  <MessageSquare className="w-4 h-4 text-[#C84B1F] shrink-0" />
+                  {!sidebarCollapsed && <span>Conversas</span>}
                 </button>
 
                 {/* Nova Aba: Conhecimento (Kloel 1:1) */}
                 <button
                   onClick={() => setActiveTab('conhecimento')}
-                  className={`w-full flex items-center justify-between px-3 py-2 rounded-xl text-xs font-semibold transition-colors cursor-pointer ${
+                  className={`w-full flex items-center ${sidebarCollapsed ? 'justify-center px-2' : 'justify-between px-3'} py-2 rounded-xl text-xs font-semibold transition-colors cursor-pointer ${
                     activeTab === 'conhecimento' ? 'bg-[#EFECE6] text-[#1A1816]' : 'text-[#5C5955] hover:text-[#1A1816] hover:bg-[#F3EFE8]'
                   }`}
+                  title="Conhecimento"
                 >
-                  <span className="flex items-center gap-2.5">
-                    <BookOpen className="w-4 h-4 text-[#C84B1F]" />
-                    <span>Conhecimento</span>
+                  <span className={`flex items-center ${sidebarCollapsed ? 'justify-center' : 'gap-2.5'}`}>
+                    <BookOpen className="w-4 h-4 text-[#C84B1F] shrink-0" />
+                    {!sidebarCollapsed && <span>Conhecimento</span>}
                   </span>
-                  <span className="w-5 h-5 rounded-full bg-[#E0DCD4] text-[10px] font-bold flex items-center justify-center text-[#1A1816]">
-                    {knowledgeList.length}
-                  </span>
+                  {!sidebarCollapsed && (
+                    <span className="w-5 h-5 rounded-full bg-[#E0DCD4] text-[10px] font-bold flex items-center justify-center text-[#1A1816]">
+                      {knowledgeList.length}
+                    </span>
+                  )}
                 </button>
 
                 {/* Botão Mais (Dropdown igual ao screenshot do Kloel) */}
                 <button
                   onClick={() => setMoreMenuOpen(!moreMenuOpen)}
-                  className={`w-full flex items-center justify-between px-3 py-2 rounded-xl text-xs font-semibold transition-colors cursor-pointer ${
+                  className={`w-full flex items-center ${sidebarCollapsed ? 'justify-center px-2' : 'justify-between px-3'} py-2 rounded-xl text-xs font-semibold transition-colors cursor-pointer ${
                     moreMenuOpen || ['templates', 'auditoria', 'telefonia', 'usuarios', 'api'].includes(activeTab)
                       ? 'bg-[#EFECE6] text-[#1A1816]'
                       : 'text-[#5C5955] hover:text-[#1A1816] hover:bg-[#F3EFE8]'
                   }`}
+                  title="Mais"
                 >
-                  <span className="flex items-center gap-2.5">
-                    <Sliders className="w-4 h-4 text-[#736F69]" />
-                    <span>Mais</span>
+                  <span className={`flex items-center ${sidebarCollapsed ? 'justify-center' : 'gap-2.5'}`}>
+                    <Sliders className="w-4 h-4 text-[#736F69] shrink-0" />
+                    {!sidebarCollapsed && <span>Mais</span>}
                   </span>
-                  {moreMenuOpen ? <ChevronUp className="w-3.5 h-3.5" /> : <ChevronDown className="w-3.5 h-3.5" />}
+                  {!sidebarCollapsed && (
+                    moreMenuOpen ? <ChevronUp className="w-3.5 h-3.5" /> : <ChevronDown className="w-3.5 h-3.5" />
+                  )}
                 </button>
               </div>
 
@@ -804,6 +796,18 @@ export default function InsideDashboardSection({ onOpenDemo, onOpenLegal, onOpen
                       <ShieldCheck className="w-3.5 h-3.5 text-[#C84B1F]" />
                       <span>Política de Privacidade</span>
                     </button>
+                    {onNavigateHome && (
+                      <button 
+                        onClick={() => { 
+                          setProfileMenuOpen(false); 
+                          onNavigateHome();
+                        }}
+                        className="w-full flex items-center gap-2.5 px-3 py-2 rounded-lg text-[#1A1816] hover:bg-[#FAF9F5] text-left cursor-pointer"
+                      >
+                        <Globe className="w-3.5 h-3.5 text-[#5C5955]" />
+                        <span>Ver Página Inicial (Site)</span>
+                      </button>
+                    )}
                     <button 
                       onClick={() => { 
                         setProfileMenuOpen(false); 
@@ -823,7 +827,7 @@ export default function InsideDashboardSection({ onOpenDemo, onOpenLegal, onOpen
           </div>
 
           {/* Main Dashboard Canvas Area */}
-          <div className="flex-1 p-6 sm:p-8 overflow-y-auto bg-white relative">
+          <div className={`flex-1 p-6 sm:p-8 ${isStandalone ? 'md:p-10 min-h-screen' : ''} overflow-y-auto bg-white relative`}>
             
             {/* ========================================================
                 1. TAB: INÍCIO (Exact replica of screenshot 3)
@@ -3029,6 +3033,6 @@ export default function InsideDashboardSection({ onOpenDemo, onOpenLegal, onOpen
         onOpenDemo={onOpenDemo}
       />
 
-    </section>
+    </div>
   );
 }

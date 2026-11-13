@@ -89,8 +89,8 @@ export default function App() {
 
   return (
     <div className="min-h-screen bg-[#FAF9F5] text-[#1A1816] flex flex-col font-sans selection:bg-[#C84B1F] selection:text-white">
-      {/* Top Navbar (hidden on Central de Ajuda to match standalone portal screenshot) */}
-      {currentPage !== 'central-ajuda' && (
+      {/* Top Navbar (oculto no Dashboard e na Central de Ajuda para ser 1:1 com o Kloel) */}
+      {currentPage !== 'central-ajuda' && currentPage !== 'dashboard' && (
         <Navbar 
           currentPage={currentPage}
           currentUser={currentUser}
@@ -298,12 +298,14 @@ export default function App() {
         </main>
       )}
 
-      {/* Footer (Exact replica of user print) */}
-      <Footer 
-        onOpenDocs={handleOpenDocs}
-        onOpenDemo={() => setDemoModalOpen(true)}
-        onNavigate={handleNavigate}
-      />
+      {/* Footer (Oculto no Dashboard e na Central de Ajuda para ser 1:1 com o Kloel) */}
+      {currentPage !== 'dashboard' && currentPage !== 'central-ajuda' && (
+        <Footer 
+          onOpenDocs={handleOpenDocs}
+          onOpenDemo={() => setDemoModalOpen(true)}
+          onNavigate={handleNavigate}
+        />
+      )}
 
       {/* Full Docs & Legal Portal (Matching user's exact uploaded doc portal) */}
       <DocsPortal 
