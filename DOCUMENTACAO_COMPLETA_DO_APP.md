@@ -354,6 +354,11 @@ Você tem duas fontes de receita massiva com essa plataforma:
    * Assistente de Saída criado: `5907a01b-07c9-4f00-977e-e828d913ee37`;
    * Voz da Clara em Português configurada com a primeira mensagem da Roberta;
    * Número de saída ativado: `+19256034058`.
+7. **Sincronização em Tempo Real Dashboard ➔ Vapi ➔ Supabase (Item 5):**
+   * Criação e clonagem de agentes no Dashboard comunicam-se via REST com a API da Vapi (`POST /assistant`);
+   * O `vapi_assistant_id` retornado é gravado automaticamente no Supabase;
+   * A tela de edição do assistente (`AssistantDetailView.jsx`) possui barra com o status da conexão Vapi e o botão de ação *"Salvar & Sincronizar na Vapi"*;
+   * A aba "Técnico" exibe os dados da infraestrutura (Deepgram pt-BR, GPT-4o Mini e Voz Clara) com teste de chamada direto para qualquer número de celular.
 
 ---
 
