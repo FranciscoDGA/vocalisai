@@ -50,9 +50,9 @@ export default function TestCallModal({ isOpen, phoneNumber, countryCode = '+55'
   const conversationScript = [
     {
       step: 0,
-      speaker: 'Débora (Vocalis · AI Agency OS)',
-      spokenText: `Olá! Aqui é a Débora da inteligência da Vocalis e do AI Agency OS. Liguei para o seu número ${spokenPhone} para fazer um diagnóstico rápido da sua empresa em menos de um minuto. Me conta: qual é o ramo da sua empresa hoje e como funciona o seu atendimento?`,
-      displayText: `Olá! Aqui é a Débora da inteligência da Vocalis (AI Agency OS). Estou ligando para o seu número ${countryCode} ${formattedDisplayPhone} para fazer um diagnóstico rápido da sua empresa ao vivo. Me conta: qual é o ramo da sua empresa hoje e como funciona o seu atendimento?`,
+      speaker: 'Débora · Vocalis',
+      spokenText: `Olá! Aqui é a Débora, da Vocalis. Estou te ligando para fazermos um diagnóstico rápido do atendimento da sua empresa, em menos de um minuto. Me conta: qual é o ramo da sua empresa hoje, e como funciona o seu atendimento?`,
+      displayText: `Olá! Aqui é a Débora, da Vocalis. Estou ligando para o seu número ${countryCode} ${formattedDisplayPhone} para fazer um diagnóstico rápido da sua empresa ao vivo. Me conta: qual é o ramo da sua empresa hoje e como funciona o seu atendimento?`,
       promptHint: 'Fale no microfone, digite abaixo ou escolha seu segmento:',
       options: [
         { label: '🏥 Clínica Odontológica / Consultório Médico', niche: 'Clínica Odontológica' },
@@ -64,8 +64,8 @@ export default function TestCallModal({ isOpen, phoneNumber, countryCode = '+55'
     },
     {
       step: 1,
-      speaker: 'Débora (Vocalis · AI Agency OS)',
-      spokenText: (niche) => `Perfeito! No setor de ${niche || 'empresas e serviços'}, a maior perda de faturamento acontece quando o cliente liga e cai na caixa postal ou quando a resposta no WhatsApp demora mais de três minutos. Qual é hoje a sua maior dificuldade? Perder vendas fora do horário, equipe sobrecarregada ou faltas de clientes agendados?`,
+      speaker: 'Débora · Vocalis',
+      spokenText: (niche) => `Perfeito! No setor de ${niche || 'empresas e serviços'}, a maior perda de faturamento acontece quando o cliente liga e não é atendido, ou quando a resposta no WhatsApp demora. Qual é hoje a sua maior dificuldade? Perder vendas fora do horário, sobrecarga da equipe, ou faltas de clientes agendados?`,
       displayText: (niche) => `Perfeito! No setor de ${niche || 'empresas e serviços'}, a maior perda de faturamento acontece quando o cliente liga e cai na caixa postal ou quando a resposta no WhatsApp demora mais de 3 minutos. Qual é hoje a maior dor no atendimento de vocês?`,
       promptHint: 'Qual é o maior gargalo no seu atendimento hoje?',
       options: [
@@ -77,8 +77,8 @@ export default function TestCallModal({ isOpen, phoneNumber, countryCode = '+55'
     },
     {
       step: 2,
-      speaker: 'Débora (Vocalis · AI Agency OS)',
-      spokenText: (niche, pain) => `Entendi perfeitamente. Com a Vocalis, a sua IA atende no primeiro toque com voz humana, agenda consultas e resolve dúvidas no ato. E quer ver o poder do nosso sistema em tempo real? Enquanto estamos conversando aqui no telefone, eu acabei de gerar um Pix de teste de um real e mandei uma mensagem no seu WhatsApp com o resumo completo desse diagnóstico! Dá uma olhada na sua tela.`,
+      speaker: 'Débora · Vocalis',
+      spokenText: (niche, pain) => `Entendi perfeitamente. Com a Vocalis, a sua inteligência atende no primeiro toque com voz humana, agenda consultas e resolve tudo no ato. E olha que incrível: enquanto estamos conversando aqui no telefone, eu acabei de gerar um Pix de teste de um real e mandei uma mensagem no seu WhatsApp com o resumo completo desse diagnóstico! Dá uma olhada na sua tela agora.`,
       displayText: (niche, pain) => `Entendi perfeitamente! Com a nossa IA, você resolve o problema de ${pain || 'atendimento'} no primeiro segundo. E olha que incrível: enquanto estamos conversando aqui no telefone, eu acabei de gerar um Pix de teste no valor de R$ 1,00 e mandei uma mensagem no seu WhatsApp com o resumo completo desse diagnóstico! Dá uma olhada na sua tela agora.`,
       promptHint: 'Ação executada em tempo real na ligação!',
       triggerAction: true,
@@ -90,8 +90,8 @@ export default function TestCallModal({ isOpen, phoneNumber, countryCode = '+55'
     },
     {
       step: 3,
-      speaker: 'Débora (Vocalis · AI Agency OS)',
-      spokenText: () => `Essa é a diferença entre um robô comum e uma IA executora de alto nível. Ela fala como humano, cobra, agenda e fecha negócios para você vinte e quatro horas por dia. Temos a condição especial de lançamento com trinta por cento de desconto e garantia de trinta dias. Quer liberar o seu acesso agora?`,
+      speaker: 'Débora · Vocalis',
+      spokenText: () => `Essa é a diferença entre um robô genérico e a nossa inteligência executora. Ela fala como humano, agenda e fecha negócios para você vinte e quatro horas por dia. Temos a condição especial de lançamento com trinta por cento de desconto e garantia de trinta dias. Quer liberar o seu acesso agora?`,
       displayText: () => `Essa é a diferença entre um robô genérico e a nossa IA executora. Ela fala como humano, cobra, agenda e fecha negócios 24 horas por dia. Hoje temos a condição de lançamento com 30% OFF nos 3 primeiros meses e 30 dias de garantia total. Quer ativar agora?`,
       promptHint: 'Ativação imediata da plataforma:',
       options: [
@@ -262,7 +262,7 @@ export default function TestCallModal({ isOpen, phoneNumber, countryCode = '+55'
       const warmReply = `Olá Francisco! Estou te ouvindo perfeitamente, em alto e bom som! É um prazer conversar com você. Para iniciarmos o diagnóstico, me conta: qual é o ramo da sua empresa hoje e como funciona o seu atendimento?`;
       setTimeout(() => {
         setCallLog(prev => [...prev, {
-          speaker: 'Débora (Vocalis · AI Agency OS)',
+          speaker: 'Débora · Vocalis',
           text: warmReply,
           time: formatDuration(callDuration + 1)
         }]);
@@ -380,7 +380,7 @@ export default function TestCallModal({ isOpen, phoneNumber, countryCode = '+55'
       // Inicia a primeira fala com voz feminina neural
       const firstStep = conversationScript[0];
       setCallLog([{ 
-        speaker: 'Débora (Vocalis · AI Agency OS)', 
+        speaker: 'Débora · Vocalis', 
         text: firstStep.displayText, 
         time: '00:01' 
       }]);
@@ -442,7 +442,7 @@ export default function TestCallModal({ isOpen, phoneNumber, countryCode = '+55'
 
       setTimeout(() => {
         setCallLog(prev => [...prev, { 
-          speaker: 'Débora (Vocalis · AI Agency OS)', 
+          speaker: 'Débora · Vocalis', 
           text: nextDisplay, 
           time: formatDuration(callDuration + 1) 
         }]);
@@ -514,7 +514,7 @@ export default function TestCallModal({ isOpen, phoneNumber, countryCode = '+55'
 
     const firstStep = conversationScript[0];
     setCallLog([{ 
-      speaker: 'Débora (Vocalis · AI Agency OS)', 
+      speaker: 'Débora · Vocalis', 
       text: firstStep.displayText, 
       time: '00:01' 
     }]);
@@ -594,7 +594,7 @@ export default function TestCallModal({ isOpen, phoneNumber, countryCode = '+55'
 
           <div className="flex items-center gap-2">
             <span className="hidden sm:inline-flex text-[10px] uppercase font-bold tracking-wider px-2 py-0.5 rounded-full bg-[#C84B1F]/20 text-[#FF8E6B] border border-[#C84B1F]/30">
-              AI Agency OS
+              Vocalis AI
             </span>
             <button 
               onClick={onClose}
@@ -900,7 +900,7 @@ export default function TestCallModal({ isOpen, phoneNumber, countryCode = '+55'
               {/* Balão 1: Resumo do Diagnóstico */}
               <div className="bg-[#202C33] p-3 rounded-2xl rounded-tl-sm border border-stone-800 max-w-[90%] text-xs space-y-2">
                 <p className="text-stone-200 leading-relaxed">
-                  👋 Olá! Aqui é a <strong>Débora da Vocalis (AI Agency OS)</strong>. Acabei de falar com você no telefone e organizei seu diagnóstico:
+                  👋 Olá! Aqui é a <strong>Débora da Vocalis</strong>. Acabei de falar com você no telefone e organizei seu diagnóstico:
                 </p>
                 <div className="p-2 rounded-xl bg-[#111B21] text-[11px] space-y-1 border border-stone-800">
                   <div>🏢 <strong>Segmento:</strong> {userNiche || 'Empresa & Serviços'}</div>

@@ -1,6 +1,6 @@
 /**
- * Utilitário de Voz Neural em Português do Brasil (Débora · Vocalis AI)
- * Prioriza vozes neurais/naturais ultra-humanas do navegador (Edge, Chrome, Safari, Windows)
+ * Utilitário de Voz Humana em Português do Brasil (Débora · Vocalis)
+ * Focado em fluidez máxima, entonação natural e ritmo acolhedor de atendimento
  */
 
 let cachedVoices = [];
@@ -10,7 +10,10 @@ export function loadBrowserVoices() {
   if (typeof window === 'undefined' || !('speechSynthesis' in window)) {
     return [];
   }
-  cachedVoices = window.speechSynthesis.getVoices() || [];
+  const loaded = window.speechSynthesis.getVoices();
+  if (loaded && loaded.length > 0) {
+    cachedVoices = loaded;
+  }
   return cachedVoices;
 }
 
@@ -24,7 +27,7 @@ if (typeof window !== 'undefined' && 'speechSynthesis' in window) {
 }
 
 /**
- * Seleciona a melhor voz feminina em Português do Brasil disponível no dispositivo
+ * Seleciona a voz mais humana e suave em Português do Brasil
  */
 export function getBestFemalePtVoice() {
   if (typeof window === 'undefined' || !('speechSynthesis' in window)) {
@@ -37,52 +40,57 @@ export function getBestFemalePtVoice() {
   // Filtrar vozes brasileiras
   const ptVoices = voices.filter(v => {
     const lang = (v.lang || '').toLowerCase().replace('_', '-');
-    return lang.includes('pt-br') || lang.startsWith('pt');
+    return lang.includes('pt-br') || lang === 'pt';
   });
 
   if (ptVoices.length === 0) {
     return voices[0] || null;
   }
 
-  // Nomes de vozes femininas de alta fidelidade
-  const femaleKeywords = [
-    'francisca', 'thalita', 'leticia', 'letícia', 'maria', 'yelda', 
-    'luciana', 'camila', 'vitoria', 'vitória', 'fabiola', 'female', 'feminina'
-  ];
-
-  // 1. Prioridade Máxima: Vozes Neurais / Online / Naturais (Microsoft Edge / Windows 11 / Chrome Neural)
-  const neuralFemale = ptVoices.find(v => {
+  // 1. Voz Neural do Google no Chrome (Google português do Brasil) - voz feminina muito fluida e natural
+  const googlePt = ptVoices.find(v => {
     const name = v.name.toLowerCase();
-    const isFemale = femaleKeywords.some(k => name.includes(k));
-    const isNatural = name.includes('natural') || name.includes('online') || name.includes('neural') || name.includes('multilingual');
-    return isFemale && isNatural;
+    return name.includes('google') && (name.includes('brasil') || name.includes('português') || name.includes('portuguese'));
   });
-  if (neuralFemale) return neuralFemale;
+  if (googlePt) return googlePt;
 
-  // 2. Voz natural qualquer (mesmo que gênero não esteja no nome, se for natural pt-BR)
+  // 2. Vozes Naturais / Online do Microsoft Edge (Francisca Online Natural / Thalita Online Natural)
+  const msNatural = ptVoices.find(v => {
+    const name = v.name.toLowerCase();
+    const isNatural = name.includes('natural') || name.includes('online') || name.includes('neural');
+    const isFemale = name.includes('francisca') || name.includes('thalita') || name.includes('leticia') || name.includes('letícia');
+    return isNatural && isFemale;
+  });
+  if (msNatural) return msNatural;
+
+  // 3. Qualquer voz Natural pt-BR (exceto vozes masculinas sabidas)
   const anyNatural = ptVoices.find(v => {
     const name = v.name.toLowerCase();
     const isNatural = name.includes('natural') || name.includes('online') || name.includes('neural');
-    const isMale = name.includes('daniel') || name.includes('helder') || name.includes('male') || name.includes('antonio');
+    const isMale = name.includes('daniel') || name.includes('helder') || name.includes('antonio') || name.includes('male');
     return isNatural && !isMale;
   });
   if (anyNatural) return anyNatural;
 
-  // 3. Voz do Google em Português do Brasil (Chrome nativo - timbre suave feminino)
-  const googlePt = ptVoices.find(v => v.name.toLowerCase().includes('google') && !v.name.toLowerCase().includes('male'));
-  if (googlePt) return googlePt;
+  // 4. Vozes femininas do Safari / iOS / macOS (Luciana, Yelda)
+  const appleFemale = ptVoices.find(v => {
+    const name = v.name.toLowerCase();
+    return name.includes('luciana') || name.includes('yelda');
+  });
+  if (appleFemale) return appleFemale;
 
-  // 4. Qualquer voz feminina conhecida
+  // 5. Qualquer voz feminina conhecida
   const anyFemale = ptVoices.find(v => {
     const name = v.name.toLowerCase();
-    return femaleKeywords.some(k => name.includes(k));
+    const isFemale = name.includes('maria') || name.includes('camila') || name.includes('vitoria') || name.includes('female');
+    return isFemale;
   });
   if (anyFemale) return anyFemale;
 
-  // 5. Evita vozes masculinas sabidas (Daniel, etc.)
+  // 6. Fallback evitando vozes masculinas
   const nonMale = ptVoices.find(v => {
     const name = v.name.toLowerCase();
-    return !name.includes('daniel') && !name.includes('helder') && !name.includes('male') && !name.includes('antonio');
+    return !name.includes('daniel') && !name.includes('helder') && !name.includes('male');
   });
   if (nonMale) return nonMale;
 
@@ -90,36 +98,44 @@ export function getBestFemalePtVoice() {
 }
 
 /**
- * Limpa o texto para fala ultra-natural:
- * - Remove Markdown (**, *, #, _, ~, `, [])
- * - Remove emojis que causam gagueira no sintetizador
- * - Traduz siglas comuns para pronúncia fonética perfeita
+ * Limpa o texto para fala ultra-natural e fluida:
+ * - NUNCA quebra palavras que contenham "ai" (como mais, vai, cai, abaixo)
+ * - NUNCA quebra palavras que contenham "os" (como estamos, minutos, nossos)
+ * - Traduz AI Agency OS para pronúncia natural "Vocalis"
+ * - Mantém pontuação limpa com pausas de respiração
  */
 export function cleanTextForSpeech(text) {
   if (!text) return '';
 
   return text
-    // Remove links
+    // Remove links/URLs
     .replace(/https?:\/\/\S+/gi, '')
-    // Remove emojis Unicode comuns
+    // Remove emojis Unicode que causam pausas ou soletrações
     .replace(/([\u2700-\u27BF]|[\uE000-\uF8FF]|\uD83C[\uDC00-\uDFFF]|\uD83D[\uDC00-\uDFFF]|[\u2011-\u26FF]|\uD83E[\uDD10-\uDDFF])/g, '')
+    // Normalização de marcas para não soletrar siglas em inglês
+    .replace(/\(AI Agency OS\)/gi, '')
+    .replace(/AI Agency OS/gi, 'Vocalis')
+    .replace(/Agency OS/gi, 'Vocalis')
+    .replace(/\bVocalis AI\b/gi, 'Vocalis')
+    // Substitui AI isolado por inteligência artificial (com limite de palavra \b)
+    .replace(/\bAI\b/g, 'inteligência artificial')
     // Remove formatação Markdown
-    .replace(/[*#_`~>[\]()]/g, ' ')
-    // Normaliza valores monetários e tempos para pronúncia perfeita
+    .replace(/[*#_`~>[\]]/g, ' ')
+    // Remove parênteses
+    .replace(/[()]/g, ', ')
+    // Normaliza valores monetários e tempos
     .replace(/R\$\s*1,00/gi, 'um real')
-    .replace(/R\$\s*1/gi, 'um real')
+    .replace(/R\$\s*1\b/gi, 'um real')
     .replace(/R\$\s*([0-9]+),([0-9]{2})/gi, '$1 reais e $2 centavos')
     .replace(/R\$\s*([0-9]+)/gi, '$1 reais')
-    .replace(/24\/7/gi, 'vinte e quatro horas por dia, sete dias por semana')
+    .replace(/24\/7/gi, 'vinte e quatro horas por dia')
     .replace(/24h/gi, 'vinte e quatro horas')
     .replace(/380ms/gi, '380 milissegundos')
     .replace(/450ms/gi, '450 milissegundos')
     .replace(/30%/gi, 'trinta por cento')
     .replace(/85%/gi, 'oitenta e cinco por cento')
-    .replace(/AI/gi, 'inteligência artificial')
-    .replace(/OS/gi, 'o ésse')
-    .replace(/Pix/gi, 'Pícs')
-    .replace(/WhatsApp/gi, 'Uatizape')
+    // Limpa pontuações repetidas
+    .replace(/,\s*,+/g, ',')
     .replace(/\s+/g, ' ')
     .trim();
 }
@@ -133,7 +149,7 @@ export function speakFemalePt(rawText, onStart, onEnd, onError) {
     return;
   }
 
-  // Cancela qualquer fala anterior imediatamente para evitar sobreposição
+  // Cancela fala anterior
   window.speechSynthesis.cancel();
 
   const spokenText = cleanTextForSpeech(rawText);
@@ -144,18 +160,14 @@ export function speakFemalePt(rawText, onStart, onEnd, onError) {
 
   const utterance = new SpeechSynthesisUtterance(spokenText);
   utterance.lang = 'pt-BR';
+  // Taxa de fala natural brasileira (1.0 = ritmo calmo e fluido)
+  utterance.rate = 1.0;
+  // Pitch 1.0 (tom natural humano, sem afinação artificial)
+  utterance.pitch = 1.0;
 
-  // Configuração fina de pitch e rate para tom acolhedor e dinâmico
   const voice = getBestFemalePtVoice();
   if (voice) {
     utterance.voice = voice;
-    // Se for uma voz natural/neural, rate 1.0 e pitch 1.0 são perfeitos
-    const isNatural = voice.name.toLowerCase().includes('natural') || voice.name.toLowerCase().includes('neural');
-    utterance.rate = isNatural ? 1.02 : 1.0;
-    utterance.pitch = isNatural ? 1.0 : 1.02;
-  } else {
-    utterance.rate = 1.0;
-    utterance.pitch = 1.0;
   }
 
   let completed = false;
@@ -172,12 +184,10 @@ export function speakFemalePt(rawText, onStart, onEnd, onError) {
 
   utterance.onend = safeEnd;
   utterance.onerror = (e) => {
-    console.warn('Erro ou cancelamento do TTS:', e);
     safeEnd();
     if (onError) onError(e);
   };
 
-  // Proteção contra bug do Chrome que pausa falas longas
   window.speechSynthesis.speak(utterance);
 }
 
