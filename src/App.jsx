@@ -36,6 +36,7 @@ const DocsPortal = lazy(() => import('./components/DocsPortal'));
 const LegalModal = lazy(() => import('./components/LegalModal'));
 const AuthModal = lazy(() => import('./components/AuthModal'));
 const DemoModal = lazy(() => import('./components/DemoModal'));
+const PlatformPresentationSlider = lazy(() => import('./components/PlatformPresentationSlider'));
 
 // Loading indicator component for route suspensions
 function PageFallback() {
@@ -58,6 +59,7 @@ export default function App() {
   const [legalInitialTab, setLegalInitialTab] = useState('privacidade');
   const [docsPortalOpen, setDocsPortalOpen] = useState(false);
   const [docsInitialDoc, setDocsInitialDoc] = useState('privacidade');
+  const [presentationOpen, setPresentationOpen] = useState(false);
 
   useEffect(() => {
     // Carrega usuário da sessão atual ao iniciar
@@ -117,6 +119,7 @@ export default function App() {
           onOpenAuth={() => setAuthModalOpen(true)}
           onOpenLegal={handleOpenLegal}
           onOpenDocs={handleOpenDocs}
+          onOpenPresentation={() => setPresentationOpen(true)}
         />
       )}
 
@@ -375,6 +378,16 @@ export default function App() {
           <DemoModal 
             isOpen={demoModalOpen} 
             onClose={() => setDemoModalOpen(false)} 
+          />
+        </Suspense>
+      )}
+
+      {/* Presentation Pitch Deck Slider */}
+      {presentationOpen && (
+        <Suspense fallback={null}>
+          <PlatformPresentationSlider 
+            isOpen={presentationOpen}
+            onClose={() => setPresentationOpen(false)}
           />
         </Suspense>
       )}

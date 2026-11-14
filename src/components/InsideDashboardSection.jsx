@@ -19,8 +19,9 @@ import VoiceCloningStudio from './VoiceCloningStudio';
 import WhatsAppVoiceToVoice from './WhatsAppVoiceToVoice';
 import AgencySubaccountsSection from './AgencySubaccountsSection';
 import OutboundCampaignsSection from './OutboundCampaignsSection';
+import PlatformPresentationSlider from './PlatformPresentationSlider';
 
-export default function InsideDashboardSection({ onOpenDemo, onOpenLegal, onOpenAuth, onOpenDocs, isStandalone = false, onLogout, currentUser, onNavigateHome }) {
+export default function InsideDashboardSection({ onOpenDemo, onOpenLegal, onOpenAuth, onOpenDocs, isStandalone = false, onLogout, currentUser, onNavigateHome, onOpenPresentation }) {
   const [activeTab, setActiveTab] = useState('inicio');
   const [pricingModalOpen, setPricingModalOpen] = useState(isStandalone);
   const [profileMenuOpen, setProfileMenuOpen] = useState(false);
@@ -28,6 +29,7 @@ export default function InsideDashboardSection({ onOpenDemo, onOpenLegal, onOpen
   const [selectedAssistant, setSelectedAssistant] = useState(null);
   const [copiedLink, setCopiedLink] = useState(false);
   const [voiceCloningOpen, setVoiceCloningOpen] = useState(false);
+  const [presentationOpen, setPresentationOpen] = useState(false);
   const [realLeads, setRealLeads] = useState([]);
 
   const userEmail = currentUser?.email || 'afiliadopebas@gmail.com';
@@ -1082,7 +1084,17 @@ export default function InsideDashboardSection({ onOpenDemo, onOpenLegal, onOpen
               <div className="space-y-6 animate-fadeIn">
                 {/* Header with Title and Timeframe Filters */}
                 <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
-                  <h3 className="text-2xl font-bold text-[#1A1816]">Início</h3>
+                  <div className="flex items-center gap-3">
+                    <h3 className="text-2xl font-bold text-[#1A1816]">Início</h3>
+                    <button
+                      onClick={() => setPresentationOpen(true)}
+                      className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-[#FAF5EE] border border-[#F2E8DC] text-[#C84B1F] text-xs font-bold hover:bg-[#F5EADB] transition-all cursor-pointer shadow-xs"
+                      title="Abrir apresentação completa do sistema para reuniões com clientes"
+                    >
+                      <Play className="w-3 h-3 fill-[#C84B1F]" />
+                      <span>Slides de Apresentação (Pitch Deck)</span>
+                    </button>
+                  </div>
                   <div className="flex items-center gap-1 bg-[#FAF9F5] p-1 rounded-xl border border-[#E7E4DC] text-xs">
                     {['Hoje', '7 dias', '30 dias', '90 dias'].map(tf => (
                       <button
@@ -3428,6 +3440,12 @@ export default function InsideDashboardSection({ onOpenDemo, onOpenLegal, onOpen
         onSaveVoice={(v) => {
           console.log('Nova voz clonada salva:', v);
         }}
+      />
+
+      {/* Sliders de Apresentação / Pitch Deck Executivo */}
+      <PlatformPresentationSlider 
+        isOpen={presentationOpen}
+        onClose={() => setPresentationOpen(false)}
       />
 
     </div>

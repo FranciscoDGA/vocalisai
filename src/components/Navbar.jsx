@@ -8,7 +8,7 @@ import {
 } from 'lucide-react';
 import { BRAND } from '../data/content';
 
-export default function Navbar({ onOpenDemo, onOpenAuth, onOpenLegal, onOpenDocs, currentPage = 'home', onNavigate, currentUser, onLogout }) {
+export default function Navbar({ onOpenDemo, onOpenAuth, onOpenLegal, onOpenDocs, currentPage = 'home', onNavigate, currentUser, onLogout, onOpenPresentation }) {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [activeDropdown, setActiveDropdown] = useState(null); // 'produtos' | 'solucoes' | 'recursos' | null
   const navRef = useRef(null);
@@ -476,6 +476,16 @@ export default function Navbar({ onOpenDemo, onOpenAuth, onOpenLegal, onOpenDocs
                 </div>
               )}
             </div>
+
+            {/* Apresentação Pitch Deck */}
+            <button 
+              onClick={onOpenPresentation}
+              className="hidden lg:flex items-center gap-1.5 text-xs font-semibold text-[#C84B1F] bg-[#FAF5EE] border border-[#F2E8DC] px-3 py-1.5 rounded-full hover:bg-[#F5EADB] transition-all cursor-pointer shadow-xs"
+              title="Abrir apresentação de slides para reuniões"
+            >
+              <Sparkles className="w-3 h-3 text-[#C84B1F]" />
+              <span>Slides de Apresentação</span>
+            </button>
 
             {/* Falar com a gente */}
             <button 
