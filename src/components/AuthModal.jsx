@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { X, Sparkles, ArrowRight, ShieldCheck, AlertCircle, Loader2, Mail, CheckCircle2, RefreshCw } from 'lucide-react';
 import { BRAND } from '../data/content';
 import { signUpUser, signInUser, supabase } from '../utils/supabaseClient';
+import AudioFrequencyWave from './AudioFrequencyWave';
 
 export default function AuthModal({ isOpen, onClose, onOpenLegal, onSuccessLogin }) {
   const [isLogin, setIsLogin] = useState(false);
@@ -411,20 +412,14 @@ export default function AuthModal({ isOpen, onClose, onOpenLegal, onSuccessLogin
             </p>
           </div>
 
-          {/* Sound bars at bottom */}
-          <div className="relative z-10 pt-10">
-            <div className="flex items-end gap-1 h-12 opacity-70">
-              <span className="w-1.5 h-3 bg-[#C84B1F] rounded-full"></span>
-              <span className="w-1.5 h-6 bg-[#C84B1F] rounded-full"></span>
-              <span className="w-1.5 h-10 bg-[#FF9E7D] rounded-full"></span>
-              <span className="w-1.5 h-8 bg-[#C84B1F] rounded-full"></span>
-              <span className="w-1.5 h-12 bg-[#FF9E7D] rounded-full"></span>
-              <span className="w-1.5 h-5 bg-[#C84B1F] rounded-full"></span>
-              <span className="w-1.5 h-9 bg-[#C84B1F] rounded-full"></span>
-              <span className="w-1.5 h-4 bg-[#C84B1F] rounded-full"></span>
-            </div>
-            <div className="text-[11px] font-mono text-[#8C8881] mt-3">
-              Latência 450ms • Voz neural brasileira
+          {/* Sound frequency in active motion at bottom */}
+          <div className="relative z-10 pt-8">
+            <div className="flex flex-col items-start">
+              <AudioFrequencyWave 
+                variant="compact" 
+                showLatencyBadge={true} 
+                latencyText="Latência 380ms - 450ms • Voz neural brasileira"
+              />
             </div>
           </div>
         </div>

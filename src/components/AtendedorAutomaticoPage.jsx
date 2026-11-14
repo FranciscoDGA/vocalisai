@@ -6,6 +6,7 @@ import {
 } from 'lucide-react';
 import { BRAND } from '../data/content';
 import TestCallModal from './TestCallModal';
+import AudioFrequencyWave from './AudioFrequencyWave';
 import { formatPhoneMask, cleanRawPhone } from '../utils/phoneUtils';
 import { speakFemalePt } from '../utils/voiceUtils';
 
@@ -582,11 +583,13 @@ export default function AtendedorAutomaticoPage({ onOpenDemo, onOpenAuth, onNavi
               </div>
             </div>
 
-            {/* Audio Wave Silhouette */}
-            <div className="mt-10 flex items-end justify-center gap-1.5 h-12 opacity-60 pointer-events-none">
-              {[8, 14, 20, 32, 24, 40, 18, 30, 48, 36, 22, 44, 30, 16, 28, 42, 26, 12, 20, 8].map((h, i) => (
-                <span key={i} style={{ height: `${h}px` }} className="w-1 bg-[#C84B1F] rounded-full" />
-              ))}
+            {/* Audio Wave Frequency Spectrum in Active Motion */}
+            <div className="pt-8 -mx-8 sm:-mx-14 -mb-8 sm:-mb-14">
+              <AudioFrequencyWave 
+                variant="full" 
+                showLatencyBadge={true}
+                latencyText="Latência 380ms • Frequência Vocal em Tempo Real"
+              />
             </div>
 
           </div>

@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { Phone, Sparkles, ArrowRight, ShieldCheck } from 'lucide-react';
 import { BRAND } from '../data/content';
 import TestCallModal from './TestCallModal';
+import AudioFrequencyWave from './AudioFrequencyWave';
 import { formatPhoneMask, cleanRawPhone } from '../utils/phoneUtils';
 
 export default function CtaSection({ onOpenDemo, onOpenAuth }) {
@@ -94,6 +95,15 @@ export default function CtaSection({ onOpenDemo, onOpenAuth }) {
               <p className="mt-1 font-semibold text-stone-300">
                 — Rodrigo Camargo, Diretor de Operações
               </p>
+            </div>
+
+            {/* Audio Frequency Spectrum Wave in Active Motion (Bottom Border) */}
+            <div className="pt-8 -mx-8 sm:-mx-14 lg:-mx-16 -mb-8 sm:-mb-14 lg:-mb-16">
+              <AudioFrequencyWave 
+                variant="full" 
+                showLatencyBadge={true}
+                latencyText="Latência 380ms • Frequência Vocal em Tempo Real"
+              />
             </div>
 
           </div>
