@@ -1,41 +1,86 @@
 /**
  * Serviço de Inteligência Artificial do Vocalis AI (Gemini / OpenAI)
+ * Otimizado para conversação telefônica humanizada em tempo real (Débora)
  */
 
 const GEMINI_API_KEY = import.meta.env.VITE_GEMINI_API_KEY;
 
-const SYSTEM_PROMPT = `Você é Débora, especialista em atendimento e inteligência artificial da Vocalis AI (parceira oficial do AI Agency OS).
-Sua missão é responder de forma conversacional, calorosa, elegante e sucinta (máximo 2 a 3 frases) em Português do Brasil.
-Você conversa com donos de empresas (médicos, imobiliárias, advogados, lojistas e prestadores de serviços) explicando como a IA de voz e omnichannel elimina filas, recupera vendas perdidas fora do horário e agenda clientes 24h por dia.
-Lembre-se: sua resposta será falada em voz alta para o cliente, então use linguagem natural, sem asteriscos, sem bullets, sem formatações complexas e com pontuação clara.`;
+const SYSTEM_PROMPT = `Você é Débora, a consultora executiva de inteligência artificial da Vocalis AI (parceira oficial do AI Agency OS).
+Sua missão é conversar ao telefone com donos de empresas, médicos, dentistas, corretores, advogados e lojistas de forma calorosa, ultra-humanizada, segura e persuasiva.
+
+DIRETRIZES DE FALA (MUITO IMPORTANTE):
+1. Sua resposta será FALADA em voz alta pelo sintetizador de voz. Portanto:
+   - Responda em Português do Brasil com tom natural e acolhedor.
+   - Limite cada resposta a 2 ou no máximo 3 frases curtas e diretas.
+   - NUNCA use asteriscos, negritos, tópicos, bullets, emojis, URLs ou formatações Markdown.
+   - Use pontuação expressiva (vírgulas e pontos) para pausas naturais na fala.
+2. CONHECIMENTO DA PLATAFORMA VOCALIS AI:
+   - Atendimento por voz neural com latência de apenas 380 a 450 milissegundos (sem atraso perceptível).
+   - Atende 24 horas por dia, 7 dias por semana, sem fila de espera.
+   - Conexão total com WhatsApp: responde áudios com áudios humanizados voice-to-voice.
+   - Agendamento automático no Google Calendar, CRM e sistemas da clínica/empresa.
+   - Geração e envio de cobrança Pix em tempo real durante a chamada ou conversa.
+   - Disparo ativo de campanhas (outbound) para confirmação de consultas e reativação de clientes inativos.
+   - Reduz no-show (faltas) em até 85% e recupera clientes perdidos após o horário comercial.
+3. CONTEXTO DO CLIENTE:
+   - Se o cliente for dentista ou tiver clínica odontológica: fale de agendamento de consultas e avaliações, atendimento de urgências 24h e confirmação de presença no WhatsApp para zerar salas de espera vazias.
+   - Se for imobiliária: fale de qualificação de interessados e agendamento de visitas para corretores.
+   - Se for advocacia: fale de triagem de novos casos e agendamento inicial.
+   - Se for comércio/serviços: fale de não perder vendas fora do expediente e orçamentos na hora.
+4. SAUDAÇÕES E COMPORTAMENTO HUMANO:
+   - Se o cliente apenas cumprimentar ("Olá Débora tudo bem aqui é o Francisco"), responda com carinho, chame-o pelo nome se ele informou, e pergunte qual é o ramo da empresa dele para fazer o diagnóstico.
+   - Nunca diga frases robóticas ou genéricas como "Olá, tudo bem por aqui" isoladamente. Seja sempre prestativa e objetiva.`;
 
 /**
- * Envia uma mensagem para o Gemini e retorna a resposta formatada para voz
+ * Envia uma mensagem para o Gemini com suporte a histórico multi-turn
  */
-export async function askDeboraAI(userMessage, context = {}) {
+export async function askDeboraAI(userMessage, context = {}, history = []) {
   const apiKey = GEMINI_API_KEY;
 
   if (!apiKey) {
     return {
       success: false,
-      text: "Estou pronta para conversar com você! Nossa inteligência está sendo inicializada."
+      text: "Estou te ouvindo perfeitamente! Como a Vocalis pode ajudar a transformar o atendimento da sua empresa hoje?"
     };
   }
 
-  // Modelos em ordem de prioridade
+  // Modelos mais rápidos e atualizados do Gemini em ordem de prioridade
   const candidateModels = [
-    'gemini-3.8-flash',
+    'gemini-3.1-flash-lite',
     'gemini-3-flash-preview',
+    'gemini-3.5-flash',
     'gemini-flash-latest'
   ];
+
+  // Monta o histórico de conversa formatado para a API Gemini
+  const contents = [];
+
+  // Se houver histórico anterior, inclui no formato do Gemini
+  if (Array.isArray(history) && history.length > 0) {
+    history.forEach(item => {
+      if (item.text && item.speaker) {
+        const isModel = item.speaker.toLowerCase().includes('débora') || item.speaker.toLowerCase().includes('debora');
+        contents.push({
+          role: isModel ? 'model' : 'user',
+          parts: [{ text: item.text }]
+        });
+      }
+    });
+  }
+
+  // Adiciona a pergunta atual com contexto empresarial embutido
+  const contextPrefix = (context.niche || context.pain || context.userName)
+    ? `[Contexto: Cliente: ${context.userName || 'Francisco'}, Ramo: ${context.niche || 'Não especificado ainda'}, Gargalo: ${context.pain || 'Atendimento'}]\n\n`
+    : '';
+
+  contents.push({
+    role: 'user',
+    parts: [{ text: `${contextPrefix}${userMessage}` }]
+  });
 
   for (const model of candidateModels) {
     try {
       const url = `https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent?key=${apiKey}`;
-      
-      const promptWithContext = context.niche || context.pain 
-        ? `[Contexto do cliente: Segmento: ${context.niche || 'Geral'}, Principal dor: ${context.pain || 'Atendimento'}]\n\nPergunta do cliente: ${userMessage}`
-        : userMessage;
 
       const response = await fetch(url, {
         method: 'POST',
@@ -44,15 +89,10 @@ export async function askDeboraAI(userMessage, context = {}) {
           system_instruction: {
             parts: [{ text: SYSTEM_PROMPT }]
           },
-          contents: [
-            {
-              role: 'user',
-              parts: [{ text: promptWithContext }]
-            }
-          ],
+          contents: contents,
           generationConfig: {
-            temperature: 0.7,
-            maxOutputTokens: 200
+            temperature: 0.6,
+            maxOutputTokens: 250
           }
         })
       });
@@ -63,10 +103,13 @@ export async function askDeboraAI(userMessage, context = {}) {
 
       const data = await response.json();
       const reply = data?.candidates?.[0]?.content?.parts?.[0]?.text;
-      
+
       if (reply) {
-        // Limpa formatação Markdown caso a IA retorne asteriscos, para fala natural
-        const cleanedText = reply.replace(/[*#_`]/g, '').trim();
+        // Limpa formatações Markdown e caracteres especiais para fala fluida
+        const cleanedText = reply
+          .replace(/[*#_`~]/g, '')
+          .replace(/\n+/g, ' ')
+          .trim();
         return { success: true, text: cleanedText, model };
       }
     } catch (err) {
@@ -74,12 +117,22 @@ export async function askDeboraAI(userMessage, context = {}) {
     }
   }
 
-  // Fallback inteligente caso a API do Google ainda esteja sendo ativada
+  // Fallback inteligente contextualizado caso a API do Google oscile
+  const lowerMsg = userMessage.toLowerCase();
+  let fallbackReply = "Com a inteligência de voz da Vocalis, sua empresa atende clientes no primeiro toque vinte e quatro horas por dia, agenda compromissos e envia Pix diretamente pelo WhatsApp sem depender de equipe manual.";
+
+  if (lowerMsg.includes('odonto') || lowerMsg.includes('dentist') || lowerMsg.includes('clínica') || lowerMsg.includes('clinica')) {
+    fallbackReply = "Para sua clínica odontológica, a Vocalis atende chamadas em menos de meio segundo, tira dúvidas sobre procedimentos, agenda avaliações na sua agenda e envia lembretes no WhatsApp para eliminar faltas de pacientes.";
+  } else if (lowerMsg.includes('ouvin') || lowerMsg.includes('escut') || lowerMsg.includes('olá') || lowerMsg.includes('ola') || lowerMsg.includes('francisco')) {
+    fallbackReply = "Estou te ouvindo perfeitamente, Francisco! Me diga: qual é o principal desafio no atendimento ou agendamento da sua empresa hoje?";
+  } else if (lowerMsg.includes('preço') || lowerMsg.includes('valor') || lowerMsg.includes('quanto custa')) {
+    fallbackReply = "Temos planos a partir de duzentos e noventa e sete reais por mês com trinta por cento de desconto de lançamento. Quer ver como funciona em detalhes?";
+  }
+
   return {
     success: false,
-    text: "Compreendi perfeitamente a sua dúvida. Com a nossa solução de voz da Vocalis, conseguimos resolver exatamente esse ponto no primeiro toque da chamada, garantindo que nenhum cliente seu fique sem atendimento."
+    text: fallbackReply
   };
 }
-
 
 export const askRobertaAI = askDeboraAI;

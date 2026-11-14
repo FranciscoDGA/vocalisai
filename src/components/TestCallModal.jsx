@@ -2,11 +2,11 @@ import React, { useState, useEffect, useRef } from 'react';
 import { 
   Phone, PhoneOff, Mic, MicOff, Volume2, Sparkles, CheckCircle2, 
   ArrowRight, X, Building, Calendar, DollarSign, Award, Bot, RefreshCw,
-  MessageSquare, QrCode, Copy, ExternalLink, ShieldCheck, Zap
+  MessageSquare, QrCode, Copy, ExternalLink, ShieldCheck, Zap, Send, Loader2
 } from 'lucide-react';
 import { BRAND } from '../data/content';
 import { formatPhoneMask, formatPhoneForVoice, cleanRawPhone } from '../utils/phoneUtils';
-import { speakFemalePt } from '../utils/voiceUtils';
+import { speakFemalePt, stopSpeech } from '../utils/voiceUtils';
 import { saveLead, updateLead } from '../utils/supabaseClient';
 import { sendWhatsAppMessage } from '../utils/uazapiClient';
 import { askDeboraAI } from '../utils/aiService';
@@ -17,32 +17,45 @@ export default function TestCallModal({ isOpen, phoneNumber, countryCode = '+55'
   const [currentStep, setCurrentStep] = useState(0);
   const [userNiche, setUserNiche] = useState('');
   const [userPain, setUserPain] = useState('');
+  const [userName, setUserName] = useState('Francisco');
   const [isSpeaking, setIsSpeaking] = useState(false);
+  const [isThinking, setIsThinking] = useState(false);
   const [callLog, setCallLog] = useState([]);
   const [whatsappToastOpen, setWhatsappToastOpen] = useState(false);
   const [whatsappModalOpen, setWhatsappModalOpen] = useState(false);
   const [pixCopied, setPixCopied] = useState(false);
   const [isListeningMic, setIsListeningMic] = useState(false);
+  const [interimSpeech, setInterimSpeech] = useState('');
   const [customInputText, setCustomInputText] = useState('');
   const [leadId, setLeadId] = useState(null);
 
   const timerRef = useRef(null);
   const recognitionRef = useRef(null);
+  const silenceTimerRef = useRef(null);
+  const transcriptAccumulatorRef = useRef('');
+  const chatBottomRef = useRef(null);
 
-  // Normalização do telefone para exibição visual e para pronúncia fonética
-  const formattedDisplayPhone = formatPhoneMask(phoneNumber) || '(11) 98765-4321';
-  const spokenPhone = formatPhoneForVoice(phoneNumber);
+  // Normalização do telefone para exibição visual e pronúncia fonética
+  const formattedDisplayPhone = formatPhoneMask(phoneNumber) || '(94) 98447-8168';
+  const spokenPhone = formatPhoneForVoice(phoneNumber || '94984478168');
 
-  // Roteiro estruturado de Diagnóstico Empresarial ao Vivo (Estilo demonstração ao vivo da Débora)
+  // Auto-scroll para última mensagem do chat
+  useEffect(() => {
+    if (chatBottomRef.current) {
+      chatBottomRef.current.scrollIntoView({ behavior: 'smooth' });
+    }
+  }, [callLog, interimSpeech]);
+
+  // Roteiro estruturado de Diagnóstico Empresarial ao Vivo
   const conversationScript = [
     {
       step: 0,
       speaker: 'Débora (Vocalis · AI Agency OS)',
       spokenText: `Olá! Aqui é a Débora da inteligência da Vocalis e do AI Agency OS. Liguei para o seu número ${spokenPhone} para fazer um diagnóstico rápido da sua empresa em menos de um minuto. Me conta: qual é o ramo da sua empresa hoje e como funciona o seu atendimento?`,
       displayText: `Olá! Aqui é a Débora da inteligência da Vocalis (AI Agency OS). Estou ligando para o seu número ${countryCode} ${formattedDisplayPhone} para fazer um diagnóstico rápido da sua empresa ao vivo. Me conta: qual é o ramo da sua empresa hoje e como funciona o seu atendimento?`,
-      promptHint: 'Selecione o ramo da sua empresa ou fale no microfone:',
+      promptHint: 'Fale no microfone, digite abaixo ou escolha seu segmento:',
       options: [
-        { label: '🏥 Clínica Médica / Consultório Odontológico', niche: 'Clínica Médica' },
+        { label: '🏥 Clínica Odontológica / Consultório Médico', niche: 'Clínica Odontológica' },
         { label: '🏠 Imobiliária / Corretores de Imóveis', niche: 'Imobiliária' },
         { label: '⚖️ Escritório de Advocacia', niche: 'Advocacia' },
         { label: '🛍️ E-commerce / Varejo e Lojas', niche: 'E-commerce' },
@@ -88,7 +101,7 @@ export default function TestCallModal({ isOpen, phoneNumber, countryCode = '+55'
     }
   ];
 
-  // Helper de sintetizador de voz
+  // Helper de sintetizador de voz com controle de estado
   const speakText = (text) => {
     speakFemalePt(
       text,
@@ -98,96 +111,249 @@ export default function TestCallModal({ isOpen, phoneNumber, countryCode = '+55'
     );
   };
 
-  // Reconhecimento de fala nativo (Speech-to-Text) para falar diretamente com a Débora
+  // Inicialização estável do reconhecimento de voz contínuo
   useEffect(() => {
     const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
-    if (SpeechRecognition) {
-      const recognition = new SpeechRecognition();
-      recognition.lang = 'pt-BR';
-      recognition.continuous = false;
-      recognition.interimResults = false;
+    if (!SpeechRecognition) return;
 
-      recognition.onresult = (event) => {
-        const transcript = event.results[0][0].transcript;
+    const recognition = new SpeechRecognition();
+    recognition.lang = 'pt-BR';
+    recognition.continuous = true;
+    recognition.interimResults = true;
+    recognition.maxAlternatives = 1;
+
+    recognition.onresult = (event) => {
+      let finalStr = '';
+      let interimStr = '';
+
+      for (let i = event.resultIndex; i < event.results.length; ++i) {
+        const item = event.results[i];
+        if (item.isFinal) {
+          finalStr += item[0].transcript + ' ';
+        } else {
+          interimStr += item[0].transcript;
+        }
+      }
+
+      if (finalStr) {
+        transcriptAccumulatorRef.current = (transcriptAccumulatorRef.current + ' ' + finalStr).trim();
+      }
+
+      setInterimSpeech(interimStr || transcriptAccumulatorRef.current);
+
+      // Debounce inteligente de silêncio: aguarda 1.8 segundos de pausa na fala para enviar
+      if (silenceTimerRef.current) clearTimeout(silenceTimerRef.current);
+      silenceTimerRef.current = setTimeout(() => {
+        const textToSend = (transcriptAccumulatorRef.current + ' ' + interimStr).trim();
+        if (textToSend.length > 2) {
+          transcriptAccumulatorRef.current = '';
+          setInterimSpeech('');
+          handleCustomUserSpeech(textToSend);
+        }
+      }, 1800);
+    };
+
+    recognition.onerror = (e) => {
+      console.warn('SpeechRecognition error:', e);
+      if (e.error !== 'no-speech') {
         setIsListeningMic(false);
-        handleCustomUserSpeech(transcript);
-      };
+      }
+    };
 
-      recognition.onerror = () => {
+    recognition.onend = () => {
+      // Se ainda estava marcado como ouvindo, reinicia automaticamente para não cortar
+      if (isListeningMic && callState === 'connected') {
+        try {
+          recognition.start();
+        } catch (err) {
+          setIsListeningMic(false);
+        }
+      } else {
         setIsListeningMic(false);
-      };
+      }
+    };
 
-      recognition.onend = () => {
-        setIsListeningMic(false);
-      };
+    recognitionRef.current = recognition;
 
-      recognitionRef.current = recognition;
-    }
-  }, [currentStep, userNiche, userPain]);
+    return () => {
+      if (silenceTimerRef.current) clearTimeout(silenceTimerRef.current);
+      try {
+        recognition.stop();
+      } catch (e) {}
+    };
+  }, [callState, isListeningMic]);
 
+  // Controle de ativação do microfone
   const toggleMic = () => {
     if (!recognitionRef.current) {
-      alert('Seu navegador não suporta reconhecimento de fala por microfone. Por favor, utilize os botões interativos na tela.');
+      alert('Seu navegador não suporta reconhecimento de fala por microfone nativo. Você pode digitar sua pergunta na caixa de texto logo abaixo!');
       return;
     }
 
     if (isListeningMic) {
-      recognitionRef.current.stop();
+      if (silenceTimerRef.current) clearTimeout(silenceTimerRef.current);
+      const textToSend = (transcriptAccumulatorRef.current + ' ' + interimSpeech).trim();
+      transcriptAccumulatorRef.current = '';
+      setInterimSpeech('');
+      try {
+        recognitionRef.current.stop();
+      } catch (e) {}
       setIsListeningMic(false);
-    } else {
-      if (typeof window !== 'undefined' && 'speechSynthesis' in window) {
-        window.speechSynthesis.cancel();
+
+      if (textToSend.length > 2) {
+        handleCustomUserSpeech(textToSend);
       }
+    } else {
+      stopSpeech();
       setIsSpeaking(false);
+      transcriptAccumulatorRef.current = '';
+      setInterimSpeech('');
       try {
         recognitionRef.current.start();
         setIsListeningMic(true);
       } catch (err) {
+        console.warn('Falha ao iniciar SpeechRecognition:', err);
         setIsListeningMic(false);
       }
     }
   };
 
+  // Extração inteligente de nicho caso o usuário mencione na fala
+  const detectNicheFromText = (text) => {
+    const lower = text.toLowerCase();
+    if (lower.includes('odonto') || lower.includes('dentist')) return 'Clínica Odontológica';
+    if (lower.includes('médic') || lower.includes('medic') || lower.includes('consultório') || lower.includes('consultorio') || lower.includes('saúde') || lower.includes('saude')) return 'Clínica Médica';
+    if (lower.includes('imob') || lower.includes('imóve') || lower.includes('imove') || lower.includes('corretor')) return 'Imobiliária';
+    if (lower.includes('advoc') || lower.includes('jurídic') || lower.includes('juridic') || lower.includes('direito') || lower.includes('advogad')) return 'Escritório de Advocacia';
+    if (lower.includes('loja') || lower.includes('e-commerce') || lower.includes('ecommerce') || lower.includes('varejo') || lower.includes('produto') || lower.includes('calçado')) return 'E-commerce & Varejo';
+    if (lower.includes('serviço') || lower.includes('servico') || lower.includes('manuten') || lower.includes('reforma') || lower.includes('oficina') || lower.includes('refrigera')) return 'Serviços & Manutenção';
+    return null;
+  };
+
+  // Processador central de fala ou texto do usuário
   const handleCustomUserSpeech = async (text) => {
-    if (!text.trim()) return;
+    if (!text || !text.trim()) return;
+    const cleanText = text.trim();
+    const lower = cleanText.toLowerCase();
 
-    if (currentStep === 0) {
-      setUserNiche(text);
-      proceedToNextStep(text, text, '');
-    } else if (currentStep === 1) {
-      setUserPain(text);
-      proceedToNextStep(text, userNiche, text);
-    } else {
-      // Registra pergunta do usuário no log
-      setCallLog(prev => [...prev, { speaker: 'Você', text, time: formatDuration(callDuration) }]);
-      
-      // Resposta dinâmica da Débora via Gemini AI
-      const aiResponse = await askDeboraAI(text, { niche: userNiche, pain: userPain });
-      const replyText = aiResponse.text;
+    // Detecção de nome do usuário
+    if ((lower.includes('sou o ') || lower.includes('aqui é o ') || lower.includes('aqui e o ')) && lower.includes('francisco')) {
+      setUserName('Francisco');
+    }
 
+    // Registra a fala do usuário no log imediatamente
+    const userMsg = { speaker: 'Você', text: cleanText, time: formatDuration(callDuration) };
+    setCallLog(prev => [...prev, userMsg]);
+
+    // 1. O usuário está apenas saudando ou testando o áudio?
+    // Ex: "Olá Débora tudo bem com você aqui é o Francisco" ou "Débora você está me ouvindo?"
+    const isGreetingOrAudioTest = (
+      lower.includes('está me ouvindo') || 
+      lower.includes('ta me ouvindo') || 
+      lower.includes('voce me ouve') || 
+      lower.includes('você me ouve') || 
+      lower.includes('me escuta') ||
+      lower.includes('confirme se') ||
+      ((lower.startsWith('olá') || lower.startsWith('ola') || lower.startsWith('oi') || lower.startsWith('bom dia') || lower.startsWith('boa tarde') || lower.startsWith('tudo bem')) && 
+       !lower.includes('odonto') && !lower.includes('clínica') && !lower.includes('clinica') && !lower.includes('empresa') && !lower.includes('imob') && !lower.includes('advoc'))
+    );
+
+    if (isGreetingOrAudioTest && !userNiche && currentStep === 0) {
+      const warmReply = `Olá Francisco! Estou te ouvindo perfeitamente, em alto e bom som! É um prazer conversar com você. Para iniciarmos o diagnóstico, me conta: qual é o ramo da sua empresa hoje e como funciona o seu atendimento?`;
       setTimeout(() => {
         setCallLog(prev => [...prev, {
-          speaker: 'Débora (Vocalis · Gemini AI)',
-          text: replyText,
+          speaker: 'Débora (Vocalis · AI Agency OS)',
+          text: warmReply,
           time: formatDuration(callDuration + 1)
         }]);
-        speakText(replyText);
-      }, 400);
+        speakText(warmReply);
+      }, 350);
+      return;
     }
+
+    // 2. Se o usuário estiver na etapa 0 e informar o nicho diretamente
+    const detectedNiche = detectNicheFromText(cleanText);
+    if (currentStep === 0 && detectedNiche) {
+      setUserNiche(detectedNiche);
+      proceedToNextStep(`Meu segmento é ${detectedNiche}`, detectedNiche, '');
+
+      // Se ele também fez uma pergunta junto (ex: "o que a Vocalis pode fazer pela minha clínica odontológica?")
+      if (lower.includes('o que') || lower.includes('como') || lower.includes('pode fazer') || lower.includes('ajuda')) {
+        setIsThinking(true);
+        const aiResponse = await askDeboraAI(cleanText, { niche: detectedNiche, pain: userPain, userName }, callLog);
+        setIsThinking(false);
+        if (aiResponse?.text) {
+          setTimeout(() => {
+            setCallLog(prev => [...prev, {
+              speaker: 'Débora (Vocalis · Gemini AI)',
+              text: aiResponse.text,
+              time: formatDuration(callDuration + 2)
+            }]);
+            speakText(aiResponse.text);
+          }, 600);
+        }
+      }
+      return;
+    }
+
+    // 3. Se estiver na etapa 1 e o usuário responder sobre dores
+    if (currentStep === 1 && (lower.includes('falta') || lower.includes('no-show') || lower.includes('cliente') || lower.includes('horário') || lower.includes('equipe') || lower.includes('custo'))) {
+      const detectedPain = lower.includes('falta') ? 'No-show e faltas de clientes' : cleanText;
+      setUserPain(detectedPain);
+      proceedToNextStep(cleanText, userNiche, detectedPain);
+      return;
+    }
+
+    // 4. Pergunta livre para a Débora em qualquer momento da chamada (Gemini AI com histórico)
+    setIsThinking(true);
+    const aiResponse = await askDeboraAI(
+      cleanText, 
+      { niche: userNiche || detectedNiche, pain: userPain, userName }, 
+      callLog
+    );
+    setIsThinking(false);
+    const replyText = aiResponse.text;
+
+    setTimeout(() => {
+      setCallLog(prev => [...prev, {
+        speaker: 'Débora (Vocalis · Gemini AI)',
+        text: replyText,
+        time: formatDuration(callDuration + 1)
+      }]);
+      speakText(replyText);
+    }, 300);
+
+    // Se estiver na etapa de demonstrar WhatsApp/Pix e ainda não tiver acionado
+    if (currentStep >= 1 && !whatsappToastOpen) {
+      setTimeout(() => {
+        setWhatsappToastOpen(true);
+      }, 1500);
+    }
+  };
+
+  const handleSendCustomText = () => {
+    if (!customInputText.trim()) return;
+    const t = customInputText;
+    setCustomInputText('');
+    handleCustomUserSpeech(t);
   };
 
   // Simulação de chamada ao abrir o modal
   useEffect(() => {
     if (!isOpen) {
       if (timerRef.current) clearInterval(timerRef.current);
-      if (typeof window !== 'undefined' && 'speechSynthesis' in window) {
-        window.speechSynthesis.cancel();
+      stopSpeech();
+      if (recognitionRef.current) {
+        try { recognitionRef.current.stop(); } catch(e) {}
       }
       setCallState('calling');
       setCallDuration(0);
       setCurrentStep(0);
+      setUserNiche('');
+      setUserPain('');
       setCallLog([]);
       setIsSpeaking(false);
+      setIsListeningMic(false);
       setWhatsappToastOpen(false);
       setWhatsappModalOpen(false);
       return;
@@ -211,7 +377,7 @@ export default function TestCallModal({ isOpen, phoneNumber, countryCode = '+55'
         setCallDuration(prev => prev + 1);
       }, 1000);
 
-      // Inicia a primeira fala com voz feminina
+      // Inicia a primeira fala com voz feminina neural
       const firstStep = conversationScript[0];
       setCallLog([{ 
         speaker: 'Débora (Vocalis · AI Agency OS)', 
@@ -225,17 +391,11 @@ export default function TestCallModal({ isOpen, phoneNumber, countryCode = '+55'
     return () => {
       clearTimeout(connectTimer);
       if (timerRef.current) clearInterval(timerRef.current);
-      if (typeof window !== 'undefined' && 'speechSynthesis' in window) {
-        window.speechSynthesis.cancel();
-      }
+      stopSpeech();
     };
   }, [isOpen, phoneNumber]);
 
   const proceedToNextStep = (userLabel, nicheVal, painVal) => {
-    // Registra resposta do usuário no log
-    const userMsg = { speaker: 'Você', text: userLabel, time: formatDuration(callDuration) };
-    setCallLog(prev => [...prev, userMsg]);
-
     const nextStep = currentStep + 1;
     if (nextStep < conversationScript.length) {
       setCurrentStep(nextStep);
@@ -252,14 +412,14 @@ export default function TestCallModal({ isOpen, phoneNumber, countryCode = '+55'
         ? nextScriptItem.displayText(chosenNiche, chosenPain) 
         : nextScriptItem.displayText;
 
-      // Se for a etapa de disparar WhatsApp e Pix simultâneo
-      if (nextScriptItem.triggerAction) {
+      // Dispara o WhatsApp e o Pix simultâneo
+      if (nextScriptItem.triggerAction || nextStep >= 2) {
         setTimeout(() => {
           setWhatsappToastOpen(true);
-        }, 1500);
+        }, 1200);
 
-        // Disparo real via UazAPI
-        const whatsappMsg = `👋 Olá! Aqui é a Débora da *Vocalis AI*.\n\nAcabei de falar com você na demonstração ao vivo e organizei o seu diagnóstico:\n🏢 *Segmento:* ${chosenNiche || 'Empresa & Serviços'}\n🎯 *Gargalo:* ${chosenPain || 'Atendimento fora do horário'}\n⚡ *Solução:* Atendimento com voz neural em 450ms, agendamento e geração de Pix em tempo real.\n\n💬 Este é um contato de validação. Caso queira ativar essa IA na sua empresa ou agendar uma reunião, basta responder esta mensagem!`;
+        // Disparo via UazAPI
+        const whatsappMsg = `👋 Olá! Aqui é a Débora da *Vocalis AI*.\n\nAcabei de falar com você na demonstração ao vivo e organizei o seu diagnóstico:\n🏢 *Segmento:* ${chosenNiche || 'Empresa & Serviços'}\n🎯 *Gargalo:* ${chosenPain || 'Atendimento fora do horário'}\n⚡ *Solução:* Atendimento com voz neural em 380ms, agendamento de consultas e geração de Pix em tempo real.\n\n💬 Caso queira ativar essa IA na sua empresa ou agendar uma reunião guiada, basta responder esta mensagem!`;
 
         sendWhatsAppMessage({
           phone: phoneNumber,
@@ -312,15 +472,19 @@ export default function TestCallModal({ isOpen, phoneNumber, countryCode = '+55'
       return;
     }
 
+    // Registra escolha no log
+    setCallLog(prev => [...prev, { speaker: 'Você', text: opt.label, time: formatDuration(callDuration) }]);
     proceedToNextStep(opt.label, opt.niche, opt.pain);
   };
 
   const handleEndCall = () => {
-    if (typeof window !== 'undefined' && 'speechSynthesis' in window) {
-      window.speechSynthesis.cancel();
+    stopSpeech();
+    if (recognitionRef.current) {
+      try { recognitionRef.current.stop(); } catch(e) {}
     }
     if (timerRef.current) clearInterval(timerRef.current);
     setIsSpeaking(false);
+    setIsListeningMic(false);
     setCallState('ended');
 
     if (leadId) {
@@ -333,15 +497,14 @@ export default function TestCallModal({ isOpen, phoneNumber, countryCode = '+55'
 
   const handleRestartCall = () => {
     if (timerRef.current) clearInterval(timerRef.current);
-    if (typeof window !== 'undefined' && 'speechSynthesis' in window) {
-      window.speechSynthesis.cancel();
-    }
+    stopSpeech();
     setCallState('connected');
     setCallDuration(0);
     setCurrentStep(0);
     setUserNiche('');
     setUserPain('');
     setIsSpeaking(false);
+    setIsListeningMic(false);
     setWhatsappToastOpen(false);
     setWhatsappModalOpen(false);
 
@@ -401,7 +564,7 @@ export default function TestCallModal({ isOpen, phoneNumber, countryCode = '+55'
 
       {/* Modal Container Principal */}
       <div 
-        className="bg-[#11100F] text-white rounded-3xl max-w-xl w-full border border-stone-800 shadow-2xl overflow-hidden flex flex-col relative font-sans max-h-[92vh]"
+        className="bg-[#11100F] text-white rounded-3xl max-w-xl w-full border border-stone-800 shadow-2xl overflow-hidden flex flex-col relative font-sans max-h-[94vh]"
         onClick={(e) => e.stopPropagation()}
       >
         
@@ -443,38 +606,38 @@ export default function TestCallModal({ isOpen, phoneNumber, countryCode = '+55'
         </div>
 
         {/* Central Call Visual */}
-        <div className="p-5 sm:p-6 flex flex-col items-center text-center overflow-y-auto max-h-[calc(92vh-130px)]">
+        <div className="p-4 sm:p-6 flex flex-col items-center text-center overflow-y-auto max-h-[calc(94vh-130px)]">
           
           {/* Avatar com aura pulsante de fala */}
-          <div className="relative my-2">
-            <div className={`w-16 h-16 sm:w-20 sm:h-20 rounded-full flex items-center justify-center transition-all ${
+          <div className="relative my-1.5">
+            <div className={`w-14 h-14 sm:w-16 sm:h-16 rounded-full flex items-center justify-center transition-all ${
               isSpeaking ? 'bg-[#C84B1F] shadow-lg shadow-[#C84B1F]/50 scale-105' : 'bg-stone-800'
             }`}>
-              <Bot className="w-8 h-8 sm:w-9 sm:h-9 text-white" />
+              <Bot className="w-7 h-7 sm:w-8 sm:h-8 text-white" />
             </div>
             {isSpeaking && (
               <div className="absolute -inset-2 rounded-full border-2 border-[#C84B1F]/50 animate-ping pointer-events-none" />
             )}
           </div>
 
-          <h3 className="text-lg sm:text-xl font-bold text-white mt-1 flex items-center justify-center gap-2">
-            <span>Débora · Consultora de IA</span>
+          <h3 className="text-base sm:text-lg font-bold text-white mt-1 flex items-center justify-center gap-2">
+            <span>Débora · Consultora Executiva de IA</span>
             <span className="text-[10px] font-mono px-2 py-0.5 rounded bg-emerald-500/20 text-emerald-400 border border-emerald-500/30">
-              Voz Neural
+              Voz Neural HD
             </span>
           </h3>
           <p className="text-xs text-stone-400 font-mono mt-0.5">
-            Ligando para: {countryCode} {formattedDisplayPhone}
+            Em ligação com: {countryCode} {formattedDisplayPhone}
           </p>
 
           {/* Active speech waveform bar */}
-          <div className="h-5 flex items-center gap-1 my-2.5">
+          <div className="h-4 flex items-center gap-1 my-2">
             {[10, 22, 35, 18, 42, 58, 38, 22, 48, 65, 42, 18, 32, 12].map((h, i) => (
               <span 
                 key={i} 
-                style={{ height: isSpeaking ? `${h * 0.35}px` : '4px' }} 
+                style={{ height: isSpeaking ? `${h * 0.3}px` : (isListeningMic ? `${(i % 5 + 1) * 3}px` : '3px') }} 
                 className={`w-1 rounded-full transition-all duration-150 ${
-                  isSpeaking ? 'bg-[#C84B1F]' : 'bg-stone-700'
+                  isSpeaking ? 'bg-[#C84B1F]' : (isListeningMic ? 'bg-emerald-400 animate-pulse' : 'bg-stone-700')
                 }`}
               />
             ))}
@@ -482,11 +645,11 @@ export default function TestCallModal({ isOpen, phoneNumber, countryCode = '+55'
 
           {/* Card com Ações em Tempo Real (Action-First AI) */}
           {currentStep >= 2 && (
-            <div className="w-full bg-[#181716] border border-stone-800 rounded-2xl p-3 mb-3 text-left animate-fadeIn">
+            <div className="w-full bg-[#181716] border border-stone-800 rounded-2xl p-3 mb-2.5 text-left animate-fadeIn">
               <div className="flex items-center justify-between mb-2">
                 <span className="text-[11px] font-bold uppercase tracking-wider text-stone-400 flex items-center gap-1.5">
                   <Zap className="w-3.5 h-3.5 text-amber-400" />
-                  <span>Ações Executadas Simultâneas na Chamada:</span>
+                  <span>Ações Executadas em Tempo Real na Chamada:</span>
                 </span>
                 <span className="text-[10px] text-emerald-400 font-mono font-bold">100% Automatizado</span>
               </div>
@@ -517,11 +680,11 @@ export default function TestCallModal({ isOpen, phoneNumber, countryCode = '+55'
           )}
 
           {/* Live Transcript Box */}
-          <div className="w-full bg-stone-900/90 rounded-2xl p-4 border border-stone-800 text-left my-1 max-h-40 overflow-y-auto space-y-2.5 scrollbar-thin">
+          <div className="w-full bg-stone-900/90 rounded-2xl p-3.5 border border-stone-800 text-left my-1 max-h-44 overflow-y-auto space-y-2 scrollbar-thin">
             {callLog.map((log, idx) => (
               <div key={idx} className="space-y-0.5">
                 <div className="flex items-center justify-between text-[10px] text-stone-400 font-mono">
-                  <span className={log.speaker.includes('Débora') ? 'text-[#FF9E7D] font-bold' : 'text-stone-300'}>
+                  <span className={log.speaker.includes('Débora') ? 'text-[#FF9E7D] font-bold' : 'text-stone-300 font-semibold'}>
                     {log.speaker}
                   </span>
                   <span>{log.time}</span>
@@ -531,54 +694,103 @@ export default function TestCallModal({ isOpen, phoneNumber, countryCode = '+55'
                 </p>
               </div>
             ))}
+
+            {/* Feedback visual enquanto Débora processa a IA */}
+            {isThinking && (
+              <div className="flex items-center gap-2 text-xs text-[#FF9E7D] italic">
+                <Loader2 className="w-3.5 h-3.5 animate-spin" />
+                <span>Débora formulando resposta...</span>
+              </div>
+            )}
+
+            {/* Feedback visual enquanto o microfone está captando fala */}
+            {isListeningMic && (
+              <div className="p-2 rounded-xl bg-stone-800/80 border border-emerald-500/30 text-xs text-emerald-300 flex items-center gap-2">
+                <span className="w-2 h-2 rounded-full bg-emerald-400 animate-ping shrink-0" />
+                <span className="truncate">
+                  {interimSpeech ? `Ouvindo: "${interimSpeech}"` : 'Ouvindo sua voz... fale agora com a Débora'}
+                </span>
+              </div>
+            )}
+            
+            <div ref={chatBottomRef} />
           </div>
 
-          {/* Interactive Response Area (Botões rápidos + Microfone ao Vivo) */}
+          {/* Área de Entrada Multimodal (Microfone + Caixa de Texto + Botões Rápidos) */}
           {callState === 'connected' && (
-            <div className="w-full mt-3 space-y-2">
-              <div className="flex items-center justify-between">
-                <p className="text-[11px] text-stone-400 font-medium text-left">
-                  {conversationScript[currentStep]?.promptHint}
-                </p>
-                
+            <div className="w-full mt-2.5 space-y-2">
+              
+              {/* Barra de Microfone e Digitação */}
+              <div className="flex items-center gap-2">
                 {/* Botão de Falar no Microfone */}
                 <button
                   type="button"
                   onClick={toggleMic}
-                  className={`px-2.5 py-1 rounded-full text-[11px] font-semibold flex items-center gap-1.5 transition-all cursor-pointer ${
+                  className={`px-3 py-2 rounded-xl text-xs font-semibold flex items-center gap-1.5 transition-all cursor-pointer shrink-0 ${
                     isListeningMic 
-                      ? 'bg-rose-600 text-white animate-pulse' 
-                      : 'bg-stone-800 hover:bg-stone-700 text-stone-300'
+                      ? 'bg-rose-600 text-white shadow-lg shadow-rose-600/30 animate-pulse' 
+                      : 'bg-stone-800 hover:bg-stone-700 text-stone-200 border border-stone-700'
                   }`}
                   title="Falar com a Débora usando seu microfone"
                 >
                   {isListeningMic ? (
                     <>
-                      <MicOff className="w-3 h-3" />
-                      <span>Ouvindo sua voz...</span>
+                      <MicOff className="w-3.5 h-3.5" />
+                      <span>Concluir Fala</span>
                     </>
                   ) : (
                     <>
-                      <Mic className="w-3 h-3 text-[#C84B1F]" />
+                      <Mic className="w-3.5 h-3.5 text-[#C84B1F]" />
                       <span>Falar no Mic</span>
                     </>
                   )}
                 </button>
+
+                {/* Input de Texto alternativo para digitação */}
+                <div className="flex-1 relative flex items-center">
+                  <input
+                    type="text"
+                    value={customInputText}
+                    onChange={(e) => setCustomInputText(e.target.value)}
+                    onKeyDown={(e) => {
+                      if (e.key === 'Enter') {
+                        e.preventDefault();
+                        handleSendCustomText();
+                      }
+                    }}
+                    placeholder="Ou digite sua pergunta para Débora..."
+                    className="w-full py-2 pl-3 pr-9 rounded-xl bg-stone-800/90 border border-stone-700 text-xs text-white placeholder-stone-400 focus:outline-none focus:border-[#C84B1F] transition-all"
+                  />
+                  <button
+                    type="button"
+                    onClick={handleSendCustomText}
+                    disabled={!customInputText.trim()}
+                    className="absolute right-1.5 w-6 h-6 rounded-lg bg-[#C84B1F] hover:bg-[#A83812] disabled:opacity-40 text-white flex items-center justify-center transition-all cursor-pointer"
+                  >
+                    <Send className="w-3 h-3" />
+                  </button>
+                </div>
               </div>
 
               {/* Botões de Opção Rápida */}
-              <div className="grid grid-cols-1 gap-1.5">
-                {conversationScript[currentStep]?.options.map((opt, idx) => (
-                  <button
-                    key={idx}
-                    onClick={() => handleSelectOption(opt)}
-                    className="w-full py-2.5 px-3.5 rounded-xl bg-stone-800/90 hover:bg-[#C84B1F] text-xs font-semibold text-white transition-all text-left flex items-center justify-between border border-stone-700 hover:border-[#C84B1F] shadow-sm hover:translate-x-1 cursor-pointer"
-                  >
-                    <span>{opt.label}</span>
-                    <ArrowRight className="w-3.5 h-3.5 opacity-60" />
-                  </button>
-                ))}
+              <div className="text-left">
+                <p className="text-[10px] text-stone-400 font-medium mb-1">
+                  {conversationScript[currentStep]?.promptHint}
+                </p>
+                <div className="grid grid-cols-1 gap-1.5">
+                  {conversationScript[currentStep]?.options.map((opt, idx) => (
+                    <button
+                      key={idx}
+                      onClick={() => handleSelectOption(opt)}
+                      className="w-full py-2 px-3 rounded-xl bg-stone-800/80 hover:bg-[#C84B1F] text-xs font-semibold text-white transition-all text-left flex items-center justify-between border border-stone-700/80 hover:border-[#C84B1F] shadow-sm hover:translate-x-1 cursor-pointer"
+                    >
+                      <span>{opt.label}</span>
+                      <ArrowRight className="w-3 h-3 opacity-60" />
+                    </button>
+                  ))}
+                </div>
               </div>
+
             </div>
           )}
 
@@ -627,7 +839,7 @@ export default function TestCallModal({ isOpen, phoneNumber, countryCode = '+55'
         </div>
 
         {/* Bottom Control Bar */}
-        <div className="px-5 sm:px-6 py-3.5 bg-stone-900 border-t border-stone-800 flex items-center justify-between">
+        <div className="px-5 sm:px-6 py-3 bg-stone-900 border-t border-stone-800 flex items-center justify-between">
           <div className="flex items-center gap-2">
             <span className="w-2 h-2 rounded-full bg-emerald-500"></span>
             <span className="text-[11px] text-stone-400">Latência Neural: 380ms · Sem Delay</span>
@@ -693,7 +905,7 @@ export default function TestCallModal({ isOpen, phoneNumber, countryCode = '+55'
                 <div className="p-2 rounded-xl bg-[#111B21] text-[11px] space-y-1 border border-stone-800">
                   <div>🏢 <strong>Segmento:</strong> {userNiche || 'Empresa & Serviços'}</div>
                   <div>🎯 <strong>Gargalo Resolvido:</strong> {userPain || 'Atendimento fora do horário'}</div>
-                  <div>⚡ <strong>Solução:</strong> IA com atendimento em 450ms e agendamento instantâneo.</div>
+                  <div>⚡ <strong>Solução:</strong> IA com atendimento em 380ms e agendamento instantâneo.</div>
                 </div>
               </div>
 
