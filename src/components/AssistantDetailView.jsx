@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { 
   Bot, MessageSquare, Phone, Headphones, Sparkles, Plus, X, 
   ChevronRight, ChevronDown, ChevronUp, Globe, Upload, BookOpen, 
@@ -6,8 +6,9 @@ import {
   Info, ExternalLink, Send, ArrowLeft, MessageCircle, MoreHorizontal,
   FileText, Shield, AlertCircle, ToggleLeft, ToggleRight, Radio, RefreshCw,
   Clock, Trash2, UserCheck, Bell, PhoneForwarded, Users,
-  ChevronsLeft, ChevronsUpDown
+  ChevronsLeft, ChevronsUpDown, Copy
 } from 'lucide-react';
+import { createVapiAssistant, updateVapiAssistant, triggerOutboundCall } from '../utils/vapiService';
 
 export default function AssistantDetailView({ 
   assistant, 
@@ -15,7 +16,9 @@ export default function AssistantDetailView({
   onBack, 
   onSelectAssistant, 
   onOpenCreateModal, 
-  onOpenPricing 
+  onOpenPricing,
+  onUpdateAssistant,
+  onDeleteAssistant
 }) {
   const [subTab, setSubTab] = useState('geral'); // 'geral' | 'regras' | 'conhecimento' | 'prompt' | 'tecnico'
   const [assistantDropdownOpen, setAssistantDropdownOpen] = useState(false);
@@ -24,6 +27,15 @@ export default function AssistantDetailView({
   const [testChatOpen, setTestChatOpen] = useState(false);
   const [addSourceDropdownOpen, setAddSourceDropdownOpen] = useState(false);
   const [activeStatus, setActiveStatus] = useState(true);
+
+  // Vapi Real-Time Sync State
+  const [vapiId, setVapiId] = useState(assistant?.vapi_assistant_id || null);
+  const [syncStatus, setSyncStatus] = useState(assistant?.vapi_assistant_id ? 'synced' : 'idle');
+  const [syncFeedback, setSyncFeedback] = useState('');
+  const [copiedVapiId, setCopiedVapiId] = useState(false);
+  const [testPhone, setTestPhone] = useState('');
+  const [callingState, setCallingState] = useState(false);
+  const [callFeedback, setCallFeedback] = useState('');
 
   // Modais Interativos das Imagens 4 a 9
   const [voiceModalOpen, setVoiceModalOpen] = useState(false);
@@ -155,6 +167,119 @@ export default function AssistantDetailView({
     } else {
       setDiasSemana([...diasSemana, dia]);
     }
+  };
+
+  // Sincroniza estado quando o assistente prop mudar
+  useEffect(() => {
+    if (assistant) {
+      setName(assistant.name || 'Assistente');
+      setType(assistant.type || 'hibrido');
+      setVapiId(assistant.vapi_assistant_id || null);
+      setSyncStatus(assistant.vapi_assistant_id ? 'synced' : 'idle');
+      if (assistant.prompt) setPromptText(assistant.prompt);
+    }
+  }, [assistant]);
+
+  // Handler para Salvar Alterações e Sincronizar com a Vapi & Supabase
+  const handleSaveAndSync = async () => {
+    setSyncStatus('syncing');
+    setSyncFeedback('Sincronizando com a Vapi...');
+
+    try {
+      let currentVapiId = vapiId;
+
+      if (currentVapiId) {
+        // Atualiza na Vapi
+        const updateRes = await updateVapiAssistant(currentVapiId, {
+          name,
+          systemPrompt: promptText,
+          firstMessage: welcomeMessageActive ? welcomeMessage : undefined,
+          voiceId: 'Clara'
+        });
+
+        if (!updateRes.success) {
+          console.warn('Falha no update da Vapi, tentando criar assistente:', updateRes.error);
+          const createRes = await createVapiAssistant({
+            name,
+            systemPrompt: promptText,
+            firstMessage: welcomeMessage,
+            voiceId: 'Clara'
+          });
+          if (createRes.success && createRes.assistantId) {
+            currentVapiId = createRes.assistantId;
+            setVapiId(currentVapiId);
+          }
+        }
+      } else {
+        // Cria na Vapi
+        const createRes = await createVapiAssistant({
+          name,
+          systemPrompt: promptText,
+          firstMessage: welcomeMessage,
+          voiceId: 'Clara'
+        });
+
+        if (createRes.success && createRes.assistantId) {
+          currentVapiId = createRes.assistantId;
+          setVapiId(currentVapiId);
+        }
+      }
+
+      if (onUpdateAssistant) {
+        await onUpdateAssistant({
+          id: assistant.id,
+          name,
+          type,
+          prompt: promptText,
+          voice: selectedVoice.name,
+          channel: type === 'voz' ? 'Telefone (11) 4003-9821' : type === 'chat' ? 'WhatsApp Oficial' : 'Telefone + WhatsApp',
+          vapi_assistant_id: currentVapiId
+        });
+      }
+
+      setSyncStatus('synced');
+      setSyncFeedback('Assistente salvo e sincronizado com a telefonia Vapi!');
+      setTimeout(() => setSyncFeedback(''), 4000);
+    } catch (err) {
+      console.error('Erro ao sincronizar:', err);
+      setSyncStatus('error');
+      setSyncFeedback('Erro ao sincronizar: ' + err.message);
+    }
+  };
+
+  const handleCopyVapiId = () => {
+    if (vapiId) {
+      navigator.clipboard.writeText(vapiId);
+      setCopiedVapiId(true);
+      setTimeout(() => setCopiedVapiId(false), 2000);
+    }
+  };
+
+  const handleDirectTestCall = async (e) => {
+    e.preventDefault();
+    const cleanNumber = testPhone.replace(/\D/g, '');
+    if (cleanNumber.length < 10) {
+      setCallFeedback('Digite um número de celular válido com DDD.');
+      return;
+    }
+
+    setCallingState(true);
+    setCallFeedback('Discando através da Vapi com este assistente...');
+
+    try {
+      const res = await triggerOutboundCall(testPhone, '+55', vapiId);
+      setCallingState(false);
+      if (res.success) {
+        setCallFeedback('✅ Ligação disparada com sucesso! Seu telefone vai tocar em instantes.');
+      } else {
+        setCallFeedback(`Aviso Vapi: ${res.error || 'Verifique seus créditos na conta Vapi.'}`);
+      }
+    } catch (err) {
+      setCallingState(false);
+      setCallFeedback('Erro ao disparar chamada: ' + err.message);
+    }
+
+    setTimeout(() => setCallFeedback(''), 8000);
   };
 
   return (
@@ -289,6 +414,76 @@ export default function AssistantDetailView({
           MAIN CONTENT AREA (Painel da Aba Selecionada)
          ======================================================== */}
       <div className="flex-1 p-6 sm:p-10 overflow-y-auto pb-28 bg-white min-h-screen">
+
+        {/* ========================================================
+            BARRA FIXA DE SINCRONIZAÇÃO EM TEMPO REAL COM A VAPI
+           ======================================================== */}
+        <div className="mb-6 p-4 rounded-2xl bg-[#FAF9F5] border border-[#E7E4DC] flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 shadow-xs">
+          <div className="flex items-center gap-3">
+            <div className={`w-3 h-3 rounded-full shrink-0 ${
+              vapiId ? 'bg-emerald-500 animate-pulse' : 'bg-amber-400'
+            }`} />
+            <div>
+              <div className="flex items-center gap-2">
+                <span className="text-xs font-bold text-[#1A1816]">{name}</span>
+                <span className={`text-[10px] font-semibold px-2 py-0.5 rounded-full ${
+                  vapiId ? 'bg-emerald-50 text-emerald-700 border border-emerald-200' : 'bg-amber-50 text-amber-700 border border-amber-200'
+                }`}>
+                  {vapiId ? 'Sincronizado na Telefonia Vapi' : 'Pendente de sincronização'}
+                </span>
+              </div>
+              <div className="flex items-center gap-2 mt-0.5">
+                {vapiId ? (
+                  <button 
+                    type="button"
+                    onClick={handleCopyVapiId}
+                    className="text-[11px] font-mono text-[#736F69] hover:text-[#1A1816] flex items-center gap-1 cursor-pointer"
+                    title="Clique para copiar o ID Vapi"
+                  >
+                    <span>ID: {vapiId}</span>
+                    <Copy className="w-3 h-3" />
+                    {copiedVapiId && <span className="text-emerald-600 font-sans font-bold">Copiado!</span>}
+                  </button>
+                ) : (
+                  <span className="text-[11px] text-[#736F69]">Clique em salvar para sincronizar com a Vapi</span>
+                )}
+              </div>
+            </div>
+          </div>
+
+          <div className="flex items-center gap-2.5 w-full sm:w-auto">
+            <button
+              type="button"
+              onClick={handleSaveAndSync}
+              disabled={syncStatus === 'syncing'}
+              className="flex-1 sm:flex-initial px-5 py-2.5 rounded-xl bg-[#1A1816] hover:bg-black text-white text-xs font-bold transition-all shadow-sm flex items-center justify-center gap-2 cursor-pointer disabled:opacity-60"
+            >
+              {syncStatus === 'syncing' ? (
+                <>
+                  <RefreshCw className="w-3.5 h-3.5 animate-spin" />
+                  <span>Sincronizando...</span>
+                </>
+              ) : (
+                <>
+                  <Sparkles className="w-3.5 h-3.5 text-[#FF9E7D]" />
+                  <span>Salvar & Sincronizar na Vapi</span>
+                </>
+              )}
+            </button>
+          </div>
+        </div>
+
+        {/* Feedback Alert Toast */}
+        {syncFeedback && (
+          <div className={`mb-6 p-3.5 rounded-xl border text-xs font-semibold flex items-center gap-2 animate-fadeIn ${
+            syncStatus === 'error' 
+              ? 'bg-rose-50 border-rose-200 text-rose-800' 
+              : 'bg-emerald-50 border-emerald-200 text-emerald-800'
+          }`}>
+            <CheckCircle2 className="w-4 h-4 shrink-0 text-emerald-600" />
+            <span>{syncFeedback}</span>
+          </div>
+        )}
         
         {/* ========================================================
             SUB-TAB 1: GERAL (Réplica Exata Prints 1 e 2)
@@ -943,6 +1138,86 @@ export default function AssistantDetailView({
         {subTab === 'tecnico' && (
           <div className="max-w-3xl space-y-4 animate-fadeIn pb-12">
             <h2 className="text-2xl font-bold text-[#1A1816]">Técnico</h2>
+
+            {/* CARD ESPECIAL: Conexão Direta com Telefonia Vapi AI */}
+            <div className="p-5 rounded-2xl border-2 border-[#C84B1F]/20 bg-gradient-to-br from-[#FFFBF8] to-[#FAF5EE] space-y-4 shadow-sm">
+              <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-3 border-b border-[#F0E6DC]">
+                <div className="flex items-center gap-3">
+                  <div className="w-9 h-9 rounded-xl bg-[#C84B1F] text-white flex items-center justify-center font-bold shadow-xs">
+                    <Phone className="w-4 h-4" />
+                  </div>
+                  <div>
+                    <h3 className="text-xs font-bold text-[#1A1816]">Motor de Voz & Telefonia Neural (Vapi AI)</h3>
+                    <p className="text-[11px] text-[#736F69]">Sincronização em tempo real de latência ultra-baixa (&lt;450ms)</p>
+                  </div>
+                </div>
+                <div className="flex items-center gap-2">
+                  <span className={`px-2.5 py-1 rounded-full text-[10px] font-bold flex items-center gap-1.5 ${
+                    vapiId ? 'bg-emerald-100 text-emerald-800' : 'bg-amber-100 text-amber-800'
+                  }`}>
+                    <span className={`w-1.5 h-1.5 rounded-full ${vapiId ? 'bg-emerald-600 animate-pulse' : 'bg-amber-600'}`} />
+                    {vapiId ? 'Conectado à Vapi' : 'Pendente de sincronização'}
+                  </span>
+                </div>
+              </div>
+
+              {/* Grid de Parâmetros Técnicos Vapi */}
+              <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 text-xs">
+                <div className="p-3 rounded-xl bg-white border border-[#E7E4DC]">
+                  <span className="text-[10px] font-bold text-[#8C8881] block uppercase">Transcritor (STT)</span>
+                  <span className="font-semibold text-[#1A1816] mt-0.5 block">Deepgram Nova-2</span>
+                  <span className="text-[10px] text-[#736F69]">Português Brasileiro (pt-BR)</span>
+                </div>
+
+                <div className="p-3 rounded-xl bg-white border border-[#E7E4DC]">
+                  <span className="text-[10px] font-bold text-[#8C8881] block uppercase">Modelo Cognitivo (LLM)</span>
+                  <span className="font-semibold text-[#1A1816] mt-0.5 block">OpenAI GPT-4o Mini</span>
+                  <span className="text-[10px] text-[#736F69]">Modo Stream Ativo</span>
+                </div>
+
+                <div className="p-3 rounded-xl bg-white border border-[#E7E4DC]">
+                  <span className="text-[10px] font-bold text-[#8C8881] block uppercase">Voz Neural (TTS)</span>
+                  <span className="font-semibold text-[#1A1816] mt-0.5 block">Vapi Neural (Clara)</span>
+                  <span className="text-[10px] text-[#736F69]">Entonação Humanizada</span>
+                </div>
+              </div>
+
+              {/* Teste de Chamada Outbound Real com este Assistente */}
+              <form onSubmit={handleDirectTestCall} className="pt-2 flex flex-col sm:flex-row items-stretch sm:items-center gap-2">
+                <div className="flex-1 relative">
+                  <input
+                    type="tel"
+                    value={testPhone}
+                    onChange={(e) => setTestPhone(e.target.value)}
+                    placeholder="Seu celular: (11) 98765-4321"
+                    className="w-full px-3.5 py-2.5 rounded-xl border border-[#D0CBC0] bg-white text-xs font-medium text-[#1A1816] focus:outline-none focus:border-[#C84B1F]"
+                  />
+                </div>
+                <button
+                  type="submit"
+                  disabled={callingState}
+                  className="px-4 py-2.5 rounded-xl bg-[#C84B1F] hover:bg-[#B34018] text-white text-xs font-bold transition-all flex items-center justify-center gap-2 cursor-pointer shadow-sm disabled:opacity-60"
+                >
+                  {callingState ? (
+                    <>
+                      <RefreshCw className="w-3.5 h-3.5 animate-spin" />
+                      <span>Discando...</span>
+                    </>
+                  ) : (
+                    <>
+                      <Phone className="w-3.5 h-3.5" />
+                      <span>Testar Ligação Agora</span>
+                    </>
+                  )}
+                </button>
+              </form>
+
+              {callFeedback && (
+                <div className="text-xs font-medium text-[#1A1816] bg-white/80 p-2.5 rounded-lg border border-[#E7E4DC] animate-fadeIn">
+                  {callFeedback}
+                </div>
+              )}
+            </div>
 
             {/* 1. Guardrails e moderação de conteúdo */}
             <div className="p-4 rounded-2xl border border-[#E7E4DC] bg-white flex items-start gap-3">

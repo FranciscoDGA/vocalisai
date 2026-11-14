@@ -139,12 +139,26 @@ export async function getLeads(limit = 50) {
 }
 
 /* ========================================================
-   ASSISTENTES (CRIAÇÃO & GESTÃO REAL)
+   ASSISTENTES (CRIAÇÃO, GESTÃO & SINCRONIZAÇÃO COM VAPI)
    ======================================================== */
 
-export async function saveAssistant({ name, type = 'voz', channel = 'Telefone (11) 4003-9821', prompt = '', voice = 'pt-BR-Neural2-A' }) {
+export async function saveAssistant({
+  name,
+  type = 'voz',
+  channel = 'Telefone (11) 4003-9821',
+  prompt = '',
+  voice = 'pt-BR-Neural2-A',
+  vapi_assistant_id = null
+}) {
   try {
     const user = await getCurrentUser();
+
+    // Armazenamos a configuração da voz e o ID da Vapi de forma segura
+    const voicePayload = JSON.stringify({
+      voice: typeof voice === 'object' ? voice.name : voice,
+      vapi_assistant_id: vapi_assistant_id || null
+    });
+
     const { data, error } = await supabase
       .from('assistants')
       .insert([
@@ -153,7 +167,7 @@ export async function saveAssistant({ name, type = 'voz', channel = 'Telefone (1
           type,
           channel,
           prompt,
-          voice,
+          voice: voicePayload,
           status: 'Ativo',
           calls_count: 0,
           user_id: user?.id || null
@@ -167,9 +181,81 @@ export async function saveAssistant({ name, type = 'voz', channel = 'Telefone (1
       return { success: false, error };
     }
 
-    return { success: true, data };
+    return { 
+      success: true, 
+      data: {
+        ...data,
+        vapi_assistant_id
+      }
+    };
   } catch (err) {
     console.warn('Exceção ao salvar assistente:', err);
+    return { success: false, error: err };
+  }
+}
+
+export async function updateAssistant(id, {
+  name,
+  type,
+  channel,
+  prompt,
+  voice,
+  vapi_assistant_id
+}) {
+  try {
+    const updates = {};
+    if (name !== undefined) updates.name = name;
+    if (type !== undefined) updates.type = type;
+    if (channel !== undefined) updates.channel = channel;
+    if (prompt !== undefined) updates.prompt = prompt;
+
+    if (voice !== undefined || vapi_assistant_id !== undefined) {
+      updates.voice = JSON.stringify({
+        voice: typeof voice === 'object' ? voice.name : (voice || 'Camila'),
+        vapi_assistant_id: vapi_assistant_id || null
+      });
+    }
+
+    const { data, error } = await supabase
+      .from('assistants')
+      .update(updates)
+      .eq('id', id)
+      .select()
+      .single();
+
+    if (error) {
+      console.warn('Erro ao atualizar assistente no Supabase:', error.message);
+      return { success: false, error };
+    }
+
+    return { 
+      success: true, 
+      data: {
+        ...data,
+        vapi_assistant_id
+      }
+    };
+  } catch (err) {
+    console.warn('Exceção ao atualizar assistente no Supabase:', err);
+    return { success: false, error: err };
+  }
+}
+
+export async function deleteAssistant(id) {
+  try {
+    const { error } = await supabase
+      .from('assistants')
+      .delete()
+      .eq('id', id);
+
+    if (error) {
+      console.warn('Erro ao deletar assistente no Supabase:', error.message);
+      return { success: false, error };
+    }
+
+    return { success: true };
+  } catch (err) {
+    console.warn('Exceção ao deletar assistente:', err);
     return { success: false, error: err };
   }
 }
@@ -186,7 +272,29 @@ export async function getAssistants() {
       return [];
     }
 
-    return data || [];
+    // Normaliza os dados desempacotando o vapi_assistant_id se presente
+    const parsedData = (data || []).map(item => {
+      let vapiId = null;
+      let voiceName = item.voice;
+
+      try {
+        if (item.voice && item.voice.startsWith('{')) {
+          const parsed = JSON.parse(item.voice);
+          vapiId = parsed.vapi_assistant_id || null;
+          voiceName = parsed.voice || 'Camila';
+        }
+      } catch (e) {
+        // Formato legado em string simples
+      }
+
+      return {
+        ...item,
+        voice: voiceName,
+        vapi_assistant_id: vapiId
+      };
+    });
+
+    return parsedData;
   } catch (err) {
     console.warn('Exceção ao carregar assistentes:', err);
     return [];

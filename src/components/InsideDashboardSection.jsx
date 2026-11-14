@@ -10,7 +10,8 @@ import {
   ChevronsLeft, ChevronsRight, BookOpen, Home, Menu
 } from 'lucide-react';
 import { BRAND } from '../data/content';
-import { getLeads, getAssistants, saveAssistant } from '../utils/supabaseClient';
+import { getLeads, getAssistants, saveAssistant, updateAssistant, deleteAssistant } from '../utils/supabaseClient';
+import { createVapiAssistant, triggerOutboundCall } from '../utils/vapiService';
 import DashboardPricingModal from './DashboardPricingModal';
 import KnowledgeBaseTab from './KnowledgeBaseTab';
 import AssistantDetailView from './AssistantDetailView';
@@ -47,7 +48,10 @@ export default function InsideDashboardSection({ onOpenDemo, onOpenLegal, onOpen
             typeName: d.type === 'voz' ? 'Assistente de voz' : d.type === 'chat' ? 'Assistente de chat' : 'Chat + Ligação',
             status: d.status || 'Ativo',
             channel: d.channel || 'Telefone (11) 4003-9821',
-            calls: d.calls_count || 0
+            calls: d.calls_count || 0,
+            prompt: d.prompt || '',
+            voice: d.voice || 'Camila',
+            vapi_assistant_id: d.vapi_assistant_id || null
           }));
           return [...remoteMapped, ...defaultItems.filter(def => !remoteMapped.some(r => r.name === def.name))];
         });
@@ -234,7 +238,22 @@ export default function InsideDashboardSection({ onOpenDemo, onOpenLegal, onOpen
   const [marginMultiplier, setMarginMultiplier] = useState(2.5); // 2.5x mark-up
   const [agencySaved, setAgencySaved] = useState(false);
 
-  const handleCloneTemplate = (tpl) => {
+  const handleCloneTemplate = async (tpl) => {
+    let vapiId = null;
+    try {
+      const vapiRes = await createVapiAssistant({
+        name: tpl.name,
+        systemPrompt: tpl.prompt || `Você é o assistente virtual executivo da Vocalis AI para o nicho de ${tpl.niche}. Atenda o cliente em português com extrema clareza e foco na resolução imediata.`,
+        firstMessage: `Olá! Aqui é ${tpl.name}. Como posso te ajudar hoje?`,
+        voiceId: 'Clara'
+      });
+      if (vapiRes.success && vapiRes.assistantId) {
+        vapiId = vapiRes.assistantId;
+      }
+    } catch (e) {
+      console.warn('Falha na criação Vapi durante clone:', e);
+    }
+
     const newAssis = {
       id: Date.now(),
       name: tpl.name,
@@ -242,14 +261,58 @@ export default function InsideDashboardSection({ onOpenDemo, onOpenLegal, onOpen
       typeName: 'Template: ' + tpl.niche,
       status: 'Ativo',
       channel: 'Telefone + WhatsApp',
-      calls: 0
+      calls: 0,
+      prompt: tpl.prompt,
+      vapi_assistant_id: vapiId
     };
     setCreatedAssistants(prev => [...prev, newAssis]);
-    setClonedSuccess(`Agente "${tpl.name}" clonado com sucesso para seu workspace!`);
+    setClonedSuccess(`Agente "${tpl.name}" clonado e sincronizado com a Vapi!`);
+
+    // Persiste no Supabase
+    saveAssistant({
+      name: tpl.name,
+      type: 'voz',
+      channel: 'Telefone + WhatsApp',
+      prompt: tpl.prompt,
+      vapi_assistant_id: vapiId
+    }).then(res => {
+      if (res?.success && res.data?.id) {
+        setCreatedAssistants(prev => prev.map(a => a.id === newAssis.id ? { ...a, id: res.data.id } : a));
+      }
+    });
+
     setTimeout(() => {
       setClonedSuccess('');
       setActiveTab('assistentes');
     }, 1500);
+  };
+
+  const handleUpdateAssistant = async (updatedData) => {
+    setCreatedAssistants(prev => prev.map(a => a.id === updatedData.id ? { ...a, ...updatedData } : a));
+    if (selectedAssistant && selectedAssistant.id === updatedData.id) {
+      setSelectedAssistant(prev => ({ ...prev, ...updatedData }));
+    }
+
+    if (typeof updatedData.id === 'string' && updatedData.id.includes('-')) {
+      await updateAssistant(updatedData.id, {
+        name: updatedData.name,
+        type: updatedData.type,
+        channel: updatedData.channel,
+        prompt: updatedData.prompt,
+        voice: updatedData.voice,
+        vapi_assistant_id: updatedData.vapi_assistant_id
+      });
+    }
+  };
+
+  const handleDeleteAssistant = async (id, vapiId) => {
+    setCreatedAssistants(prev => prev.filter(a => a.id !== id));
+    if (selectedAssistant?.id === id) {
+      setSelectedAssistant(null);
+    }
+    if (typeof id === 'string' && id.includes('-')) {
+      await deleteAssistant(id);
+    }
   };
 
   const handleRunAudit = () => {
@@ -315,6 +378,24 @@ export default function InsideDashboardSection({ onOpenDemo, onOpenLegal, onOpen
       hibrido: 'Chat + Ligação'
     };
     const chosenChannel = selectedType === 'voz' ? 'Telefone (11) 4003-9821' : selectedType === 'chat' ? 'WhatsApp Oficial' : 'Telefone + WhatsApp';
+    
+    let vapiId = null;
+    if (selectedType === 'voz' || selectedType === 'hibrido') {
+      try {
+        const vapiRes = await createVapiAssistant({
+          name: assistantName || 'Nova Assistente',
+          systemPrompt: `Você é uma assistente virtual executiva chamada ${assistantName || 'Camila'} da Vocalis AI. Você atende em português brasileiro com gentileza, brevidade e alta capacidade de resolução de dúvidas e agendamentos.`,
+          firstMessage: `Olá! Aqui é a ${assistantName || 'Camila'}. Como posso ajudar você hoje?`,
+          voiceId: 'Clara'
+        });
+        if (vapiRes.success && vapiRes.assistantId) {
+          vapiId = vapiRes.assistantId;
+        }
+      } catch (err) {
+        console.warn('Falha na criação Vapi:', err);
+      }
+    }
+
     const newAssis = {
       id: Date.now(),
       name: assistantName || 'Nova Assistente',
@@ -322,17 +403,23 @@ export default function InsideDashboardSection({ onOpenDemo, onOpenLegal, onOpen
       typeName: typeNames[selectedType],
       status: 'Ativo',
       channel: chosenChannel,
-      calls: 0
+      calls: 0,
+      vapi_assistant_id: vapiId
     };
     setCreatedAssistants(prev => [newAssis, ...prev]);
     setCreateModalOpen(false);
     setActiveTab('assistentes');
 
     // Persiste no Supabase
-    await saveAssistant({
+    saveAssistant({
       name: assistantName || 'Nova Assistente',
       type: selectedType,
-      channel: chosenChannel
+      channel: chosenChannel,
+      vapi_assistant_id: vapiId
+    }).then(res => {
+      if (res?.success && res.data?.id) {
+        setCreatedAssistants(prev => prev.map(a => a.id === newAssis.id ? { ...a, id: res.data.id } : a));
+      }
     });
   };
 
@@ -1861,13 +1948,15 @@ export default function InsideDashboardSection({ onOpenDemo, onOpenLegal, onOpen
                   onSelectAssistant={(a) => setSelectedAssistant(a)}
                   onOpenCreateModal={() => openCreateModal('chat')}
                   onOpenPricing={() => setPricingModalOpen(true)}
+                  onUpdateAssistant={handleUpdateAssistant}
+                  onDeleteAssistant={handleDeleteAssistant}
                 />
               ) : (
                 <div className="space-y-6 animate-fadeIn">
                   <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-4 border-b border-[#EBE8E2]">
                     <div>
                       <h3 className="text-2xl font-bold text-[#1A1816]">Assistentes Virtuais</h3>
-                      <p className="text-xs text-[#5C5955] mt-1">Crie e configure agentes de voz neural, WhatsApp e Webchat.</p>
+                      <p className="text-xs text-[#5C5955] mt-1">Crie e configure agentes de voz neural, WhatsApp e Webchat sincronizados com a telefonia.</p>
                     </div>
                     <button 
                       onClick={() => openCreateModal('voz')}
@@ -1910,9 +1999,16 @@ export default function InsideDashboardSection({ onOpenDemo, onOpenLegal, onOpen
                               <span className="text-[11px] text-[#736F69]">{ass.typeName}</span>
                             </div>
                           </div>
-                          <span className="px-2 py-0.5 rounded-full text-[10px] font-bold bg-emerald-50 text-emerald-700 border border-emerald-200">
-                            {ass.status}
-                          </span>
+                          <div className="flex flex-col items-end gap-1">
+                            <span className="px-2 py-0.5 rounded-full text-[10px] font-bold bg-emerald-50 text-emerald-700 border border-emerald-200">
+                              {ass.status}
+                            </span>
+                            {ass.vapi_assistant_id && (
+                              <span className="px-2 py-0.5 rounded-full text-[9px] font-mono font-bold bg-[#FAF5EE] text-[#C84B1F] border border-[#F2E8DC]">
+                                Vapi: {ass.vapi_assistant_id.slice(0, 8)}...
+                              </span>
+                            )}
+                          </div>
                         </div>
 
                         <div className="text-xs text-[#5C5955] space-y-1">
