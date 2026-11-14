@@ -394,7 +394,7 @@ export default function Navbar({ onOpenDemo, onOpenAuth, onOpenLegal, onOpenDocs
               <a 
                 href="#casos-de-uso" 
                 onClick={() => handleNavClick('casos-de-uso')} 
-                className="text-[13.5px] font-medium text-[#5C5955] hover:text-[#1A1816] transition-colors"
+                className="text-[13.5px] font-medium text-[#5C5955] hover:text-[#1A1816] transition-colors whitespace-nowrap"
               >
                 Casos de uso
               </a>
@@ -405,7 +405,7 @@ export default function Navbar({ onOpenDemo, onOpenAuth, onOpenLegal, onOpenDocs
                   setActiveDropdown(null);
                   if (onNavigate) onNavigate('parceiros');
                 }}
-                className={`text-[13.5px] font-medium transition-colors ${
+                className={`text-[13.5px] font-medium transition-colors whitespace-nowrap ${
                   currentPage === 'parceiros' 
                     ? 'text-[#1A1816] font-bold' 
                     : 'text-[#5C5955] hover:text-[#1A1816]'
@@ -417,7 +417,7 @@ export default function Navbar({ onOpenDemo, onOpenAuth, onOpenLegal, onOpenDocs
               {/* 6. Preços / Planos */}
               <button 
                 onClick={() => { if (onNavigate) { onNavigate('precos'); window.scrollTo({ top: 0, behavior: 'smooth' }); } }} 
-                className="text-[13.5px] font-medium text-[#5C5955] hover:text-[#1A1816] transition-colors cursor-pointer"
+                className="text-[13.5px] font-medium text-[#5C5955] hover:text-[#1A1816] transition-colors cursor-pointer whitespace-nowrap"
               >
                 Preços
               </button>
@@ -426,10 +426,10 @@ export default function Navbar({ onOpenDemo, onOpenAuth, onOpenLegal, onOpenDocs
           </div>
 
           {/* Right Action Items (Exact match to print: 🇧🇷 ⌄ · Falar com a gente · Criar minha Vocalis ➔) */}
-          <div className="hidden md:flex items-center gap-6">
+          <div className="hidden md:flex items-center gap-5 lg:gap-6 shrink-0">
             
-            {/* Country / Lang selector (Exact replica of user's uploaded print) */}
-            <div className="relative">
+            {/* Country / Lang selector */}
+            <div className="relative shrink-0">
               <button 
                 onClick={() => toggleDropdown('idioma')}
                 className="flex items-center gap-1.5 cursor-pointer hover:opacity-80 transition-opacity"
@@ -477,20 +477,10 @@ export default function Navbar({ onOpenDemo, onOpenAuth, onOpenLegal, onOpenDocs
               )}
             </div>
 
-            {/* Apresentação Pitch Deck */}
-            <button 
-              onClick={onOpenPresentation}
-              className="hidden lg:flex items-center gap-1.5 text-xs font-semibold text-[#C84B1F] bg-[#FAF5EE] border border-[#F2E8DC] px-3 py-1.5 rounded-full hover:bg-[#F5EADB] transition-all cursor-pointer shadow-xs"
-              title="Abrir apresentação de slides para reuniões"
-            >
-              <Sparkles className="w-3 h-3 text-[#C84B1F]" />
-              <span>Slides de Apresentação</span>
-            </button>
-
             {/* Falar com a gente */}
             <button 
               onClick={onOpenDemo}
-              className="text-[13.5px] font-medium text-[#1A1816] hover:text-[#C84B1F] transition-colors cursor-pointer"
+              className="text-[13.5px] font-medium text-[#1A1816] hover:text-[#C84B1F] transition-colors cursor-pointer whitespace-nowrap"
             >
               Falar com a gente
             </button>
