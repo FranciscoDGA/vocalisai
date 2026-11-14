@@ -1,0 +1,418 @@
+import React, { useState } from 'react';
+import { 
+  Building2, Users, Plus, Search, ExternalLink, MoreVertical, CreditCard, 
+  ArrowUpRight, Phone, ShieldCheck, CheckCircle2, DollarSign, Clock, Layers,
+  ChevronRight, X, Sparkles, Filter, AlertCircle
+} from 'lucide-react';
+
+export default function AgencySubaccountsSection({ onSwitchWorkspace }) {
+  const [searchQuery, setSearchQuery] = useState('');
+  const [statusFilter, setStatusFilter] = useState('all'); // all | active | onboarding | paused
+  const [createModalOpen, setCreateModalOpen] = useState(false);
+  const [selectedSubaccount, setSelectedSubaccount] = useState(null);
+
+  // Subcontas de exemplo do AI Agency OS
+  const [subaccounts, setSubaccounts] = useState([
+    {
+      id: 'sub_01',
+      name: 'Clínica Odonto Prime',
+      responsible: 'Dra. Camila Santos',
+      segment: 'Saúde & Odontologia',
+      subdomain: 'odonto.suaagencia.com.br',
+      phone: '+55 (11) 4003-8821',
+      assistantsCount: 2,
+      minutesUsed: 460,
+      minutesLimit: 600,
+      monthlyPlan: 'Plano Pro (R$ 1.497/mês)',
+      profitMargin: 'R$ 890/mês',
+      status: 'active',
+      createdAt: '10/10/2026'
+    },
+    {
+      id: 'sub_02',
+      name: 'Imobiliária Morar Bem',
+      responsible: 'Lucas Silveira',
+      segment: 'Imóveis & Locação',
+      subdomain: 'imoveis.suaagencia.com.br',
+      phone: '+55 (21) 3995-1200',
+      assistantsCount: 3,
+      minutesUsed: 780,
+      minutesLimit: 1000,
+      monthlyPlan: 'Plano Scale (R$ 2.497/mês)',
+      profitMargin: 'R$ 1.620/mês',
+      status: 'active',
+      createdAt: '01/11/2026'
+    },
+    {
+      id: 'sub_03',
+      name: 'Carvalho & Advogados Associados',
+      responsible: 'Dra. Mariana Carvalho',
+      segment: 'Jurídico & Compliance',
+      subdomain: 'juridico.suaagencia.com.br',
+      phone: '+55 (31) 3220-4490',
+      assistantsCount: 1,
+      minutesUsed: 195,
+      minutesLimit: 400,
+      monthlyPlan: 'Plano Starter (R$ 997/mês)',
+      profitMargin: 'R$ 640/mês',
+      status: 'active',
+      createdAt: '05/11/2026'
+    },
+    {
+      id: 'sub_04',
+      name: 'Studio Bella Estética Avançada',
+      responsible: 'Juliana Mendes',
+      segment: 'Beleza & Estética',
+      subdomain: 'estetica.suaagencia.com.br',
+      phone: '+55 (41) 3088-7711',
+      assistantsCount: 1,
+      minutesUsed: 52,
+      minutesLimit: 400,
+      monthlyPlan: 'Plano Starter (R$ 997/mês)',
+      profitMargin: 'R$ 640/mês',
+      status: 'onboarding',
+      createdAt: '12/11/2026'
+    }
+  ]);
+
+  // Form states for new subaccount
+  const [newClientName, setNewClientName] = useState('');
+  const [newResponsible, setNewResponsible] = useState('');
+  const [newSegment, setNewSegment] = useState('Saúde & Odontologia');
+  const [newSubdomain, setNewSubdomain] = useState('');
+  const [newPlan, setNewPlan] = useState('pro');
+
+  const filteredSubaccounts = subaccounts.filter((sub) => {
+    const matchesSearch = sub.name.toLowerCase().includes(searchQuery.toLowerCase()) || 
+                          sub.responsible.toLowerCase().includes(searchQuery.toLowerCase()) ||
+                          sub.segment.toLowerCase().includes(searchQuery.toLowerCase());
+    const matchesStatus = statusFilter === 'all' || sub.status === statusFilter;
+    return matchesSearch && matchesStatus;
+  });
+
+  const totalMinutes = subaccounts.reduce((acc, curr) => acc + curr.minutesUsed, 0);
+  const totalProfit = 'R$ 3.790,00';
+
+  const handleCreateSubaccount = (e) => {
+    e.preventDefault();
+    if (!newClientName) return;
+
+    const newSub = {
+      id: `sub_${Date.now()}`,
+      name: newClientName,
+      responsible: newResponsible || 'Responsável',
+      segment: newSegment,
+      subdomain: newSubdomain ? `${newSubdomain}.suaagencia.com.br` : `${newClientName.toLowerCase().replace(/\s+/g, '')}.suaagencia.com.br`,
+      phone: '+55 (DDD) Pendente',
+      assistantsCount: 1,
+      minutesUsed: 0,
+      minutesLimit: newPlan === 'starter' ? 400 : newPlan === 'pro' ? 800 : 1500,
+      monthlyPlan: newPlan === 'starter' ? 'Plano Starter (R$ 997/mês)' : newPlan === 'pro' ? 'Plano Pro (R$ 1.497/mês)' : 'Plano Scale (R$ 2.497/mês)',
+      profitMargin: newPlan === 'starter' ? 'R$ 640/mês' : newPlan === 'pro' ? 'R$ 980/mês' : 'R$ 1.700/mês',
+      status: 'onboarding',
+      createdAt: 'Hoje'
+    };
+
+    setSubaccounts([newSub, ...subaccounts]);
+    setCreateModalOpen(false);
+    setNewClientName('');
+    setNewResponsible('');
+    setNewSubdomain('');
+  };
+
+  return (
+    <div className="space-y-6 max-w-6xl animate-fadeIn">
+      {/* Header */}
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+        <div>
+          <div className="flex items-center gap-2 mb-1">
+            <span className="px-2.5 py-0.5 rounded-full text-[10px] font-bold bg-[#1A1816] text-white uppercase tracking-wider">
+              AI Agency OS Master
+            </span>
+            <span className="text-[10px] text-[#C84B1F] bg-[#FAF5EE] px-2 py-0.5 rounded-full font-bold border border-[#F2E8DC]">
+              Multi-Tenant Subcontas
+            </span>
+          </div>
+          <h2 className="text-2xl sm:text-3xl font-bold text-[#1A1816] tracking-tight">
+            Gestão de Empresas & Clientes
+          </h2>
+          <p className="text-xs text-[#5C5955] mt-1 max-w-2xl">
+            Gerencie todas as clínicas, imobiliárias e empresas clientes da sua agência em um único painel. Monitore minutos consumidos e lucros por subconta.
+          </p>
+        </div>
+
+        <button 
+          onClick={() => setCreateModalOpen(true)}
+          className="flex items-center gap-2 px-4 py-2.5 rounded-xl bg-[#1A1816] text-white text-xs font-bold hover:bg-black transition-colors shadow-sm self-start cursor-pointer"
+        >
+          <Plus className="w-4 h-4 text-[#C84B1F]" />
+          <span>Cadastrar Nova Empresa</span>
+        </button>
+      </div>
+
+      {/* KPI Cards */}
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+        <div className="bg-white p-5 rounded-2xl border border-[#E7E4DC] shadow-xs">
+          <div className="flex items-center justify-between text-[#736F69] mb-2">
+            <span className="text-[11px] font-bold uppercase tracking-wider">Empresas Ativas</span>
+            <Building2 className="w-4 h-4 text-[#C84B1F]" />
+          </div>
+          <div className="text-2xl font-bold text-[#1A1816]">{subaccounts.length}</div>
+          <div className="text-[11px] text-emerald-600 font-semibold mt-1">100% no ar e atendendo</div>
+        </div>
+
+        <div className="bg-white p-5 rounded-2xl border border-[#E7E4DC] shadow-xs">
+          <div className="flex items-center justify-between text-[#736F69] mb-2">
+            <span className="text-[11px] font-bold uppercase tracking-wider">Minutos Totais do Mês</span>
+            <Clock className="w-4 h-4 text-indigo-600" />
+          </div>
+          <div className="text-2xl font-bold text-[#1A1816]">{totalMinutes} <span className="text-xs font-normal text-[#736F69]">min</span></div>
+          <div className="text-[11px] text-[#736F69] mt-1">Consumo agregado de voz</div>
+        </div>
+
+        <div className="bg-white p-5 rounded-2xl border border-[#E7E4DC] shadow-xs">
+          <div className="flex items-center justify-between text-[#736F69] mb-2">
+            <span className="text-[11px] font-bold uppercase tracking-wider">Lucro Líquido da Agência</span>
+            <DollarSign className="w-4 h-4 text-emerald-600" />
+          </div>
+          <div className="text-2xl font-bold text-emerald-600">{totalProfit}</div>
+          <div className="text-[11px] text-[#736F69] mt-1">Mensalidades + Margem de minutos</div>
+        </div>
+
+        <div className="bg-white p-5 rounded-2xl border border-[#E7E4DC] shadow-xs">
+          <div className="flex items-center justify-between text-[#736F69] mb-2">
+            <span className="text-[11px] font-bold uppercase tracking-wider">Assistentes Ativos</span>
+            <Layers className="w-4 h-4 text-[#C84B1F]" />
+          </div>
+          <div className="text-2xl font-bold text-[#1A1816]">7 Robôs</div>
+          <div className="text-[11px] text-[#736F69] mt-1">Voz + WhatsApp integrados</div>
+        </div>
+      </div>
+
+      {/* Tabela de Subcontas */}
+      <div className="bg-white rounded-2xl border border-[#E7E4DC] shadow-xs overflow-hidden">
+        {/* Barra de Filtros */}
+        <div className="p-4 border-b border-[#E7E4DC] flex flex-col sm:flex-row items-center justify-between gap-3">
+          <div className="relative w-full sm:w-80">
+            <Search className="w-4 h-4 text-[#736F69] absolute left-3 top-2.5" />
+            <input 
+              type="text" 
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+              placeholder="Buscar por clínica, responsável ou nicho..."
+              className="w-full pl-9 pr-3 py-1.5 rounded-xl border border-[#D0CBC0] text-xs focus:outline-none focus:border-[#C84B1F]"
+            />
+          </div>
+
+          <div className="flex items-center gap-2 w-full sm:w-auto overflow-x-auto">
+            <button 
+              onClick={() => setStatusFilter('all')}
+              className={`px-3 py-1 rounded-lg text-xs font-semibold cursor-pointer ${
+                statusFilter === 'all' ? 'bg-[#1A1816] text-white' : 'bg-[#FAF9F5] text-[#736F69] hover:bg-stone-100'
+              }`}
+            >
+              Todos ({subaccounts.length})
+            </button>
+            <button 
+              onClick={() => setStatusFilter('active')}
+              className={`px-3 py-1 rounded-lg text-xs font-semibold cursor-pointer ${
+                statusFilter === 'active' ? 'bg-emerald-600 text-white' : 'bg-[#FAF9F5] text-[#736F69] hover:bg-stone-100'
+              }`}
+            >
+              Ativos
+            </button>
+            <button 
+              onClick={() => setStatusFilter('onboarding')}
+              className={`px-3 py-1 rounded-lg text-xs font-semibold cursor-pointer ${
+                statusFilter === 'onboarding' ? 'bg-amber-600 text-white' : 'bg-[#FAF9F5] text-[#736F69] hover:bg-stone-100'
+              }`}
+            >
+              Implantação
+            </button>
+          </div>
+        </div>
+
+        {/* Lista */}
+        <div className="divide-y divide-[#E7E4DC]">
+          {filteredSubaccounts.map((sub) => {
+            const usagePercent = Math.min(100, Math.round((sub.minutesUsed / sub.minutesLimit) * 100));
+
+            return (
+              <div key={sub.id} className="p-4 sm:p-5 hover:bg-[#FAF9F5] transition-colors flex flex-col md:flex-row md:items-center justify-between gap-4">
+                <div className="flex items-start gap-3.5">
+                  <div className="w-10 h-10 rounded-xl bg-[#FAF5EE] border border-[#F2E8DC] text-[#C84B1F] flex items-center justify-center font-bold text-sm shrink-0">
+                    {sub.name.charAt(0)}
+                  </div>
+
+                  <div>
+                    <div className="flex items-center gap-2">
+                      <h4 className="font-bold text-sm text-[#1A1816]">{sub.name}</h4>
+                      <span className={`text-[10px] font-bold px-2 py-0.5 rounded-full ${
+                        sub.status === 'active' 
+                          ? 'bg-emerald-50 text-emerald-700 border border-emerald-200' 
+                          : 'bg-amber-50 text-amber-700 border border-amber-200'
+                      }`}>
+                        {sub.status === 'active' ? '● Em Operação' : 'Implantação'}
+                      </span>
+                    </div>
+
+                    <div className="flex flex-wrap items-center gap-3 text-xs text-[#736F69] mt-1">
+                      <span>{sub.responsible}</span>
+                      <span>•</span>
+                      <span className="text-[#C84B1F] font-medium">{sub.segment}</span>
+                      <span>•</span>
+                      <span className="font-mono text-[11px]">{sub.subdomain}</span>
+                    </div>
+                  </div>
+                </div>
+
+                {/* Métricas da subconta */}
+                <div className="flex flex-wrap items-center gap-6 justify-between md:justify-end">
+                  {/* Barra de Minutos */}
+                  <div className="w-36">
+                    <div className="flex justify-between text-[10px] text-[#736F69] mb-1 font-semibold">
+                      <span>Consumo</span>
+                      <span>{sub.minutesUsed}/{sub.minutesLimit} min</span>
+                    </div>
+                    <div className="w-full bg-[#E7E4DC] h-1.5 rounded-full overflow-hidden">
+                      <div 
+                        className={`h-full rounded-full ${
+                          usagePercent > 80 ? 'bg-amber-500' : 'bg-emerald-500'
+                        }`}
+                        style={{ width: `${usagePercent}%` }}
+                      />
+                    </div>
+                  </div>
+
+                  {/* Lucro da Agência */}
+                  <div className="text-right">
+                    <div className="text-[10px] uppercase font-bold text-[#736F69]">Lucro Agência</div>
+                    <div className="text-xs font-bold text-emerald-600">{sub.profitMargin}</div>
+                  </div>
+
+                  {/* Ações */}
+                  <div className="flex items-center gap-2">
+                    <button 
+                      onClick={() => {
+                        if (onSwitchWorkspace) onSwitchWorkspace(sub);
+                        alert(`Contexto alternado para o workspace de: ${sub.name}`);
+                      }}
+                      className="px-3 py-1.5 rounded-lg bg-[#FAF9F5] hover:bg-[#EFECE6] border border-[#D0CBC0] text-xs font-semibold text-[#1A1816] flex items-center gap-1 transition-colors cursor-pointer"
+                    >
+                      <span>Acessar Painel</span>
+                      <ArrowUpRight className="w-3.5 h-3.5 text-[#736F69]" />
+                    </button>
+                  </div>
+                </div>
+              </div>
+            );
+          })}
+        </div>
+      </div>
+
+      {/* Modal: Cadastrar Nova Empresa */}
+      {createModalOpen && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm animate-fadeIn">
+          <div 
+            className="bg-white rounded-3xl max-w-lg w-full p-6 sm:p-8 border border-[#E7E4DC] shadow-2xl relative"
+            onClick={(e) => e.stopPropagation()}
+          >
+            <button 
+              onClick={() => setCreateModalOpen(false)}
+              className="absolute right-5 top-5 w-8 h-8 rounded-full bg-[#FAF9F5] hover:bg-[#EFECE6] border border-[#E7E4DC] flex items-center justify-center text-[#736F69] hover:text-[#1A1816] transition-colors"
+            >
+              <X className="w-4 h-4" />
+            </button>
+
+            <div className="mb-5">
+              <span className="text-[10px] font-bold text-[#C84B1F] uppercase tracking-wider bg-[#FAF5EE] px-2 py-0.5 rounded border border-[#F2E8DC]">
+                Onboarding de Cliente
+              </span>
+              <h3 className="text-xl font-bold text-[#1A1816] mt-1">Nova Subconta para sua Agência</h3>
+              <p className="text-xs text-[#736F69]">Cria um workspace isolado e exclusivo para a empresa atendida.</p>
+            </div>
+
+            <form onSubmit={handleCreateSubaccount} className="space-y-4">
+              <div>
+                <label className="block text-[11px] font-bold text-[#1A1816] mb-1">Nome da Empresa / Clínica</label>
+                <input 
+                  type="text" 
+                  value={newClientName}
+                  onChange={(e) => setNewClientName(e.target.value)}
+                  placeholder="Ex: Clínica San Pietro"
+                  className="w-full px-3 py-2 rounded-xl border border-[#D0CBC0] text-xs focus:outline-none focus:border-[#C84B1F]"
+                  required
+                />
+              </div>
+
+              <div className="grid grid-cols-2 gap-3">
+                <div>
+                  <label className="block text-[11px] font-bold text-[#1A1816] mb-1">Responsável / Contato</label>
+                  <input 
+                    type="text" 
+                    value={newResponsible}
+                    onChange={(e) => setNewResponsible(e.target.value)}
+                    placeholder="Ex: Dr. Roberto"
+                    className="w-full px-3 py-2 rounded-xl border border-[#D0CBC0] text-xs focus:outline-none focus:border-[#C84B1F]"
+                  />
+                </div>
+                <div>
+                  <label className="block text-[11px] font-bold text-[#1A1816] mb-1">Segmento</label>
+                  <select 
+                    value={newSegment}
+                    onChange={(e) => setNewSegment(e.target.value)}
+                    className="w-full px-3 py-2 rounded-xl border border-[#D0CBC0] text-xs bg-white focus:outline-none focus:border-[#C84B1F]"
+                  >
+                    <option value="Saúde & Odontologia">Saúde & Odontologia</option>
+                    <option value="Imóveis & Locação">Imóveis & Locação</option>
+                    <option value="Jurídico & Compliance">Jurídico & Advocacia</option>
+                    <option value="Varejo & Serviços">Varejo & Serviços</option>
+                  </select>
+                </div>
+              </div>
+
+              <div>
+                <label className="block text-[11px] font-bold text-[#1A1816] mb-1">Subdomínio Próprio White-Label</label>
+                <div className="flex items-center">
+                  <input 
+                    type="text" 
+                    value={newSubdomain}
+                    onChange={(e) => setNewSubdomain(e.target.value)}
+                    placeholder="clinica"
+                    className="w-full px-3 py-2 rounded-l-xl border border-[#D0CBC0] text-xs focus:outline-none focus:border-[#C84B1F]"
+                  />
+                  <span className="px-3 py-2 bg-[#FAF9F5] border border-l-0 border-[#D0CBC0] rounded-r-xl text-xs text-[#736F69] font-mono">
+                    .suaagencia.com.br
+                  </span>
+                </div>
+              </div>
+
+              <div>
+                <label className="block text-[11px] font-bold text-[#1A1816] mb-1">Plano & Franquia</label>
+                <select 
+                  value={newPlan}
+                  onChange={(e) => setNewPlan(e.target.value)}
+                  className="w-full px-3 py-2 rounded-xl border border-[#D0CBC0] text-xs bg-white focus:outline-none focus:border-[#C84B1F]"
+                >
+                  <option value="starter">Plano Starter (400 min - Margem sugerida: R$ 640/mês)</option>
+                  <option value="pro">Plano Pro (800 min - Margem sugerida: R$ 980/mês)</option>
+                  <option value="scale">Plano Scale (1.500 min - Margem sugerida: R$ 1.700/mês)</option>
+                </select>
+              </div>
+
+              <div className="pt-2">
+                <button 
+                  type="submit"
+                  className="w-full py-3 rounded-xl bg-[#1A1816] hover:bg-black text-white text-xs font-bold transition-all shadow-md cursor-pointer flex items-center justify-center gap-2"
+                >
+                  <Sparkles className="w-4 h-4 text-[#C84B1F]" />
+                  <span>Ativar Subconta Imediatamente</span>
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+      )}
+    </div>
+  );
+}

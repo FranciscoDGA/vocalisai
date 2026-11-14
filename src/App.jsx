@@ -1,9 +1,8 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, lazy, Suspense } from 'react';
 import Navbar from './components/Navbar';
 import Hero from './components/Hero';
 import ChannelsSection from './components/ChannelsSection';
 import CallTimelineSection from './components/CallTimelineSection';
-import InsideDashboardSection from './components/InsideDashboardSection';
 import StepsSection from './components/StepsSection';
 import UseCasesSection from './components/UseCasesSection';
 import IntegrationsSection from './components/IntegrationsSection';
@@ -12,26 +11,43 @@ import GuaranteesSection from './components/GuaranteesSection';
 import FaqSection from './components/FaqSection';
 import CtaSection from './components/CtaSection';
 import Footer from './components/Footer';
-import LegalModal from './components/LegalModal';
-import AuthModal from './components/AuthModal';
-import DemoModal from './components/DemoModal';
-import DocsPortal from './components/DocsPortal';
-import ParceirosPage from './components/ParceirosPage';
-import WhatsAppPage from './components/WhatsAppPage';
-import WebchatPage from './components/WebchatPage';
-import AgenteSuportePage from './components/AgenteSuportePage';
-import AgendamentosPage from './components/AgendamentosPage';
-import RecepcionistaVirtualPage from './components/RecepcionistaVirtualPage';
-import AtendedorAutomaticoPage from './components/AtendedorAutomaticoPage';
-import EquipeExternaPage from './components/EquipeExternaPage';
-import WebinarsPage from './components/WebinarsPage';
-import IntegracoesPage from './components/IntegracoesPage';
-import CentralAjudaPage from './components/CentralAjudaPage';
-import CarreirasPage from './components/CarreirasPage';
-import ImprensaPage from './components/ImprensaPage';
-import ContatoPage from './components/ContatoPage';
 import WebchatWidget from './components/WebchatWidget';
 import { supabase, getCurrentUser, signOutUser } from './utils/supabaseClient';
+
+// Lazy-loaded components for optimal bundle size and instant initial load
+const InsideDashboardSection = lazy(() => import('./components/InsideDashboardSection'));
+const ParceirosPage = lazy(() => import('./components/ParceirosPage'));
+const WhatsAppPage = lazy(() => import('./components/WhatsAppPage'));
+const WebchatPage = lazy(() => import('./components/WebchatPage'));
+const AgenteSuportePage = lazy(() => import('./components/AgenteSuportePage'));
+const AgendamentosPage = lazy(() => import('./components/AgendamentosPage'));
+const RecepcionistaVirtualPage = lazy(() => import('./components/RecepcionistaVirtualPage'));
+const AtendedorAutomaticoPage = lazy(() => import('./components/AtendedorAutomaticoPage'));
+const EquipeExternaPage = lazy(() => import('./components/EquipeExternaPage'));
+const WebinarsPage = lazy(() => import('./components/WebinarsPage'));
+const IntegracoesPage = lazy(() => import('./components/IntegracoesPage'));
+const CentralAjudaPage = lazy(() => import('./components/CentralAjudaPage'));
+const CarreirasPage = lazy(() => import('./components/CarreirasPage'));
+const ImprensaPage = lazy(() => import('./components/ImprensaPage'));
+const ContatoPage = lazy(() => import('./components/ContatoPage'));
+
+// Lazy-loaded modals
+const DocsPortal = lazy(() => import('./components/DocsPortal'));
+const LegalModal = lazy(() => import('./components/LegalModal'));
+const AuthModal = lazy(() => import('./components/AuthModal'));
+const DemoModal = lazy(() => import('./components/DemoModal'));
+
+// Loading indicator component for route suspensions
+function PageFallback() {
+  return (
+    <div className="flex items-center justify-center min-h-[50vh] p-8">
+      <div className="flex flex-col items-center gap-3">
+        <div className="w-8 h-8 border-2 border-[#C84B1F] border-t-transparent rounded-full animate-spin" />
+        <span className="text-xs font-semibold text-[#736F69]">Carregando...</span>
+      </div>
+    </div>
+  );
+}
 
 export default function App() {
   const [currentPage, setCurrentPage] = useState('home'); // 'home' | 'dashboard' | 'parceiros' | 'whatsapp' | ...
@@ -104,200 +120,202 @@ export default function App() {
         />
       )}
 
-      {/* Main Page Stream */}
-      {currentPage === 'dashboard' ? (
-        <main className="flex-1 animate-fadeIn">
-          <InsideDashboardSection 
-            isStandalone={true}
-            currentUser={currentUser}
-            onLogout={handleLogout}
-            onNavigateHome={() => handleNavigate('home')}
-            onOpenDemo={() => setDemoModalOpen(true)}
-            onOpenLegal={handleOpenLegal}
-            onOpenAuth={() => setAuthModalOpen(true)}
-            onOpenDocs={handleOpenDocs}
-          />
-        </main>
-      ) : currentPage === 'parceiros' ? (
-        <main className="flex-1">
-          <ParceirosPage 
-            onOpenDemo={() => setDemoModalOpen(true)}
-            onOpenAuth={() => setAuthModalOpen(true)}
-            onNavigateHome={() => handleNavigate('home')}
-          />
-        </main>
-      ) : currentPage === 'whatsapp' ? (
-        <main className="flex-1">
-          <WhatsAppPage 
-            onOpenDemo={() => setDemoModalOpen(true)}
-            onOpenAuth={() => setAuthModalOpen(true)}
-            onNavigateHome={() => handleNavigate('home')}
-          />
-        </main>
-      ) : currentPage === 'webchat' ? (
-        <main className="flex-1">
-          <WebchatPage 
-            onOpenDemo={() => setDemoModalOpen(true)}
-            onOpenAuth={() => setAuthModalOpen(true)}
-            onNavigateHome={() => handleNavigate('home')}
-          />
-        </main>
-      ) : currentPage === 'agente-suporte' ? (
-        <main className="flex-1">
-          <AgenteSuportePage 
-            onOpenDemo={() => setDemoModalOpen(true)}
-            onOpenAuth={() => setAuthModalOpen(true)}
-            onNavigateHome={() => handleNavigate('home')}
-          />
-        </main>
-      ) : currentPage === 'agendamentos' ? (
-        <main className="flex-1">
-          <AgendamentosPage 
-            onOpenDemo={() => setDemoModalOpen(true)}
-            onOpenAuth={() => setAuthModalOpen(true)}
-            onNavigateHome={() => handleNavigate('home')}
-          />
-        </main>
-      ) : currentPage === 'recepcionista-virtual' ? (
-        <main className="flex-1">
-          <RecepcionistaVirtualPage 
-            onOpenDemo={() => setDemoModalOpen(true)}
-            onOpenAuth={() => setAuthModalOpen(true)}
-            onNavigateHome={() => handleNavigate('home')}
-          />
-        </main>
-      ) : currentPage === 'atendedor-automatico' ? (
-        <main className="flex-1">
-          <AtendedorAutomaticoPage 
-            onOpenDemo={() => setDemoModalOpen(true)}
-            onOpenAuth={() => setAuthModalOpen(true)}
-            onNavigateHome={() => handleNavigate('home')}
-          />
-        </main>
-      ) : currentPage === 'equipe-externa' ? (
-        <main className="flex-1">
-          <EquipeExternaPage 
-            onOpenDemo={() => setDemoModalOpen(true)}
-            onOpenAuth={() => setAuthModalOpen(true)}
-            onNavigateHome={() => handleNavigate('home')}
-          />
-        </main>
-      ) : currentPage === 'webinars' ? (
-        <main className="flex-1">
-          <WebinarsPage 
-            onOpenDemo={() => setDemoModalOpen(true)}
-            onOpenAuth={() => setAuthModalOpen(true)}
-            onNavigateHome={() => handleNavigate('home')}
-          />
-        </main>
-      ) : currentPage === 'integracoes' ? (
-        <main className="flex-1">
-          <IntegracoesPage 
-            onOpenDemo={() => setDemoModalOpen(true)}
-            onOpenAuth={() => setAuthModalOpen(true)}
-            onNavigateHome={() => handleNavigate('home')}
-          />
-        </main>
-      ) : currentPage === 'central-ajuda' ? (
-        <main className="flex-1">
-          <CentralAjudaPage 
-            onOpenDemo={() => setDemoModalOpen(true)}
-            onOpenAuth={() => setAuthModalOpen(true)}
-            onOpenLegal={handleOpenLegal}
-            onOpenDocs={handleOpenDocs}
-            onNavigateHome={() => handleNavigate('home')}
-          />
-        </main>
-      ) : currentPage === 'carreiras' ? (
-        <main className="flex-1">
-          <CarreirasPage 
-            onOpenDemo={() => setDemoModalOpen(true)}
-            onOpenAuth={() => setAuthModalOpen(true)}
-            onNavigateHome={() => handleNavigate('home')}
-          />
-        </main>
-      ) : currentPage === 'imprensa' ? (
-        <main className="flex-1">
-          <ImprensaPage 
-            onOpenDemo={() => setDemoModalOpen(true)}
-            onOpenAuth={() => setAuthModalOpen(true)}
-            onNavigateHome={() => handleNavigate('home')}
-          />
-        </main>
-      ) : currentPage === 'contato' ? (
-        <main className="flex-1">
-          <ContatoPage 
-            onOpenDemo={() => setDemoModalOpen(true)}
-            onOpenAuth={() => setAuthModalOpen(true)}
-            onNavigate={handleNavigate}
-          />
-        </main>
-      ) : currentPage === 'precos' ? (
-        <main className="flex-1 animate-fadeIn">
-          {/* Página Dedicada de Preços & Planos (Exclusiva) */}
-          <PricingSection 
-            onOpenAuth={() => setAuthModalOpen(true)}
-            onOpenDemo={() => setDemoModalOpen(true)}
-          />
-          <GuaranteesSection />
-          <FaqSection />
-          <CtaSection 
-            onOpenDemo={() => setDemoModalOpen(true)}
-            onOpenAuth={() => setAuthModalOpen(true)}
-          />
-        </main>
-      ) : (
-        <main className="flex-1">
-          {/* 1. Hero with dark voice demo player & direct test */}
-          <Hero 
-            onOpenDemo={() => setDemoModalOpen(true)} 
-            onOpenAuth={() => setAuthModalOpen(true)}
-          />
+      {/* Main Page Stream with Suspense for lazy routes */}
+      <Suspense fallback={<PageFallback />}>
+        {currentPage === 'dashboard' ? (
+          <main className="flex-1 animate-fadeIn">
+            <InsideDashboardSection 
+              isStandalone={true}
+              currentUser={currentUser}
+              onLogout={handleLogout}
+              onNavigateHome={() => handleNavigate('home')}
+              onOpenDemo={() => setDemoModalOpen(true)}
+              onOpenLegal={handleOpenLegal}
+              onOpenAuth={() => setAuthModalOpen(true)}
+              onOpenDocs={handleOpenDocs}
+            />
+          </main>
+        ) : currentPage === 'parceiros' ? (
+          <main className="flex-1">
+            <ParceirosPage 
+              onOpenDemo={() => setDemoModalOpen(true)}
+              onOpenAuth={() => setAuthModalOpen(true)}
+              onNavigateHome={() => handleNavigate('home')}
+            />
+          </main>
+        ) : currentPage === 'whatsapp' ? (
+          <main className="flex-1">
+            <WhatsAppPage 
+              onOpenDemo={() => setDemoModalOpen(true)}
+              onOpenAuth={() => setAuthModalOpen(true)}
+              onNavigateHome={() => handleNavigate('home')}
+            />
+          </main>
+        ) : currentPage === 'webchat' ? (
+          <main className="flex-1">
+            <WebchatPage 
+              onOpenDemo={() => setDemoModalOpen(true)}
+              onOpenAuth={() => setAuthModalOpen(true)}
+              onNavigateHome={() => handleNavigate('home')}
+            />
+          </main>
+        ) : currentPage === 'agente-suporte' ? (
+          <main className="flex-1">
+            <AgenteSuportePage 
+              onOpenDemo={() => setDemoModalOpen(true)}
+              onOpenAuth={() => setAuthModalOpen(true)}
+              onNavigateHome={() => handleNavigate('home')}
+            />
+          </main>
+        ) : currentPage === 'agendamentos' ? (
+          <main className="flex-1">
+            <AgendamentosPage 
+              onOpenDemo={() => setDemoModalOpen(true)}
+              onOpenAuth={() => setAuthModalOpen(true)}
+              onNavigateHome={() => handleNavigate('home')}
+            />
+          </main>
+        ) : currentPage === 'recepcionista-virtual' ? (
+          <main className="flex-1">
+            <RecepcionistaVirtualPage 
+              onOpenDemo={() => setDemoModalOpen(true)}
+              onOpenAuth={() => setAuthModalOpen(true)}
+              onNavigateHome={() => handleNavigate('home')}
+            />
+          </main>
+        ) : currentPage === 'atendedor-automatico' ? (
+          <main className="flex-1">
+            <AtendedorAutomaticoPage 
+              onOpenDemo={() => setDemoModalOpen(true)}
+              onOpenAuth={() => setAuthModalOpen(true)}
+              onNavigateHome={() => handleNavigate('home')}
+            />
+          </main>
+        ) : currentPage === 'equipe-externa' ? (
+          <main className="flex-1">
+            <EquipeExternaPage 
+              onOpenDemo={() => setDemoModalOpen(true)}
+              onOpenAuth={() => setAuthModalOpen(true)}
+              onNavigateHome={() => handleNavigate('home')}
+            />
+          </main>
+        ) : currentPage === 'webinars' ? (
+          <main className="flex-1">
+            <WebinarsPage 
+              onOpenDemo={() => setDemoModalOpen(true)}
+              onOpenAuth={() => setAuthModalOpen(true)}
+              onNavigateHome={() => handleNavigate('home')}
+            />
+          </main>
+        ) : currentPage === 'integracoes' ? (
+          <main className="flex-1">
+            <IntegracoesPage 
+              onOpenDemo={() => setDemoModalOpen(true)}
+              onOpenAuth={() => setAuthModalOpen(true)}
+              onNavigateHome={() => handleNavigate('home')}
+            />
+          </main>
+        ) : currentPage === 'central-ajuda' ? (
+          <main className="flex-1">
+            <CentralAjudaPage 
+              onOpenDemo={() => setDemoModalOpen(true)}
+              onOpenAuth={() => setAuthModalOpen(true)}
+              onOpenLegal={handleOpenLegal}
+              onOpenDocs={handleOpenDocs}
+              onNavigateHome={() => handleNavigate('home')}
+            />
+          </main>
+        ) : currentPage === 'carreiras' ? (
+          <main className="flex-1">
+            <CarreirasPage 
+              onOpenDemo={() => setDemoModalOpen(true)}
+              onOpenAuth={() => setAuthModalOpen(true)}
+              onNavigateHome={() => handleNavigate('home')}
+            />
+          </main>
+        ) : currentPage === 'imprensa' ? (
+          <main className="flex-1">
+            <ImprensaPage 
+              onOpenDemo={() => setDemoModalOpen(true)}
+              onOpenAuth={() => setAuthModalOpen(true)}
+              onNavigateHome={() => handleNavigate('home')}
+            />
+          </main>
+        ) : currentPage === 'contato' ? (
+          <main className="flex-1">
+            <ContatoPage 
+              onOpenDemo={() => setDemoModalOpen(true)}
+              onOpenAuth={() => setAuthModalOpen(true)}
+              onNavigate={handleNavigate}
+            />
+          </main>
+        ) : currentPage === 'precos' ? (
+          <main className="flex-1 animate-fadeIn">
+            {/* Página Dedicada de Preços & Planos (Exclusiva) */}
+            <PricingSection 
+              onOpenAuth={() => setAuthModalOpen(true)}
+              onOpenDemo={() => setDemoModalOpen(true)}
+            />
+            <GuaranteesSection />
+            <FaqSection />
+            <CtaSection 
+              onOpenDemo={() => setDemoModalOpen(true)}
+              onOpenAuth={() => setAuthModalOpen(true)}
+            />
+          </main>
+        ) : (
+          <main className="flex-1">
+            {/* 1. Hero with dark voice demo player & direct test */}
+            <Hero 
+              onOpenDemo={() => setDemoModalOpen(true)} 
+              onOpenAuth={() => setAuthModalOpen(true)}
+            />
 
-          {/* 2. Omnichannel delivery (Telefone, WhatsApp, Webchat, E-mail IA) */}
-          <ChannelsSection 
-            onOpenDemo={() => setDemoModalOpen(true)} 
-          />
+            {/* 2. Omnichannel delivery (Telefone, WhatsApp, Webchat, E-mail IA) */}
+            <ChannelsSection 
+              onOpenDemo={() => setDemoModalOpen(true)} 
+            />
 
-          {/* 3. Real Call Flow Timeline (00:03 to 01:00) */}
-          <CallTimelineSection />
+            {/* 3. Real Call Flow Timeline (00:03 to 01:00) */}
+            <CallTimelineSection />
 
-          {/* 4. Inside the Platform (Dashboard preview based on real prints) */}
-          <InsideDashboardSection 
-            onOpenDemo={() => setDemoModalOpen(true)}
-            onOpenLegal={handleOpenLegal}
-            onOpenAuth={() => setAuthModalOpen(true)}
-            onOpenDocs={handleOpenDocs}
-          />
+            {/* 4. Inside the Platform (Dashboard preview) */}
+            <InsideDashboardSection 
+              onOpenDemo={() => setDemoModalOpen(true)}
+              onOpenLegal={handleOpenLegal}
+              onOpenAuth={() => setAuthModalOpen(true)}
+              onOpenDocs={handleOpenDocs}
+            />
 
-          {/* 5. 3 Steps Setup (No code needed) */}
-          <StepsSection 
-            onOpenDemo={() => setDemoModalOpen(true)}
-          />
+            {/* 5. 3 Steps Setup (No code needed) */}
+            <StepsSection 
+              onOpenDemo={() => setDemoModalOpen(true)}
+            />
 
-          {/* 6. Vertical Use Cases (Clínicas, Imobiliárias, Advocacia, etc.) */}
-          <UseCasesSection 
-            onOpenDemo={() => setDemoModalOpen(true)}
-          />
+            {/* 6. Vertical Use Cases (Clínicas, Imobiliárias, Advocacia, etc.) */}
+            <UseCasesSection 
+              onOpenDemo={() => setDemoModalOpen(true)}
+            />
 
-          {/* 7. Comprehensive Integrations Grid */}
-          <IntegrationsSection 
-            onOpenDemo={() => setDemoModalOpen(true)}
-          />
+            {/* 7. Comprehensive Integrations Grid */}
+            <IntegrationsSection 
+              onOpenDemo={() => setDemoModalOpen(true)}
+            />
 
-          {/* 8. Guarantees (30 Days, LGPD, You in control) */}
-          <GuaranteesSection />
+            {/* 8. Guarantees (30 Days, LGPD, You in control) */}
+            <GuaranteesSection />
 
-          {/* 9. FAQ Accordions */}
-          <FaqSection />
+            {/* 9. FAQ Accordions */}
+            <FaqSection />
 
-          {/* 10. Final Conversion CTA Card & Big Quote */}
-          <CtaSection 
-            onOpenDemo={() => setDemoModalOpen(true)}
-            onOpenAuth={() => setAuthModalOpen(true)}
-          />
-        </main>
-      )}
+            {/* 10. Final Conversion CTA Card & Big Quote */}
+            <CtaSection 
+              onOpenDemo={() => setDemoModalOpen(true)}
+              onOpenAuth={() => setAuthModalOpen(true)}
+            />
+          </main>
+        )}
+      </Suspense>
 
       {/* Footer (Oculto no Dashboard e na Central de Ajuda para ser 1:1 com o Kloel) */}
       {currentPage !== 'dashboard' && currentPage !== 'central-ajuda' && (
@@ -316,34 +334,50 @@ export default function App() {
         />
       )}
 
-      {/* Full Docs & Legal Portal (Matching user's exact uploaded doc portal) */}
-      <DocsPortal 
-        isOpen={docsPortalOpen}
-        initialDoc={docsInitialDoc}
-        onClose={() => setDocsPortalOpen(false)}
-        onOpenApp={() => setDocsPortalOpen(false)}
-      />
+      {/* Full Docs & Legal Portal */}
+      {docsPortalOpen && (
+        <Suspense fallback={null}>
+          <DocsPortal 
+            isOpen={docsPortalOpen}
+            initialDoc={docsInitialDoc}
+            onClose={() => setDocsPortalOpen(false)}
+            onOpenApp={() => setDocsPortalOpen(false)}
+          />
+        </Suspense>
+      )}
 
       {/* Quick Legal Modal */}
-      <LegalModal 
-        isOpen={legalModalOpen} 
-        initialTab={legalInitialTab} 
-        onClose={() => setLegalModalOpen(false)} 
-      />
+      {legalModalOpen && (
+        <Suspense fallback={null}>
+          <LegalModal 
+            isOpen={legalModalOpen} 
+            initialTab={legalInitialTab} 
+            onClose={() => setLegalModalOpen(false)} 
+          />
+        </Suspense>
+      )}
 
       {/* Auth Modal */}
-      <AuthModal 
-        isOpen={authModalOpen} 
-        onClose={() => setAuthModalOpen(false)} 
-        onOpenLegal={handleOpenLegal}
-        onSuccessLogin={handleLoginSuccess}
-      />
+      {authModalOpen && (
+        <Suspense fallback={null}>
+          <AuthModal 
+            isOpen={authModalOpen} 
+            onClose={() => setAuthModalOpen(false)} 
+            onOpenLegal={handleOpenLegal}
+            onSuccessLogin={handleLoginSuccess}
+          />
+        </Suspense>
+      )}
 
       {/* Demo Modal */}
-      <DemoModal 
-        isOpen={demoModalOpen} 
-        onClose={() => setDemoModalOpen(false)} 
-      />
+      {demoModalOpen && (
+        <Suspense fallback={null}>
+          <DemoModal 
+            isOpen={demoModalOpen} 
+            onClose={() => setDemoModalOpen(false)} 
+          />
+        </Suspense>
+      )}
     </div>
   );
 }

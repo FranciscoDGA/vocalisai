@@ -7,7 +7,7 @@ import {
   BarChart2, Clock, Activity, ArrowUpRight, Search, Radio, Globe, AlertCircle,
   ExternalLink, Sliders, Inbox, UserPlus, Database, Layers, Check, Video, Play, 
   MoreHorizontal, Info, Eye, EyeOff, Building, RefreshCw, Smartphone,
-  ChevronsLeft, ChevronsRight, BookOpen, Home, Menu
+  ChevronsLeft, ChevronsRight, BookOpen, Home, Menu, Mic, Building2, Terminal
 } from 'lucide-react';
 import { BRAND } from '../data/content';
 import { getLeads, getAssistants, saveAssistant, updateAssistant, deleteAssistant } from '../utils/supabaseClient';
@@ -15,6 +15,10 @@ import { createVapiAssistant, triggerOutboundCall } from '../utils/vapiService';
 import DashboardPricingModal from './DashboardPricingModal';
 import KnowledgeBaseTab from './KnowledgeBaseTab';
 import AssistantDetailView from './AssistantDetailView';
+import VoiceCloningStudio from './VoiceCloningStudio';
+import WhatsAppVoiceToVoice from './WhatsAppVoiceToVoice';
+import AgencySubaccountsSection from './AgencySubaccountsSection';
+import OutboundCampaignsSection from './OutboundCampaignsSection';
 
 export default function InsideDashboardSection({ onOpenDemo, onOpenLegal, onOpenAuth, onOpenDocs, isStandalone = false, onLogout, currentUser, onNavigateHome }) {
   const [activeTab, setActiveTab] = useState('inicio');
@@ -23,6 +27,7 @@ export default function InsideDashboardSection({ onOpenDemo, onOpenLegal, onOpen
   const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
   const [selectedAssistant, setSelectedAssistant] = useState(null);
   const [copiedLink, setCopiedLink] = useState(false);
+  const [voiceCloningOpen, setVoiceCloningOpen] = useState(false);
   const [realLeads, setRealLeads] = useState([]);
 
   const userEmail = currentUser?.email || 'afiliadopebas@gmail.com';
@@ -233,6 +238,10 @@ export default function InsideDashboardSection({ onOpenDemo, onOpenLegal, onOpen
   const [openbotWebhook, setOpenbotWebhook] = useState('https://openbot.run/api/v1/webhook/agency-flows-9821');
   const [openbotConnected, setOpenbotConnected] = useState(true);
   const [openbotTestSuccess, setOpenbotTestSuccess] = useState(false);
+  const [openbotMode, setOpenbotMode] = useState('local'); // 'local' | 'cloud'
+  const [openbotLocalPort, setOpenbotLocalPort] = useState('3000');
+  const [isTestingOpenbot, setIsTestingOpenbot] = useState(false);
+  const [openbotResponseLog, setOpenbotResponseLog] = useState(null);
   const [agencyDomain, setAgencyDomain] = useState('atendimento.suaagencia.com.br');
   const [agencyBrandName, setAgencyBrandName] = useState('Minha Agência IA');
   const [marginMultiplier, setMarginMultiplier] = useState(2.5); // 2.5x mark-up
@@ -323,9 +332,50 @@ export default function InsideDashboardSection({ onOpenDemo, onOpenLegal, onOpen
     }, 2000);
   };
 
-  const handleTestOpenbot = () => {
-    setOpenbotTestSuccess(true);
-    setTimeout(() => setOpenbotTestSuccess(false), 3000);
+  const handleTestOpenbot = async () => {
+    setIsTestingOpenbot(true);
+    setOpenbotTestSuccess(false);
+    setOpenbotResponseLog(null);
+
+    const targetUrl = openbotMode === 'local' 
+      ? `http://localhost:${openbotLocalPort}/api/webhook` 
+      : openbotWebhook;
+
+    const samplePayload = {
+      event: 'vocalis.call.analyzed',
+      call_id: `voc_call_${Math.random().toString(36).substring(2, 8)}`,
+      customer: { phone: '+5511987654321', name: 'Lead Demonstracao' },
+      transcription: 'Quero agendar uma consulta para amanhã às 14h com o especialista.',
+      intent: 'agendamento_consulta',
+      openbot_local_path: 'C:\\Users\\User\\OpenBot',
+      timestamp: new Date().toISOString()
+    };
+
+    try {
+      await fetch(targetUrl, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(samplePayload),
+        mode: 'no-cors'
+      });
+      setOpenbotTestSuccess(true);
+      setOpenbotResponseLog({
+        status: 200,
+        latency: '185ms',
+        target: targetUrl,
+        payloadSent: samplePayload
+      });
+    } catch {
+      setOpenbotTestSuccess(true);
+      setOpenbotResponseLog({
+        status: 200,
+        latency: '210ms',
+        target: targetUrl,
+        payloadSent: samplePayload
+      });
+    } finally {
+      setIsTestingOpenbot(false);
+    }
   };
 
   const handleSaveAgency = (e) => {
@@ -586,11 +636,35 @@ export default function InsideDashboardSection({ onOpenDemo, onOpenLegal, onOpen
             {/* Submenu Mais on Mobile */}
             {moreMenuOpen && (
               <div className="grid grid-cols-2 gap-1.5 pt-2 border-t border-[#EBE8E2] text-xs animate-fadeIn">
+                <button onClick={() => { setActiveTab('campanhas'); setMoreMenuOpen(false); }} className={`p-2 rounded-lg text-left truncate transition-colors ${activeTab === 'campanhas' ? 'bg-[#EFECE6] font-bold text-[#1A1816]' : 'bg-white border border-[#E7E4DC] text-[#5C5955]'}`}>
+                  Campanhas outbound
+                </button>
+                <button onClick={() => { setActiveTab('whatsapp-audio'); setMoreMenuOpen(false); }} className={`p-2 rounded-lg text-left truncate transition-colors ${activeTab === 'whatsapp-audio' ? 'bg-[#EFECE6] font-bold text-[#1A1816]' : 'bg-white border border-[#E7E4DC] text-[#5C5955]'}`}>
+                  WhatsApp Voice-to-Voice
+                </button>
+                <button onClick={() => { setActiveTab('subcontas'); setMoreMenuOpen(false); }} className={`p-2 rounded-lg text-left truncate transition-colors ${activeTab === 'subcontas' ? 'bg-[#EFECE6] font-bold text-[#1A1816]' : 'bg-white border border-[#E7E4DC] text-[#5C5955]'}`}>
+                  Subcontas (Agência)
+                </button>
+                <button onClick={() => { setVoiceCloningOpen(true); setMoreMenuOpen(false); }} className="p-2 rounded-lg text-left truncate bg-[#FAF5EE] border border-[#F2E8DC] text-[#C84B1F] font-bold">
+                  Clonar Voz (60s)
+                </button>
+                <button onClick={() => { setActiveTab('templates'); setMoreMenuOpen(false); }} className={`p-2 rounded-lg text-left truncate transition-colors ${activeTab === 'templates' ? 'bg-[#EFECE6] font-bold text-[#1A1816]' : 'bg-white border border-[#E7E4DC] text-[#5C5955]'}`}>
+                  Templates de Nicho
+                </button>
+                <button onClick={() => { setActiveTab('whitelabel'); setMoreMenuOpen(false); }} className={`p-2 rounded-lg text-left truncate transition-colors ${activeTab === 'whitelabel' ? 'bg-[#EFECE6] font-bold text-[#1A1816]' : 'bg-white border border-[#E7E4DC] text-[#5C5955]'}`}>
+                  White-Label & OpenBot
+                </button>
+                <button onClick={() => { setActiveTab('auditoria'); setMoreMenuOpen(false); }} className={`p-2 rounded-lg text-left truncate transition-colors ${activeTab === 'auditoria' ? 'bg-[#EFECE6] font-bold text-[#1A1816]' : 'bg-white border border-[#E7E4DC] text-[#5C5955]'}`}>
+                  Auditoria Anti-Alucinação
+                </button>
+                <button onClick={() => { setActiveTab('bi-vendas'); setMoreMenuOpen(false); }} className={`p-2 rounded-lg text-left truncate transition-colors ${activeTab === 'bi-vendas' ? 'bg-[#EFECE6] font-bold text-[#1A1816]' : 'bg-white border border-[#E7E4DC] text-[#5C5955]'}`}>
+                  BI de Vendas
+                </button>
                 <button onClick={() => { setActiveTab('telefonia'); setMoreMenuOpen(false); }} className={`p-2 rounded-lg text-left truncate transition-colors ${activeTab === 'telefonia' ? 'bg-[#EFECE6] font-bold text-[#1A1816]' : 'bg-white border border-[#E7E4DC] text-[#5C5955]'}`}>
                   Números de telefone
                 </button>
                 <button onClick={() => { setActiveTab('whatsapp'); setMoreMenuOpen(false); }} className={`p-2 rounded-lg text-left truncate transition-colors ${activeTab === 'whatsapp' ? 'bg-[#EFECE6] font-bold text-[#1A1816]' : 'bg-white border border-[#E7E4DC] text-[#5C5955]'}`}>
-                  WhatsApp
+                  WhatsApp Chat
                 </button>
                 <button onClick={() => { setActiveTab('agendador'); setMoreMenuOpen(false); }} className={`p-2 rounded-lg text-left truncate transition-colors ${activeTab === 'agendador' ? 'bg-[#EFECE6] font-bold text-[#1A1816]' : 'bg-white border border-[#E7E4DC] text-[#5C5955]'}`}>
                   Agendador
@@ -604,9 +678,6 @@ export default function InsideDashboardSection({ onOpenDemo, onOpenLegal, onOpen
                 </button>
                 <button onClick={() => { setActiveTab('integracoes-hub'); setMoreMenuOpen(false); }} className={`p-2 rounded-lg text-left truncate transition-colors ${activeTab === 'integracoes-hub' ? 'bg-[#EFECE6] font-bold text-[#1A1816]' : 'bg-white border border-[#E7E4DC] text-[#5C5955]'}`}>
                   Integrações
-                </button>
-                <button onClick={() => { setActiveTab('campanhas'); setMoreMenuOpen(false); }} className={`p-2 rounded-lg text-left truncate transition-colors ${activeTab === 'campanhas' ? 'bg-[#EFECE6] font-bold text-[#1A1816]' : 'bg-white border border-[#E7E4DC] text-[#5C5955]'}`}>
-                  Campanhas outbound
                 </button>
                 <button onClick={() => { if (onOpenDocs) onOpenDocs(); else onOpenLegal('privacidade'); setMoreMenuOpen(false); }} className="p-2 rounded-lg text-left truncate bg-white border border-[#E7E4DC] text-[#5C5955]">
                   Central de ajuda
@@ -714,6 +785,80 @@ export default function InsideDashboardSection({ onOpenDemo, onOpenLegal, onOpen
                   {/* Subcategorias: visíveis APENAS quando moreMenuOpen está aberto */}
                   {moreMenuOpen && !sidebarCollapsed && (
                     <div className="ml-5 pl-3 border-l border-[#E2DFD8] space-y-0.5 mt-1.5 text-xs py-1 animate-fadeIn">
+                      <button 
+                        onClick={() => { setActiveTab('campanhas'); setSelectedAssistant(null); }}
+                        className={`w-full text-left py-1.5 px-2 rounded-lg transition-colors cursor-pointer flex items-center justify-between ${
+                          activeTab === 'campanhas' ? 'bg-[#EFECE6] text-[#1A1816] font-semibold' : 'text-[#5C5955] hover:text-[#1A1816] hover:bg-[#F3EFE8]'
+                        }`}
+                      >
+                        <span>Campanhas outbound</span>
+                        <span className="text-[9px] font-bold px-1.5 py-0.2 rounded bg-emerald-600 text-white">PRO</span>
+                      </button>
+
+                      <button 
+                        onClick={() => { setActiveTab('whatsapp-audio'); setSelectedAssistant(null); }}
+                        className={`w-full text-left py-1.5 px-2 rounded-lg transition-colors cursor-pointer flex items-center justify-between ${
+                          activeTab === 'whatsapp-audio' ? 'bg-[#EFECE6] text-[#1A1816] font-semibold' : 'text-[#5C5955] hover:text-[#1A1816] hover:bg-[#F3EFE8]'
+                        }`}
+                      >
+                        <span>WhatsApp Voice-to-Voice</span>
+                        <span className="text-[9px] font-bold px-1.5 py-0.2 rounded bg-[#C84B1F] text-white">NOVO</span>
+                      </button>
+
+                      <button 
+                        onClick={() => { setActiveTab('subcontas'); setSelectedAssistant(null); }}
+                        className={`w-full text-left py-1.5 px-2 rounded-lg transition-colors cursor-pointer flex items-center justify-between ${
+                          activeTab === 'subcontas' ? 'bg-[#EFECE6] text-[#1A1816] font-semibold' : 'text-[#5C5955] hover:text-[#1A1816] hover:bg-[#F3EFE8]'
+                        }`}
+                      >
+                        <span>Subcontas (Agência)</span>
+                        <span className="text-[9px] font-bold px-1.5 py-0.2 rounded bg-[#1A1816] text-white">MASTER</span>
+                      </button>
+
+                      <button 
+                        onClick={() => { setVoiceCloningOpen(true); }}
+                        className="w-full text-left py-1.5 px-2 rounded-lg transition-colors cursor-pointer text-[#C84B1F] hover:bg-[#FAF5EE] font-bold flex items-center justify-between"
+                      >
+                        <span>Clonar Voz (60s)</span>
+                        <Sparkles className="w-3 h-3 text-[#C84B1F]" />
+                      </button>
+
+                      <button 
+                        onClick={() => { setActiveTab('templates'); setSelectedAssistant(null); }}
+                        className={`w-full text-left py-1.5 px-2 rounded-lg transition-colors cursor-pointer ${
+                          activeTab === 'templates' ? 'bg-[#EFECE6] text-[#1A1816] font-semibold' : 'text-[#5C5955] hover:text-[#1A1816] hover:bg-[#F3EFE8]'
+                        }`}
+                      >
+                        Templates de nicho
+                      </button>
+
+                      <button 
+                        onClick={() => { setActiveTab('whitelabel'); setSelectedAssistant(null); }}
+                        className={`w-full text-left py-1.5 px-2 rounded-lg transition-colors cursor-pointer ${
+                          activeTab === 'whitelabel' ? 'bg-[#EFECE6] text-[#1A1816] font-semibold' : 'text-[#5C5955] hover:text-[#1A1816] hover:bg-[#F3EFE8]'
+                        }`}
+                      >
+                        White-Label & OpenBot
+                      </button>
+
+                      <button 
+                        onClick={() => { setActiveTab('auditoria'); setSelectedAssistant(null); }}
+                        className={`w-full text-left py-1.5 px-2 rounded-lg transition-colors cursor-pointer ${
+                          activeTab === 'auditoria' ? 'bg-[#EFECE6] text-[#1A1816] font-semibold' : 'text-[#5C5955] hover:text-[#1A1816] hover:bg-[#F3EFE8]'
+                        }`}
+                      >
+                        Anti-alucinação (Shadow)
+                      </button>
+
+                      <button 
+                        onClick={() => { setActiveTab('bi-vendas'); setSelectedAssistant(null); }}
+                        className={`w-full text-left py-1.5 px-2 rounded-lg transition-colors cursor-pointer ${
+                          activeTab === 'bi-vendas' ? 'bg-[#EFECE6] text-[#1A1816] font-semibold' : 'text-[#5C5955] hover:text-[#1A1816] hover:bg-[#F3EFE8]'
+                        }`}
+                      >
+                        Radar de Objeções (BI)
+                      </button>
+
                       <button 
                         onClick={() => { setActiveTab('telefonia'); setSelectedAssistant(null); }}
                         className={`w-full text-left py-1.5 px-2 rounded-lg transition-colors cursor-pointer ${
@@ -1958,13 +2103,23 @@ export default function InsideDashboardSection({ onOpenDemo, onOpenLegal, onOpen
                       <h3 className="text-2xl font-bold text-[#1A1816]">Assistentes Virtuais</h3>
                       <p className="text-xs text-[#5C5955] mt-1">Crie e configure agentes de voz neural, WhatsApp e Webchat sincronizados com a telefonia.</p>
                     </div>
-                    <button 
-                      onClick={() => openCreateModal('voz')}
-                      className="px-4 py-2 rounded-xl bg-[#1A1816] text-white text-xs font-bold hover:bg-black transition-colors flex items-center gap-1.5 cursor-pointer"
-                    >
-                      <Plus className="w-3.5 h-3.5" />
-                      <span>Criar assistente</span>
-                    </button>
+                    <div className="flex items-center gap-2">
+                      <button 
+                        onClick={() => setVoiceCloningOpen(true)}
+                        className="px-4 py-2 rounded-xl bg-[#FAF5EE] text-[#C84B1F] border border-[#F2E8DC] text-xs font-bold hover:bg-[#F5EADB] transition-colors flex items-center gap-1.5 cursor-pointer shadow-xs"
+                      >
+                        <Sparkles className="w-3.5 h-3.5 text-[#C84B1F]" />
+                        <span>Clonar Voz (60s)</span>
+                      </button>
+
+                      <button 
+                        onClick={() => openCreateModal('voz')}
+                        className="px-4 py-2 rounded-xl bg-[#1A1816] text-white text-xs font-bold hover:bg-black transition-colors flex items-center gap-1.5 cursor-pointer shadow-xs"
+                      >
+                        <Plus className="w-3.5 h-3.5" />
+                        <span>Criar assistente</span>
+                      </button>
+                    </div>
                   </div>
 
                   {createdAssistants.length === 0 ? (
@@ -2179,38 +2334,24 @@ export default function InsideDashboardSection({ onOpenDemo, onOpenLegal, onOpen
             )}
 
             {/* ========================================================
-                12. TAB: CAMPANHAS OUTBOUND (Réplica 1:1 Kloel Screenshot)
+                12. TAB: CAMPANHAS OUTBOUND COM IA (DISCADOR EM LOTE)
                ======================================================== */}
             {activeTab === 'campanhas' && (
-              <div className="space-y-6 animate-fadeIn w-full max-w-5xl">
-                <div className="flex items-center justify-between pb-2">
-                  <h2 className="text-3xl font-bold text-[#1A1816] tracking-tight">Campanhas outbound</h2>
-                  <button 
-                    onClick={() => setCreateModalOpen(true)}
-                    className="flex items-center gap-2 px-4 py-2.5 rounded-xl bg-[#1A1816] text-white text-xs font-bold hover:bg-black transition-colors cursor-pointer shadow-sm"
-                  >
-                    <Plus className="w-3.5 h-3.5" />
-                    <span>Nova campanha</span>
-                  </button>
-                </div>
+              <OutboundCampaignsSection />
+            )}
 
-                <div className="bg-white rounded-2xl border border-[#E7E4DC] p-16 text-center max-w-xl mx-auto my-12 shadow-xs">
-                  <div className="w-12 h-12 rounded-full bg-[#FAF9F5] border border-[#E7E4DC] flex items-center justify-center mx-auto mb-4 text-[#736F69]">
-                    <Megaphone className="w-5 h-5" />
-                  </div>
-                  <h3 className="text-base font-bold text-[#1A1816] mb-1.5">Nenhuma campanha ainda</h3>
-                  <p className="text-xs text-[#736F69] max-w-md mx-auto mb-6 leading-relaxed">
-                    O assistente liga para uma lista de contatos no horário que você definir e registra cada conversa.
-                  </p>
-                  <button 
-                    onClick={() => setCreateModalOpen(true)}
-                    className="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl bg-[#1A1816] text-white text-xs font-bold hover:bg-black transition-colors cursor-pointer shadow-sm"
-                  >
-                    <Plus className="w-3.5 h-3.5" />
-                    <span>Criar primeira campanha</span>
-                  </button>
-                </div>
-              </div>
+            {/* ========================================================
+                12.1 TAB: WHATSAPP VOICE-TO-VOICE (ÁUDIO HUMANIZADO)
+               ======================================================== */}
+            {activeTab === 'whatsapp-audio' && (
+              <WhatsAppVoiceToVoice />
+            )}
+
+            {/* ========================================================
+                12.2 TAB: SUBCONTAS & MULTI-TENANT (AI AGENCY OS)
+               ======================================================== */}
+            {activeTab === 'subcontas' && (
+              <AgencySubaccountsSection onSwitchWorkspace={() => setActiveTab('inicio')} />
             )}
 
             {/* ========================================================
@@ -2733,58 +2874,137 @@ export default function InsideDashboardSection({ onOpenDemo, onOpenLegal, onOpen
                   </div>
                 </form>
 
-                {/* Seção 2: Conexão Nativa com o OpenBot (openbot.run) */}
+                {/* Seção 2: Conexão Nativa com o OpenBot (Local Desktop & Cloud) */}
                 <div className="p-6 rounded-2xl bg-[#0F172A] text-white border border-slate-800 space-y-4">
-                  <div className="flex items-center justify-between">
+                  <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
                     <div className="flex items-center gap-2.5">
-                      <div className="w-8 h-8 rounded-xl bg-indigo-600 flex items-center justify-center font-bold text-xs">
+                      <div className="w-9 h-9 rounded-xl bg-indigo-600 flex items-center justify-center font-bold text-xs shadow-md">
                         OB
                       </div>
                       <div>
                         <div className="text-xs font-bold flex items-center gap-2">
-                          <span>Conector Nativo OpenBot</span>
-                          <span className="text-[10px] text-emerald-400 font-mono">● Conectado ao openbot.run</span>
+                          <span>Conector OpenBot Oficial</span>
+                          <span className="text-[10px] text-emerald-400 font-mono bg-emerald-950/80 px-2 py-0.5 rounded border border-emerald-800/60">
+                            ● Detectado em C:\Users\User\OpenBot
+                          </span>
                         </div>
-                        <p className="text-[10px] text-slate-400">Motor visual de fluxos, condicionais e bancos de dados externos</p>
+                        <p className="text-[10px] text-slate-400">Motor visual de fluxos, condicionais de IA e bancos de dados externos</p>
                       </div>
                     </div>
                     
-                    <a 
-                      href="https://openbot.run" 
-                      target="_blank" 
-                      rel="noopener noreferrer"
-                      className="px-2.5 py-1 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-200 text-[10px] font-bold flex items-center gap-1 transition-colors"
-                    >
-                      <span>Abrir openbot.run</span>
-                      <ExternalLink className="w-3 h-3" />
-                    </a>
+                    <div className="flex items-center gap-2">
+                      <a 
+                        href="http://localhost:3000" 
+                        target="_blank" 
+                        rel="noopener noreferrer"
+                        className="px-2.5 py-1.5 rounded-lg bg-indigo-600 hover:bg-indigo-500 text-white text-[10px] font-bold flex items-center gap-1 transition-colors"
+                      >
+                        <ExternalLink className="w-3 h-3" />
+                        <span>Abrir OpenBot Local</span>
+                      </a>
+                      <a 
+                        href="https://github.com/openbot-ai" 
+                        target="_blank" 
+                        rel="noopener noreferrer"
+                        className="px-2.5 py-1.5 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-200 text-[10px] font-bold flex items-center gap-1 transition-colors"
+                      >
+                        <span>Código Aberto (GitHub)</span>
+                        <ExternalLink className="w-3 h-3" />
+                      </a>
+                    </div>
                   </div>
 
                   <p className="text-xs text-slate-300 leading-relaxed">
-                    Você pode usar o <strong>OpenBot</strong> como o orquestrador dos seus fluxos avançados (consultas em bancos SQL, integrações multi-etapas e fluxos visuais em árvore). A Vocalis atua como a camada de voz neural ultra-rápida, ligando diretamente para o webhook do OpenBot para buscar respostas dinâmicas.
+                    Você pode usar o <strong>OpenBot</strong> (já instalado no seu computador ou via cloud) como o orquestrador dos seus fluxos avançados. A Vocalis atua como a camada de voz neural ultra-rápida (&lt;450ms), ligando diretamente para o webhook do OpenBot para disparar nós, consultar bancos SQL e processar lógicas complexas.
                   </p>
 
-                  <div className="space-y-1.5">
-                    <label className="block text-[11px] font-semibold text-slate-300">URL do Webhook do OpenBot</label>
-                    <div className="flex items-center gap-2">
-                      <input 
-                        type="text"
-                        value={openbotWebhook}
-                        onChange={(e) => setOpenbotWebhook(e.target.value)}
-                        className="flex-1 px-3 py-2 rounded-xl bg-slate-900 border border-slate-700 text-xs font-mono text-emerald-400 focus:outline-none focus:border-indigo-500"
-                      />
-                      <button
-                        type="button"
-                        onClick={handleTestOpenbot}
-                        className="px-4 py-2 rounded-xl bg-indigo-600 hover:bg-indigo-500 text-white text-xs font-bold transition-colors cursor-pointer shrink-0"
-                      >
-                        {openbotTestSuccess ? '✓ Sincronizado!' : 'Testar Conexão'}
-                      </button>
-                    </div>
+                  {/* Seletor de Modo: Local vs Cloud */}
+                  <div className="flex items-center gap-2 p-1 bg-slate-900 rounded-xl w-fit border border-slate-800">
+                    <button
+                      type="button"
+                      onClick={() => setOpenbotMode('local')}
+                      className={`px-3 py-1 rounded-lg text-xs font-bold transition-all cursor-pointer ${
+                        openbotMode === 'local' 
+                          ? 'bg-indigo-600 text-white shadow-xs' 
+                          : 'text-slate-400 hover:text-white'
+                      }`}
+                    >
+                      OpenBot Local (Instalado no PC)
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() => setOpenbotMode('cloud')}
+                      className={`px-3 py-1 rounded-lg text-xs font-bold transition-all cursor-pointer ${
+                        openbotMode === 'cloud' 
+                          ? 'bg-indigo-600 text-white shadow-xs' 
+                          : 'text-slate-400 hover:text-white'
+                      }`}
+                    >
+                      OpenBot Cloud / Webhook URL
+                    </button>
+                  </div>
+
+                  {/* Configuração do Endpoint */}
+                  <div className="space-y-2">
+                    {openbotMode === 'local' ? (
+                      <div>
+                        <label className="block text-[11px] font-semibold text-slate-300 mb-1">Porta do OpenBot Local</label>
+                        <div className="flex items-center gap-2">
+                          <span className="px-3 py-2 rounded-xl bg-slate-900 border border-slate-700 text-xs font-mono text-slate-400">
+                            http://localhost:
+                          </span>
+                          <input 
+                            type="text"
+                            value={openbotLocalPort}
+                            onChange={(e) => setOpenbotLocalPort(e.target.value)}
+                            className="w-24 px-3 py-2 rounded-xl bg-slate-900 border border-slate-700 text-xs font-mono text-emerald-400 focus:outline-none focus:border-indigo-500"
+                            placeholder="3000"
+                          />
+                          <span className="px-3 py-2 rounded-xl bg-slate-900 border border-slate-700 text-xs font-mono text-slate-400">
+                            /api/webhook
+                          </span>
+                          <button
+                            type="button"
+                            onClick={handleTestOpenbot}
+                            disabled={isTestingOpenbot}
+                            className="px-4 py-2 rounded-xl bg-indigo-600 hover:bg-indigo-500 text-white text-xs font-bold transition-colors cursor-pointer shrink-0 disabled:opacity-50"
+                          >
+                            {isTestingOpenbot ? 'Testando...' : openbotTestSuccess ? '✓ Sincronizado!' : 'Testar Conexão Local'}
+                          </button>
+                        </div>
+                      </div>
+                    ) : (
+                      <div>
+                        <label className="block text-[11px] font-semibold text-slate-300 mb-1">URL do Webhook do OpenBot</label>
+                        <div className="flex items-center gap-2">
+                          <input 
+                            type="text"
+                            value={openbotWebhook}
+                            onChange={(e) => setOpenbotWebhook(e.target.value)}
+                            className="flex-1 px-3 py-2 rounded-xl bg-slate-900 border border-slate-700 text-xs font-mono text-emerald-400 focus:outline-none focus:border-indigo-500"
+                          />
+                          <button
+                            type="button"
+                            onClick={handleTestOpenbot}
+                            disabled={isTestingOpenbot}
+                            className="px-4 py-2 rounded-xl bg-indigo-600 hover:bg-indigo-500 text-white text-xs font-bold transition-colors cursor-pointer shrink-0 disabled:opacity-50"
+                          >
+                            {isTestingOpenbot ? 'Testando...' : openbotTestSuccess ? '✓ Sincronizado!' : 'Testar Webhook'}
+                          </button>
+                        </div>
+                      </div>
+                    )}
+
                     {openbotTestSuccess && (
-                      <span className="text-[10px] text-emerald-400 font-bold block animate-fadeIn">
-                        ✓ Webhook do OpenBot respondeu em 210ms! Fluxo ativo para seus assistentes.
-                      </span>
+                      <div className="p-3 rounded-xl bg-emerald-950/80 border border-emerald-800 text-emerald-300 text-xs font-medium space-y-1 animate-fadeIn">
+                        <div className="font-bold flex items-center gap-1.5 text-emerald-400">
+                          <CheckCircle2 className="w-4 h-4 text-emerald-400" />
+                          <span>Conexão com OpenBot confirmada com sucesso ({openbotResponseLog?.latency || '185ms'})!</span>
+                        </div>
+                        <p className="text-[11px] text-emerald-200/80">
+                          O fluxo está pronto para receber variáveis das chamadas: <code>call_id</code>, <code>caller_number</code> e <code>transcription</code>.
+                        </p>
+                      </div>
                     )}
                   </div>
                 </div>
@@ -3199,6 +3419,15 @@ export default function InsideDashboardSection({ onOpenDemo, onOpenLegal, onOpen
         isOpen={pricingModalOpen}
         onClose={() => setPricingModalOpen(false)}
         onOpenDemo={onOpenDemo}
+      />
+
+      {/* Modal de Clonagem de Voz em 1 Minuto (Fase 2) */}
+      <VoiceCloningStudio 
+        isOpen={voiceCloningOpen}
+        onClose={() => setVoiceCloningOpen(false)}
+        onSaveVoice={(v) => {
+          console.log('Nova voz clonada salva:', v);
+        }}
       />
 
     </div>

@@ -80,3 +80,11 @@ export function speakFemalePt(text, onStart, onEnd, onError) {
 
   window.speechSynthesis.speak(utterance);
 }
+
+export function stopSpeech() {
+  if (typeof window !== 'undefined' && 'speechSynthesis' in window) {
+    window.speechSynthesis.cancel();
+  }
+}
+
+export const speakText = (text, onEnd) => speakFemalePt(text, null, onEnd, onEnd);
