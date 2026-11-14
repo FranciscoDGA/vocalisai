@@ -160,13 +160,14 @@ npm run preview
 * **Invocação:** Disparada pelo Hero ou pelos botões de teste espalhados pelo site.
 * **Comportamento em Tempo Real:**
   1. Efeito de discagem realista por 1.8 segundos;
-  2. Conexão com voz neural feminina da Roberta;
-  3. Visualizador de onda sonora (waveform) animada sincronizada com a voz;
-  4. Reconhecimento de fala via microfone (`SpeechRecognition`) com botão interativo "Falar no Mic";
-  5. Menu de respostas rápidas com 1 clique;
-  6. **Notificação Flutuante de WhatsApp:** Desliza durante a ligação avisando do recebimento de mensagem;
-  7. **Card de Ação Executada:** Demonstra que o Pix de R$ 1,00 foi gerado na hora e a agenda sincronizada;
-  8. **Modal Sobreposto de WhatsApp:** Permite inspecionar a mensagem formatada recebida da Roberta com botão de copiar código Pix.
+  2. Conexão imediata com a voz neural humanizada da **Débora · Vocalis**;
+  3. Visualizador de onda sonora e aura pulsante sincronizados com a fala;
+  4. Reconhecimento contínuo de voz (`SpeechRecognition`) com debounce de silêncio de 1.8s e feedback em tempo real (`Ouvindo: "..."`);
+  5. Campo de digitação alternativo integrado para envio rápido de perguntas por texto;
+  6. Roteador conversacional com Gemini AI capaz de responder dúvidas personalizadas sobre clínicas odontológicas, imobiliárias, advocacia e varejo em 2 a 3 frases fluidas;
+  7. **Notificação Flutuante de WhatsApp:** Desliza durante a ligação avisando do recebimento do diagnóstico;
+  8. **Card de Ação Executada em Tempo Real:** Demonstra a cobrança Pix de teste de R$ 1,00 gerada na chamada e a agenda sincronizada;
+  9. **Modal Sobreposto de WhatsApp:** Permite inspecionar a mensagem formatada recebida da Débora com botão de copiar código Pix.
 
 ---
 
@@ -386,6 +387,21 @@ Você tem duas fontes de receita massiva com essa plataforma:
    * O `vapi_assistant_id` retornado é gravado automaticamente no Supabase;
    * A tela de edição do assistente (`AssistantDetailView.jsx`) possui barra com o status da conexão Vapi e o botão de ação *"Salvar & Sincronizar na Vapi"*;
    * A aba "Técnico" exibe os dados da infraestrutura (Deepgram pt-BR, GPT-4o Mini e Voz Clara) com teste de chamada direto para qualquer número de celular.
+8. **Equalizador Visual de Frequência Sonora & Latência em Movimento (`AudioFrequencyWave.jsx` & `index.css`):**
+   * Visualizador dinâmico de espectro harmônico de 68 barras no rodapé dos cards da Landing Page (`CtaSection.jsx`) e em todas as 7 páginas verticais (`/agendamentos`, `/atendedor-automatico`, `/recepcionista-virtual`, `/equipe-externa`, `/suporte`, `/integracoes`, `/webinars`);
+   * Equalizador compacto com 10 barras animadas no painel escuro de login e cadastro (`AuthModal.jsx`);
+   * Indicador com ponto pulsante em tempo real: `● Latência 380ms - 450ms • Voz neural brasileira`;
+   * Animação 100% acelerada pela GPU com `scaleY` e `opacity` sem travamentos ou reflows de layout.
+9. **Refatoração da Fluidez e Síntese Natural da Débora (`TestCallModal.jsx`, `voiceUtils.js`, `aiService.js`):**
+   * Correção definitiva de expressões regulares agressivas que causavam soletração de palavras comuns em português (como "mais", "estamos", "minutos");
+   * Remoção da pronúncia forçada de siglas em inglês como "AI Agency OS" na fala telefônica — a assistente pronuncia naturalmente "Vocalis";
+   * Abertura humanizada da chamada sem recitação robótica dos 11 dígitos do telefone;
+   * Calibração de ritmo e pitch (`rate = 1.0`, `pitch = 1.0`) priorizando vozes neurais brasileiras suaves (Google pt-BR e Microsoft Francisca/Thalita Online Natural);
+   * Roteamento inteligente de saudações/testes de microfone e suporte a histórico multi-turn via Gemini AI (`gemini-3.1-flash-lite`, `gemini-3-flash-preview`).
+10. **Preservação e Restauração Estrita do Header/Menu do Site (`Navbar.jsx`):**
+    * Menu original 100% restaurado e desobstruído com espaçamento original (`Produtos ⌄`, `Soluções ⌄`, `Recursos ⌄`, `Casos de uso`, `Parceiros`, `Preços`, `🇧🇷 ⌄`, `Falar com a gente`, `Entrar` e `Criar minha Vocalis ➔`);
+    * Regra CSS `whitespace-nowrap` aplicada a todos os links para blindar contra qualquer quebra de linha em telas desktop;
+    * O módulo de Slides de Apresentação Executiva (*Pitch Deck*) foi concentrado exclusivamente dentro do Dashboard (`InsideDashboardSection.jsx`), onde os donos de agência conduzem reuniões de vendas.
 
 ---
 
