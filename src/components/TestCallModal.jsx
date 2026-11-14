@@ -34,6 +34,14 @@ export default function TestCallModal({ isOpen, phoneNumber, countryCode = '+55'
   const silenceTimerRef = useRef(null);
   const transcriptAccumulatorRef = useRef('');
   const chatBottomRef = useRef(null);
+  const isSpeakingRef = useRef(false);
+  const isProcessingSpeechRef = useRef(false);
+  const isListeningMicRef = useRef(false);
+
+  // Mantém a ref sincronizada com o estado do microfone
+  useEffect(() => {
+    isListeningMicRef.current = isListeningMic;
+  }, [isListeningMic]);
 
   // Normalização do telefone para exibição visual e pronúncia fonética
   const formattedDisplayPhone = formatPhoneMask(phoneNumber) || '(94) 98447-8168';
@@ -46,13 +54,13 @@ export default function TestCallModal({ isOpen, phoneNumber, countryCode = '+55'
     }
   }, [callLog, interimSpeech]);
 
-  // Roteiro estruturado de Diagnóstico Empresarial ao Vivo
+  // Roteiro estruturado de Diagnóstico Empresarial ao Vivo (Executivo, Breve e Natural)
   const conversationScript = [
     {
       step: 0,
       speaker: 'Débora · Vocalis',
-      spokenText: `Olá! Aqui é a Débora, da Vocalis. Estou te ligando para fazermos um diagnóstico rápido do atendimento da sua empresa, em menos de um minuto. Me conta: qual é o ramo da sua empresa hoje, e como funciona o seu atendimento?`,
-      displayText: `Olá! Aqui é a Débora, da Vocalis. Estou ligando para o seu número ${countryCode} ${formattedDisplayPhone} para fazer um diagnóstico rápido da sua empresa ao vivo. Me conta: qual é o ramo da sua empresa hoje e como funciona o seu atendimento?`,
+      spokenText: `Olá! Aqui é a Débora, da Vocalis. Estou ligando para um diagnóstico rápido do seu atendimento. Qual é o ramo da sua empresa?`,
+      displayText: `Olá! Aqui é a Débora, da Vocalis. Estou ligando para o seu número ${countryCode} ${formattedDisplayPhone} para um diagnóstico rápido do seu atendimento. Qual é o ramo da sua empresa hoje?`,
       promptHint: 'Fale no microfone, digite abaixo ou escolha seu segmento:',
       options: [
         { label: '🏥 Clínica Odontológica / Consultório Médico', niche: 'Clínica Odontológica' },
@@ -65,8 +73,8 @@ export default function TestCallModal({ isOpen, phoneNumber, countryCode = '+55'
     {
       step: 1,
       speaker: 'Débora · Vocalis',
-      spokenText: (niche) => `Perfeito! No setor de ${niche || 'empresas e serviços'}, a maior perda de faturamento acontece quando o cliente liga e não é atendido, ou quando a resposta no WhatsApp demora. Qual é hoje a sua maior dificuldade? Perder vendas fora do horário, sobrecarga da equipe, ou faltas de clientes agendados?`,
-      displayText: (niche) => `Perfeito! No setor de ${niche || 'empresas e serviços'}, a maior perda de faturamento acontece quando o cliente liga e cai na caixa postal ou quando a resposta no WhatsApp demora mais de 3 minutos. Qual é hoje a maior dor no atendimento de vocês?`,
+      spokenText: (niche) => `Perfeito! No setor de ${niche || 'empresas'}, qual é o seu maior gargalo: perder clientes fora do horário, sobrecarga da equipe ou faltas em agendamentos?`,
+      displayText: (niche) => `Perfeito! No setor de ${niche || 'empresas'}, qual é hoje o seu maior gargalo: perder clientes fora do horário, sobrecarga da equipe ou faltas de clientes agendados?`,
       promptHint: 'Qual é o maior gargalo no seu atendimento hoje?',
       options: [
         { label: '⏱️ Perdemos muitos clientes após as 18h e nos finais de semana', pain: 'Fora do horário' },
@@ -78,8 +86,8 @@ export default function TestCallModal({ isOpen, phoneNumber, countryCode = '+55'
     {
       step: 2,
       speaker: 'Débora · Vocalis',
-      spokenText: (niche, pain) => `Entendi perfeitamente. Com a Vocalis, a sua inteligência atende no primeiro toque com voz humana, agenda consultas e resolve tudo no ato. E olha que incrível: enquanto estamos conversando aqui no telefone, eu acabei de gerar um Pix de teste de um real e mandei uma mensagem no seu WhatsApp com o resumo completo desse diagnóstico! Dá uma olhada na sua tela agora.`,
-      displayText: (niche, pain) => `Entendi perfeitamente! Com a nossa IA, você resolve o problema de ${pain || 'atendimento'} no primeiro segundo. E olha que incrível: enquanto estamos conversando aqui no telefone, eu acabei de gerar um Pix de teste no valor de R$ 1,00 e mandei uma mensagem no seu WhatsApp com o resumo completo desse diagnóstico! Dá uma olhada na sua tela agora.`,
+      spokenText: (niche, pain) => `Entendi! Com a Vocalis, sua assistente atende no primeiro toque e resolve na hora. E acabei de mandar o resumo no seu WhatsApp com um Pix de teste de um real! Dá uma olhada na tela.`,
+      displayText: (niche, pain) => `Entendi! Com a Vocalis, sua assistente atende no primeiro toque e resolve na hora. E acabei de mandar o resumo no seu WhatsApp com um Pix de teste de R$ 1,00! Dá uma olhada na tela.`,
       promptHint: 'Ação executada em tempo real na ligação!',
       triggerAction: true,
       options: [
@@ -91,8 +99,8 @@ export default function TestCallModal({ isOpen, phoneNumber, countryCode = '+55'
     {
       step: 3,
       speaker: 'Débora · Vocalis',
-      spokenText: () => `Essa é a diferença entre um robô genérico e a nossa inteligência executora. Ela fala como humano, agenda e fecha negócios para você vinte e quatro horas por dia. Temos a condição especial de lançamento com trinta por cento de desconto e garantia de trinta dias. Quer liberar o seu acesso agora?`,
-      displayText: () => `Essa é a diferença entre um robô genérico e a nossa IA executora. Ela fala como humano, cobra, agenda e fecha negócios 24 horas por dia. Hoje temos a condição de lançamento com 30% OFF nos 3 primeiros meses e 30 dias de garantia total. Quer ativar agora?`,
+      spokenText: () => `Essa é a força de uma inteligência executora real. Quer agendar uma demonstração rápida de 15 minutos com nossa equipe para ver rodando na sua empresa?`,
+      displayText: () => `Essa é a força de uma inteligência executora real. Quer agendar uma demonstração de 15 minutos para ver rodando na sua empresa?`,
       promptHint: 'Ativação imediata da plataforma:',
       options: [
         { label: '🚀 Sim! Quero ativar minha assistente agora com 30% OFF', action: 'signup' },
@@ -101,13 +109,51 @@ export default function TestCallModal({ isOpen, phoneNumber, countryCode = '+55'
     }
   ];
 
-  // Helper de sintetizador de voz com controle de estado
-  const speakText = (text) => {
+  // Helper de sintetizador de voz com controle anti-eco absoluto
+  const speakText = (text, onFinished) => {
+    // 1. Marca imediatamente como falando
+    isSpeakingRef.current = true;
+    setIsSpeaking(true);
+
+    // 2. Aborta temporariamente o microfone para Débora NÃO ouvir o próprio som vindo das caixas/alto-falantes
+    if (silenceTimerRef.current) {
+      clearTimeout(silenceTimerRef.current);
+    }
+    transcriptAccumulatorRef.current = '';
+    setInterimSpeech('');
+    if (recognitionRef.current) {
+      try {
+        recognitionRef.current.abort();
+      } catch (e) {}
+    }
+
     speakFemalePt(
       text,
-      () => setIsSpeaking(true),
-      () => setIsSpeaking(false),
-      () => setIsSpeaking(false)
+      () => {
+        isSpeakingRef.current = true;
+        setIsSpeaking(true);
+      },
+      () => {
+        isSpeakingRef.current = false;
+        setIsSpeaking(false);
+        if (onFinished) onFinished();
+
+        // 3. Se o microfone estiver ativo pelo usuário, religa após 300ms de silêncio
+        setTimeout(() => {
+          if (isListeningMicRef.current && !isSpeakingRef.current && recognitionRef.current) {
+            try {
+              transcriptAccumulatorRef.current = '';
+              setInterimSpeech('');
+              recognitionRef.current.start();
+            } catch (e) {}
+          }
+        }, 300);
+      },
+      () => {
+        isSpeakingRef.current = false;
+        setIsSpeaking(false);
+        if (onFinished) onFinished();
+      }
     );
   };
 
@@ -123,6 +169,11 @@ export default function TestCallModal({ isOpen, phoneNumber, countryCode = '+55'
     recognition.maxAlternatives = 1;
 
     recognition.onresult = (event) => {
+      // Se Débora estiver falando ou processando, ignora todo áudio para evitar feedback de eco
+      if (isSpeakingRef.current || isProcessingSpeechRef.current) {
+        return;
+      }
+
       let finalStr = '';
       let interimStr = '';
 
@@ -141,16 +192,17 @@ export default function TestCallModal({ isOpen, phoneNumber, countryCode = '+55'
 
       setInterimSpeech(interimStr || transcriptAccumulatorRef.current);
 
-      // Debounce inteligente de silêncio: aguarda 1.8 segundos de pausa na fala para enviar
+      // Debounce inteligente de silêncio: aguarda 2.2 segundos para garantir que o cliente concluiu a fala
       if (silenceTimerRef.current) clearTimeout(silenceTimerRef.current);
       silenceTimerRef.current = setTimeout(() => {
+        if (isSpeakingRef.current || isProcessingSpeechRef.current) return;
         const textToSend = (transcriptAccumulatorRef.current + ' ' + interimStr).trim();
         if (textToSend.length > 2) {
           transcriptAccumulatorRef.current = '';
           setInterimSpeech('');
           handleCustomUserSpeech(textToSend);
         }
-      }, 1800);
+      }, 2200);
     };
 
     recognition.onerror = (e) => {
@@ -161,15 +213,17 @@ export default function TestCallModal({ isOpen, phoneNumber, countryCode = '+55'
     };
 
     recognition.onend = () => {
+      // Se Débora estiver falando, a fala dela religará o microfone no momento correto
+      if (isSpeakingRef.current || isProcessingSpeechRef.current) {
+        return;
+      }
       // Se ainda estava marcado como ouvindo, reinicia automaticamente para não cortar
-      if (isListeningMic && callState === 'connected') {
+      if (isListeningMicRef.current && callState === 'connected') {
         try {
           recognition.start();
         } catch (err) {
-          setIsListeningMic(false);
+          // ignore already started
         }
-      } else {
-        setIsListeningMic(false);
       }
     };
 
@@ -181,7 +235,7 @@ export default function TestCallModal({ isOpen, phoneNumber, countryCode = '+55'
         recognition.stop();
       } catch (e) {}
     };
-  }, [callState, isListeningMic]);
+  }, [callState]);
 
   // Controle de ativação do microfone
   const toggleMic = () => {
@@ -195,25 +249,27 @@ export default function TestCallModal({ isOpen, phoneNumber, countryCode = '+55'
       const textToSend = (transcriptAccumulatorRef.current + ' ' + interimSpeech).trim();
       transcriptAccumulatorRef.current = '';
       setInterimSpeech('');
-      try {
-        recognitionRef.current.stop();
-      } catch (e) {}
+      isListeningMicRef.current = false;
       setIsListeningMic(false);
+      try {
+        recognitionRef.current.abort();
+      } catch (e) {}
 
-      if (textToSend.length > 2) {
+      if (textToSend.length > 2 && !isSpeakingRef.current && !isProcessingSpeechRef.current) {
         handleCustomUserSpeech(textToSend);
       }
     } else {
       stopSpeech();
+      isSpeakingRef.current = false;
       setIsSpeaking(false);
       transcriptAccumulatorRef.current = '';
       setInterimSpeech('');
+      isListeningMicRef.current = true;
+      setIsListeningMic(true);
       try {
         recognitionRef.current.start();
-        setIsListeningMic(true);
       } catch (err) {
         console.warn('Falha ao iniciar SpeechRecognition:', err);
-        setIsListeningMic(false);
       }
     }
   };
@@ -233,101 +289,116 @@ export default function TestCallModal({ isOpen, phoneNumber, countryCode = '+55'
   // Processador central de fala ou texto do usuário
   const handleCustomUserSpeech = async (text) => {
     if (!text || !text.trim()) return;
-    const cleanText = text.trim();
-    const lower = cleanText.toLowerCase();
+    if (isProcessingSpeechRef.current) return;
+    isProcessingSpeechRef.current = true;
 
-    // Detecção de nome do usuário
-    if ((lower.includes('sou o ') || lower.includes('aqui é o ') || lower.includes('aqui e o ')) && lower.includes('francisco')) {
-      setUserName('Francisco');
-    }
+    try {
+      const cleanText = text.trim();
+      const lower = cleanText.toLowerCase();
 
-    // Registra a fala do usuário no log imediatamente
-    const userMsg = { speaker: 'Você', text: cleanText, time: formatDuration(callDuration) };
-    setCallLog(prev => [...prev, userMsg]);
+      // Detecção de nome do usuário
+      if ((lower.includes('sou o ') || lower.includes('aqui é o ') || lower.includes('aqui e o ')) && lower.includes('francisco')) {
+        setUserName('Francisco');
+      }
 
-    // 1. O usuário está apenas saudando ou testando o áudio?
-    // Ex: "Olá Débora tudo bem com você aqui é o Francisco" ou "Débora você está me ouvindo?"
-    const isGreetingOrAudioTest = (
-      lower.includes('está me ouvindo') || 
-      lower.includes('ta me ouvindo') || 
-      lower.includes('voce me ouve') || 
-      lower.includes('você me ouve') || 
-      lower.includes('me escuta') ||
-      lower.includes('confirme se') ||
-      ((lower.startsWith('olá') || lower.startsWith('ola') || lower.startsWith('oi') || lower.startsWith('bom dia') || lower.startsWith('boa tarde') || lower.startsWith('tudo bem')) && 
-       !lower.includes('odonto') && !lower.includes('clínica') && !lower.includes('clinica') && !lower.includes('empresa') && !lower.includes('imob') && !lower.includes('advoc'))
-    );
+      // Registra a fala do usuário no log imediatamente
+      const userMsg = { speaker: 'Você', text: cleanText, time: formatDuration(callDuration) };
+      setCallLog(prev => [...prev, userMsg]);
 
-    if (isGreetingOrAudioTest && !userNiche && currentStep === 0) {
-      const warmReply = `Olá Francisco! Estou te ouvindo perfeitamente, em alto e bom som! É um prazer conversar com você. Para iniciarmos o diagnóstico, me conta: qual é o ramo da sua empresa hoje e como funciona o seu atendimento?`;
+      // 1. O usuário está apenas saudando ou testando o áudio?
+      const isGreetingOrAudioTest = (
+        lower.includes('está me ouvindo') || 
+        lower.includes('ta me ouvindo') || 
+        lower.includes('voce me ouve') || 
+        lower.includes('você me ouve') || 
+        lower.includes('me escuta') ||
+        lower.includes('confirme se') ||
+        ((lower.startsWith('olá') || lower.startsWith('ola') || lower.startsWith('oi') || lower.startsWith('bom dia') || lower.startsWith('boa tarde') || lower.startsWith('tudo bem')) && 
+         !lower.includes('odonto') && !lower.includes('clínica') && !lower.includes('clinica') && !lower.includes('empresa') && !lower.includes('imob') && !lower.includes('advoc'))
+      );
+
+      if (isGreetingOrAudioTest && !userNiche && currentStep === 0) {
+        const warmReply = `Olá! Te ouço com total clareza. Me conta: qual é o ramo da sua empresa para começarmos?`;
+        setTimeout(() => {
+          setCallLog(prev => [...prev, {
+            speaker: 'Débora · Vocalis',
+            text: warmReply,
+            time: formatDuration(callDuration + 1)
+          }]);
+          speakText(warmReply, () => {
+            isProcessingSpeechRef.current = false;
+          });
+        }, 300);
+        return;
+      }
+
+      // 2. Se o usuário estiver na etapa 0 e informar o nicho diretamente
+      const detectedNiche = detectNicheFromText(cleanText);
+      if (currentStep === 0 && detectedNiche) {
+        setUserNiche(detectedNiche);
+        proceedToNextStep(`Meu segmento é ${detectedNiche}`, detectedNiche, '');
+
+        // Se ele também fez uma pergunta junto
+        if (lower.includes('o que') || lower.includes('como') || lower.includes('pode fazer') || lower.includes('ajuda')) {
+          setIsThinking(true);
+          const aiResponse = await askDeboraAI(cleanText, { niche: detectedNiche, pain: userPain, userName }, callLog);
+          setIsThinking(false);
+          if (aiResponse?.text) {
+            setTimeout(() => {
+              setCallLog(prev => [...prev, {
+                speaker: 'Débora (Vocalis · Gemini AI)',
+                text: aiResponse.text,
+                time: formatDuration(callDuration + 2)
+              }]);
+              speakText(aiResponse.text, () => {
+                isProcessingSpeechRef.current = false;
+              });
+            }, 500);
+          } else {
+            isProcessingSpeechRef.current = false;
+          }
+        }
+        return;
+      }
+
+      // 3. Se estiver na etapa 1 e o usuário responder sobre dores
+      if (currentStep === 1 && (lower.includes('falta') || lower.includes('no-show') || lower.includes('cliente') || lower.includes('horário') || lower.includes('equipe') || lower.includes('custo'))) {
+        const detectedPain = lower.includes('falta') ? 'No-show e faltas de clientes' : cleanText;
+        setUserPain(detectedPain);
+        proceedToNextStep(cleanText, userNiche, detectedPain);
+        return;
+      }
+
+      // 4. Pergunta livre para a Débora (Gemini AI com histórico)
+      setIsThinking(true);
+      const aiResponse = await askDeboraAI(
+        cleanText, 
+        { niche: userNiche || detectedNiche, pain: userPain, userName }, 
+        callLog
+      );
+      setIsThinking(false);
+      const replyText = aiResponse.text;
+
       setTimeout(() => {
         setCallLog(prev => [...prev, {
-          speaker: 'Débora · Vocalis',
-          text: warmReply,
+          speaker: 'Débora (Vocalis · Gemini AI)',
+          text: replyText,
           time: formatDuration(callDuration + 1)
         }]);
-        speakText(warmReply);
-      }, 350);
-      return;
-    }
+        speakText(replyText, () => {
+          isProcessingSpeechRef.current = false;
+        });
+      }, 300);
 
-    // 2. Se o usuário estiver na etapa 0 e informar o nicho diretamente
-    const detectedNiche = detectNicheFromText(cleanText);
-    if (currentStep === 0 && detectedNiche) {
-      setUserNiche(detectedNiche);
-      proceedToNextStep(`Meu segmento é ${detectedNiche}`, detectedNiche, '');
-
-      // Se ele também fez uma pergunta junto (ex: "o que a Vocalis pode fazer pela minha clínica odontológica?")
-      if (lower.includes('o que') || lower.includes('como') || lower.includes('pode fazer') || lower.includes('ajuda')) {
-        setIsThinking(true);
-        const aiResponse = await askDeboraAI(cleanText, { niche: detectedNiche, pain: userPain, userName }, callLog);
-        setIsThinking(false);
-        if (aiResponse?.text) {
-          setTimeout(() => {
-            setCallLog(prev => [...prev, {
-              speaker: 'Débora (Vocalis · Gemini AI)',
-              text: aiResponse.text,
-              time: formatDuration(callDuration + 2)
-            }]);
-            speakText(aiResponse.text);
-          }, 600);
-        }
+      // Se estiver na etapa de demonstrar WhatsApp/Pix e ainda não tiver acionado
+      if (currentStep >= 1 && !whatsappToastOpen) {
+        setTimeout(() => {
+          setWhatsappToastOpen(true);
+        }, 1500);
       }
-      return;
-    }
-
-    // 3. Se estiver na etapa 1 e o usuário responder sobre dores
-    if (currentStep === 1 && (lower.includes('falta') || lower.includes('no-show') || lower.includes('cliente') || lower.includes('horário') || lower.includes('equipe') || lower.includes('custo'))) {
-      const detectedPain = lower.includes('falta') ? 'No-show e faltas de clientes' : cleanText;
-      setUserPain(detectedPain);
-      proceedToNextStep(cleanText, userNiche, detectedPain);
-      return;
-    }
-
-    // 4. Pergunta livre para a Débora em qualquer momento da chamada (Gemini AI com histórico)
-    setIsThinking(true);
-    const aiResponse = await askDeboraAI(
-      cleanText, 
-      { niche: userNiche || detectedNiche, pain: userPain, userName }, 
-      callLog
-    );
-    setIsThinking(false);
-    const replyText = aiResponse.text;
-
-    setTimeout(() => {
-      setCallLog(prev => [...prev, {
-        speaker: 'Débora (Vocalis · Gemini AI)',
-        text: replyText,
-        time: formatDuration(callDuration + 1)
-      }]);
-      speakText(replyText);
-    }, 300);
-
-    // Se estiver na etapa de demonstrar WhatsApp/Pix e ainda não tiver acionado
-    if (currentStep >= 1 && !whatsappToastOpen) {
-      setTimeout(() => {
-        setWhatsappToastOpen(true);
-      }, 1500);
+    } catch (err) {
+      console.error('Erro ao processar fala:', err);
+      isProcessingSpeechRef.current = false;
     }
   };
 
@@ -384,7 +455,9 @@ export default function TestCallModal({ isOpen, phoneNumber, countryCode = '+55'
         text: firstStep.displayText, 
         time: '00:01' 
       }]);
-      speakText(firstStep.spokenText);
+      speakText(firstStep.spokenText, () => {
+        isProcessingSpeechRef.current = false;
+      });
 
     }, 1800);
 
@@ -446,7 +519,9 @@ export default function TestCallModal({ isOpen, phoneNumber, countryCode = '+55'
           text: nextDisplay, 
           time: formatDuration(callDuration + 1) 
         }]);
-        speakText(nextSpoken);
+        speakText(nextSpoken, () => {
+          isProcessingSpeechRef.current = false;
+        });
       }, 500);
     }
   };

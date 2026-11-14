@@ -98,26 +98,25 @@ export function getBestFemalePtVoice() {
 }
 
 /**
- * Limpa o texto para fala ultra-natural e fluida:
- * - NUNCA quebra palavras que contenham "ai" (como mais, vai, cai, abaixo)
- * - NUNCA quebra palavras que contenham "os" (como estamos, minutos, nossos)
- * - Traduz AI Agency OS para pronúncia natural "Vocalis"
- * - Mantém pontuação limpa com pausas de respiração
+ * Limpa e normaliza o texto para fala ultra-fluida e natural:
+ * - Remove diacríticos e acentos para IMPEDIR que sintetizadores leiam nomes de acentos ("agudo", "cedilha", "til")
+ * - Nunca divide palavras com "ai" ou "os"
+ * - Traduz AI Agency OS para "Vocalis"
+ * - Mantém pontuação limpa para respiração natural
  */
 export function cleanTextForSpeech(text) {
   if (!text) return '';
 
-  return text
+  let cleaned = text
     // Remove links/URLs
     .replace(/https?:\/\/\S+/gi, '')
-    // Remove emojis Unicode que causam pausas ou soletrações
+    // Remove emojis Unicode
     .replace(/([\u2700-\u27BF]|[\uE000-\uF8FF]|\uD83C[\uDC00-\uDFFF]|\uD83D[\uDC00-\uDFFF]|[\u2011-\u26FF]|\uD83E[\uDD10-\uDDFF])/g, '')
-    // Normalização de marcas para não soletrar siglas em inglês
+    // Normalização de marcas
     .replace(/\(AI Agency OS\)/gi, '')
     .replace(/AI Agency OS/gi, 'Vocalis')
     .replace(/Agency OS/gi, 'Vocalis')
     .replace(/\bVocalis AI\b/gi, 'Vocalis')
-    // Substitui AI isolado por inteligência artificial (com limite de palavra \b)
     .replace(/\bAI\b/g, 'inteligência artificial')
     // Remove formatação Markdown
     .replace(/[*#_`~>[\]]/g, ' ')
@@ -126,7 +125,7 @@ export function cleanTextForSpeech(text) {
     // Normaliza valores monetários e tempos
     .replace(/R\$\s*1,00/gi, 'um real')
     .replace(/R\$\s*1\b/gi, 'um real')
-    .replace(/R\$\s*([0-9]+),([0-9]{2})/gi, '$1 reais e $2 centavos')
+    .replace(/R\$\s*([0-9]+),([0-9]{2})/gi, '$1 reais')
     .replace(/R\$\s*([0-9]+)/gi, '$1 reais')
     .replace(/24\/7/gi, 'vinte e quatro horas por dia')
     .replace(/24h/gi, 'vinte e quatro horas')
@@ -134,7 +133,17 @@ export function cleanTextForSpeech(text) {
     .replace(/450ms/gi, '450 milissegundos')
     .replace(/30%/gi, 'trinta por cento')
     .replace(/85%/gi, 'oitenta e cinco por cento')
-    // Limpa pontuações repetidas
+    // Converte ç para c para blindar contra pronúncia de "cedilha"
+    .replace(/ç/g, 'c')
+    .replace(/Ç/g, 'C');
+
+  // ELIMINAÇÃO TOTAL DE NOMES DE ACENTOS (agudo, circunflexo, til, crase):
+  // Decompõe e remove todos os diacríticos combinados (\u0300-\u036f)
+  // á->a, é->e, í->i, ó->o, ú->u, ã->a, õ->o, â->a, ê->e
+  // Isso impede 100% que qualquer sintetizador no Windows/Chrome fale "acento agudo", "til" etc.
+  cleaned = cleaned.normalize('NFD').replace(/[\u0300-\u036f]/g, '');
+
+  return cleaned
     .replace(/,\s*,+/g, ',')
     .replace(/\s+/g, ' ')
     .trim();
@@ -149,7 +158,7 @@ export function speakFemalePt(rawText, onStart, onEnd, onError) {
     return;
   }
 
-  // Cancela fala anterior
+  // Cancela fala anterior imediatamente
   window.speechSynthesis.cancel();
 
   const spokenText = cleanTextForSpeech(rawText);
@@ -160,9 +169,7 @@ export function speakFemalePt(rawText, onStart, onEnd, onError) {
 
   const utterance = new SpeechSynthesisUtterance(spokenText);
   utterance.lang = 'pt-BR';
-  // Taxa de fala natural brasileira (1.0 = ritmo calmo e fluido)
   utterance.rate = 1.0;
-  // Pitch 1.0 (tom natural humano, sem afinação artificial)
   utterance.pitch = 1.0;
 
   const voice = getBestFemalePtVoice();

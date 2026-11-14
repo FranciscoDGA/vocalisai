@@ -1,34 +1,27 @@
 /**
  * Serviço de Inteligência Artificial do Vocalis AI (Gemini / OpenAI)
- * Otimizado para conversação telefônica humanizada em tempo real (Débora)
+ * Otimizado para respostas telefônicas breves, executivas e ultra-diretas (Débora)
  */
 
 const GEMINI_API_KEY = import.meta.env.VITE_GEMINI_API_KEY;
 
-const SYSTEM_PROMPT = `Você é Débora, consultora executiva de atendimento da Vocalis.
-Sua missão é conversar ao telefone com donos de empresas, médicos, dentistas, corretores, advogados e lojistas com simpatia, naturalidade, calma e clareza.
+const SYSTEM_PROMPT = `Você é Débora, consultora executiva da Vocalis falando ao telefone com empresários.
+Sua missão é responder com extrema brevidade, objetividade e elegância. Empresários e médicos não têm tempo a perder ao telefone.
 
-DIRETRIZES DE FALA (MUITO IMPORTANTE):
-1. Sua resposta será FALADA em voz alta pelo sintetizador de voz. Portanto:
-   - Responda sempre em Português do Brasil com tom natural e acolhedor.
-   - Limite cada resposta a 2 frases curtas, conversacionais e diretas.
-   - NUNCA diga siglas em inglês como "AI Agency OS" ou soletre letras. Fale simplesmente "Vocalis".
-   - NUNCA use asteriscos, negritos, tópicos, bullets, emojis, URLs ou formatações Markdown.
-   - Use pontuação expressiva com vírgulas e pontos para pausas de respiração naturais na fala.
-2. CONHECIMENTO DA PLATAFORMA VOCALIS:
-   - Atendimento por voz com resposta imediata em menos de meio segundo.
-   - Atende 24 horas por dia, 7 dias por semana, sem deixar ninguém esperando.
-   - Responde ligações e WhatsApp com áudios humanizados.
-   - Agenda consultas e compromissos diretamente no calendário ou sistema da empresa.
-   - Envia cobrança Pix em tempo real para o cliente.
-   - Confirma consultas para eliminar faltas de pacientes (no-show).
-3. RESPOSTAS PERSONALIZADAS:
-   - Se for dentista ou clínica odontológica: fale de agendamento de consultas e avaliações, atendimento de urgências 24h e confirmação no WhatsApp para zerar faltas.
-   - Se for imobiliária: fale de agendar visitas com corretores e qualificar clientes na hora.
-   - Se for advocacia: fale de triagem inicial e agendamento de consultas jurídicas.
-   - Se for comércio ou serviços: fale de fechar vendas fora do horário e enviar orçamentos.
-4. SAUDAÇÕES:
-   - Se o cliente apenas cumprimentar ("Olá Débora tudo bem aqui é o Francisco"), responda com carinho, chame-o pelo nome e pergunte o ramo da empresa dele para personalizar a conversa.`;
+DIRETRIZES OBRIGATÓRIAS DE RESPOSTA TELEFÔNICA:
+1. BREVIDADE MÁXIMA: Responda em no máximo 1 ou 2 frases curtas (total máximo de 20 a 25 palavras).
+2. NUNCA faça discursos longos ou explicações técnicas profundas por telefone. Detalhes são para reuniões de demonstração.
+3. SEMPRE finalize convidando diretamente para uma reunião rápida de 15 minutos ou para ver a demonstração na tela.
+4. NUNCA use formatação Markdown, negrito, asteriscos, tópicos ou emojis.
+5. Fale sempre "Vocalis". NUNCA use siglas em inglês como "AI Agency OS".
+
+EXEMPLOS DE ESTILO ESPERADO:
+- Cliente: "O que a Vocalis faz por uma clínica odontológica?"
+  Débora: "Automatizamos o agendamento de consultas e o atendimento 24 horas no WhatsApp, zerando faltas. Quer ver uma demonstração de 15 minutos com nossa equipe?"
+- Cliente: "Quanto custa?"
+  Débora: "Nossos planos começam em duzentos e noventa e sete reais por mês com trinta por cento de desconto de lançamento. Quer ativar seu teste agora?"
+- Cliente: "Você integra com meu sistema?"
+  Débora: "Sim, integramos com WhatsApp, Google Agenda e os principais sistemas do mercado em poucos minutos. Quer que eu te mande o material completo?"`;
 
 /**
  * Envia uma mensagem para o Gemini com suporte a histórico multi-turn
@@ -39,7 +32,7 @@ export async function askDeboraAI(userMessage, context = {}, history = []) {
   if (!apiKey) {
     return {
       success: false,
-      text: "Estou te ouvindo perfeitamente! Como a Vocalis pode ajudar a transformar o atendimento da sua empresa hoje?"
+      text: "Estou te ouvindo perfeitamente! Quer agendar uma demonstracao rapida de 15 minutos para ver na pratica?"
     };
   }
 
@@ -56,7 +49,7 @@ export async function askDeboraAI(userMessage, context = {}, history = []) {
 
   // Se houver histórico anterior, inclui no formato do Gemini
   if (Array.isArray(history) && history.length > 0) {
-    history.forEach(item => {
+    history.slice(-4).forEach(item => {
       if (item.text && item.speaker) {
         const isModel = item.speaker.toLowerCase().includes('débora') || item.speaker.toLowerCase().includes('debora');
         contents.push({
@@ -69,7 +62,7 @@ export async function askDeboraAI(userMessage, context = {}, history = []) {
 
   // Adiciona a pergunta atual com contexto empresarial embutido
   const contextPrefix = (context.niche || context.pain || context.userName)
-    ? `[Contexto: Cliente: ${context.userName || 'Francisco'}, Ramo: ${context.niche || 'Não especificado ainda'}, Gargalo: ${context.pain || 'Atendimento'}]\n\n`
+    ? `[Contexto: Cliente: ${context.userName || 'Francisco'}, Ramo: ${context.niche || 'Geral'}]\n\n`
     : '';
 
   contents.push({
@@ -90,8 +83,8 @@ export async function askDeboraAI(userMessage, context = {}, history = []) {
           },
           contents: contents,
           generationConfig: {
-            temperature: 0.6,
-            maxOutputTokens: 250
+            temperature: 0.4,
+            maxOutputTokens: 80
           }
         })
       });
@@ -116,16 +109,16 @@ export async function askDeboraAI(userMessage, context = {}, history = []) {
     }
   }
 
-  // Fallback inteligente contextualizado caso a API do Google oscile
+  // Fallback breve e executivo
   const lowerMsg = userMessage.toLowerCase();
-  let fallbackReply = "Com a inteligência de voz da Vocalis, sua empresa atende clientes no primeiro toque vinte e quatro horas por dia, agenda compromissos e envia Pix diretamente pelo WhatsApp sem depender de equipe manual.";
+  let fallbackReply = "Com a Vocalis, sua empresa atende em menos de meio segundo e agenda clientes 24 horas por dia. Quer agendar uma reuniao rapida de 15 minutos?";
 
   if (lowerMsg.includes('odonto') || lowerMsg.includes('dentist') || lowerMsg.includes('clínica') || lowerMsg.includes('clinica')) {
-    fallbackReply = "Para sua clínica odontológica, a Vocalis atende chamadas em menos de meio segundo, tira dúvidas sobre procedimentos, agenda avaliações na sua agenda e envia lembretes no WhatsApp para eliminar faltas de pacientes.";
-  } else if (lowerMsg.includes('ouvin') || lowerMsg.includes('escut') || lowerMsg.includes('olá') || lowerMsg.includes('ola') || lowerMsg.includes('francisco')) {
-    fallbackReply = "Estou te ouvindo perfeitamente, Francisco! Me diga: qual é o principal desafio no atendimento ou agendamento da sua empresa hoje?";
+    fallbackReply = "Para sua clinica, a Vocalis atende chamadas na hora, agenda avaliacoes e zera as faltas de pacientes. Quer ver uma demonstracao de 15 minutos?";
   } else if (lowerMsg.includes('preço') || lowerMsg.includes('valor') || lowerMsg.includes('quanto custa')) {
-    fallbackReply = "Temos planos a partir de duzentos e noventa e sete reais por mês com trinta por cento de desconto de lançamento. Quer ver como funciona em detalhes?";
+    fallbackReply = "Temos planos a partir de duzentos e noventa e sete reais por mes com trinta por cento de desconto de lancamento. Quer liberar seu acesso agora?";
+  } else if (lowerMsg.includes('ouvin') || lowerMsg.includes('escut') || lowerMsg.includes('ola') || lowerMsg.includes('olá')) {
+    fallbackReply = "Estou te ouvindo perfeitamente, Francisco! Qual e o ramo da sua empresa para fazermos um diagnostico rapido?";
   }
 
   return {

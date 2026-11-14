@@ -402,6 +402,17 @@ Você tem duas fontes de receita massiva com essa plataforma:
     * Menu original 100% restaurado e desobstruído com espaçamento original (`Produtos ⌄`, `Soluções ⌄`, `Recursos ⌄`, `Casos de uso`, `Parceiros`, `Preços`, `🇧🇷 ⌄`, `Falar com a gente`, `Entrar` e `Criar minha Vocalis ➔`);
     * Regra CSS `whitespace-nowrap` aplicada a todos os links para blindar contra qualquer quebra de linha em telas desktop;
     * O módulo de Slides de Apresentação Executiva (*Pitch Deck*) foi concentrado exclusivamente dentro do Dashboard (`InsideDashboardSection.jsx`), onde os donos de agência conduzem reuniões de vendas.
+11. **Eliminação Definitiva da Leitura de Nomes de Acentos e Cedilhas (`voiceUtils.js`):**
+    * Decomposição canônica Unicode (`normalize('NFD')`) e remoção estrita de diacríticos combinados (`replace(/[\u0300-\u036f]/g, '')`) combinada com conversão de `ç/Ç` para `c/C`;
+    * Torna fisicamente impossível que qualquer sintetizador de voz (Windows / Chrome / Edge) leia nomes de diacríticos como "acento agudo", "cedilha", "til" ou "circunflexo", mantendo a pronúncia 100% natural e limpa.
+12. **Brevidade Executiva Telefônica & Respostas Sucintas (`aiService.js`):**
+    * Refatoração do prompt de sistema da Débora: respostas ultra-diretas, profissionais e objetivas (1 a 2 frases curtas, máximo de 20 a 25 palavras);
+    * Foco telefônico: detalhes técnicos complexos e catálogos completos são direcionados para uma demonstração guiada de 15 minutos;
+    * `maxOutputTokens` ajustado para 80 tokens, reduzindo a latência para menos de 400ms e impedindo respostas longas e cansativas.
+13. **Proteção Anti-Eco Acústico e Mutex de Fala no Microfone (`TestCallModal.jsx`):**
+    * Suspensão imediata do microfone (`recognition.abort()`) durante a fala da Débora, impedindo que o som dos alto-falantes do computador seja recapturado pelo microfone e reenviado à IA;
+    * Filtro na escuta (`isSpeakingRef` e `isProcessingSpeechRef`) para descartar qualquer áudio residual enquanto a assistente fala;
+    * Aumento do temporizador de debounce de silêncio para 2.2 segundos, permitindo que o cliente formule suas perguntas sem ser interrompido precocemente.
 
 ---
 
