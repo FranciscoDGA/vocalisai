@@ -1,6 +1,28 @@
 # GUIA OFICIAL DE CADASTRO DE PRODUTOS NA KIWIFY · VOCALIS AI
-**Instruções Práticas Passo a Passo para Copiar e Colar no Painel da Kiwify**  
-*Acesse: https://dashboard.kiwify.com.br/products > Criar Produto*
+**Instruções Práticas e Links Oficiais de Checkout Kiwify Ativos**  
+
+---
+
+## ⚡ LINKS OFICIAIS DE CHECKOUT ATIVOS NA KIWIFY
+
+| Produto / Serviço | Modalidade | Preço | Link de Pagamento Kiwify |
+| :--- | :--- | :--- | :--- |
+| **Telefonia Solo** | Trimestral Promo (3x R$ 503) | R$ 1.509,00 | https://pay.kiwify.com.br/yIadQIk |
+| **Telefonia Solo** | Mensal Regular | R$ 719,00/mês | https://pay.kiwify.com.br/GqYfqEz |
+| **Telefonia Team** | Trimestral Promo (3x R$ 1.511) | R$ 4.533,00 | https://pay.kiwify.com.br/otKELje |
+| **Telefonia Team** | Mensal Regular | R$ 2.159,00/mês | https://pay.kiwify.com.br/sp6lCRV |
+| **Telefonia Scale** | Trimestral Promo (3x R$ 2.519) | R$ 7.557,00 | https://pay.kiwify.com.br/8pUOuM2 |
+| **Telefonia Scale** | Mensal Regular | R$ 3.599,00/mês | https://pay.kiwify.com.br/fEY5HSl |
+| **WhatsApp Solo** | Trimestral Promo (3x R$ 349) | R$ 1.047,00 | https://pay.kiwify.com.br/Kxd9e2b |
+| **WhatsApp Solo** | Mensal Regular | R$ 499,00/mês | https://pay.kiwify.com.br/MaYSn5H |
+| **WhatsApp Team** | Trimestral Promo (3x R$ 1.399) | R$ 4.197,00 | https://pay.kiwify.com.br/65imFMf |
+| **WhatsApp Team** | Mensal Regular | R$ 1.999,00/mês | https://pay.kiwify.com.br/9yoGHIa |
+| **Omnichannel Total** | Trimestral Promo (3x R$ 783) | R$ 2.349,00 | https://pay.kiwify.com.br/G61E8xN |
+| **Omnichannel Total** | Mensal Regular | R$ 1.119,00/mês | https://pay.kiwify.com.br/clTMg00 |
+| **Setup & Implantação VIP** | Pagamento Único | R$ 1.500,00 | https://pay.kiwify.com.br/tAKsPoO |
+| **Recarga 100 Minutos** | Pagamento Único | R$ 50,00 | https://pay.kiwify.com.br/yq7MprN |
+
+---
 
 ---
 

@@ -201,7 +201,17 @@ export default function PricingSection({ onOpenAuth, onOpenDemo }) {
                   {/* CTA Button */}
                   <div className="my-6">
                     <button
-                      onClick={onOpenAuth}
+                      onClick={() => {
+                        const targetUrl = billingCycle === 'yearly' 
+                          ? (plan.checkoutPromo || plan.checkoutMonthly) 
+                          : (plan.checkoutMonthly || plan.checkoutPromo);
+                        
+                        if (targetUrl) {
+                          window.open(targetUrl, '_blank', 'noopener,noreferrer');
+                        } else if (onOpenAuth) {
+                          onOpenAuth();
+                        }
+                      }}
                       className={`w-full py-3 rounded-full text-xs font-bold transition-all shadow-md flex items-center justify-center gap-1.5 ${
                         isHighlight
                           ? 'bg-[#4F46E5] text-white hover:bg-[#4338CA]'
