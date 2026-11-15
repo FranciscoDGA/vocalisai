@@ -313,7 +313,7 @@ export default function WhatsAppConnectorDashboard({ userPhone = '559484423948' 
               <button 
                 type="submit"
                 disabled={isSending}
-                className="w-full py-2.5 rounded-xl bg-[#4F46E5] hover:bg-[#A83812] text-white font-bold text-xs flex items-center justify-center gap-2 transition-colors cursor-pointer disabled:opacity-60 shadow-md shadow-[#4F46E5]/20"
+                className="w-full py-2.5 rounded-xl bg-[#4F46E5] hover:bg-[#4338CA] text-white font-bold text-xs flex items-center justify-center gap-2 transition-colors cursor-pointer disabled:opacity-60 shadow-md shadow-[#4F46E5]/20"
               >
                 {isSending ? (
                   <span>Enviando pelo robô...</span>
@@ -336,7 +336,7 @@ export default function WhatsAppConnectorDashboard({ userPhone = '559484423948' 
               </div>
 
               <p className="text-xs text-[#5C5955] leading-relaxed">
-                A Vocalis envia o áudio como se fosse gravado na hora com o <strong>microfone verde</strong> nativo do WhatsApp, simulando a presença *"Débora está gravando áudio..."*.
+                A Vocalis envia o áudio como se fosse gravado na hora com o <strong>microfone verde</strong> nativo do WhatsApp, simulando a presença *"Roberta está gravando áudio..."*.
               </p>
 
               <div className="p-3.5 rounded-2xl bg-[#FAF9F5] border border-[#EBE8E2] text-xs space-y-1">
@@ -384,7 +384,7 @@ export default function WhatsAppConnectorDashboard({ userPhone = '559484423948' 
           <span>Diretrizes de Segurança & Aquecimento de Chip</span>
         </h4>
         <ul className="list-disc list-inside space-y-1 leading-relaxed">
-          <li><strong>Atendimento Receptivo:</strong> Os disparos são acionados quando o cliente solicita um diagnóstico, agenda no site ou responde à ligação da Débora.</li>
+          <li><strong>Atendimento Receptivo:</strong> Os disparos são acionados quando o cliente solicita um diagnóstico, agenda no site ou responde à ligação da Roberta.</li>
           <li><strong>Zero Risco de Banimento:</strong> Por ser um fluxo 100% consentido pelo próprio cliente, a taxa de denúncias é nula.</li>
           <li><strong>Desconexão:</strong> Caso queira desconectar o chip, basta acessar <em>Aparelhos Conectados</em> no seu WhatsApp e desconectar a sessão <em>Vocalis AI / Chrome</em>.</li>
         </ul>

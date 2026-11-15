@@ -43,11 +43,11 @@ export default function WebchatWidget({ onOpenDemo, onOpenAuth }) {
     setIsTyping(true);
 
     setTimeout(() => {
-      let reply = `Com certeza! A Vocalis foi feita para automatizar seu atendimento em múltiplos canais com 3 assistentes especializadas: a Débora (primeiros atendimentos no telefone), a Camila (atendimento e vendas no WhatsApp) e eu, Beatriz, no webchat do site!`;
+      let reply = `Com certeza! A Vocalis foi feita para automatizar seu atendimento em múltiplos canais com 3 assistentes especializadas: a Roberta (SDR e primeiros atendimentos no telefone), a Camila (atendimento e vendas no WhatsApp) e eu, Beatriz, no webchat do site!`;
       
       const lower = text.toLowerCase();
-      if (lower.includes('débora') || lower.includes('debora') || lower.includes('telefone') || lower.includes('fone') || lower.includes('ligação')) {
-        reply = `A Débora é nossa especialista em atendimento telefônico! Ela atende chamadas com voz neural em 450ms, faz triagem humanizada, agenda consultas e transfere para sua equipe quando necessário. Você pode testar uma ligação com ela no topo da página!`;
+      if (lower.includes('roberta') || lower.includes('telefone') || lower.includes('fone') || lower.includes('ligação') || lower.includes('sdr')) {
+        reply = `A Roberta é nossa SDR e especialista em atendimento telefônico! Ela atende chamadas com voz neural em 380ms, faz triagem humanizada, agenda consultas e transfere para sua equipe quando necessário. Você pode testar uma ligação com ela no topo da página!`;
       } else if (lower.includes('camila') || lower.includes('whatsapp') || lower.includes('zap')) {
         reply = `A Camila é nossa especialista em WhatsApp Business! Ela atende seus clientes 24/7 no WhatsApp, envia propostas, tira dúvidas de catálogos e gera Pix copia-e-cola na hora para fechar vendas.`;
       } else if (lower.includes('preço') || lower.includes('plano') || lower.includes('valor') || lower.includes('quanto custa')) {
@@ -166,10 +166,10 @@ export default function WebchatWidget({ onOpenDemo, onOpenAuth }) {
           {/* Quick Suggestion Chips */}
           <div className="p-2 bg-white border-t border-[#EBE8E2] flex items-center gap-1.5 overflow-x-auto no-scrollbar">
             <button
-              onClick={() => handleSendMessage('Como funciona a Débora no telefone?')}
+              onClick={() => handleSendMessage('Como funciona a Roberta no telefone?')}
               className="text-[10px] whitespace-nowrap px-2.5 py-1 rounded-full bg-[#EEF2FF] text-[#4F46E5] border border-[#F2E8DC] hover:bg-[#F5ECE0] font-medium transition-colors"
             >
-              📞 Débora no Telefone
+              📞 Roberta no Telefone
             </button>
             <button
               onClick={() => handleSendMessage('Como funciona a Camila no WhatsApp?')}

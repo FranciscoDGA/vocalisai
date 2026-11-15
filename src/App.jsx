@@ -38,6 +38,7 @@ const CentralAjudaPage = lazy(() => import('./components/CentralAjudaPage'));
 const CarreirasPage = lazy(() => import('./components/CarreirasPage'));
 const ImprensaPage = lazy(() => import('./components/ImprensaPage'));
 const ContatoPage = lazy(() => import('./components/ContatoPage'));
+const SobrePage = lazy(() => import('./components/SobrePage'));
 
 // Lazy-loaded modals
 const DocsPortal = lazy(() => import('./components/DocsPortal'));
@@ -255,6 +256,14 @@ export default function App() {
         ) : currentPage === 'contato' ? (
           <main className="flex-1">
             <ContatoPage 
+              onOpenDemo={() => setDemoModalOpen(true)}
+              onOpenAuth={() => setAuthModalOpen(true)}
+              onNavigate={handleNavigate}
+            />
+          </main>
+        ) : currentPage === 'sobre' ? (
+          <main className="flex-1">
+            <SobrePage 
               onOpenDemo={() => setDemoModalOpen(true)}
               onOpenAuth={() => setAuthModalOpen(true)}
               onNavigate={handleNavigate}

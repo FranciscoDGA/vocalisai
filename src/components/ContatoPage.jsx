@@ -41,7 +41,7 @@ export default function ContatoPage({ onOpenDemo, onOpenAuth, onNavigate }) {
   };
 
   const handleCopyPhone = () => {
-    navigator.clipboard.writeText('1132303340');
+    navigator.clipboard.writeText('(94) 98442-3948');
     setCopiedPhone(true);
     setTimeout(() => setCopiedPhone(false), 2000);
   };

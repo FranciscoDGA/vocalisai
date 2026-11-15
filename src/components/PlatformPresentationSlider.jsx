@@ -363,7 +363,7 @@ export default function PlatformPresentationSlider({ isOpen, onClose }) {
             {currentSlide < slides.length - 1 ? (
               <button
                 onClick={() => setCurrentSlide((prev) => prev + 1)}
-                className="px-5 py-2 rounded-xl bg-[#4F46E5] hover:bg-[#B33E15] text-white text-xs font-bold transition-all shadow-md flex items-center gap-1.5 cursor-pointer"
+                className="px-5 py-2 rounded-xl bg-[#4F46E5] hover:bg-[#4338CA] text-white text-xs font-bold transition-all shadow-md flex items-center gap-1.5 cursor-pointer"
               >
                 <span>Próximo</span>
                 <ChevronRight className="w-4 h-4" />

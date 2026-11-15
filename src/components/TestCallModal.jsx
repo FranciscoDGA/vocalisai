@@ -9,7 +9,7 @@ import { formatPhoneMask, formatPhoneForVoice, cleanRawPhone } from '../utils/ph
 import { speakFemalePt, stopSpeech } from '../utils/voiceUtils';
 import { saveLead, updateLead } from '../utils/supabaseClient';
 import { sendWhatsAppMessage } from '../utils/uazapiClient';
-import { askDeboraAI } from '../utils/aiService';
+import { askRobertaAI } from '../utils/aiService';
 
 export default function TestCallModal({ isOpen, phoneNumber, countryCode = '+55', onClose, onOpenAuth }) {
   const [callState, setCallState] = useState('calling'); // 'calling' | 'connected' | 'ended'
@@ -58,9 +58,9 @@ export default function TestCallModal({ isOpen, phoneNumber, countryCode = '+55'
   const conversationScript = [
     {
       step: 0,
-      speaker: 'Débora · Vocalis',
-      spokenText: `Olá! Aqui é a Débora, da Vocalis. Estou ligando para um diagnóstico rápido do seu atendimento. Qual é o ramo da sua empresa?`,
-      displayText: `Olá! Aqui é a Débora, da Vocalis. Estou ligando para o seu número ${countryCode} ${formattedDisplayPhone} para um diagnóstico rápido do seu atendimento. Qual é o ramo da sua empresa hoje?`,
+      speaker: 'Roberta · Vocalis',
+      spokenText: `Olá! Aqui é a Roberta, da Vocalis. Estou ligando para um diagnóstico rápido do seu atendimento. Qual é o ramo da sua empresa?`,
+      displayText: `Olá! Aqui é a Roberta, da Vocalis. Estou ligando para o seu número ${countryCode} ${formattedDisplayPhone} para um diagnóstico rápido do seu atendimento. Qual é o ramo da sua empresa hoje?`,
       promptHint: 'Fale no microfone, digite abaixo ou escolha seu segmento:',
       options: [
         { label: '🏥 Clínica Odontológica / Consultório Médico', niche: 'Clínica Odontológica' },
@@ -72,7 +72,7 @@ export default function TestCallModal({ isOpen, phoneNumber, countryCode = '+55'
     },
     {
       step: 1,
-      speaker: 'Débora · Vocalis',
+      speaker: 'Roberta · Vocalis',
       spokenText: (niche) => `Perfeito! No setor de ${niche || 'empresas'}, qual é o seu maior gargalo: perder clientes fora do horário, sobrecarga da equipe ou faltas em agendamentos?`,
       displayText: (niche) => `Perfeito! No setor de ${niche || 'empresas'}, qual é hoje o seu maior gargalo: perder clientes fora do horário, sobrecarga da equipe ou faltas de clientes agendados?`,
       promptHint: 'Qual é o maior gargalo no seu atendimento hoje?',
@@ -85,7 +85,7 @@ export default function TestCallModal({ isOpen, phoneNumber, countryCode = '+55'
     },
     {
       step: 2,
-      speaker: 'Débora · Vocalis',
+      speaker: 'Roberta · Vocalis',
       spokenText: (niche, pain) => `Entendi! Com a Vocalis, sua assistente atende no primeiro toque e resolve na hora. E acabei de mandar o resumo no seu WhatsApp com um Pix de teste de um real! Dá uma olhada na tela.`,
       displayText: (niche, pain) => `Entendi! Com a Vocalis, sua assistente atende no primeiro toque e resolve na hora. E acabei de mandar o resumo no seu WhatsApp com um Pix de teste de R$ 1,00! Dá uma olhada na tela.`,
       promptHint: 'Ação executada em tempo real na ligação!',
@@ -98,7 +98,7 @@ export default function TestCallModal({ isOpen, phoneNumber, countryCode = '+55'
     },
     {
       step: 3,
-      speaker: 'Débora · Vocalis',
+      speaker: 'Roberta · Vocalis',
       spokenText: () => `Essa é a força de uma inteligência executora real. Quer agendar uma demonstração rápida de 15 minutos com nossa equipe para ver rodando na sua empresa?`,
       displayText: () => `Essa é a força de uma inteligência executora real. Quer agendar uma demonstração de 15 minutos para ver rodando na sua empresa?`,
       promptHint: 'Ativação imediata da plataforma:',
@@ -115,7 +115,7 @@ export default function TestCallModal({ isOpen, phoneNumber, countryCode = '+55'
     isSpeakingRef.current = true;
     setIsSpeaking(true);
 
-    // 2. Aborta temporariamente o microfone para Débora NÃO ouvir o próprio som vindo das caixas/alto-falantes
+    // 2. Aborta temporariamente o microfone para Roberta NÃO ouvir o próprio som vindo das caixas/alto-falantes
     if (silenceTimerRef.current) {
       clearTimeout(silenceTimerRef.current);
     }
@@ -169,7 +169,7 @@ export default function TestCallModal({ isOpen, phoneNumber, countryCode = '+55'
     recognition.maxAlternatives = 1;
 
     recognition.onresult = (event) => {
-      // Se Débora estiver falando ou processando, ignora todo áudio para evitar feedback de eco
+      // Se Roberta estiver falando ou processando, ignora todo áudio para evitar feedback de eco
       if (isSpeakingRef.current || isProcessingSpeechRef.current) {
         return;
       }
@@ -213,7 +213,7 @@ export default function TestCallModal({ isOpen, phoneNumber, countryCode = '+55'
     };
 
     recognition.onend = () => {
-      // Se Débora estiver falando, a fala dela religará o microfone no momento correto
+      // Se Roberta estiver falando, a fala dela religará o microfone no momento correto
       if (isSpeakingRef.current || isProcessingSpeechRef.current) {
         return;
       }
@@ -321,7 +321,7 @@ export default function TestCallModal({ isOpen, phoneNumber, countryCode = '+55'
         const warmReply = `Olá! Te ouço com total clareza. Me conta: qual é o ramo da sua empresa para começarmos?`;
         setTimeout(() => {
           setCallLog(prev => [...prev, {
-            speaker: 'Débora · Vocalis',
+            speaker: 'Roberta · Vocalis',
             text: warmReply,
             time: formatDuration(callDuration + 1)
           }]);
@@ -341,12 +341,12 @@ export default function TestCallModal({ isOpen, phoneNumber, countryCode = '+55'
         // Se ele também fez uma pergunta junto
         if (lower.includes('o que') || lower.includes('como') || lower.includes('pode fazer') || lower.includes('ajuda')) {
           setIsThinking(true);
-          const aiResponse = await askDeboraAI(cleanText, { niche: detectedNiche, pain: userPain, userName }, callLog);
+          const aiResponse = await askRobertaAI(cleanText, { niche: detectedNiche, pain: userPain, userName }, callLog);
           setIsThinking(false);
           if (aiResponse?.text) {
             setTimeout(() => {
               setCallLog(prev => [...prev, {
-                speaker: 'Débora (Vocalis · Gemini AI)',
+                speaker: 'Roberta (Vocalis · Gemini AI)',
                 text: aiResponse.text,
                 time: formatDuration(callDuration + 2)
               }]);
@@ -369,9 +369,9 @@ export default function TestCallModal({ isOpen, phoneNumber, countryCode = '+55'
         return;
       }
 
-      // 4. Pergunta livre para a Débora (Gemini AI com histórico)
+      // 4. Pergunta livre para a Roberta (Gemini AI com histórico)
       setIsThinking(true);
-      const aiResponse = await askDeboraAI(
+      const aiResponse = await askRobertaAI(
         cleanText, 
         { niche: userNiche || detectedNiche, pain: userPain, userName }, 
         callLog
@@ -381,7 +381,7 @@ export default function TestCallModal({ isOpen, phoneNumber, countryCode = '+55'
 
       setTimeout(() => {
         setCallLog(prev => [...prev, {
-          speaker: 'Débora (Vocalis · Gemini AI)',
+          speaker: 'Roberta (Vocalis · Gemini AI)',
           text: replyText,
           time: formatDuration(callDuration + 1)
         }]);
@@ -451,7 +451,7 @@ export default function TestCallModal({ isOpen, phoneNumber, countryCode = '+55'
       // Inicia a primeira fala com voz feminina neural
       const firstStep = conversationScript[0];
       setCallLog([{ 
-        speaker: 'Débora · Vocalis', 
+        speaker: 'Roberta · Vocalis', 
         text: firstStep.displayText, 
         time: '00:01' 
       }]);
@@ -492,7 +492,7 @@ export default function TestCallModal({ isOpen, phoneNumber, countryCode = '+55'
         }, 1200);
 
         // Disparo via UazAPI
-        const whatsappMsg = `👋 Olá! Aqui é a Débora da *Vocalis AI*.\n\nAcabei de falar com você na demonstração ao vivo e organizei o seu diagnóstico:\n🏢 *Segmento:* ${chosenNiche || 'Empresa & Serviços'}\n🎯 *Gargalo:* ${chosenPain || 'Atendimento fora do horário'}\n⚡ *Solução:* Atendimento com voz neural em 380ms, agendamento de consultas e geração de Pix em tempo real.\n\n💬 Caso queira ativar essa IA na sua empresa ou agendar uma reunião guiada, basta responder esta mensagem!`;
+        const whatsappMsg = `👋 Olá! Aqui é a Roberta da *Vocalis AI*.\n\nAcabei de falar com você na demonstração ao vivo e organizei o seu diagnóstico:\n🏢 *Segmento:* ${chosenNiche || 'Empresa & Serviços'}\n🎯 *Gargalo:* ${chosenPain || 'Atendimento fora do horário'}\n⚡ *Solução:* Atendimento com voz neural em 380ms, agendamento de consultas e geração de Pix em tempo real.\n\n💬 Caso queira ativar essa IA na sua empresa ou agendar uma reunião guiada, basta responder esta mensagem!`;
 
         sendWhatsAppMessage({
           phone: phoneNumber,
@@ -515,7 +515,7 @@ export default function TestCallModal({ isOpen, phoneNumber, countryCode = '+55'
 
       setTimeout(() => {
         setCallLog(prev => [...prev, { 
-          speaker: 'Débora · Vocalis', 
+          speaker: 'Roberta · Vocalis', 
           text: nextDisplay, 
           time: formatDuration(callDuration + 1) 
         }]);
@@ -589,7 +589,7 @@ export default function TestCallModal({ isOpen, phoneNumber, countryCode = '+55'
 
     const firstStep = conversationScript[0];
     setCallLog([{ 
-      speaker: 'Débora · Vocalis', 
+      speaker: 'Roberta · Vocalis', 
       text: firstStep.displayText, 
       time: '00:01' 
     }]);
@@ -624,7 +624,7 @@ export default function TestCallModal({ isOpen, phoneNumber, countryCode = '+55'
           </div>
           <div className="text-left text-xs pr-2">
             <div className="font-bold flex items-center gap-1.5">
-              <span>WhatsApp de Débora (Vocalis)</span>
+              <span>WhatsApp de Roberta (Vocalis)</span>
               <span className="text-[10px] bg-white/20 px-1.5 py-0.2 rounded font-mono">agora</span>
             </div>
             <p className="text-emerald-100 text-[11px] truncate max-w-xs sm:max-w-sm">
@@ -658,7 +658,7 @@ export default function TestCallModal({ isOpen, phoneNumber, countryCode = '+55'
               {callState === 'calling' && 'Discando para seu celular em tempo real...'}
               {callState === 'connected' && (
                 <>
-                  <span>Diagnóstico ao Vivo com Débora</span>
+                  <span>Diagnóstico ao Vivo com Roberta</span>
                   <span className="text-stone-500">•</span>
                   <span className="text-emerald-400 font-mono font-bold">{formatDuration(callDuration)}</span>
                 </>
@@ -668,7 +668,7 @@ export default function TestCallModal({ isOpen, phoneNumber, countryCode = '+55'
           </div>
 
           <div className="flex items-center gap-2">
-            <span className="hidden sm:inline-flex text-[10px] uppercase font-bold tracking-wider px-2 py-0.5 rounded-full bg-[#4F46E5]/20 text-[#FF8E6B] border border-[#4F46E5]/30">
+            <span className="hidden sm:inline-flex text-[10px] uppercase font-bold tracking-wider px-2 py-0.5 rounded-full bg-[#4F46E5]/20 text-[#A5B4FC] border border-[#4F46E5]/30">
               Vocalis AI
             </span>
             <button 
@@ -696,7 +696,7 @@ export default function TestCallModal({ isOpen, phoneNumber, countryCode = '+55'
           </div>
 
           <h3 className="text-base sm:text-lg font-bold text-white mt-1 flex items-center justify-center gap-2">
-            <span>Débora · Consultora Executiva de IA</span>
+            <span>Roberta · SDR & Consultora Executiva de IA</span>
             <span className="text-[10px] font-mono px-2 py-0.5 rounded bg-emerald-500/20 text-emerald-400 border border-emerald-500/30">
               Voz Neural HD
             </span>
@@ -759,7 +759,7 @@ export default function TestCallModal({ isOpen, phoneNumber, countryCode = '+55'
             {callLog.map((log, idx) => (
               <div key={idx} className="space-y-0.5">
                 <div className="flex items-center justify-between text-[10px] text-stone-400 font-mono">
-                  <span className={log.speaker.includes('Débora') ? 'text-[#A5B4FC] font-bold' : 'text-stone-300 font-semibold'}>
+                  <span className={log.speaker.includes('Roberta') ? 'text-[#A5B4FC] font-bold' : 'text-stone-300 font-semibold'}>
                     {log.speaker}
                   </span>
                   <span>{log.time}</span>
@@ -770,11 +770,11 @@ export default function TestCallModal({ isOpen, phoneNumber, countryCode = '+55'
               </div>
             ))}
 
-            {/* Feedback visual enquanto Débora processa a IA */}
+            {/* Feedback visual enquanto Roberta processa a IA */}
             {isThinking && (
               <div className="flex items-center gap-2 text-xs text-[#A5B4FC] italic">
                 <Loader2 className="w-3.5 h-3.5 animate-spin" />
-                <span>Débora formulando resposta...</span>
+                <span>Roberta formulando resposta...</span>
               </div>
             )}
 
@@ -783,7 +783,7 @@ export default function TestCallModal({ isOpen, phoneNumber, countryCode = '+55'
               <div className="p-2 rounded-xl bg-stone-800/80 border border-emerald-500/30 text-xs text-emerald-300 flex items-center gap-2">
                 <span className="w-2 h-2 rounded-full bg-emerald-400 animate-ping shrink-0" />
                 <span className="truncate">
-                  {interimSpeech ? `Ouvindo: "${interimSpeech}"` : 'Ouvindo sua voz... fale agora com a Débora'}
+                  {interimSpeech ? `Ouvindo: "${interimSpeech}"` : 'Ouvindo sua voz... fale agora com a Roberta'}
                 </span>
               </div>
             )}
@@ -806,7 +806,7 @@ export default function TestCallModal({ isOpen, phoneNumber, countryCode = '+55'
                       ? 'bg-rose-600 text-white shadow-lg shadow-rose-600/30 animate-pulse' 
                       : 'bg-stone-800 hover:bg-stone-700 text-stone-200 border border-stone-700'
                   }`}
-                  title="Falar com a Débora usando seu microfone"
+                  title="Falar com a Roberta usando seu microfone"
                 >
                   {isListeningMic ? (
                     <>
@@ -833,14 +833,14 @@ export default function TestCallModal({ isOpen, phoneNumber, countryCode = '+55'
                         handleSendCustomText();
                       }
                     }}
-                    placeholder="Ou digite sua pergunta para Débora..."
+                    placeholder="Ou digite sua pergunta para Roberta..."
                     className="w-full py-2 pl-3 pr-9 rounded-xl bg-stone-800/90 border border-stone-700 text-xs text-white placeholder-stone-400 focus:outline-none focus:border-[#4F46E5] transition-all"
                   />
                   <button
                     type="button"
                     onClick={handleSendCustomText}
                     disabled={!customInputText.trim()}
-                    className="absolute right-1.5 w-6 h-6 rounded-lg bg-[#4F46E5] hover:bg-[#A83812] disabled:opacity-40 text-white flex items-center justify-center transition-all cursor-pointer"
+                    className="absolute right-1.5 w-6 h-6 rounded-lg bg-[#4F46E5] hover:bg-[#4338CA] disabled:opacity-40 text-white flex items-center justify-center transition-all cursor-pointer"
                   >
                     <Send className="w-3 h-3" />
                   </button>
@@ -892,7 +892,7 @@ export default function TestCallModal({ isOpen, phoneNumber, countryCode = '+55'
                     onClose();
                     if (onOpenAuth) onOpenAuth();
                   }}
-                  className="flex-1 py-2.5 rounded-xl bg-[#4F46E5] hover:bg-[#A83812] text-xs font-semibold text-white flex items-center justify-center gap-1.5 transition-colors cursor-pointer"
+                  className="flex-1 py-2.5 rounded-xl bg-[#4F46E5] hover:bg-[#4338CA] text-xs font-semibold text-white flex items-center justify-center gap-1.5 transition-colors cursor-pointer"
                 >
                   <span>Liberar Acesso Agora</span>
                   <ArrowRight className="w-3.5 h-3.5" />
@@ -955,7 +955,7 @@ export default function TestCallModal({ isOpen, phoneNumber, countryCode = '+55'
                 </div>
                 <div className="text-left">
                   <div className="text-xs font-bold text-stone-100 flex items-center gap-1">
-                    <span>Débora · Vocalis AI</span>
+                    <span>Roberta · Vocalis AI</span>
                     <span className="text-[10px] text-emerald-400 font-normal">● Online</span>
                   </div>
                   <div className="text-[10px] text-stone-400">Conta Oficial Verificada</div>
@@ -975,7 +975,7 @@ export default function TestCallModal({ isOpen, phoneNumber, countryCode = '+55'
               {/* Balão 1: Resumo do Diagnóstico */}
               <div className="bg-[#202C33] p-3 rounded-2xl rounded-tl-sm border border-stone-800 max-w-[90%] text-xs space-y-2">
                 <p className="text-stone-200 leading-relaxed">
-                  👋 Olá! Aqui é a <strong>Débora da Vocalis</strong>. Acabei de falar com você no telefone e organizei seu diagnóstico:
+                  👋 Olá! Aqui é a <strong>Roberta da Vocalis</strong>. Acabei de falar com você no telefone e organizei seu diagnóstico:
                 </p>
                 <div className="p-2 rounded-xl bg-[#111B21] text-[11px] space-y-1 border border-stone-800">
                   <div>🏢 <strong>Segmento:</strong> {userNiche || 'Empresa & Serviços'}</div>
@@ -1013,7 +1013,7 @@ export default function TestCallModal({ isOpen, phoneNumber, countryCode = '+55'
                   onClose();
                   if (onOpenAuth) onOpenAuth();
                 }}
-                className="w-full py-2.5 rounded-xl bg-[#4F46E5] hover:bg-[#A83812] text-white font-bold text-xs transition-colors flex items-center justify-center gap-2 cursor-pointer shadow-lg shadow-[#4F46E5]/30"
+                className="w-full py-2.5 rounded-xl bg-[#4F46E5] hover:bg-[#4338CA] text-white font-bold text-xs transition-colors flex items-center justify-center gap-2 cursor-pointer shadow-lg shadow-[#4F46E5]/30"
               >
                 <span>Ativar na Minha Empresa Agora</span>
                 <ArrowRight className="w-3.5 h-3.5" />
@@ -1021,7 +1021,7 @@ export default function TestCallModal({ isOpen, phoneNumber, countryCode = '+55'
 
               {/* Botão de Falar com Especialista Humano no WhatsApp */}
               <a
-                href={`https://wa.me/5594984423948?text=${encodeURIComponent(`Olá Francisco! Acabei de ver o diagnóstico da Débora na Vocalis AI para ${userNiche || 'minha empresa'} e gostaria de falar com um especialista.`)}`}
+                href={`https://wa.me/5594984423948?text=${encodeURIComponent(`Olá Francisco! Acabei de ver o diagnóstico da Roberta na Vocalis AI para ${userNiche || 'minha empresa'} e gostaria de falar com um especialista.`)}`}
                 target="_blank"
                 rel="noreferrer"
                 className="w-full py-2.5 rounded-xl bg-[#25D366] hover:bg-[#20bd5a] text-white font-bold text-xs transition-colors flex items-center justify-center gap-2 cursor-pointer shadow-md text-center"

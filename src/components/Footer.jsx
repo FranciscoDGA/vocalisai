@@ -96,25 +96,48 @@ export default function Footer({ onOpenDocs, onOpenDemo, onNavigate }) {
 
           </div>
 
-          {/* Col 2: NAVEGAÇÃO */}
+          {/* Col 2: PRODUTOS & SOLUÇÕES */}
           <div className="space-y-3">
             <h4 className="text-[11px] font-bold text-[#8C8881] uppercase tracking-wider">
-              NAVEGAÇÃO
+              PRODUTOS
             </h4>
             <ul className="space-y-2 text-xs">
               <li>
-                <a 
-                  href="#casos-de-uso" 
-                  onClick={() => { if (onNavigate) onNavigate('home'); }}
-                  className="text-[#5C5955] hover:text-[#1A1816] transition-colors block"
+                <button 
+                  onClick={() => { if (onNavigate) onNavigate('home'); setTimeout(() => { const el = document.getElementById('canais'); if (el) el.scrollIntoView({ behavior: 'smooth' }); }, 100); }}
+                  className="text-[#5C5955] hover:text-[#1A1816] transition-colors block text-left cursor-pointer"
                 >
-                  Casos de uso
-                </a>
+                  Assistente Telefônico IA
+                </button>
+              </li>
+              <li>
+                <button 
+                  onClick={() => { if (onNavigate) onNavigate('whatsapp'); }}
+                  className="text-[#5C5955] hover:text-[#1A1816] transition-colors block text-left cursor-pointer"
+                >
+                  WhatsApp com IA
+                </button>
+              </li>
+              <li>
+                <button 
+                  onClick={() => { if (onNavigate) onNavigate('webchat'); }}
+                  className="text-[#5C5955] hover:text-[#1A1816] transition-colors block text-left cursor-pointer"
+                >
+                  Webchat Inteligente
+                </button>
+              </li>
+              <li>
+                <button 
+                  onClick={() => { if (onNavigate) onNavigate('agendamentos'); }}
+                  className="text-[#5C5955] hover:text-[#1A1816] transition-colors block text-left cursor-pointer"
+                >
+                  Agendamento Automático
+                </button>
               </li>
               <li>
                 <button 
                   onClick={() => { if (onNavigate) { onNavigate('precos'); window.scrollTo({ top: 0, behavior: 'smooth' }); } }}
-                  className="text-[#5C5955] hover:text-[#1A1816] transition-colors block text-left cursor-pointer"
+                  className="text-[#5C5955] hover:text-[#1A1816] transition-colors block text-left cursor-pointer font-semibold text-[#4F46E5]"
                 >
                   Preços & Planos
                 </button>
@@ -131,12 +154,52 @@ export default function Footer({ onOpenDocs, onOpenDemo, onNavigate }) {
               <li>
                 <button 
                   onClick={() => {
-                    if (onNavigate) onNavigate('contato');
+                    if (onNavigate) { onNavigate('sobre'); window.scrollTo({ top: 0, behavior: 'smooth' }); }
+                  }}
+                  className="text-[#5C5955] hover:text-[#1A1816] transition-colors text-left cursor-pointer font-medium"
+                >
+                  Sobre a Vocalis AI
+                </button>
+              </li>
+              <li>
+                <button 
+                  onClick={() => {
+                    if (onNavigate) { onNavigate('contato'); window.scrollTo({ top: 0, behavior: 'smooth' }); }
                     else onOpenDemo();
                   }}
-                  className="text-[#5C5955] hover:text-[#1A1816] transition-colors text-left"
+                  className="text-[#5C5955] hover:text-[#1A1816] transition-colors text-left cursor-pointer"
                 >
-                  Contato
+                  Contato & Fale Conosco
+                </button>
+              </li>
+              <li>
+                <button 
+                  onClick={() => {
+                    if (onNavigate) { onNavigate('parceiros'); window.scrollTo({ top: 0, behavior: 'smooth' }); }
+                  }}
+                  className="text-[#5C5955] hover:text-[#1A1816] transition-colors text-left cursor-pointer"
+                >
+                  Parceiros & Agências
+                </button>
+              </li>
+              <li>
+                <button 
+                  onClick={() => {
+                    if (onNavigate) { onNavigate('carreiras'); window.scrollTo({ top: 0, behavior: 'smooth' }); }
+                  }}
+                  className="text-[#5C5955] hover:text-[#1A1816] transition-colors text-left cursor-pointer"
+                >
+                  Carreiras
+                </button>
+              </li>
+              <li>
+                <button 
+                  onClick={() => {
+                    if (onNavigate) { onNavigate('imprensa'); window.scrollTo({ top: 0, behavior: 'smooth' }); }
+                  }}
+                  className="text-[#5C5955] hover:text-[#1A1816] transition-colors text-left cursor-pointer"
+                >
+                  Imprensa
                 </button>
               </li>
             </ul>
@@ -154,9 +217,29 @@ export default function Footer({ onOpenDocs, onOpenDemo, onNavigate }) {
                     if (onNavigate) onNavigate('central-ajuda');
                     else onOpenDocs('central');
                   }}
-                  className="text-[#5C5955] hover:text-[#1A1816] transition-colors text-left"
+                  className="text-[#5C5955] hover:text-[#1A1816] transition-colors text-left cursor-pointer"
                 >
                   Central de ajuda
+                </button>
+              </li>
+              <li>
+                <button 
+                  onClick={() => {
+                    if (onNavigate) onNavigate('integracoes');
+                  }}
+                  className="text-[#5C5955] hover:text-[#1A1816] transition-colors text-left cursor-pointer"
+                >
+                  Integrações
+                </button>
+              </li>
+              <li>
+                <button 
+                  onClick={() => {
+                    if (onNavigate) onNavigate('webinars');
+                  }}
+                  className="text-[#5C5955] hover:text-[#1A1816] transition-colors text-left cursor-pointer"
+                >
+                  Webinars & Demonstrações
                 </button>
               </li>
             </ul>

@@ -8,16 +8,16 @@ const SCENARIOS = [
     title: 'Clínica Médica / Odonto',
     niche: 'Agendamento de Emergência',
     time: 'Domingo às 21h40',
-    agent: 'Débora (Voz Neural)',
+    agent: 'Roberta (Voz Neural)',
     caller: 'Paciente com dor de dente',
     icon: Stethoscope,
     badgeColor: 'bg-emerald-50 text-emerald-700 border-emerald-200',
     summary: 'A paciente liga no domingo à noite com dor aguda. A Vocalis acolhe, consulta a agenda de urgência de segunda-feira e confirma o horário com localização.',
     dialogue: [
       { speaker: 'Paciente', text: 'Boa noite! Eu tô com uma dor insuportável no siso desde a tarde, vocês têm algum horário de emergência pra amanhã cedo?' },
-      { speaker: 'Débora (IA)', text: 'Olá, boa noite! Sinto muito pela sua dor, mas fique tranquila que nós vamos cuidar disso. Consultei a agenda do Dr. Renato e temos um horário de urgência amanhã às oito e quinze da manhã. Posso reservar esse horário no seu nome?' },
+      { speaker: 'Roberta (IA)', text: 'Olá, boa noite! Sinto muito pela sua dor, mas fique tranquila que nós vamos cuidar disso. Consultei a agenda do Dr. Renato e temos um horário de urgência amanhã às oito e quinze da manhã. Posso reservar esse horário no seu nome?' },
       { speaker: 'Paciente', text: 'Pode sim, por favor! O que eu preciso levar?' },
-      { speaker: 'Débora (IA)', text: 'Perfeito! Já confirmei seu agendamento para amanhã às oito e quinze. Traga apenas um documento com foto. Acabei de te enviar a localização e o lembrete no seu WhatsApp. Descanse esta noite e até amanhã!' }
+      { speaker: 'Roberta (IA)', text: 'Perfeito! Já confirmei seu agendamento para amanhã às oito e quinze. Traga apenas um documento com foto. Acabei de te enviar a localização e o lembrete no seu WhatsApp. Descanse esta noite e até amanhã!' }
     ]
   },
   {

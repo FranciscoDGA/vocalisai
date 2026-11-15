@@ -1,5 +1,5 @@
 /**
- * Utilitário de Voz Humana em Português do Brasil (Débora · Vocalis)
+ * Utilitário de Voz Humana em Português do Brasil (Roberta · Vocalis)
  * Focado em fluidez máxima, entonação natural e ritmo acolhedor de atendimento
  */
 
@@ -150,7 +150,7 @@ export function cleanTextForSpeech(text) {
 }
 
 /**
- * Fala o texto usando a voz de Débora com cancelamento prévio e tratamento de erro
+ * Fala o texto usando a voz de Roberta com cancelamento prévio e tratamento de erro
  */
 export function speakFemalePt(rawText, onStart, onEnd, onError) {
   if (typeof window === 'undefined' || !('speechSynthesis' in window)) {

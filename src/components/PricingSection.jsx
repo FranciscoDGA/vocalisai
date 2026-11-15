@@ -160,7 +160,7 @@ export default function PricingSection({ onOpenAuth, onOpenDemo }) {
               >
                 {/* Badge Mais Escolhido */}
                 {plan.badge && (
-                  <div className="absolute -top-3.5 right-6 px-3.5 py-1 rounded-full bg-[#E88E23] text-white text-[10px] font-bold uppercase tracking-wider shadow">
+                  <div className="absolute -top-3.5 right-6 px-3.5 py-1 rounded-full bg-gradient-to-r from-[#4F46E5] to-[#6366F1] text-white text-[10px] font-bold uppercase tracking-wider shadow-md">
                     {plan.badge}
                   </div>
                 )}
@@ -204,7 +204,7 @@ export default function PricingSection({ onOpenAuth, onOpenDemo }) {
                       onClick={onOpenAuth}
                       className={`w-full py-3 rounded-full text-xs font-bold transition-all shadow-md flex items-center justify-center gap-1.5 ${
                         isHighlight
-                          ? 'bg-[#4F46E5] text-white hover:bg-[#B33E15]'
+                          ? 'bg-[#4F46E5] text-white hover:bg-[#4338CA]'
                           : 'bg-[#11100F] text-white hover:bg-black'
                       }`}
                     >

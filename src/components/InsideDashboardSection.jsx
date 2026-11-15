@@ -119,17 +119,17 @@ export default function InsideDashboardSection({ onOpenDemo, onOpenLegal, onOpen
 
   // Assistant State
   const [selectedType, setSelectedType] = useState('voz');
-  const [assistantName, setAssistantName] = useState('Débora');
+  const [assistantName, setAssistantName] = useState('Roberta');
   const [createdAssistants, setCreatedAssistants] = useState([
     {
       id: 1,
-      name: 'Débora',
+      name: 'Roberta',
       type: 'voz',
       typeName: 'Assistente de voz (Telefone)',
       status: 'Ativo',
-      channel: 'Telefone (11) 4003-9821',
+      channel: 'Telefone (94) 98447-8168',
       calls: 58,
-      description: 'Primeiros atendimentos via telefone, triagem humanizada e qualificação com voz neural.'
+      description: 'Primeiros atendimentos via telefone, SDR, triagem humanizada e qualificação com voz neural.'
     },
     {
       id: 2,
@@ -175,7 +175,7 @@ export default function InsideDashboardSection({ onOpenDemo, onOpenLegal, onOpen
       size: '34 KB',
       updatedAt: 'Ontem',
       status: 'Indexado',
-      target: 'Débora (Voz Neural)',
+      target: 'Roberta (SDR · Voz Neural)',
       tokens: 1850,
       description: '18 respostas calibradas para dúvidas recorrentes sobre convênios aceitos, estacionamento gratuito e preparo de exames.'
     },
@@ -206,7 +206,7 @@ export default function InsideDashboardSection({ onOpenDemo, onOpenLegal, onOpen
       name: 'Linha Principal SP',
       number: '+55 11 4003-9821',
       uso: 'Entrada & Saída',
-      vinculacao: 'Débora (Voz Neural)',
+      vinculacao: 'Roberta (SDR · Voz Neural)',
       type: 'Entrada'
     }
   ]);
@@ -428,7 +428,7 @@ export default function InsideDashboardSection({ onOpenDemo, onOpenLegal, onOpen
   const openCreateModal = (type = 'voz') => {
     setSelectedType(type);
     if (type === 'voz') {
-      setAssistantName('Débora');
+      setAssistantName('Roberta');
     } else if (type === 'chat') {
       setAssistantName('Camila');
     } else if (type === 'hibrido') {
@@ -1293,7 +1293,7 @@ export default function InsideDashboardSection({ onOpenDemo, onOpenLegal, onOpen
                   <div className="flex flex-col sm:flex-row items-center gap-3 pt-2">
                     <button 
                       onClick={() => setTestCallModalOpen(true)}
-                      className="px-5 py-2.5 rounded-xl bg-[#4F46E5] text-white text-xs font-bold hover:bg-[#B33E15] transition-colors flex items-center gap-2 shadow-sm"
+                      className="px-5 py-2.5 rounded-xl bg-[#4F46E5] text-white text-xs font-bold hover:bg-[#4338CA] transition-colors flex items-center gap-2 shadow-sm"
                     >
                       <Phone className="w-3.5 h-3.5" />
                       <span>Testar ligação</span>
@@ -3047,7 +3047,7 @@ export default function InsideDashboardSection({ onOpenDemo, onOpenLegal, onOpen
                 {/* 3 Large Cards Grid with information below title */}
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-3.5">
                   
-                  {/* Card 1: Assistente de voz (Débora) */}
+                  {/* Card 1: Assistente de voz (Roberta) */}
                   <div
                     onClick={() => handleSelectAssistantType('voz')}
                     className={`p-4 rounded-xl flex flex-col justify-start min-h-[140px] text-left cursor-pointer transition-all ${
@@ -3325,7 +3325,7 @@ export default function InsideDashboardSection({ onOpenDemo, onOpenLegal, onOpen
 
                 <button 
                   type="submit"
-                  className="w-full py-2.5 rounded-xl bg-[#4F46E5] text-white text-xs font-bold hover:bg-[#B33E15] transition-colors"
+                  className="w-full py-2.5 rounded-xl bg-[#4F46E5] text-white text-xs font-bold hover:bg-[#4338CA] transition-colors"
                 >
                   Receber chamada de teste
                 </button>

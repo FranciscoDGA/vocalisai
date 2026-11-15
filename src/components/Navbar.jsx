@@ -341,6 +341,20 @@ export default function Navbar({ onOpenDemo, onOpenAuth, onOpenLegal, onOpenDocs
                       <button 
                         onClick={() => { 
                           setActiveDropdown(null); 
+                          if (onNavigate) onNavigate('sobre');
+                        }} 
+                        className={`w-full flex items-center gap-2.5 px-3 py-2 rounded-xl text-xs font-medium transition-colors text-left cursor-pointer ${
+                          currentPage === 'sobre'
+                            ? 'bg-[#EEF2FF] text-[#4F46E5] font-bold'
+                            : 'text-[#1A1816] hover:bg-[#FAF9F5]'
+                        }`}
+                      >
+                        <Sparkles className="w-4 h-4 text-[#4F46E5]" />
+                        <span className="font-semibold text-[#4F46E5]">Sobre a Vocalis AI</span>
+                      </button>
+                      <button 
+                        onClick={() => { 
+                          setActiveDropdown(null); 
                           if (onNavigate) onNavigate('carreiras');
                         }} 
                         className={`w-full flex items-center gap-2.5 px-3 py-2 rounded-xl text-xs font-medium transition-colors text-left cursor-pointer ${
@@ -649,6 +663,15 @@ export default function Navbar({ onOpenDemo, onOpenAuth, onOpenLegal, onOpenDocs
             className="block w-full text-left py-1 text-[#1A1816] font-medium"
           >
             Central de ajuda
+          </button>
+          <button 
+            onClick={() => { 
+              setMobileMenuOpen(false); 
+              if (onNavigate) onNavigate('sobre'); 
+            }} 
+            className="block w-full text-left py-1 text-[#4F46E5] font-bold"
+          >
+            Sobre a Vocalis AI
           </button>
           <button 
             onClick={() => { 

@@ -52,8 +52,8 @@ const DIALOGUE_STEPS = [
   {
     id: 1,
     speaker: 'vocalis',
-    speakerName: 'VOCALIS (DÉBORA)',
-    text: 'Boa noite! Consultório Vila Verde, aqui é a Débora. Como posso ajudar?',
+    speakerName: 'VOCALIS (ROBERTA)',
+    text: 'Boa noite! Consultório Vila Verde, aqui é a Roberta. Como posso ajudar?',
     durationMs: 4500,
     latency: '340ms',
     actions: []
@@ -62,7 +62,7 @@ const DIALOGUE_STEPS = [
     id: 2,
     speaker: 'cliente',
     speakerName: 'CLIENTE',
-    text: 'Oi, Débora. Queria marcar uma limpeza ou consulta ainda esta semana.',
+    text: 'Oi, Roberta. Queria marcar uma limpeza ou consulta ainda esta semana.',
     durationMs: 4200,
     latency: null,
     actions: []
@@ -70,7 +70,7 @@ const DIALOGUE_STEPS = [
   {
     id: 3,
     speaker: 'vocalis',
-    speakerName: 'VOCALIS (DÉBORA)',
+    speakerName: 'VOCALIS (ROBERTA)',
     text: 'Claro! Tenho quinta às 14h ou sexta às 9h30. Qual fica melhor para você?',
     durationMs: 4800,
     latency: '380ms',
@@ -88,7 +88,7 @@ const DIALOGUE_STEPS = [
   {
     id: 5,
     speaker: 'vocalis',
-    speakerName: 'VOCALIS (DÉBORA)',
+    speakerName: 'VOCALIS (ROBERTA)',
     text: 'Pronto: quinta, 14h, com a Dra. Marina. Mandei a confirmação no seu WhatsApp.',
     durationMs: 5000,
     latency: '360ms',

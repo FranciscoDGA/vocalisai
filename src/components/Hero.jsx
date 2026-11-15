@@ -137,7 +137,7 @@ export default function Hero({ onOpenDemo, onOpenAuth }) {
         {/* ========================================================
             PHONE TEST INPUT CONTAINER (Exact replica of Kloel print)
            ======================================================== */}
-        <form onSubmit={handleTestCallSubmit} className="max-w-xl mx-auto mb-3">
+        <form id="hero-test" onSubmit={handleTestCallSubmit} className="max-w-xl mx-auto mb-3">
           <div className="flex flex-col sm:flex-row items-stretch sm:items-center bg-white rounded-2xl sm:rounded-full p-1.5 sm:pl-3 border border-[#DCD8D0] shadow-md focus-within:border-[#4F46E5] focus-within:ring-2 focus-within:ring-[#4F46E5]/20 transition-all relative gap-2 sm:gap-0">
             
             {/* Input Row on mobile / inline on desktop */}
@@ -191,20 +191,20 @@ export default function Hero({ onOpenDemo, onOpenAuth }) {
               />
             </div>
 
-            {/* CTA Button: Receber ligação da Débora agora */}
+            {/* CTA Button: Receber ligação da Roberta agora */}
             <button
               type="submit"
               className="w-full sm:w-auto shrink-0 px-6 py-3 rounded-xl sm:rounded-full bg-[#11100F] text-white text-xs sm:text-sm font-semibold hover:bg-black transition-all flex items-center justify-center gap-2 shadow-sm cursor-pointer hover:scale-[1.01]"
             >
-              <Phone className="w-4 h-4 text-[#FF8E6B]" />
-              <span>Receber ligação da Débora</span>
+              <Phone className="w-4 h-4 text-[#6366F1]" />
+              <span>Receber ligação da Roberta</span>
             </button>
 
           </div>
         </form>
 
         <p className="text-[11px] text-[#8C8881] font-medium mb-4">
-          ⚡ A Débora ligará para seu número para diagnosticar sua empresa e enviar uma demonstração no WhatsApp.
+          ⚡ A Roberta ligará para seu número para diagnosticar sua empresa e enviar uma demonstração no WhatsApp.
         </p>
 
         {/* Link: Prefiro conversar com uma pessoa */}
