@@ -12,6 +12,12 @@ import FaqSection from './components/FaqSection';
 import CtaSection from './components/CtaSection';
 import Footer from './components/Footer';
 import WebchatWidget from './components/WebchatWidget';
+import AudioShowcaseSection from './components/AudioShowcaseSection';
+import LostRevenueCalculator from './components/LostRevenueCalculator';
+import ComparisonMatrixSection from './components/ComparisonMatrixSection';
+import VoiceTestimonialsSection from './components/VoiceTestimonialsSection';
+import GuaranteeBadgeSection from './components/GuaranteeBadgeSection';
+import ExitIntentModal from './components/ExitIntentModal';
 import { supabase, getCurrentUser, signOutUser } from './utils/supabaseClient';
 
 // Lazy-loaded components for optimal bundle size and instant initial load
@@ -274,15 +280,26 @@ export default function App() {
               onOpenAuth={() => setAuthModalOpen(true)}
             />
 
-            {/* 2. Omnichannel delivery (Telefone, WhatsApp, Webchat, E-mail IA) */}
+            {/* 2. Test Drive Auditivo em 1 Clique (3 Cenários Reais) */}
+            <AudioShowcaseSection 
+              onOpenDemo={() => setDemoModalOpen(true)}
+            />
+
+            {/* 3. Calculadora de Faturamento Perdido (Agitador de Dor) */}
+            <LostRevenueCalculator 
+              onOpenDemo={() => setDemoModalOpen(true)}
+              onOpenAuth={() => setAuthModalOpen(true)}
+            />
+
+            {/* 4. Omnichannel delivery (Telefone, WhatsApp, Webchat, E-mail IA) */}
             <ChannelsSection 
               onOpenDemo={() => setDemoModalOpen(true)} 
             />
 
-            {/* 3. Real Call Flow Timeline (00:03 to 01:00) */}
+            {/* 5. Real Call Flow Timeline (00:03 to 01:00) */}
             <CallTimelineSection />
 
-            {/* 4. Inside the Platform (Dashboard preview) */}
+            {/* 6. Inside the Platform (Dashboard preview com WhatsApp Web nativo) */}
             <InsideDashboardSection 
               onOpenDemo={() => setDemoModalOpen(true)}
               onOpenLegal={handleOpenLegal}
@@ -290,30 +307,45 @@ export default function App() {
               onOpenDocs={handleOpenDocs}
             />
 
-            {/* 5. 3 Steps Setup (No code needed) */}
+            {/* 7. Tabela Comparativa Brutal: Atendente CLT vs URA vs Vocalis AI */}
+            <ComparisonMatrixSection 
+              onOpenAuth={() => setAuthModalOpen(true)}
+              onOpenDemo={() => setDemoModalOpen(true)}
+            />
+
+            {/* 8. 3 Steps Setup (No code needed) */}
             <StepsSection 
               onOpenDemo={() => setDemoModalOpen(true)}
             />
 
-            {/* 6. Capabilities Use Cases Grid (Recepção, Agendamentos, Suporte, etc.) */}
+            {/* 9. Prova Social em Áudio Real (3 Depoimentos de Empresários em Voz) */}
+            <VoiceTestimonialsSection />
+
+            {/* 10. Capabilities Use Cases Grid (Recepção, Agendamentos, Suporte, etc.) */}
             <UseCasesSection 
               onOpenDemo={() => setDemoModalOpen(true)}
               onOpenAuth={() => setAuthModalOpen(true)}
               onNavigate={handleNavigate}
             />
 
-            {/* 7. Comprehensive Integrations Grid */}
+            {/* 11. Comprehensive Integrations Grid */}
             <IntegrationsSection 
               onOpenDemo={() => setDemoModalOpen(true)}
             />
 
-            {/* 8. Guarantees (30 Days, LGPD, You in control) */}
+            {/* 12. Garantia Blindada de 14 Dias (Risco Zero) */}
+            <GuaranteeBadgeSection 
+              onOpenAuth={() => setAuthModalOpen(true)}
+              onOpenDemo={() => setDemoModalOpen(true)}
+            />
+
+            {/* 13. Guarantees (30 Days, LGPD, You in control) */}
             <GuaranteesSection />
 
-            {/* 9. FAQ Accordions */}
+            {/* 14. FAQ Accordions */}
             <FaqSection />
 
-            {/* 10. Final Conversion CTA Card & Big Quote */}
+            {/* 15. Final Conversion CTA Card & Big Quote */}
             <CtaSection 
               onOpenDemo={() => setDemoModalOpen(true)}
               onOpenAuth={() => setAuthModalOpen(true)}
@@ -393,6 +425,9 @@ export default function App() {
           />
         </Suspense>
       )}
+
+      {/* Exit Intent Recovery Modal */}
+      <ExitIntentModal onTriggerCall={() => setDemoModalOpen(true)} />
     </div>
   );
 }
