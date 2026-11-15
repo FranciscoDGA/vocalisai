@@ -24,6 +24,24 @@ export default function RecepcionistaVirtualPage({ onOpenDemo, onOpenAuth, onNav
   const [isPlayingAudio, setIsPlayingAudio] = useState(false);
   const [faqOpenIndex, setFaqOpenIndex] = useState(0);
 
+  // Estados de expansão inline ("Leia mais" / "Mostrar menos") 1:1 com Kloel
+  const [expandedHowItWorks, setExpandedHowItWorks] = useState({});
+  const [expandedWhatIs, setExpandedWhatIs] = useState({});
+  const [expandedAdvantages, setExpandedAdvantages] = useState({});
+  const [expandedTopAdvantage, setExpandedTopAdvantage] = useState(false);
+
+  const toggleHowItWorks = (num) => {
+    setExpandedHowItWorks(prev => ({ ...prev, [num]: !prev[num] }));
+  };
+
+  const toggleWhatIs = (key) => {
+    setExpandedWhatIs(prev => ({ ...prev, [key]: !prev[key] }));
+  };
+
+  const toggleAdvantage = (idx) => {
+    setExpandedAdvantages(prev => ({ ...prev, [idx]: !prev[idx] }));
+  };
+
   const countries = [
     { name: 'Brasil', code: '+55', flag: '🇧🇷' },
     { name: 'Portugal', code: '+351', flag: '🇵🇹' },
@@ -69,29 +87,34 @@ export default function RecepcionistaVirtualPage({ onOpenDemo, onOpenAuth, onNav
     {
       num: 1,
       title: 'Deixe a IA assumir suas ligações',
-      desc: 'A recepcionista de IA funciona ao assumir todas as ligações recebidas no primeiro toque, conversando com o cliente com voz calorosa e humanizada sem filas.'
+      shortDesc: 'A recepcionista de IA funciona ao assumir todas as ligações recebidas, compreendê-las e executar as ações desejadas. A IA...',
+      fullDesc: 'A recepcionista de IA funciona ao assumir todas as ligações recebidas, compreendê-las e executar as ações desejadas. A IA atende os clientes de forma humanizada, tira dúvidas comuns e direciona ligações prioritárias para as pessoas certas.'
     },
     {
       num: 2,
       title: 'Definir comportamento e pós-processamento',
-      desc: 'Durante a configuração, você define para qual colaborador ou ramal a IA deve transferir quem liga, de acordo com o departamento e assunto solicitado.'
+      shortDesc: 'Durante a configuração da recepcionista de IA, é definido para qual colaborador a IA deve transferir quem ligou em determinad...',
+      fullDesc: 'Durante a configuração da recepcionista de IA, é definido para qual colaborador a IA deve transferir quem ligou em determinada situação, quais dados registrar e quais ações automáticas disparar após o término da ligação.'
     },
     {
       num: 3,
       title: 'Nenhuma ligação é perdida',
-      desc: 'Se o colaborador estiver ocupado, a recepcionista virtual avisa o cliente e envia um resumo completo da ligação no WhatsApp e e-mail da equipe na hora.'
+      shortDesc: 'Se o colaborador não atender, a recepcionista virtual com IA informa ao cliente e diz que enviará um e-mail com a solicitação...',
+      fullDesc: 'Se o colaborador não atender, a recepcionista virtual com IA informa ao cliente e diz que enviará um e-mail com a solicitação ao responsável, garantindo o retorno sem que ninguém precise anotar recados.'
     },
     {
       num: 4,
-      title: 'Integração perfeitamente à sua infraestrutura',
-      desc: 'A partir do número principal da empresa ou 0800, é configurada uma transferência de chamada para a IA através do recurso de siga-me padrão da operadora.'
+      title: 'Integrada perfeitamente à sua infraestrutura',
+      shortDesc: 'A partir do número principal da empresa, é configurada uma transferência de chamada para o número da IA, para que a...',
+      fullDesc: 'A partir do número principal da empresa, é configurada uma transferência de chamada para o número da IA, para que a recepcionista assuma quando você estiver ocupado, fora do horário comercial ou sempre que desejar.'
     }
   ];
 
   const advantages = [
     {
       title: 'Triagem de ligações',
-      desc: 'A recepcionista virtual com IA classifica ligações antecipadamente e processa os contatos com agilidade.',
+      shortDesc: 'A recepcionista virtual com IA classifica ligações antecipadamente e processa os...',
+      fullDesc: 'A recepcionista virtual com IA classifica ligações antecipadamente e processa os contatos com agilidade, direcionando cada caso ao setor ou profissional correto.',
       visual: (
         <div className="h-44 sm:h-48 rounded-2xl bg-[#FAF9F5] border border-[#EBE8E2] p-4 flex flex-col items-center justify-center relative overflow-hidden bg-[radial-gradient(#E2DDD5_1px,transparent_1px)] [background-size:12px_12px]">
           {/* Card 1 (top) */}
@@ -140,7 +163,8 @@ export default function RecepcionistaVirtualPage({ onOpenDemo, onOpenAuth, onNav
     },
     {
       title: 'Multilíngue',
-      desc: 'Nossa recepcionista virtual com IA é multilíngue e capaz de processar ligações com fluência nativa.',
+      shortDesc: 'Nossa recepcionista virtual com IA é multilíngue e capaz de processar ligações...',
+      fullDesc: 'Nossa recepcionista virtual com IA é multilíngue e capaz de processar ligações em diversos idiomas com sotaque nativo, compreendendo gírias e sotaques regionais.',
       visual: (
         <div className="h-44 sm:h-48 rounded-2xl bg-[#FAF9F5] border border-[#EBE8E2] p-4 flex items-center justify-center relative overflow-hidden bg-[radial-gradient(#E2DDD5_1px,transparent_1px)] [background-size:12px_12px]">
           <div className="grid grid-cols-6 gap-2 sm:gap-2.5">
@@ -172,7 +196,8 @@ export default function RecepcionistaVirtualPage({ onOpenDemo, onOpenAuth, onNav
     },
     {
       title: 'Documentação precisa de cada ligação',
-      desc: 'A recepcionista virtual com IA documenta cada ligação com precisão, salvando o áudio e notas.',
+      shortDesc: 'A recepcionista virtual com IA documenta cada ligação com precisão, salvando o...',
+      fullDesc: 'A recepcionista virtual com IA documenta cada ligação com precisão, salvando o áudio gravado, transcrição completa, análise de sentimento e notas estruturadas direto no seu CRM.',
       visual: (
         <div className="h-44 sm:h-48 rounded-2xl bg-[#FAF9F5] border border-[#EBE8E2] p-3 flex flex-col items-center justify-center relative overflow-hidden bg-[radial-gradient(#E2DDD5_1px,transparent_1px)] [background-size:12px_12px]">
           <div className="w-full max-w-[260px] relative py-2">
@@ -413,36 +438,44 @@ export default function RecepcionistaVirtualPage({ onOpenDemo, onOpenAuth, onNav
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6 max-w-4xl mx-auto text-left mb-12">
             
             {/* Card 1: Recepcionista com IA */}
-            <div className="bg-white rounded-3xl p-8 border border-[#E7E4DC] shadow-clean flex flex-col justify-between">
+            <div className="bg-white rounded-3xl p-8 border border-[#E7E4DC] shadow-clean flex flex-col justify-between transition-all duration-300">
               <div>
                 <h3 className="text-xl font-bold text-[#1A1816] mb-3">Recepcionista com IA</h3>
                 <p className="text-xs sm:text-sm text-[#5C5955] leading-relaxed mb-6">
-                  Como uma recepcionista humana, a recepcionista com IA cuida do atendimento telefônico da sua empresa. Atende de forma acolhedora, tira dúvidas sobre horários e serviços, transfere ligações e agenda compromissos sem pausas mecânicas.
+                  {expandedWhatIs['rec'] ? (
+                    'Como uma recepcionista humana, a recepcionista com IA cuida do atendimento telefônico da sua empresa. Atende de forma acolhedora, tira dúvidas sobre horários e serviços, transfere ligações e agenda compromissos sem pausas mecânicas.'
+                  ) : (
+                    'Como uma recepcionista humana, a recepcionista com IA cuida do atendimento telefônico da sua empresa. Atende de forma acolhedora, tira dúvidas sobre...'
+                  )}
                 </p>
               </div>
               <button 
-                onClick={onOpenDemo}
-                className="text-xs text-[#C84B1F] font-semibold hover:underline inline-flex items-center gap-1 cursor-pointer"
+                onClick={() => toggleWhatIs('rec')}
+                className="text-xs text-[#8C8881] hover:text-[#1A1816] font-medium inline-flex items-center gap-1 cursor-pointer transition-colors w-fit"
               >
-                <span>Leia mais</span>
-                <span>→</span>
+                <span>{expandedWhatIs['rec'] ? 'Mostrar menos' : 'Leia mais'}</span>
+                {expandedWhatIs['rec'] ? <ChevronUp className="w-3.5 h-3.5" /> : <ChevronDown className="w-3.5 h-3.5" />}
               </button>
             </div>
 
             {/* Card 2: Assistente de telefone digital */}
-            <div className="bg-white rounded-3xl p-8 border border-[#E7E4DC] shadow-clean flex flex-col justify-between">
+            <div className="bg-white rounded-3xl p-8 border border-[#E7E4DC] shadow-clean flex flex-col justify-between transition-all duration-300">
               <div>
                 <h3 className="text-xl font-bold text-[#1A1816] mb-3">Assistente de telefone digital</h3>
                 <p className="text-xs sm:text-sm text-[#5C5955] leading-relaxed mb-6">
-                  Uma recepcionista virtual com IA é um assistente de telefone digital inteligente que executa tarefas de atendimento breves como identificar a intenção do cliente, consultar dados cadastrais e encaminhar o cliente diretamente para a pessoa certa.
+                  {expandedWhatIs['assist'] ? (
+                    'Uma recepcionista virtual com IA é um assistente de telefone digital inteligente que executa tarefas de atendimento breves como identificar a intenção do cliente, consultar dados cadastrais e encaminhar o cliente diretamente para a pessoa certa.'
+                  ) : (
+                    'Uma recepcionista virtual com IA é um assistente de telefone digital inteligente que executa tarefas de atendimento breves como identificar a intenção do...'
+                  )}
                 </p>
               </div>
               <button 
-                onClick={onOpenDemo}
-                className="text-xs text-[#C84B1F] font-semibold hover:underline inline-flex items-center gap-1 cursor-pointer"
+                onClick={() => toggleWhatIs('assist')}
+                className="text-xs text-[#8C8881] hover:text-[#1A1816] font-medium inline-flex items-center gap-1 cursor-pointer transition-colors w-fit"
               >
-                <span>Leia mais</span>
-                <span>→</span>
+                <span>{expandedWhatIs['assist'] ? 'Mostrar menos' : 'Leia mais'}</span>
+                {expandedWhatIs['assist'] ? <ChevronUp className="w-3.5 h-3.5" /> : <ChevronDown className="w-3.5 h-3.5" />}
               </button>
             </div>
 
@@ -472,31 +505,40 @@ export default function RecepcionistaVirtualPage({ onOpenDemo, onOpenAuth, onNav
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6 max-w-4xl mx-auto">
-            {howItWorksCards.map((c) => (
-              <div 
-                key={c.num}
-                className="bg-[#FAF9F5] rounded-3xl p-7 border border-[#E7E4DC] shadow-clean flex flex-col justify-between"
-              >
-                <div>
-                  <div className="w-8 h-8 rounded-full bg-white border border-[#EDE5D8] text-[#C84B1F] flex items-center justify-center font-bold text-xs mb-4">
-                    {c.num}
-                  </div>
-                  <h3 className="text-base font-bold text-[#1A1816] mb-2 leading-snug">
-                    {c.title}
-                  </h3>
-                  <p className="text-xs sm:text-sm text-[#5C5955] leading-relaxed mb-4">
-                    {c.desc}
-                  </p>
-                </div>
-                <button 
-                  onClick={onOpenDemo}
-                  className="text-xs text-[#C84B1F] font-semibold hover:underline inline-flex items-center gap-1 cursor-pointer"
+            {howItWorksCards.map((c) => {
+              const isExpanded = !!expandedHowItWorks[c.num];
+              return (
+                <div 
+                  key={c.num}
+                  className="bg-white rounded-3xl p-7 sm:p-8 border border-[#E7E4DC] shadow-sm flex flex-col justify-between transition-all duration-300"
                 >
-                  <span>Leia mais</span>
-                  <span>→</span>
-                </button>
-              </div>
-            ))}
+                  <div>
+                    <div className="w-8 h-8 rounded-full bg-[#FAF9F5] border border-[#EDE5D8] text-[#1A1816] flex items-center justify-center font-bold text-xs mb-4">
+                      {c.num}
+                    </div>
+                    <h3 className="text-base sm:text-lg font-bold text-[#1A1816] mb-3 leading-snug">
+                      {c.title}
+                    </h3>
+                    <p className="text-xs sm:text-sm text-[#5C5955] leading-relaxed mb-4">
+                      {isExpanded ? c.fullDesc : c.shortDesc}
+                    </p>
+                  </div>
+                  <div className="pt-2 mt-auto">
+                    <button 
+                      onClick={() => toggleHowItWorks(c.num)}
+                      className="text-xs text-[#8C8881] hover:text-[#1A1816] font-medium inline-flex items-center gap-1 cursor-pointer transition-colors"
+                    >
+                      <span>{isExpanded ? 'Mostrar menos' : 'Leia mais'}</span>
+                      {isExpanded ? (
+                        <ChevronUp className="w-3.5 h-3.5" />
+                      ) : (
+                        <ChevronDown className="w-3.5 h-3.5" />
+                      )}
+                    </button>
+                  </div>
+                </div>
+              );
+            })}
           </div>
 
         </div>
@@ -516,46 +558,57 @@ export default function RecepcionistaVirtualPage({ onOpenDemo, onOpenAuth, onNav
               </h2>
             </div>
             <div className="max-w-md text-xs sm:text-sm text-[#5C5955] leading-relaxed">
-              As principais vantagens da nossa recepcionista virtual com IA são a disponibilidade 24 horas por dia, o aumento da...
+              {expandedTopAdvantage ? (
+                <span>
+                  As principais vantagens da nossa recepcionista virtual com IA são a disponibilidade 24 horas por dia, o aumento da capacidade de atendimento simultâneo sem filas de espera, e a redução drástica nos custos operacionais com total precisão no registro de dados.
+                </span>
+              ) : (
+                <span>
+                  As principais vantagens da nossa recepcionista virtual com IA são a disponibilidade 24 horas por dia, o aumento da...
+                </span>
+              )}
               <button 
-                onClick={onOpenDemo}
+                onClick={() => setExpandedTopAdvantage(!expandedTopAdvantage)}
                 className="text-[#736F69] hover:text-[#1A1816] font-medium text-xs ml-1 inline-flex items-center gap-0.5 cursor-pointer transition-colors"
               >
-                <span>Leia mais</span>
-                <ChevronDown className="w-3 h-3" />
+                <span>{expandedTopAdvantage ? 'Mostrar menos' : 'Leia mais'}</span>
+                {expandedTopAdvantage ? <ChevronUp className="w-3 h-3" /> : <ChevronDown className="w-3 h-3" />}
               </button>
             </div>
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-            {advantages.map((adv, idx) => (
-              <div 
-                key={idx}
-                className="bg-white rounded-3xl p-6 border border-[#E7E4DC] shadow-sm flex flex-col justify-between hover:shadow-md transition-shadow"
-              >
-                <div>
-                  <div className="mb-5">
-                    {adv.visual}
+            {advantages.map((adv, idx) => {
+              const isExpanded = !!expandedAdvantages[idx];
+              return (
+                <div 
+                  key={idx}
+                  className="bg-white rounded-3xl p-6 border border-[#E7E4DC] shadow-sm flex flex-col justify-between hover:shadow-md transition-shadow"
+                >
+                  <div>
+                    <div className="mb-5">
+                      {adv.visual}
+                    </div>
+                    <h3 className="text-base sm:text-lg font-bold text-[#1A1816] mb-2">
+                      {adv.title}
+                    </h3>
+                    <p className="text-xs sm:text-sm text-[#5C5955] leading-relaxed">
+                      {isExpanded ? adv.fullDesc : adv.shortDesc}
+                    </p>
                   </div>
-                  <h3 className="text-base sm:text-lg font-bold text-[#1A1816] mb-2">
-                    {adv.title}
-                  </h3>
-                  <p className="text-xs sm:text-sm text-[#5C5955] leading-relaxed">
-                    {adv.desc}
-                  </p>
+                  
+                  <div className="pt-4 mt-auto">
+                    <button 
+                      onClick={() => toggleAdvantage(idx)}
+                      className="text-xs text-[#8C8881] hover:text-[#1A1816] font-medium inline-flex items-center gap-1 cursor-pointer transition-colors"
+                    >
+                      <span>{isExpanded ? 'Mostrar menos' : 'Leia mais'}</span>
+                      {isExpanded ? <ChevronUp className="w-3 h-3" /> : <ChevronDown className="w-3 h-3" />}
+                    </button>
+                  </div>
                 </div>
-                
-                <div className="pt-4 mt-auto">
-                  <button 
-                    onClick={onOpenDemo}
-                    className="text-xs text-[#8C8881] hover:text-[#1A1816] font-medium inline-flex items-center gap-1 cursor-pointer transition-colors"
-                  >
-                    <span>Leia mais</span>
-                    <ChevronDown className="w-3 h-3" />
-                  </button>
-                </div>
-              </div>
-            ))}
+              );
+            })}
           </div>
 
           {/* Centered Pagination Arrows (1:1 com print do Kloel) */}

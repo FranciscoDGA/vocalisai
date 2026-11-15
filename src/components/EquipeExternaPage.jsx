@@ -18,6 +18,11 @@ export default function EquipeExternaPage({ onOpenDemo, onOpenAuth, onNavigateHo
   const [countryPickerOpen, setCountryPickerOpen] = useState(false);
   const [testCallModalOpen, setTestCallModalOpen] = useState(false);
   const [isPlayingAudio, setIsPlayingAudio] = useState(false);
+  const [expandedHowItWorks, setExpandedHowItWorks] = useState({});
+
+  const toggleHowItWorks = (num) => {
+    setExpandedHowItWorks(prev => ({ ...prev, [num]: !prev[num] }));
+  };
 
   const countries = [
     { name: 'Brasil', code: '+55', flag: '🇧🇷' },
@@ -64,22 +69,26 @@ export default function EquipeExternaPage({ onOpenDemo, onOpenAuth, onNavigateHo
     {
       num: 1,
       title: 'Ligue para seu assistente de IA',
-      desc: 'Simplesmente disque pelo viva-voz do carro ou fone bluetooth, através do número de telefone exclusivo atribuído ao seu assistente de IA ao sair da reunião.'
+      shortDesc: 'Simplesmente disque pelo viva-voz do carro ou fone bluetooth, através do número de telefone exclusivo...',
+      fullDesc: 'Simplesmente disque pelo viva-voz do carro ou fone bluetooth, através do número de telefone exclusivo atribuído ao seu assistente de IA ao sair da reunião.'
     },
     {
       num: 2,
       title: 'Faça debriefings e deixe a IA entrevistá-lo',
-      desc: 'Diferente de um gravador passivo, você treina seu assistente para perguntar ativamente dados que faltam: decisores, objeções, budget e prazos acordados.'
+      shortDesc: 'Diferente de um gravador passivo, você treina seu assistente para perguntar ativamente dados que faltam...',
+      fullDesc: 'Diferente de um gravador passivo, você treina seu assistente para perguntar ativamente dados que faltam: decisores, objeções, budget e prazos acordados.'
     },
     {
       num: 3,
       title: 'Processamento inteligente',
-      desc: 'Linguagem falada vira dados estruturados. A IA filtra vícios de linguagem, ruído da estrada e extrai valores monetários, tarefas e próximas etapas.'
+      shortDesc: 'Linguagem falada vira dados estruturados. A IA filtra vícios de linguagem, ruído da estrada e extrai valores...',
+      fullDesc: 'Linguagem falada vira dados estruturados. A IA filtra vícios de linguagem, ruído da estrada e extrai valores monetários, tarefas e próximas etapas.'
     },
     {
       num: 4,
       title: 'Sincronização com CRM e fechamento',
-      desc: 'Antes de você chegar ao próximo cliente, o debriefing da última reunião já está documentado no HubSpot, Salesforce ou Pipedrive sem digitação manual.'
+      shortDesc: 'Antes de você chegar ao próximo cliente, o debriefing da última reunião já está documentado no HubSpot...',
+      fullDesc: 'Antes de você chegar ao próximo cliente, o debriefing da última reunião já está documentado no HubSpot, Salesforce ou Pipedrive sem digitação manual.'
     }
   ];
 
@@ -276,31 +285,36 @@ export default function EquipeExternaPage({ onOpenDemo, onOpenAuth, onNavigateHo
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6 max-w-4xl mx-auto">
-            {howItWorksCards.map((c) => (
-              <div 
-                key={c.num}
-                className="bg-white rounded-3xl p-7 border border-[#E7E4DC] shadow-clean flex flex-col justify-between"
-              >
-                <div>
-                  <div className="w-8 h-8 rounded-full bg-[#FAF5EE] border border-[#EDE5D8] text-[#C84B1F] flex items-center justify-center font-bold text-xs mb-4">
-                    {c.num}
-                  </div>
-                  <h3 className="text-base font-bold text-[#1A1816] mb-2 leading-snug">
-                    {c.title}
-                  </h3>
-                  <p className="text-xs sm:text-sm text-[#5C5955] leading-relaxed mb-4">
-                    {c.desc}
-                  </p>
-                </div>
-                <button 
-                  onClick={onOpenDemo}
-                  className="text-xs text-[#C84B1F] font-semibold hover:underline inline-flex items-center gap-1 cursor-pointer"
+            {howItWorksCards.map((c) => {
+              const isExpanded = !!expandedHowItWorks[c.num];
+              return (
+                <div 
+                  key={c.num}
+                  className="bg-white rounded-3xl p-7 sm:p-8 border border-[#E7E4DC] shadow-sm flex flex-col justify-between transition-all duration-300"
                 >
-                  <span>Leia mais</span>
-                  <span>→</span>
-                </button>
-              </div>
-            ))}
+                  <div>
+                    <div className="w-8 h-8 rounded-full bg-[#FAF5EE] border border-[#EDE5D8] text-[#C84B1F] flex items-center justify-center font-bold text-xs mb-4">
+                      {c.num}
+                    </div>
+                    <h3 className="text-base sm:text-lg font-bold text-[#1A1816] mb-3 leading-snug">
+                      {c.title}
+                    </h3>
+                    <p className="text-xs sm:text-sm text-[#5C5955] leading-relaxed mb-4">
+                      {isExpanded ? c.fullDesc : c.shortDesc}
+                    </p>
+                  </div>
+                  <div className="pt-2 mt-auto">
+                    <button 
+                      onClick={() => toggleHowItWorks(c.num)}
+                      className="text-xs text-[#8C8881] hover:text-[#1A1816] font-medium inline-flex items-center gap-1 cursor-pointer transition-colors"
+                    >
+                      <span>{isExpanded ? 'Mostrar menos' : 'Leia mais'}</span>
+                      {isExpanded ? <ChevronUp className="w-3.5 h-3.5" /> : <ChevronDown className="w-3.5 h-3.5" />}
+                    </button>
+                  </div>
+                </div>
+              );
+            })}
           </div>
 
         </div>

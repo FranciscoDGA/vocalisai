@@ -19,6 +19,11 @@ export default function AgenteSuportePage({ onOpenDemo, onOpenAuth, onNavigateHo
   const [testCallModalOpen, setTestCallModalOpen] = useState(false);
   const [isPlayingAudio, setIsPlayingAudio] = useState(false);
   const [faqOpenIndex, setFaqOpenIndex] = useState(0);
+  const [expandedSetup, setExpandedSetup] = useState({});
+
+  const toggleSetup = (num) => {
+    setExpandedSetup(prev => ({ ...prev, [num]: !prev[num] }));
+  };
 
   const countries = [
     { name: 'Brasil', code: '+55', flag: '🇧🇷' },
@@ -300,60 +305,80 @@ export default function AgenteSuportePage({ onOpenDemo, onOpenAuth, onNavigateHo
             
             {/* Top row: 3 cards */}
             <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-              {setupCards.slice(0, 3).map((item) => (
-                <div 
-                  key={item.num}
-                  className="bg-white rounded-3xl p-7 border border-[#E7E4DC] shadow-clean flex flex-col justify-between"
-                >
-                  <div>
-                    <div className="w-8 h-8 rounded-full bg-[#FAF5EE] border border-[#EDE5D8] text-[#C84B1F] flex items-center justify-center font-bold text-xs mb-5">
-                      {item.num}
-                    </div>
-                    <h3 className="text-base font-bold text-[#1A1816] mb-2 leading-snug">
-                      {item.title}
-                    </h3>
-                    <p className="text-xs sm:text-sm text-[#5C5955] leading-relaxed mb-4">
-                      {item.text}
-                    </p>
-                  </div>
-                  <button 
-                    onClick={onOpenDemo}
-                    className="text-xs text-[#C84B1F] font-semibold hover:underline inline-flex items-center gap-1 text-left"
+              {setupCards.slice(0, 3).map((item) => {
+                const isExpanded = !!expandedSetup[item.num];
+                return (
+                  <div 
+                    key={item.num}
+                    className="bg-white rounded-3xl p-7 border border-[#E7E4DC] shadow-clean flex flex-col justify-between transition-all duration-300"
                   >
-                    <span>Leia mais</span>
-                    <span>→</span>
-                  </button>
-                </div>
-              ))}
+                    <div>
+                      <div className="w-8 h-8 rounded-full bg-[#FAF5EE] border border-[#EDE5D8] text-[#C84B1F] flex items-center justify-center font-bold text-xs mb-5">
+                        {item.num}
+                      </div>
+                      <h3 className="text-base font-bold text-[#1A1816] mb-2 leading-snug">
+                        {item.title}
+                      </h3>
+                      <p className="text-xs sm:text-sm text-[#5C5955] leading-relaxed mb-4">
+                        {item.text}
+                        {isExpanded && (
+                          <span className="block mt-2 text-[#736F69] text-xs">
+                            {item.detail}
+                          </span>
+                        )}
+                      </p>
+                    </div>
+                    <div className="pt-2 mt-auto">
+                      <button 
+                        onClick={() => toggleSetup(item.num)}
+                        className="text-xs text-[#8C8881] hover:text-[#1A1816] font-medium inline-flex items-center gap-1 cursor-pointer transition-colors"
+                      >
+                        <span>{isExpanded ? 'Mostrar menos' : 'Leia mais'}</span>
+                        {isExpanded ? <ChevronUp className="w-3.5 h-3.5" /> : <ChevronDown className="w-3.5 h-3.5" />}
+                      </button>
+                    </div>
+                  </div>
+                );
+              })}
             </div>
 
             {/* Bottom row: 2 cards */}
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6 max-w-3xl mx-auto">
-              {setupCards.slice(3, 5).map((item) => (
-                <div 
-                  key={item.num}
-                  className="bg-white rounded-3xl p-7 border border-[#E7E4DC] shadow-clean flex flex-col justify-between"
-                >
-                  <div>
-                    <div className="w-8 h-8 rounded-full bg-[#FAF5EE] border border-[#EDE5D8] text-[#C84B1F] flex items-center justify-center font-bold text-xs mb-5">
-                      {item.num}
-                    </div>
-                    <h3 className="text-base font-bold text-[#1A1816] mb-2 leading-snug">
-                      {item.title}
-                    </h3>
-                    <p className="text-xs sm:text-sm text-[#5C5955] leading-relaxed mb-4">
-                      {item.text}
-                    </p>
-                  </div>
-                  <button 
-                    onClick={onOpenDemo}
-                    className="text-xs text-[#C84B1F] font-semibold hover:underline inline-flex items-center gap-1 text-left"
+              {setupCards.slice(3, 5).map((item) => {
+                const isExpanded = !!expandedSetup[item.num];
+                return (
+                  <div 
+                    key={item.num}
+                    className="bg-white rounded-3xl p-7 border border-[#E7E4DC] shadow-clean flex flex-col justify-between transition-all duration-300"
                   >
-                    <span>Leia mais</span>
-                    <span>→</span>
-                  </button>
-                </div>
-              ))}
+                    <div>
+                      <div className="w-8 h-8 rounded-full bg-[#FAF5EE] border border-[#EDE5D8] text-[#C84B1F] flex items-center justify-center font-bold text-xs mb-5">
+                        {item.num}
+                      </div>
+                      <h3 className="text-base font-bold text-[#1A1816] mb-2 leading-snug">
+                        {item.title}
+                      </h3>
+                      <p className="text-xs sm:text-sm text-[#5C5955] leading-relaxed mb-4">
+                        {item.text}
+                        {isExpanded && (
+                          <span className="block mt-2 text-[#736F69] text-xs">
+                            {item.detail}
+                          </span>
+                        )}
+                      </p>
+                    </div>
+                    <div className="pt-2 mt-auto">
+                      <button 
+                        onClick={() => toggleSetup(item.num)}
+                        className="text-xs text-[#8C8881] hover:text-[#1A1816] font-medium inline-flex items-center gap-1 cursor-pointer transition-colors"
+                      >
+                        <span>{isExpanded ? 'Mostrar menos' : 'Leia mais'}</span>
+                        {isExpanded ? <ChevronUp className="w-3.5 h-3.5" /> : <ChevronDown className="w-3.5 h-3.5" />}
+                      </button>
+                    </div>
+                  </div>
+                );
+              })}
             </div>
 
           </div>

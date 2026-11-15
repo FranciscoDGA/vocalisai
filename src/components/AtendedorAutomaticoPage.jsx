@@ -21,6 +21,17 @@ export default function AtendedorAutomaticoPage({ onOpenDemo, onOpenAuth, onNavi
   const [faqOpenIndex, setFaqOpenIndex] = useState(0);
   const [selectedSegment, setSelectedSegment] = useState('servicos'); // 'servicos' | 'clinicas' | 'empresas'
 
+  const [expandedHowItWorks, setExpandedHowItWorks] = useState({});
+  const [expandedAdvantages, setExpandedAdvantages] = useState({});
+
+  const toggleHowItWorks = (num) => {
+    setExpandedHowItWorks(prev => ({ ...prev, [num]: !prev[num] }));
+  };
+
+  const toggleAdvantage = (idx) => {
+    setExpandedAdvantages(prev => ({ ...prev, [idx]: !prev[idx] }));
+  };
+
   const countries = [
     { name: 'Brasil', code: '+55', flag: '🇧🇷' },
     { name: 'Portugal', code: '+351', flag: '🇵🇹' },
@@ -66,29 +77,34 @@ export default function AtendedorAutomaticoPage({ onOpenDemo, onOpenAuth, onNavi
     {
       num: 1,
       title: 'Nenhuma ligação é perdida',
-      desc: 'O atendedor automático por IA da Vocalis atende as ligações no 1º toque quando os colaboradores estiverem ocupados, retendo clientes e pedidos sem espera ou linha ocupada.'
+      shortDesc: 'O atendedor automático por IA da Vocalis atende as ligações no 1º toque quando os colaboradores estiverem ocupados...',
+      fullDesc: 'O atendedor automático por IA da Vocalis atende as ligações no 1º toque quando os colaboradores estiverem ocupados, retendo clientes e pedidos sem espera ou linha ocupada.'
     },
     {
       num: 2,
       title: 'Transferência de acordo com suas regras. Transcrição incluída.',
-      desc: 'Com o atendedor automático por IA, estabeleça profissionais e diferentes ramais/números para os quais a IA transfere os clientes conforme a urgência e o assunto.'
+      shortDesc: 'Com o atendedor automático por IA, estabeleça profissionais e diferentes ramais/números para os quais a IA transfere...',
+      fullDesc: 'Com o atendedor automático por IA, estabeleça profissionais e diferentes ramais/números para os quais a IA transfere os clientes conforme a urgência e o assunto.'
     },
     {
       num: 3,
       title: 'Configure uma vez. Economize tempo para sempre',
-      desc: 'Através do atendedor automático por IA, triagens de chamadas e o atendimento das perguntas frequentes dos clientes é automatizado para liberar a equipe de tarefas repetitivas.'
+      shortDesc: 'Através do atendedor automático por IA, triagens de chamadas e o atendimento das perguntas frequentes dos clientes...',
+      fullDesc: 'Através do atendedor automático por IA, triagens de chamadas e o atendimento das perguntas frequentes dos clientes é automatizado para liberar a equipe de tarefas repetitivas.'
     },
     {
       num: 4,
       title: 'Integrado perfeitamente aos seus sistemas',
-      desc: 'O seu novo atendedor automático por IA é personalizável e se integra sem atrito aos seus sistemas existentes de agendamento, CRM e controle de chamados.'
+      shortDesc: 'O seu novo atendedor automático por IA é personalizável e se integra sem atrito aos seus sistemas existentes de...',
+      fullDesc: 'O seu novo atendedor automático por IA é personalizável e se integra sem atrito aos seus sistemas existentes de agendamento, CRM e controle de chamados.'
     }
   ];
 
   const advantages = [
     {
       title: 'Não é necessário ouvir mensagens gravadas',
-      desc: 'Com o nosso atendedor automático por IA, o cliente fala diretamente o que precisa sem ter que ouvir menus numéricos longos e cansativos de "digite 1 ou 2".',
+      shortDesc: 'Com o nosso atendedor automático por IA, o cliente fala diretamente o que precisa sem ter que ouvir menus numéricos...',
+      fullDesc: 'Com o nosso atendedor automático por IA, o cliente fala diretamente o que precisa sem ter que ouvir menus numéricos longos e cansativos de "digite 1 ou 2".',
       visual: (
         <div className="bg-[#FAF5EE] rounded-2xl p-4 border border-[#EDE5D8] text-xs font-mono space-y-2">
           <div className="flex items-center justify-between text-[11px] text-stone-500">
@@ -104,7 +120,8 @@ export default function AtendedorAutomaticoPage({ onOpenDemo, onOpenAuth, onNavi
     },
     {
       title: 'Sempre disponível',
-      desc: 'O atendedor automático por IA está sempre disponível e atende ligações 24/7, impedindo que você perca clientes que ligam no almoço, à noite ou em feriados.',
+      shortDesc: 'O atendedor automático por IA está sempre disponível e atende ligações 24/7, impedindo que você perca clientes que...',
+      fullDesc: 'O atendedor automático por IA está sempre disponível e atende ligações 24/7, impedindo que você perca clientes que ligam no almoço, à noite ou em feriados.',
       visual: (
         <div className="bg-[#FAF5EE] rounded-2xl p-4 border border-[#EDE5D8] flex items-center justify-around text-center py-2">
           <div className="space-y-1">
@@ -121,7 +138,8 @@ export default function AtendedorAutomaticoPage({ onOpenDemo, onOpenAuth, onNavi
     },
     {
       title: 'Economia de tempo e custos',
-      desc: 'Com nosso atendedor automático por IA você economiza tempo e custos, cobrindo o expediente sem necessidade de plantões caros de horas extras.',
+      shortDesc: 'Com nosso atendedor automático por IA você economiza tempo e custos, cobrindo o expediente sem necessidade de...',
+      fullDesc: 'Com nosso atendedor automático por IA você economiza tempo e custos, cobrindo o expediente sem necessidade de plantões caros de horas extras.',
       visual: (
         <div className="bg-[#FAF5EE] rounded-2xl p-4 border border-[#EDE5D8] text-xs space-y-1.5 font-sans">
           <div className="flex items-center gap-2 text-[#C84B1F] font-bold">
@@ -351,31 +369,36 @@ export default function AtendedorAutomaticoPage({ onOpenDemo, onOpenAuth, onNavi
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6 max-w-4xl mx-auto">
-            {howItWorksCards.map((c) => (
-              <div 
-                key={c.num}
-                className="bg-white rounded-3xl p-7 border border-[#E7E4DC] shadow-clean flex flex-col justify-between"
-              >
-                <div>
-                  <div className="w-8 h-8 rounded-full bg-[#FAF5EE] border border-[#EDE5D8] text-[#C84B1F] flex items-center justify-center font-bold text-xs mb-4">
-                    {c.num}
-                  </div>
-                  <h3 className="text-base font-bold text-[#1A1816] mb-2 leading-snug">
-                    {c.title}
-                  </h3>
-                  <p className="text-xs sm:text-sm text-[#5C5955] leading-relaxed mb-4">
-                    {c.desc}
-                  </p>
-                </div>
-                <button 
-                  onClick={onOpenDemo}
-                  className="text-xs text-[#C84B1F] font-semibold hover:underline inline-flex items-center gap-1 cursor-pointer"
+            {howItWorksCards.map((c) => {
+              const isExpanded = !!expandedHowItWorks[c.num];
+              return (
+                <div 
+                  key={c.num}
+                  className="bg-white rounded-3xl p-7 sm:p-8 border border-[#E7E4DC] shadow-sm flex flex-col justify-between transition-all duration-300"
                 >
-                  <span>Leia mais</span>
-                  <span>→</span>
-                </button>
-              </div>
-            ))}
+                  <div>
+                    <div className="w-8 h-8 rounded-full bg-[#FAF5EE] border border-[#EDE5D8] text-[#C84B1F] flex items-center justify-center font-bold text-xs mb-4">
+                      {c.num}
+                    </div>
+                    <h3 className="text-base sm:text-lg font-bold text-[#1A1816] mb-3 leading-snug">
+                      {c.title}
+                    </h3>
+                    <p className="text-xs sm:text-sm text-[#5C5955] leading-relaxed mb-4">
+                      {isExpanded ? c.fullDesc : c.shortDesc}
+                    </p>
+                  </div>
+                  <div className="pt-2 mt-auto">
+                    <button 
+                      onClick={() => toggleHowItWorks(c.num)}
+                      className="text-xs text-[#8C8881] hover:text-[#1A1816] font-medium inline-flex items-center gap-1 cursor-pointer transition-colors"
+                    >
+                      <span>{isExpanded ? 'Mostrar menos' : 'Leia mais'}</span>
+                      {isExpanded ? <ChevronUp className="w-3.5 h-3.5" /> : <ChevronDown className="w-3.5 h-3.5" />}
+                    </button>
+                  </div>
+                </div>
+              );
+            })}
           </div>
 
         </div>
@@ -400,31 +423,36 @@ export default function AtendedorAutomaticoPage({ onOpenDemo, onOpenAuth, onNavi
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-            {advantages.map((adv, idx) => (
-              <div 
-                key={idx}
-                className="bg-[#FAF9F5] rounded-3xl p-6 border border-[#E7E4DC] shadow-clean flex flex-col justify-between"
-              >
-                <div>
-                  <div className="mb-6">
-                    {adv.visual}
-                  </div>
-                  <h3 className="text-lg font-bold text-[#1A1816] mb-2">
-                    {adv.title}
-                  </h3>
-                  <p className="text-xs sm:text-sm text-[#5C5955] leading-relaxed mb-4">
-                    {adv.desc}
-                  </p>
-                </div>
-                <button 
-                  onClick={onOpenDemo}
-                  className="text-xs text-[#C84B1F] font-semibold hover:underline inline-flex items-center gap-1 cursor-pointer"
+            {advantages.map((adv, idx) => {
+              const isExpanded = !!expandedAdvantages[idx];
+              return (
+                <div 
+                  key={idx}
+                  className="bg-[#FAF9F5] rounded-3xl p-6 border border-[#E7E4DC] shadow-clean flex flex-col justify-between transition-all duration-300"
                 >
-                  <span>Leia mais</span>
-                  <span>→</span>
-                </button>
-              </div>
-            ))}
+                  <div>
+                    <div className="mb-6">
+                      {adv.visual}
+                    </div>
+                    <h3 className="text-lg font-bold text-[#1A1816] mb-2">
+                      {adv.title}
+                    </h3>
+                    <p className="text-xs sm:text-sm text-[#5C5955] leading-relaxed mb-4">
+                      {isExpanded ? adv.fullDesc : adv.shortDesc}
+                    </p>
+                  </div>
+                  <div className="pt-2 mt-auto">
+                    <button 
+                      onClick={() => toggleAdvantage(idx)}
+                      className="text-xs text-[#8C8881] hover:text-[#1A1816] font-medium inline-flex items-center gap-1 cursor-pointer transition-colors"
+                    >
+                      <span>{isExpanded ? 'Mostrar menos' : 'Leia mais'}</span>
+                      {isExpanded ? <ChevronUp className="w-3.5 h-3.5" /> : <ChevronDown className="w-3.5 h-3.5" />}
+                    </button>
+                  </div>
+                </div>
+              );
+            })}
           </div>
 
         </div>
