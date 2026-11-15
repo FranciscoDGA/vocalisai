@@ -1,0 +1,18 @@
+{
+  "name": "Vocalis AI — Atendimento Inteligente por Voz & WhatsApp",
+  "short_name": "Vocalis AI",
+  "description": "Atendimento humanizado por voz e WhatsApp 24/7. Agendamentos, triagem e fechamento de vendas.",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#FAF9F5",
+  "theme_color": "#4F46E5",
+  "orientation": "portrait-primary",
+  "icons": [
+    {
+      "src": "/favicon.svg",
+      "sizes": "192x192 512x512",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    }
+  ]
+}

@@ -98,6 +98,104 @@ export function getBestFemalePtVoice() {
 }
 
 /**
+ * Seleciona a melhor voz masculina em Português do Brasil (Marcus · Vocalis)
+ */
+export function getBestMalePtVoice() {
+  if (typeof window === 'undefined' || !('speechSynthesis' in window)) {
+    return null;
+  }
+
+  const voices = cachedVoices.length > 0 ? cachedVoices : window.speechSynthesis.getVoices();
+  if (!voices || voices.length === 0) return null;
+
+  const ptVoices = voices.filter(v => {
+    const lang = (v.lang || '').toLowerCase().replace('_', '-');
+    return lang.includes('pt-br') || lang === 'pt';
+  });
+
+  if (ptVoices.length === 0) {
+    return voices[0] || null;
+  }
+
+  // 1. Vozes masculinas Microsoft (Daniel, Helder)
+  const msMale = ptVoices.find(v => {
+    const name = v.name.toLowerCase();
+    return name.includes('daniel') || name.includes('helder') || name.includes('antonio');
+  });
+  if (msMale) return msMale;
+
+  // 2. Qualquer voz masculina
+  const anyMale = ptVoices.find(v => {
+    const name = v.name.toLowerCase();
+    return name.includes('male') || name.includes('homem') || name.includes('guy');
+  });
+  if (anyMale) return anyMale;
+
+  // Fallback para melhor voz pt-BR
+  return ptVoices[0];
+}
+
+/**
+ * Executa a fala de acordo com a Persona selecionada
+ */
+export function speakPersonaPt(personaKey = 'roberta', rawText, onStart, onEnd, onError) {
+  if (typeof window === 'undefined' || !('speechSynthesis' in window)) {
+    if (onEnd) onEnd();
+    return;
+  }
+
+  window.speechSynthesis.cancel();
+
+  const spokenText = cleanTextForSpeech(rawText);
+  if (!spokenText) {
+    if (onEnd) onEnd();
+    return;
+  }
+
+  const utterance = new SpeechSynthesisUtterance(spokenText);
+  utterance.lang = 'pt-BR';
+
+  if (personaKey === 'marcus') {
+    utterance.voice = getBestMalePtVoice();
+    utterance.rate = 0.96;
+    utterance.pitch = 0.85;
+  } else if (personaKey === 'camila') {
+    utterance.voice = getBestFemalePtVoice();
+    utterance.rate = 0.94;
+    utterance.pitch = 0.98;
+  } else if (personaKey === 'leticia') {
+    utterance.voice = getBestFemalePtVoice();
+    utterance.rate = 1.08;
+    utterance.pitch = 1.08;
+  } else {
+    // Roberta (default)
+    utterance.voice = getBestFemalePtVoice();
+    utterance.rate = 1.02;
+    utterance.pitch = 1.04;
+  }
+
+  let completed = false;
+  const safeEnd = () => {
+    if (!completed) {
+      completed = true;
+      if (onEnd) onEnd();
+    }
+  };
+
+  utterance.onstart = () => {
+    if (onStart) onStart();
+  };
+
+  utterance.onend = safeEnd;
+  utterance.onerror = (e) => {
+    safeEnd();
+    if (onError) onError(e);
+  };
+
+  window.speechSynthesis.speak(utterance);
+}
+
+/**
  * Limpa e normaliza o texto para fala ultra-fluida e natural:
  * - Remove diacríticos e acentos para IMPEDIR que sintetizadores leiam nomes de acentos ("agudo", "cedilha", "til")
  * - Nunca divide palavras com "ai" ou "os"

@@ -1,9 +1,10 @@
 import React from 'react';
-import { Phone, MessageCircle } from 'lucide-react';
+import { Phone, MessageCircle, FileText } from 'lucide-react';
 import { BRAND } from '../data/content';
 import VocalisLogo from './VocalisLogo';
+import SystemStatusBadge from './SystemStatusBadge';
 
-export default function Footer({ onOpenDocs, onOpenDemo, onNavigate }) {
+export default function Footer({ onOpenDocs, onOpenDemo, onNavigate, onOpenDossier }) {
   return (
     <footer className="bg-white border-t border-[#EBE8E2] pt-16 pb-12 text-[#5C5955] text-xs font-sans overflow-hidden w-full max-w-full">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 w-full max-w-full min-w-0">
@@ -242,6 +243,17 @@ export default function Footer({ onOpenDocs, onOpenDemo, onNavigate }) {
                   Webinars & Demonstrações
                 </button>
               </li>
+              <li>
+                <button 
+                  onClick={() => {
+                    if (onOpenDossier) onOpenDossier();
+                  }}
+                  className="text-[#4F46E5] hover:text-[#4338CA] font-medium transition-colors text-left cursor-pointer flex items-center gap-1.5"
+                >
+                  <FileText className="w-3.5 h-3.5" />
+                  <span>Dossiê para Diretoria (PDF)</span>
+                </button>
+              </li>
             </ul>
           </div>
 
@@ -273,8 +285,10 @@ export default function Footer({ onOpenDocs, onOpenDemo, onNavigate }) {
             </button>
           </div>
 
-          {/* Right: dados tratados conforme a LGPD badge */}
-          <div className="flex items-center gap-1.5 text-xs text-[#8C8881] pt-1 sm:pt-0">
+          {/* Right: Live SLA & LGPD badges */}
+          <div className="flex flex-wrap items-center gap-3 text-xs text-[#8C8881] pt-1 sm:pt-0">
+            <SystemStatusBadge />
+            <span className="hidden sm:inline text-stone-300">·</span>
             <span>dados tratados conforme a LGPD</span>
           </div>
 

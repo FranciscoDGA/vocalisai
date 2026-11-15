@@ -20,6 +20,9 @@ import GuaranteeBadgeSection from './components/GuaranteeBadgeSection';
 import ExitIntentModal from './components/ExitIntentModal';
 import DoneForYouSection from './components/DoneForYouSection';
 import WhatsAppInstantAudioCard from './components/WhatsAppInstantAudioCard';
+import VoiceStudioPlayground from './components/VoiceStudioPlayground';
+import NicheScriptGenerator from './components/NicheScriptGenerator';
+import LiveSocialProofToasts from './components/LiveSocialProofToasts';
 import { supabase, getCurrentUser, signOutUser } from './utils/supabaseClient';
 
 // Lazy-loaded components for optimal bundle size and instant initial load
@@ -46,6 +49,7 @@ const LegalModal = lazy(() => import('./components/LegalModal'));
 const AuthModal = lazy(() => import('./components/AuthModal'));
 const DemoModal = lazy(() => import('./components/DemoModal'));
 const PlatformPresentationSlider = lazy(() => import('./components/PlatformPresentationSlider'));
+const ExecutiveDossierModal = lazy(() => import('./components/ExecutiveDossierModal'));
 
 // Loading indicator component for route suspensions
 function PageFallback() {
@@ -69,6 +73,7 @@ export default function App() {
   const [docsPortalOpen, setDocsPortalOpen] = useState(false);
   const [docsInitialDoc, setDocsInitialDoc] = useState('privacidade');
   const [presentationOpen, setPresentationOpen] = useState(false);
+  const [dossierModalOpen, setDossierModalOpen] = useState(false);
 
   useEffect(() => {
     // Carrega usuário da sessão atual ao iniciar
@@ -129,6 +134,7 @@ export default function App() {
           onOpenLegal={handleOpenLegal}
           onOpenDocs={handleOpenDocs}
           onOpenPresentation={() => setPresentationOpen(true)}
+          onOpenDossier={() => setDossierModalOpen(true)}
         />
       )}
 
@@ -296,8 +302,20 @@ export default function App() {
               onOpenDemo={() => setDemoModalOpen(true)}
             />
 
+            {/* 3. Estúdio & Playground Interativo de Vozes e Sotaques */}
+            <VoiceStudioPlayground 
+              onOpenDemo={() => setDemoModalOpen(true)}
+              onOpenAuth={() => setAuthModalOpen(true)}
+            />
+
             {/* 4. Calculadora de Faturamento Perdido (Agitador de Dor) */}
             <LostRevenueCalculator 
+              onOpenDemo={() => setDemoModalOpen(true)}
+              onOpenAuth={() => setAuthModalOpen(true)}
+            />
+
+            {/* 5. Gerador Instantâneo de Script / Prompt Neural por Nicho */}
+            <NicheScriptGenerator 
               onOpenDemo={() => setDemoModalOpen(true)}
               onOpenAuth={() => setAuthModalOpen(true)}
             />
@@ -380,8 +398,12 @@ export default function App() {
           onOpenDocs={handleOpenDocs}
           onOpenDemo={() => setDemoModalOpen(true)}
           onNavigate={handleNavigate}
+          onOpenDossier={() => setDossierModalOpen(true)}
         />
       )}
+
+      {/* Live Social Proof Realtime Toasts (Active on landing & secondary pages) */}
+      {currentPage !== 'dashboard' && <LiveSocialProofToasts />}
 
       {/* Floating Webchat Widget com a Beatriz */}
       {currentPage !== 'dashboard' && (
@@ -448,6 +470,17 @@ export default function App() {
 
       {/* Exit Intent Recovery Modal */}
       <ExitIntentModal onTriggerCall={() => setDemoModalOpen(true)} />
+
+      {/* Executive Dossier Printable PDF Modal */}
+      {dossierModalOpen && (
+        <Suspense fallback={null}>
+          <ExecutiveDossierModal
+            isOpen={dossierModalOpen}
+            onClose={() => setDossierModalOpen(false)}
+            onOpenDemo={() => setDemoModalOpen(true)}
+          />
+        </Suspense>
+      )}
     </div>
   );
 }

@@ -4,14 +4,14 @@ import {
   MessageSquare, Mail, Radio, ShieldCheck, Sparkles, Building2, 
   Stethoscope, Home, Briefcase, ShoppingBag, Car, BookOpen, Calculator,
   Activity, HelpCircle, Headphones, Calendar, ClipboardList, Voicemail, Truck, Users,
-  Video, LayoutGrid, LifeBuoy, Megaphone, Check
+  Video, LayoutGrid, LifeBuoy, Megaphone, Check, FileText
 } from 'lucide-react';
 import { BRAND } from '../data/content';
 import BrazilFlag from './BrazilFlag';
 import { FlagUK, FlagFR, FlagDE, FlagES, FlagNL, FlagPL, FlagIT } from './CountryFlags';
 import VocalisLogo from './VocalisLogo';
 
-export default function Navbar({ onOpenDemo, onOpenAuth, onOpenLegal, onOpenDocs, currentPage = 'home', onNavigate, currentUser, onLogout, onOpenPresentation }) {
+export default function Navbar({ onOpenDemo, onOpenAuth, onOpenLegal, onOpenDocs, currentPage = 'home', onNavigate, currentUser, onLogout, onOpenPresentation, onOpenDossier }) {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [activeDropdown, setActiveDropdown] = useState(null); // 'produtos' | 'solucoes' | 'recursos' | null
   const navRef = useRef(null);
@@ -332,6 +332,21 @@ export default function Navbar({ onOpenDemo, onOpenAuth, onOpenLegal, onOpenDocs
                       >
                         <LifeBuoy className="w-4 h-4 text-[#5C5955]" />
                         <span>Central de ajuda</span>
+                      </button>
+                      <button
+                        onClick={() => {
+                          setActiveDropdown(null);
+                          if (onOpenDossier) onOpenDossier();
+                        }}
+                        className="w-full flex items-center justify-between px-3 py-2 rounded-xl text-xs font-semibold text-[#4F46E5] hover:bg-indigo-50/70 transition-colors text-left cursor-pointer"
+                      >
+                        <span className="flex items-center gap-2.5">
+                          <FileText className="w-4 h-4 text-[#4F46E5]" />
+                          <span>Dossiê Diretoria</span>
+                        </span>
+                        <span className="px-1.5 py-0.5 rounded text-[9px] font-bold bg-[#4F46E5] text-white">
+                          PDF
+                        </span>
                       </button>
                     </div>
 
@@ -667,6 +682,16 @@ export default function Navbar({ onOpenDemo, onOpenAuth, onOpenLegal, onOpenDocs
             className="block w-full text-left py-1 text-[#1A1816] font-medium"
           >
             Central de ajuda
+          </button>
+          <button 
+            onClick={() => { 
+              setMobileMenuOpen(false); 
+              if (onOpenDossier) onOpenDossier(); 
+            }} 
+            className="flex items-center justify-between w-full text-left py-1 text-[#4F46E5] font-semibold"
+          >
+            <span>Dossiê para Diretoria</span>
+            <span className="text-[10px] bg-[#4F46E5] text-white px-1.5 py-0.5 rounded font-bold">PDF</span>
           </button>
           <button 
             onClick={() => { 
