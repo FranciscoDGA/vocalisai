@@ -225,7 +225,7 @@ export default function DocsPortal({ isOpen, initialDoc = 'privacidade', onClose
             <div className="space-y-8 text-sm text-[#383531] leading-relaxed">
               
               <p>
-                Esta Política se aplica à <strong>VOCALIS TECNOLOGIA LTDA</strong> (CNPJ 00.000.000/0001-00, Alameda Campinas, s/n, Cerqueira César, São Paulo/SP, CEP 01404-900) e aos dados pessoais de usuários de nosso site, de usuários da plataforma e de pessoas que conversam com assistentes configurados por nossos clientes, nos termos da Lei nº 13.709/2018 (LGPD).
+                Esta Política se aplica à <strong>VOCALIS TECNOLOGIA LTDA</strong> (CNPJ 27.824.190/0001-18, Rua Rio Grande do Sul, 24, Setor Maria Liane, Cumaru do Norte/PA, CEP 68398-000) e aos dados pessoais de usuários de nosso site, de usuários da plataforma e de pessoas que conversam com assistentes configurados por nossos clientes, nos termos da Lei nº 13.709/2018 (LGPD).
               </p>
 
               {/* 1. Quem é o controlador */}

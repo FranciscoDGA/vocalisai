@@ -151,7 +151,7 @@ export default function ContatoPage({ onOpenDemo, onOpenAuth, onNavigate }) {
       {/* 2. ATUAÇÃO NACIONAL, COM SEDE (2 Columns) */}
       <section className="py-16 px-4 sm:px-6 lg:px-8 max-w-5xl mx-auto">
         <h2 className="text-xl sm:text-2xl font-bold text-[#1A1816] text-center mb-10">
-          Atuação nacional, com sede em São Paulo (SP)
+          Atuação nacional, com sede em Cumaru do Norte (PA)
         </h2>
 
         <div className="grid grid-cols-1 md:grid-cols-12 gap-8 items-center">
@@ -173,7 +173,7 @@ export default function ContatoPage({ onOpenDemo, onOpenAuth, onNavigate }) {
             <div className="relative z-10 self-start">
               <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-xl bg-white/20 backdrop-blur-md border border-white/30 text-white text-xs font-semibold shadow-xs">
                 <MapPin className="w-3.5 h-3.5 text-white" />
-                <span>Sede Vocalis: São Paulo (SP)</span>
+                <span>Sede Vocalis: Cumaru do Norte (PA)</span>
               </div>
             </div>
           </div>
@@ -185,15 +185,15 @@ export default function ContatoPage({ onOpenDemo, onOpenAuth, onNavigate }) {
                 Vocalis Tecnologia Ltda.
               </h3>
               <p className="text-xs text-[#736F69]">
-                Av. Paulista, 1374, 11º andar — Bela Vista<br />
-                São Paulo - SP, CEP 01310-100
+                Rua Rio Grande do Sul, 24 — Setor Maria Liane<br />
+                Cumaru do Norte - PA, CEP 68398-000
               </p>
             </div>
 
             <div className="space-y-1.5 pt-1 text-xs">
               <div className="flex items-center gap-2">
                 <span className="font-semibold text-[#1A1816]">CNPJ:</span>
-                <span className="font-mono text-[#5C5955]">48.808.897/0001-59</span>
+                <span className="font-mono text-[#5C5955] font-semibold">27.824.190/0001-18</span>
               </div>
 
               <div className="flex items-center gap-2">
