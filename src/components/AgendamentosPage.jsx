@@ -6,6 +6,7 @@ import {
 import { BRAND } from '../data/content';
 import TestCallModal from './TestCallModal';
 import AudioFrequencyWave from './AudioFrequencyWave';
+import AudioCircleWave from './AudioCircleWave';
 import { formatPhoneMask, cleanRawPhone } from '../utils/phoneUtils';
 import { speakFemalePt } from '../utils/voiceUtils';
 
@@ -116,27 +117,13 @@ export default function AgendamentosPage({ onOpenDemo, onOpenAuth, onNavigateHom
             Agende compromissos por telefone e responda perguntas frequentes
           </p>
 
-          {/* Audio Wave Visualizer Circle */}
+          {/* Audio Wave Visualizer Circle with Loop */}
           <div className="flex justify-center mb-8">
-            <button
-              onClick={handleToggleVoiceSample}
-              className="group relative w-24 h-24 rounded-full bg-[#11100F] border border-stone-800 shadow-2xl flex items-center justify-center hover:scale-105 transition-all cursor-pointer"
-              title="Clique para ouvir a voz do agendador"
-            >
-              <div className={`absolute -inset-2 rounded-full border-2 border-[#C84B1F]/30 ${isPlayingAudio ? 'animate-ping' : ''}`} />
-              
-              <div className="flex items-center gap-1 h-9">
-                {[14, 26, 38, 22, 34, 40, 28, 16, 24].map((h, i) => (
-                  <span
-                    key={i}
-                    style={{ height: isPlayingAudio ? `${h}px` : `${h * 0.65}px` }}
-                    className={`w-[3px] rounded-full transition-all duration-200 ${
-                      isPlayingAudio ? 'bg-[#FF9E7D]' : 'bg-[#C84B1F]'
-                    }`}
-                  />
-                ))}
-              </div>
-            </button>
+            <AudioCircleWave 
+              isPlaying={isPlayingAudio}
+              onToggle={handleToggleVoiceSample}
+              size="md"
+            />
           </div>
 
           {/* Phone Input Box matching print */}
