@@ -1,14 +1,18 @@
 import React, { useState } from 'react';
 import { 
-  Phone, Sparkles, Check, ArrowRight, Play, Pause, ChevronDown, ChevronUp,
+  Phone, Sparkles, Check, ArrowRight, ArrowLeft, Play, Pause, ChevronDown, ChevronUp,
   Volume2, Bot, Database, Calendar, Users, ShieldCheck, Clock, CheckCheck,
-  Languages, FileText, GitBranch, ArrowUpRight
+  Languages, FileText, GitBranch, ArrowUpRight, Inbox, BarChart2
 } from 'lucide-react';
 import { BRAND } from '../data/content';
 import TestCallModal from './TestCallModal';
 import AudioFrequencyWave from './AudioFrequencyWave';
 import AudioCircleWave from './AudioCircleWave';
 import BrazilFlag from './BrazilFlag';
+import { 
+  FlagBR, FlagPT, FlagES, FlagUS, FlagUK, FlagFR, 
+  FlagDE, FlagIT, FlagMX, FlagAR, FlagNL, FlagJP 
+} from './CountryFlags';
 import { formatPhoneMask, cleanRawPhone } from '../utils/phoneUtils';
 import { speakFemalePt } from '../utils/voiceUtils';
 
@@ -87,46 +91,121 @@ export default function RecepcionistaVirtualPage({ onOpenDemo, onOpenAuth, onNav
   const advantages = [
     {
       title: 'Triagem de ligações',
-      desc: 'A recepcionista virtual com IA classifica ligações e as transfere para os contatos ou departamentos certos com histórico resumido.',
+      desc: 'A recepcionista virtual com IA classifica ligações antecipadamente e processa os contatos com agilidade.',
       visual: (
-        <div className="bg-[#FAF5EE] rounded-2xl p-4 border border-[#EDE5D8] text-xs font-mono space-y-2">
-          <div className="flex items-center justify-between text-[11px] text-stone-500">
-            <span>Ligação recebida</span>
-            <span className="text-[#C84B1F] font-bold">Ao vivo</span>
+        <div className="h-44 sm:h-48 rounded-2xl bg-[#FAF9F5] border border-[#EBE8E2] p-4 flex flex-col items-center justify-center relative overflow-hidden bg-[radial-gradient(#E2DDD5_1px,transparent_1px)] [background-size:12px_12px]">
+          {/* Card 1 (top) */}
+          <div className="w-[84%] bg-white/95 px-3 py-1.5 rounded-xl border border-stone-200/80 shadow-xs flex items-center justify-between text-[11px] z-10">
+            <span className="flex items-center gap-1.5 text-stone-700">
+              <Phone className="w-3 h-3 text-stone-400" />
+              <span>Ligação salva</span>
+            </span>
+            <span className="px-1.5 py-0.2 rounded bg-rose-50 text-rose-600 font-bold text-[9px] border border-rose-200">
+              Urgente
+            </span>
           </div>
-          <div className="bg-white p-2.5 rounded-xl border border-stone-200 text-stone-800">
-            <span className="text-[10px] text-stone-400 block">Triagem Vocalis</span>
-            <span className="font-bold text-[#1A1816]">Financeiro → Ramal 204</span>
+
+          {/* Card 2 (middle) */}
+          <div className="w-[89%] bg-white/95 px-3 py-1.5 rounded-xl border border-stone-200/80 shadow-xs flex items-center justify-between text-[11px] -mt-1.5 z-20">
+            <span className="flex items-center gap-1.5 text-stone-700">
+              <Phone className="w-3 h-3 text-stone-400" />
+              <span>Ligação salva</span>
+            </span>
+            <span className="px-1.5 py-0.2 rounded bg-amber-50 text-amber-700 font-bold text-[9px] border border-amber-200">
+              Média
+            </span>
+          </div>
+
+          {/* Card 3 (bottom) */}
+          <div className="w-[94%] bg-white px-3.5 py-2.5 rounded-xl border border-stone-200 shadow-md text-[11px] -mt-1.5 z-30 space-y-2">
+            <div className="flex items-center justify-between">
+              <span className="flex items-center gap-1.5 text-stone-700 font-medium">
+                <Phone className="w-3 h-3 text-stone-400" />
+                <span>Ligação salva</span>
+              </span>
+              <span className="px-1.5 py-0.2 rounded bg-sky-50 text-sky-700 font-bold text-[9px] border border-sky-200">
+                Info
+              </span>
+            </div>
+            <div>
+              <span className="text-[10px] text-stone-400 font-medium block mb-1">Transcrição</span>
+              <div className="space-y-1">
+                <div className="h-1.5 bg-stone-100 rounded-full w-full" />
+                <div className="h-1.5 bg-stone-100 rounded-full w-2/3" />
+              </div>
+            </div>
           </div>
         </div>
       )
     },
     {
       title: 'Multilíngue',
-      desc: 'Nossa recepcionista virtual com IA é multilíngue e capaz de conversar com fluência nativa em mais de 60 idiomas diferentes.',
+      desc: 'Nossa recepcionista virtual com IA é multilíngue e capaz de processar ligações com fluência nativa.',
       visual: (
-        <div className="bg-[#FAF5EE] rounded-2xl p-4 border border-[#EDE5D8] flex flex-wrap items-center justify-center gap-2 text-2xl">
-          <span>🇧🇷</span>
-          <span>🇺🇸</span>
-          <span>🇪🇸</span>
-          <span>🇫🇷</span>
-          <span>🇩🇪</span>
-          <span>🇮🇹</span>
-          <span>🇵🇹</span>
-          <span>🇳🇱</span>
+        <div className="h-44 sm:h-48 rounded-2xl bg-[#FAF9F5] border border-[#EBE8E2] p-4 flex items-center justify-center relative overflow-hidden bg-[radial-gradient(#E2DDD5_1px,transparent_1px)] [background-size:12px_12px]">
+          <div className="grid grid-cols-6 gap-2 sm:gap-2.5">
+            {[
+              { Component: FlagBR, name: 'Brasil' },
+              { Component: FlagPT, name: 'Portugal' },
+              { Component: FlagES, name: 'Espanha' },
+              { Component: FlagUS, name: 'Estados Unidos' },
+              { Component: FlagUK, name: 'Reino Unido' },
+              { Component: FlagFR, name: 'França' },
+              { Component: FlagDE, name: 'Alemanha' },
+              { Component: FlagIT, name: 'Itália' },
+              { Component: FlagMX, name: 'México' },
+              { Component: FlagAR, name: 'Argentina' },
+              { Component: FlagNL, name: 'Holanda' },
+              { Component: FlagJP, name: 'Japão' }
+            ].map((f, i) => (
+              <div
+                key={i}
+                className="w-8 h-8 sm:w-9 sm:h-9 bg-white rounded-xl shadow-xs border border-stone-200/90 flex items-center justify-center hover:scale-110 hover:shadow-md transition-all cursor-pointer"
+                title={f.name}
+              >
+                <f.Component className="w-5 h-3.5 sm:w-6 sm:h-4" />
+              </div>
+            ))}
+          </div>
         </div>
       )
     },
     {
       title: 'Documentação precisa de cada ligação',
-      desc: 'A recepcionista virtual com IA documenta cada ligação com precisão, gravando áudio, gerando transcrição e integrando ao CRM.',
+      desc: 'A recepcionista virtual com IA documenta cada ligação com precisão, salvando o áudio e notas.',
       visual: (
-        <div className="bg-[#FAF5EE] rounded-2xl p-4 border border-[#EDE5D8] text-xs space-y-1.5 font-sans">
-          <div className="flex items-center justify-between font-bold text-stone-800">
-            <span>✓ Transcrição gerada</span>
-            <span className="text-emerald-600 font-mono text-[10px]">100% gravado</span>
+        <div className="h-44 sm:h-48 rounded-2xl bg-[#FAF9F5] border border-[#EBE8E2] p-3 flex flex-col items-center justify-center relative overflow-hidden bg-[radial-gradient(#E2DDD5_1px,transparent_1px)] [background-size:12px_12px]">
+          <div className="w-full max-w-[260px] relative py-2">
+            <svg viewBox="0 0 240 65" className="w-full h-14 mb-1" fill="none">
+              <path 
+                d="M 60 12 Q 120 18 120 55 Q 120 18 180 12" 
+                stroke="#C84B1F" 
+                strokeWidth="1.5" 
+                strokeDasharray="3 3" 
+                opacity="0.45"
+              />
+            </svg>
+
+            {/* Top row pills */}
+            <div className="flex items-center justify-between absolute top-0 inset-x-0">
+              <div className="px-2.5 py-1 rounded-full bg-white border border-stone-200 shadow-xs text-[10px] font-semibold text-stone-700 flex items-center gap-1">
+                <Database className="w-3 h-3 text-[#C84B1F]" />
+                <span>Sistemas de CRM</span>
+              </div>
+              <div className="px-2.5 py-1 rounded-full bg-white border border-stone-200 shadow-xs text-[10px] font-semibold text-stone-700 flex items-center gap-1">
+                <BarChart2 className="w-3 h-3 text-[#C84B1F]" />
+                <span>Ferramentas de gestão</span>
+              </div>
+            </div>
+
+            {/* Bottom center pill */}
+            <div className="flex justify-center mt-2">
+              <div className="px-3 py-1 rounded-full bg-white border border-stone-200 shadow-xs text-[10px] font-semibold text-stone-700 flex items-center gap-1">
+                <Calendar className="w-3 h-3 text-[#C84B1F]" />
+                <span>Agenda de compromissos</span>
+              </div>
+            </div>
           </div>
-          <p className="text-[11px] text-stone-600">Enviado para HubSpot, RD Station e WhatsApp da gerência.</p>
         </div>
       )
     }
@@ -424,7 +503,7 @@ export default function RecepcionistaVirtualPage({ onOpenDemo, onOpenAuth, onNav
       </section>
 
       {/* ========================================================
-          5. VANTAGENS DA NOSSA RECEPCIONISTA (3 Cards com Visual)
+          5. VANTAGENS DA NOSSA RECEPCIONISTA (3 Cards com Visual - 1:1 Kloel)
          ======================================================== */}
       <section className="py-24 bg-[#FAF9F5]">
         <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -436,8 +515,15 @@ export default function RecepcionistaVirtualPage({ onOpenDemo, onOpenAuth, onNav
                 <span className="font-serif-title italic text-[#C84B1F]">recepcionista virtual com IA</span>
               </h2>
             </div>
-            <div className="max-w-md text-xs sm:text-sm text-[#5C5955]">
-              As principais vantagens da nossa recepcionista virtual com IA são a disponibilidade 24 horas por dia, a redução de custos com folha de pagamento e o aumento na taxa de conversão de clientes.
+            <div className="max-w-md text-xs sm:text-sm text-[#5C5955] leading-relaxed">
+              As principais vantagens da nossa recepcionista virtual com IA são a disponibilidade 24 horas por dia, o aumento da...
+              <button 
+                onClick={onOpenDemo}
+                className="text-[#736F69] hover:text-[#1A1816] font-medium text-xs ml-1 inline-flex items-center gap-0.5 cursor-pointer transition-colors"
+              >
+                <span>Leia mais</span>
+                <ChevronDown className="w-3 h-3" />
+              </button>
             </div>
           </div>
 
@@ -445,28 +531,49 @@ export default function RecepcionistaVirtualPage({ onOpenDemo, onOpenAuth, onNav
             {advantages.map((adv, idx) => (
               <div 
                 key={idx}
-                className="bg-white rounded-3xl p-6 border border-[#E7E4DC] shadow-clean flex flex-col justify-between"
+                className="bg-white rounded-3xl p-6 border border-[#E7E4DC] shadow-sm flex flex-col justify-between hover:shadow-md transition-shadow"
               >
                 <div>
-                  <div className="mb-6">
+                  <div className="mb-5">
                     {adv.visual}
                   </div>
-                  <h3 className="text-lg font-bold text-[#1A1816] mb-2">
+                  <h3 className="text-base sm:text-lg font-bold text-[#1A1816] mb-2">
                     {adv.title}
                   </h3>
-                  <p className="text-xs sm:text-sm text-[#5C5955] leading-relaxed mb-4">
+                  <p className="text-xs sm:text-sm text-[#5C5955] leading-relaxed">
                     {adv.desc}
                   </p>
                 </div>
-                <button 
-                  onClick={onOpenDemo}
-                  className="text-xs text-[#C84B1F] font-semibold hover:underline inline-flex items-center gap-1 cursor-pointer"
-                >
-                  <span>Leia mais</span>
-                  <span>→</span>
-                </button>
+                
+                <div className="pt-4 mt-auto">
+                  <button 
+                    onClick={onOpenDemo}
+                    className="text-xs text-[#8C8881] hover:text-[#1A1816] font-medium inline-flex items-center gap-1 cursor-pointer transition-colors"
+                  >
+                    <span>Leia mais</span>
+                    <ChevronDown className="w-3 h-3" />
+                  </button>
+                </div>
               </div>
             ))}
+          </div>
+
+          {/* Centered Pagination Arrows (1:1 com print do Kloel) */}
+          <div className="flex items-center justify-center gap-3 mt-10">
+            <button 
+              type="button"
+              className="w-9 h-9 rounded-full bg-white border border-[#E7E4DC] hover:border-[#1A1816] flex items-center justify-center text-stone-600 hover:text-[#1A1816] transition-colors shadow-xs cursor-pointer"
+              title="Anterior"
+            >
+              <ArrowLeft className="w-4 h-4" />
+            </button>
+            <button 
+              type="button"
+              className="w-9 h-9 rounded-full bg-white border border-[#E7E4DC] hover:border-[#1A1816] flex items-center justify-center text-stone-600 hover:text-[#1A1816] transition-colors shadow-xs cursor-pointer"
+              title="Próximo"
+            >
+              <ArrowRight className="w-4 h-4" />
+            </button>
           </div>
 
         </div>
