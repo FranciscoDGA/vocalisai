@@ -136,3 +136,32 @@ Antes de ir para a reunião com o cliente, certifique-se de ter:
    * Conformidade integral com a LGPD (Lei Geral de Proteção de Dados).
 4. **Calculadora de ROI:**
    * Mostre que economizar o salário e encargos de 1 recepcionista presencial (R$ 2.800/mês com impostos) mais a recuperação de 5 pacientes perdidos por mês paga a plataforma 4 vezes no mesmo mês.
+
+---
+
+## 5. REGRAS DE OURO DO FUNIL: O PAPEL DA ROBERTA (SDR) E DO ESPECIALISTA (CLOSER)
+
+Para maximizar a conversão de vendas e proteger o tempo do time comercial, a operação segue uma divisão rigorosa de responsabilidades:
+
+### 1. A Roberta (Inteligência Artificial - SDR / Qualificadora)
+* **Onde atua:** No site principal (formulário de captura do Hero).
+* **Missão:** Ligar imediatamente (em menos de 3 segundos) para o número que o visitante colocou no site.
+* **Comportamento na chamada:**
+  * Demonstra a voz neural ultra-realista sem pausas robóticas;
+  * Quebra objeções de ceticismo ("parece uma pessoa real", "entende sotaques", "responde interrupções");
+  * Faz 2 a 3 perguntas de qualificação rápida (qual o segmento da empresa, quantas chamadas recebe);
+  * Quando percebe que o lead tem interesse real e potencial de compra, dispara o gatilho de transbordo comercial.
+
+### 2. O Francisco (Especialista Humano - Closer / Fechador)
+* **Contato Oficial:** WhatsApp / Telefone Comercial **`(94) 98442-3948`**.
+* **Missão:** Conduzir a reunião de fechamento de 20 minutos e formalizar o contrato.
+* **Regra de Ouro da Linha Telefônica:**
+  * O número `(94) 98442-3948` **NUNCA** deve ser divulgado como linha pública de teste para "curiosos tentarem pegar o robô no pulo".
+  * Esse canal é reservado exclusivamente para:
+    1. Leads qualificados que a Roberta direcionou via WhatsApp com diagnóstico pronto;
+    2. Visitantes de alta intenção que clicaram em *"Prefiro falar com uma pessoa no WhatsApp"*;
+    3. Apresentação da proposta comercial e envio do link de pagamento/setup.
+
+---
+
+*Manual Operacional de Vendas mantido como guia estratégico da Vocalis AI & AI Agency OS.*

@@ -500,4 +500,52 @@ Para documentação exaustiva, consulte o arquivo mestre:
 
 ---
 
+## 14. DIRETRIZ ESTRATÉGICA DE FUNIL: OUTBOUND HERO VS. PROTEÇÃO DE NÚMERO DO ESPECIALISTA
+
+### 14.1 Diagnóstico de Conversão & Decisão Homologada (Novembro/2026)
+Durante a validação de arquitetura de conversão da landing page, identificou-se um ponto nevrálgico sobre a disposição de números telefônicos e fricção de entrada do lead:
+
+1. **A Força do Formulário no Topo (Hero - Outbound):**
+   * **Fluxo:** O visitante digita seu número `(DDD) 9XXXX-XXXX` no formulário do Hero e clica em *"Receber ligação da Roberta"*.
+   * **Vantagens de Alta Conversão:**
+     * **Fricção Zero:** O usuário não precisa abrir discador, digitar 11 dígitos ou gastar minutos de plano móvel.
+     * **Captura de Lead (Opt-in Ativo):** O número é imediatamente gravado no banco/CRM antes mesmo da ligação começar. Caso ele desligue rápido, a agência mantém o lead qualificado para nutrição e follow-up no WhatsApp.
+     * **Efeito "UAU":** O telefone toca na mão do lead em menos de 3 segundos, provando a velocidade e o poder da tecnologia.
+
+2. **O Risco do Banner de Discagem Passiva (Inbound):**
+   * Anteriormente, um banner escuro de "Desafio ao Vivo" convidava o visitante a discar diretamente para `(94) 98442-3948`.
+   * **Gargalos Identificados:**
+     * **Queda de Conversão:** Pedir para o lead discar gera atrito e preguiça no usuário médio de internet.
+     * **Conflito de Papéis:** O número `(94) 98442-3948` é o WhatsApp/telefone comercial do **Especialista Humano (Francisco)**, responsável pela reunião de demonstração executiva e fechamento de contratos (mesa de vendas).
+     * **Queima do Canal do Especialista:** Se colocado em um banner com o texto *"Tente pegar o robô no pulo"*, o especialista humano receberia chamadas de curiosos procurando uma IA, e o lead não experimentaria a assistente automática na linha tradicional.
+
+### 14.2 Separação de Papéis no Funil de Vendas
+
+```
+                    [ VISITANTE NO SITE ]
+                              │
+            ┌─────────────────┴─────────────────┐
+            ▼                                   ▼
+ [Formulário Hero / Topo]             [Botões Transbordo / VIP]
+            │                                   │
+   (Digita o Celular)                 ("Falar com Especialista")
+            │                                   │
+            ▼                                   ▼
+    [ ROBERTA (IA) ]                  [ FRANCISCO (HUMANO) ]
+  • Liga em 3 segundos                 • Mesa de Fechamento
+  • Demonstra voz neural               • Reunião de 20 minutos
+  • Quebra objeções                    • Apresentação de Proposta
+  • Qualifica nicho e dor              • Fechamento e Onboarding
+            │                                   ▲
+            └─────────── [ Lead Quente ] ───────┘
+                     (Transbordo Direto)
+```
+
+### 14.3 Ações Técnicas Implementadas:
+* **Remoção do Banner Redundante:** O componente `LivePhoneChallengeBanner` foi desacoplado de `App.jsx`, mantendo o fluxo da página ultra-limpo, veloz e focado na ação de maior conversão no Hero.
+* **Blindagem do Contato Comercial:** O número `(94) 98442-3948` permanece restrito aos pontos estratégicos de fechamento (links de WhatsApp do especialista, botões de contato humano e transbordo qualificado da Roberta).
+* **Homologação em Produção:** Build validado e deploy ativado na Vercel (`https://vocalisai-phi.vercel.app`) via commit no branch `main`.
+
+---
+
 *Documento gerado e mantido na raiz do projeto como referência oficial de engenharia, arquitetura e produto.*
