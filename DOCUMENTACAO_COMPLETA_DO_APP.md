@@ -21,6 +21,7 @@
 8. [Roadmap Futuro (O que Vamos Construir)](#8-roadmap-futuro-o-que-vamos-construir)
 9. [Manual Operacional: Como Gerar Leads e Vender no Piloto Automático](#9-manual-operacional-como-gerar-leads-e-vender-no-piloto-automático)
 10. [Pauta e Sprint de Execução para Amanhã (Checklist Pronto)](#10-pauta-e-sprint-de-execução-para-amanhã-checklist-pronto)
+15. [Guia Mestre dos 3 Pilares Open-Source (Cal.com, Chatwoot e Voice Studio)](#15-guia-mestre-dos-3-pilares-open-source-calcom-chatwoot-e-voice-studio)
 
 ---
 
@@ -545,6 +546,143 @@ Durante a validação de arquitetura de conversão da landing page, identificou-
 * **Remoção do Banner Redundante:** O componente `LivePhoneChallengeBanner` foi desacoplado de `App.jsx`, mantendo o fluxo da página ultra-limpo, veloz e focado na ação de maior conversão no Hero.
 * **Blindagem do Contato Comercial:** O número `(94) 98442-3948` permanece restrito aos pontos estratégicos de fechamento (links de WhatsApp do especialista, botões de contato humano e transbordo qualificado da Roberta).
 * **Homologação em Produção:** Build validado e deploy ativado na Vercel (`https://vocalisai-phi.vercel.app`) via commit no branch `main`.
+
+---
+
+## 15. GUIA MESTRE DOS 3 PILARES OPEN-SOURCE (CAL.COM, CHATWOOT E VOICE STUDIO)
+
+Este guia serve como referência técnica e comercial para expandir a Vocalis AI com ferramentas de código aberto de padrão mundial, aumentando o ticket médio da sua agência e eliminando custos de assinaturas terceiras (como Calendly, Intercom e ElevenLabs).
+
+---
+
+### 15.1 PILAR 1: Cal.com (`https://github.com/calcom/cal.diy`)
+**Função no Ecossistema:** Motor Oficial de Agendamentos da Roberta e Camila.
+
+#### 1. Por que usar o Cal.com:
+* Substitui o Calendly com custo zero (100% open-source e auto-hospedável).
+* Sincronização bidirecional em tempo real com **Google Agenda, Microsoft Outlook e Apple Calendar**.
+* Suporte nativo a fusos horários, múltiplos atendentes, limites de reuniões diárias e envio de lembretes.
+* Permite criar URLs de agendamento personalizadas sob a sua própria marca (ex: `agenda.suaagencia.com.br/clinica-saude`).
+
+#### 2. Como Rodar (Self-Hosted via Docker):
+```bash
+# Clonar o repositório oficial
+git clone --recursive https://github.com/calcom/cal.com.git
+cd cal.com
+
+# Iniciar via Docker Compose
+docker compose up -d
+```
+*Se preferir não hospedar servidores no início, a versão em nuvem gratuita em `https://cal.com` atende perfeitamente até 1 calendário por conta.*
+
+#### 3. Como Conectar com a Vocalis AI:
+1. No painel do Cal.com, vá em **Settings > Developer > API Keys** e gere uma chave de API.
+2. Crie um tipo de evento (ex: `Consulta Inicial - 30 Minutos`) e pegue o `eventTypeId`.
+3. **Fluxo na Roberta (Telefone) e Camila (WhatsApp):**
+   * A IA pergunta: *"Você prefere atendimento pela manhã ou à tarde?"*.
+   * O cliente responde: *"Amanhã às 14 horas"*.
+   * A Vocalis faz uma requisição HTTP REST para o Cal.com:
+     ```http
+     POST https://api.cal.com/v1/bookings?apiKey=SUA_CHAVE_API
+     Content-Type: application/json
+
+     {
+       "eventTypeId": 12345,
+       "start": "2026-11-16T14:00:00.000Z",
+       "responses": {
+         "name": "Carlos Andrade",
+         "email": "carlos@gmail.com",
+         "notes": "Agendado via voz pela Roberta"
+       },
+       "metadata": { "channel": "telefone_vocalis" }
+     }
+     ```
+   * O Cal.com bloqueia a agenda do médico/corretor e devolve a confirmação.
+   * A Roberta confirma na linha: *"Perfeito, Carlos! Seu horário foi reservado para amanhã às 14h. Acabei de te enviar a confirmação no WhatsApp com o link do endereço!"*.
+
+---
+
+### 15.2 PILAR 2: Chatwoot (`https://github.com/chatwoot/chatwoot`)
+**Função no Ecossistema:** Central de Atendimento Omnichannel e Painel de Transbordo Humano.
+
+#### 1. Por que usar o Chatwoot:
+* Elimina a principal objeção de venda corporativa: *"E se o cliente quiser falar com uma pessoa de verdade?"*.
+* Uma única caixa de entrada para múltiplos canais: **WhatsApp, Webchat do site, Instagram Direct e E-mail**.
+* Distribuição de conversas entre atendentes humanos, controle de filas e relatórios de tempo de resposta.
+
+#### 2. Como Rodar:
+* Via Docker oficial com 1 comando:
+  ```bash
+  docker run -d -p 3000:3000 --name chatwoot chatwoot/chatwoot:latest
+  ```
+* Ou criando conta gratuita diretamente em `https://app.chatwoot.com`.
+
+#### 3. Como Conectar com a Vocalis AI (Transbordo Inteligente):
+1. No Chatwoot, vá em **Settings > Inboxes > Add Inbox** e crie uma caixa de entrada do tipo **API** ou conecte a sua instância de WhatsApp (UazAPI / Evolution).
+2. Configure o Webhook do WhatsApp para enviar as mensagens para a Vocalis AI.
+3. **Lógica de Transbordo Automático da IA:**
+   * Enquanto o cliente estiver tirando dúvidas ou fazendo agendamento, a IA da Vocalis responde de forma autônoma.
+   * Quando o cliente diz: *"Quero falar com um atendente humano"*, *"Falar com atendente"* ou a IA detecta insatisfação:
+     * A Vocalis aciona a API do Chatwoot para atribuir a conversa a um operador humano:
+       ```http
+       POST https://app.chatwoot.com/api/v1/accounts/1/conversations/45/toggle_status
+       api_access_token: SEU_ACCESS_TOKEN
+       Content-Type: application/json
+
+       { "status": "open" }
+       ```
+     * A IA envia a mensagem final: *"Com certeza! Já transferi nosso bate-papo para um de nossos especialistas. Por favor, aguarde só um instante que alguém da nossa equipe vai te responder por aqui."*
+     * A IA se silencia e a equipe da empresa assume o atendimento no painel do Chatwoot sem perder o histórico do que foi conversado.
+
+---
+
+### 15.3 PILAR 3: Voice Studio (`https://github.com/debpalash/VoiceStudio`)
+**Função no Ecossistema:** Clonagem de Voz Neural Local e Proprietária (Alternativa ao ElevenLabs).
+
+#### 1. Por que usar o Voice Studio:
+* **Zero Custo de Mensalidade em Dólares:** Não depende de planos caros de US$ 99 a US$ 330/mês da ElevenLabs.
+* **Margem de Lucro Brutal para a Agência:** Permite vender o serviço de *"Clonagem da Voz do Dono"* por uma taxa de setup de R$ 1.500 a R$ 3.000 para clínicas médicas (voz do médico titular), imobiliárias (voz do corretor mais querido) e escritórios de advocacia.
+* Roda modelos neurais de ponta como **XTTS-v2, Coqui TTS, Bark e RVC** com capacidade de clonagem a partir de áudios curtos.
+
+#### 2. Como Rodar Localmente no seu Computador ou Servidor GPU:
+```bash
+# 1. Clonar o repositório
+git clone https://github.com/debpalash/VoiceStudio.git
+cd VoiceStudio
+
+# 2. Criar ambiente virtual Python
+python -m venv venv
+venv\Scripts\activate
+
+# 3. Instalar dependências de áudio e inteligência artificial
+pip install -r requirements.txt
+
+# 4. Iniciar a interface gráfica do estúdio
+python app.py
+```
+*Recomendado ter placa de vídeo NVIDIA (RTX 3060 ou superior) ou alugar uma máquina GPU por US$ 0.20/hora na RunPod/Vast.ai.*
+
+#### 3. Como Operar o Processo de Clonagem na Prática:
+1. **Coleta da Amostra:**
+   * Peça para o cliente (ex: Dr. Carlos) gravar uma mensagem de 60 a 90 segundos lendo um texto formal no gravador do celular ou em uma nota de voz no WhatsApp em um ambiente silencioso.
+2. **Processamento no Voice Studio:**
+   * Faça upload do áudio no Voice Studio.
+   * O sistema remove ruídos de fundo e extrai a "assinatura acústica" (pitch, timbre, ritmo de respiração).
+   * Gere um texto de teste: *"Olá, sou o Dr. Carlos. Obrigado por ligar para nossa clínica. Em que posso te ajudar hoje?"*.
+3. **Integração com a Vocalis AI:**
+   * Exporte os pesos do modelo (`voice_embedding.npy` ou amostra de referência `.wav`).
+   * No painel da Vocalis (`InsideDashboardSection.jsx > Estúdio de Voz`), suba o arquivo de voz no perfil do assistente.
+   * Conecte esse perfil ao motor de telefonia ou ao novo servidor de TTS neural da Vocalis.
+
+---
+
+### 15.4 Matriz de Monetização dos 3 Pilares para a Sua Agência
+
+| Recurso Integrado | Valor Cobrado do Cliente Final | Custo Operacional para Você | Margem Líquida |
+| :--- | :--- | :--- | :--- |
+| **Atendimento Telefônico com Agendamento Cal.com** | R$ 1.500 (Setup) + R$ 497/mês | R$ 0,00 (Cal.com open-source) | **100% Líquido** |
+| **Central WhatsApp com Transbordo Humano Chatwoot** | R$ 900 (Setup) + R$ 250/mês | R$ 0,00 (Chatwoot open-source) | **100% Líquido** |
+| **Voz Clonada Exclusiva do Dono (Voice Studio)** | R$ 2.500 (Taxa única de clonagem) | R$ 0,00 (Processado no seu PC/GPU) | **100% Líquido** |
 
 ---
 
