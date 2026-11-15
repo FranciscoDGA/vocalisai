@@ -30,3 +30,8 @@ dist-ssr
 
 
 .vercel
+
+# WhatsApp Server local files
+whatsapp-server/node_modules
+whatsapp-server/session_auth
+

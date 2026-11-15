@@ -1,82 +1,129 @@
 import React from 'react';
-import { Stethoscope, Building2, Scale, ShoppingBag, Wrench, Banknote, ArrowUpRight } from 'lucide-react';
-import { NICHES } from '../data/content';
+import { 
+  Headphones, Calendar, UserCheck, ShoppingBag, FileText, 
+  Sparkles, ArrowUpRight, ArrowRight 
+} from 'lucide-react';
+import { BRAND } from '../data/content';
 
-const iconMap = {
-  Stethoscope,
-  Building2,
-  Scale,
-  ShoppingBag,
-  Wrench,
-  Banknote,
-};
+export default function UseCasesSection({ onOpenDemo, onOpenAuth, onNavigate }) {
+  const brandName = BRAND?.name || 'Kloel';
 
-export default function UseCasesSection({ onOpenDemo }) {
+  const capabilities = [
+    {
+      id: 'recepcao',
+      title: 'Recepção',
+      desc: 'Atende, filtra e encaminha cada ligação para quem precisa recebê-la.',
+      icon: Headphones,
+      page: 'recepcionista-virtual'
+    },
+    {
+      id: 'agendamentos',
+      title: 'Agendamentos',
+      desc: 'Marca, remarca e confirma horários direto na sua agenda.',
+      icon: Calendar,
+      page: 'agendamentos'
+    },
+    {
+      id: 'suporte',
+      title: 'Suporte ao cliente',
+      desc: 'Resolve as dúvidas de sempre e segue as suas regras nos casos especiais.',
+      icon: UserCheck,
+      page: 'agente-suporte'
+    },
+    {
+      id: 'pedidos',
+      title: 'Pedidos',
+      desc: 'Recebe pedidos e solicitações a qualquer hora, já no formato que a sua equipe usa.',
+      icon: ShoppingBag,
+      page: 'atendedor-automatico'
+    },
+    {
+      id: 'recados',
+      title: 'Recados e resumos',
+      desc: 'Quando você não pode atender, ela anota tudo e manda por e-mail.',
+      icon: FileText,
+      page: 'equipe-externa'
+    },
+    {
+      id: 'integracoes',
+      title: 'O que o seu negócio pedir',
+      desc: 'Fluxos sob medida, conectados às ferramentas que você já usa.',
+      icon: Sparkles,
+      page: 'integracoes'
+    }
+  ];
+
+  const handleCardClick = (page) => {
+    if (onNavigate) {
+      onNavigate(page);
+    } else if (onOpenDemo) {
+      onOpenDemo();
+    }
+  };
+
   return (
-    <section id="casos-de-uso" className="py-24 bg-[#FAF9F5] border-t border-[#EBE8E2]">
+    <section id="casos-de-uso" className="py-20 sm:py-28 bg-[#FAF9F5] border-t border-[#EBE8E2]">
       <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
         
-        {/* Section Header */}
-        <div className="flex flex-col md:flex-row md:items-end justify-between mb-16 gap-6">
+        {/* Section Header (1:1 com o Kloel) */}
+        <div className="flex flex-col md:flex-row md:items-end justify-between mb-12 sm:mb-16 gap-6">
           <div className="max-w-2xl">
-            <span className="inline-block text-xs font-semibold text-[#C84B1F] uppercase tracking-wider mb-3">
-              CASOS DE USO
-            </span>
-            <h2 className="text-4xl sm:text-5xl font-normal text-[#1A1816] tracking-tight leading-[1.12]">
-              Feita para a rotina<br />
-              <span className="font-serif-title italic text-[#C84B1F]">de quem atende.</span>
+            <h2 className="text-3xl sm:text-5xl font-normal text-[#1A1816] tracking-tight leading-[1.15]">
+              Feita para o <span className="font-serif-title italic text-[#C84B1F]">dia a dia</span> de quem atende.
             </h2>
-            <p className="mt-4 text-base sm:text-lg text-[#5C5955] leading-relaxed">
-              Descubra como empresas de diferentes setores estão escalando seus atendimentos com humanidade e zero fila.
+            <p className="mt-4 text-sm sm:text-base text-[#5C5955] leading-relaxed">
+              Do consultório à imobiliária, da oficina ao e-commerce: a {brandName} se encaixa na agenda, no CRM e no jeito de trabalhar que você já tem.
             </p>
           </div>
           
           <button
-            onClick={onOpenDemo}
-            className="inline-flex items-center gap-2 text-sm font-semibold text-[#C84B1F] hover:text-[#9E3612] transition-colors"
+            onClick={onOpenAuth || onOpenDemo}
+            className="inline-flex items-center gap-2 px-5 py-2.5 rounded-full border border-[#D0CBC0] hover:border-[#1A1816] bg-white text-xs sm:text-sm font-semibold text-[#1A1816] hover:bg-[#FAF9F5] transition-all cursor-pointer shadow-xs self-start md:self-auto shrink-0 group"
           >
-            <span>Ver todos os nichos</span>
-            <ArrowUpRight className="w-4 h-4" />
+            <span>Começar agora</span>
+            <ArrowRight className="w-4 h-4 text-[#736F69] group-hover:text-[#1A1816] group-hover:translate-x-0.5 transition-all" />
           </button>
         </div>
 
-        {/* 6 Cards Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {NICHES.map((niche) => {
-            const Icon = iconMap[niche.icon] || Stethoscope;
+        {/* 6 Cards Container Unificado (Grid 3x2 idêntico ao Kloel) */}
+        <div className="bg-white rounded-3xl border border-[#E7E4DC] shadow-sm overflow-hidden grid grid-cols-1 md:grid-cols-3">
+          {capabilities.map((item, idx) => {
+            const Icon = item.icon;
+            
+            // Bordas internas do grid 3x2:
+            // Linha 1 (0, 1, 2) tem borda inferior
+            // Colunas 0 e 1 de cada linha têm borda direita
+            const isBottomBorder = idx < 3;
+            const isRightBorder = (idx % 3) !== 2;
+
             return (
               <div
-                key={niche.id}
-                className="bg-white rounded-3xl p-7 border border-[#E7E4DC] shadow-clean shadow-card-hover flex flex-col justify-between group cursor-pointer transition-all hover:-translate-y-1"
-                onClick={onOpenDemo}
+                key={item.id}
+                onClick={() => handleCardClick(item.page)}
+                className={`p-7 sm:p-8 flex flex-col justify-between group cursor-pointer transition-colors hover:bg-[#FAF9F5] ${
+                  isBottomBorder ? 'border-b border-[#EBE8E2]' : ''
+                } ${
+                  isRightBorder ? 'md:border-r border-[#EBE8E2]' : ''
+                }`}
               >
                 <div>
-                  <div className="flex items-center justify-between mb-6">
-                    <div className="w-12 h-12 rounded-2xl bg-[#FAF5EE] border border-[#EDE5D8] flex items-center justify-center text-[#C84B1F] group-hover:scale-110 transition-transform">
-                      <Icon className="w-5 h-5" />
-                    </div>
-                    <ArrowUpRight className="w-5 h-5 text-[#A6A29A] group-hover:text-[#C84B1F] transition-colors" />
+                  <div className="flex items-center gap-2 mb-3">
+                    <Icon className="w-4 h-4 text-[#C84B1F] shrink-0" />
+                    <h3 className="text-base sm:text-lg font-bold text-[#1A1816] flex items-center gap-1 group-hover:text-[#C84B1F] transition-colors">
+                      <span>{item.title}</span>
+                      <ArrowUpRight className="w-3.5 h-3.5 text-[#A6A29A] group-hover:text-[#C84B1F] group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-all" />
+                    </h3>
                   </div>
 
-                  <h3 className="text-xl font-bold text-[#1A1816] mb-2">
-                    {niche.name}
-                  </h3>
-                  <p className="text-xs font-medium text-[#C84B1F] mb-3">
-                    {niche.tagline}
-                  </p>
-                  <p className="text-sm text-[#5C5955] leading-relaxed mb-6">
-                    {niche.description}
+                  <p className="text-xs sm:text-sm text-[#5C5955] leading-relaxed">
+                    {item.desc}
                   </p>
                 </div>
 
-                {/* Metrics Pill */}
-                <div className="pt-4 border-t border-[#F0EDE8] grid grid-cols-2 gap-2">
-                  {niche.metrics.map((m, idx) => (
-                    <div key={idx} className="bg-[#FAF9F5] p-2.5 rounded-xl border border-[#EBE8E2]">
-                      <div className="text-base font-bold text-[#1A1816]">{m.value}</div>
-                      <div className="text-[11px] text-[#736F69] truncate">{m.label}</div>
-                    </div>
-                  ))}
+                <div className="pt-6 mt-auto">
+                  <span className="text-[11px] font-semibold text-[#C84B1F] opacity-0 group-hover:opacity-100 transition-opacity inline-flex items-center gap-1">
+                    Ver página detalhada ➔
+                  </span>
                 </div>
               </div>
             );

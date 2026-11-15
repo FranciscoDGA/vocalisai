@@ -295,9 +295,11 @@ export default function App() {
               onOpenDemo={() => setDemoModalOpen(true)}
             />
 
-            {/* 6. Vertical Use Cases (Clínicas, Imobiliárias, Advocacia, etc.) */}
+            {/* 6. Capabilities Use Cases Grid (Recepção, Agendamentos, Suporte, etc.) */}
             <UseCasesSection 
               onOpenDemo={() => setDemoModalOpen(true)}
+              onOpenAuth={() => setAuthModalOpen(true)}
+              onNavigate={handleNavigate}
             />
 
             {/* 7. Comprehensive Integrations Grid */}

@@ -20,6 +20,8 @@ import WhatsAppVoiceToVoice from './WhatsAppVoiceToVoice';
 import AgencySubaccountsSection from './AgencySubaccountsSection';
 import OutboundCampaignsSection from './OutboundCampaignsSection';
 import PlatformPresentationSlider from './PlatformPresentationSlider';
+import WhatsAppConnectorDashboard from './WhatsAppConnectorDashboard';
+import { sendWhatsAppMessage } from '../utils/uazapiClient';
 
 export default function InsideDashboardSection({ onOpenDemo, onOpenLegal, onOpenAuth, onOpenDocs, isStandalone = false, onLogout, currentUser, onNavigateHome, onOpenPresentation }) {
   const [activeTab, setActiveTab] = useState('inicio');
@@ -31,6 +33,29 @@ export default function InsideDashboardSection({ onOpenDemo, onOpenLegal, onOpen
   const [voiceCloningOpen, setVoiceCloningOpen] = useState(false);
   const [presentationOpen, setPresentationOpen] = useState(false);
   const [realLeads, setRealLeads] = useState([]);
+  const [sendingWaLead, setSendingWaLead] = useState(null);
+  const [waSentToast, setWaSentToast] = useState(null);
+
+  const handleSendDirectWhatsApp = async (lead) => {
+    const cleanPhone = String(lead.phone).replace(/\D/g, '');
+    const targetPhone = cleanPhone.startsWith('55') ? cleanPhone : `55${cleanPhone}`;
+    const msg = `Olá! Aqui é o ${userName} da Vocalis AI. Vi que você fez o diagnóstico para ${lead.seg}. Gostaria de te mostrar como implantar isso na sua empresa.`;
+
+    setSendingWaLead(lead.name || lead.phone);
+    try {
+      const res = await sendWhatsAppMessage({ phone: targetPhone, message: msg });
+      if (res?.success) {
+        setWaSentToast(`✓ Mensagem enviada automaticamente para ${lead.name} (+${targetPhone}) pelo robô do WhatsApp!`);
+        setTimeout(() => setWaSentToast(null), 5000);
+      } else {
+        window.open(`https://wa.me/${targetPhone}?text=${encodeURIComponent(msg)}`, '_blank');
+      }
+    } catch {
+      window.open(`https://wa.me/${targetPhone}?text=${encodeURIComponent(msg)}`, '_blank');
+    } finally {
+      setSendingWaLead(null);
+    }
+  };
 
   const userEmail = currentUser?.email || 'afiliadopebas@gmail.com';
   const userName = currentUser?.user_metadata?.company_name || userEmail.split('@')[0] || 'Francisco';
@@ -666,7 +691,7 @@ export default function InsideDashboardSection({ onOpenDemo, onOpenLegal, onOpen
                   Números de telefone
                 </button>
                 <button onClick={() => { setActiveTab('whatsapp'); setMoreMenuOpen(false); }} className={`p-2 rounded-lg text-left truncate transition-colors ${activeTab === 'whatsapp' ? 'bg-[#EFECE6] font-bold text-[#1A1816]' : 'bg-white border border-[#E7E4DC] text-[#5C5955]'}`}>
-                  WhatsApp Chat
+                  Conexão WhatsApp
                 </button>
                 <button onClick={() => { setActiveTab('agendador'); setMoreMenuOpen(false); }} className={`p-2 rounded-lg text-left truncate transition-colors ${activeTab === 'agendador' ? 'bg-[#EFECE6] font-bold text-[#1A1816]' : 'bg-white border border-[#E7E4DC] text-[#5C5955]'}`}>
                   Agendador
@@ -872,11 +897,12 @@ export default function InsideDashboardSection({ onOpenDemo, onOpenLegal, onOpen
 
                       <button 
                         onClick={() => { setActiveTab('whatsapp'); setSelectedAssistant(null); }}
-                        className={`w-full text-left py-1.5 px-2 rounded-lg transition-colors cursor-pointer ${
+                        className={`w-full text-left py-1.5 px-2 rounded-lg transition-colors cursor-pointer flex items-center justify-between ${
                           activeTab === 'whatsapp' ? 'bg-[#EFECE6] text-[#1A1816] font-semibold' : 'text-[#5C5955] hover:text-[#1A1816] hover:bg-[#F3EFE8]'
                         }`}
                       >
-                        WhatsApp
+                        <span>Conexão WhatsApp</span>
+                        <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" title="WhatsApp Operacional"></span>
                       </button>
 
                       <button 
@@ -1289,59 +1315,10 @@ export default function InsideDashboardSection({ onOpenDemo, onOpenLegal, onOpen
             )}
 
             {/* ========================================================
-                3. TAB: WHATSAPP BUSINESS (Exact replica of screenshot 5)
+                3. TAB: WHATSAPP WEB CONNECTOR & ENGINE
                ======================================================== */}
             {activeTab === 'whatsapp' && (
-              <div className="space-y-6 animate-fadeIn">
-                <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-4 border-b border-[#EBE8E2]">
-                  <h3 className="text-2xl font-bold text-[#1A1816]">WhatsApp Business</h3>
-                  <div className="flex flex-wrap items-center gap-2">
-                    <button 
-                      onClick={onOpenDemo}
-                      className="flex items-center gap-1.5 px-3.5 py-2 rounded-xl border border-[#D0CBC0] text-xs font-bold text-[#1A1816] hover:bg-[#FAF9F5] transition-colors"
-                    >
-                      <Building className="w-3.5 h-3.5" />
-                      <span>Perfil da empresa</span>
-                    </button>
-                    <button 
-                      onClick={onOpenDemo}
-                      className="flex items-center gap-1.5 px-3.5 py-2 rounded-xl border border-[#D0CBC0] text-xs font-bold text-[#1A1816] hover:bg-[#FAF9F5] transition-colors"
-                    >
-                      <FileText className="w-3.5 h-3.5" />
-                      <span>Modelos de mensagem</span>
-                    </button>
-                    <button 
-                      onClick={onOpenDemo}
-                      className="px-4 py-2 rounded-xl bg-[#1A1816] text-white text-xs font-bold hover:bg-black transition-colors"
-                    >
-                      Conectar conta do WhatsApp Business
-                    </button>
-                  </div>
-                </div>
-
-                {/* Banner: Assine o plano de WhatsApp */}
-                <div className="p-4 sm:p-5 rounded-2xl border border-[#E7E4DC] bg-white flex flex-col sm:flex-row sm:items-center justify-between gap-4">
-                  <div>
-                    <h4 className="text-xs font-bold text-[#1A1816]">Assine o plano de WhatsApp para conectar uma conta</h4>
-                    <p className="text-[11px] text-[#5C5955] mt-0.5">
-                      A conexão com a Meta (WhatsApp Business) é liberada depois que o plano estiver ativo.
-                    </p>
-                  </div>
-                  <button 
-                    onClick={() => setActiveTab('faturamento')}
-                    className="px-4 py-2 rounded-xl border border-[#D0CBC0] text-xs font-bold text-[#1A1816] hover:bg-[#FAF9F5] transition-colors shrink-0"
-                  >
-                    Assinar plano
-                  </button>
-                </div>
-
-                {/* Empty State */}
-                <div className="p-16 rounded-2xl border border-[#E7E4DC] bg-white text-center">
-                  <p className="text-xs text-[#8C8881]">
-                    Nenhuma conta do WhatsApp Business conectada
-                  </p>
-                </div>
-              </div>
+              <WhatsAppConnectorDashboard userPhone="559484423948" />
             )}
 
             {/* ========================================================
@@ -2743,6 +2720,16 @@ export default function InsideDashboardSection({ onOpenDemo, onOpenLegal, onOpen
                     </span>
                   </div>
 
+                  {waSentToast && (
+                    <div className="mb-3 p-3 rounded-xl bg-emerald-950 border border-emerald-700/80 text-emerald-200 text-xs font-semibold flex items-center justify-between animate-fadeIn">
+                      <div className="flex items-center gap-2">
+                        <Check className="w-4 h-4 text-emerald-400" />
+                        <span>{waSentToast}</span>
+                      </div>
+                      <button onClick={() => setWaSentToast(null)} className="text-emerald-400 hover:text-white text-xs">✕</button>
+                    </div>
+                  )}
+
                   <div className="overflow-x-auto">
                     <table className="w-full text-left text-xs">
                       <thead>
@@ -2779,14 +2766,20 @@ export default function InsideDashboardSection({ onOpenDemo, onOpenLegal, onOpen
                             </td>
                             <td className="py-2.5 text-[#5C5955] text-[11px]">{lead.status}</td>
                             <td className="py-2.5 text-right">
-                              <a 
-                                href={`https://wa.me/${lead.phone.replace(/\D/g, '').startsWith('55') ? lead.phone.replace(/\D/g, '') : '55' + lead.phone.replace(/\D/g, '')}?text=${encodeURIComponent(`Olá! Aqui é o Francisco do AI Agency OS (Vocalis AI). Vi que você fez o diagnóstico para ${lead.seg}. Gostaria de te mostrar como implantar isso na sua empresa.`)}`}
-                                target="_blank"
-                                rel="noreferrer"
-                                className="inline-block px-2.5 py-1 rounded-lg bg-[#C84B1F] text-white font-bold text-[10px] hover:bg-[#A83812] cursor-pointer"
+                              <button 
+                                onClick={() => handleSendDirectWhatsApp(lead)}
+                                disabled={sendingWaLead === (lead.name || lead.phone)}
+                                className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-emerald-600 hover:bg-emerald-500 text-white font-bold text-[10px] transition-all cursor-pointer shadow-sm disabled:opacity-50"
                               >
-                                Chamar no WhatsApp VIP
-                              </a>
+                                {sendingWaLead === (lead.name || lead.phone) ? (
+                                  <span>Enviando pelo robô...</span>
+                                ) : (
+                                  <>
+                                    <Send className="w-3 h-3" />
+                                    <span>Disparar WhatsApp VIP</span>
+                                  </>
+                                )}
+                              </button>
                             </td>
                           </tr>
                         ))}
