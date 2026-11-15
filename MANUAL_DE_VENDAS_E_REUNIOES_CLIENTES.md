@@ -164,4 +164,28 @@ Para maximizar a conversão de vendas e proteger o tempo do time comercial, a op
 
 ---
 
+## 6. TABELA OFICIAL DE PREÇOS, MINUTAGEM E POLÍTICA ANTI-PEGADINHAS
+
+Nas reuniões comerciais, o cliente nunca pode sentir que está sendo taxado com custos ocultos. Apresente sempre a proposta em **3 blocos claros**:
+
+### 6.1 Os 3 Blocos da Proposta Comercial:
+1. **Setup de Implantação (Taxa Única):**
+   * **R$ 1.500,00** (à vista ou em até 12x no cartão).
+   * Cobre o treinamento do assistente, gravação de fluxos, integração de agenda (Cal.com / Google Agenda) e conexão do WhatsApp oficial e telefonia.
+2. **Mensalidade da Plataforma (Plano Profissional):**
+   * **R$ 497,00 / mês**.
+   * IA ativa 24/7, WhatsApp ilimitado (sem taxas por mensagem), transcrições no painel e transbordo para equipe física no Chatwoot.
+   * **Franquia de 250 minutos de chamadas já inclusa todo mês.**
+3. **Política de Minutagem Transparente (Pré-Paga):**
+   * Minutos adicionais se a empresa ultrapassar a franquia: **R$ 0,69 por minuto**.
+   * Modelo pré-pago (recarrega no painel apenas se quiser; saldo nunca expira).
+   * **Sua margem:** Seu custo é de R$ 0,16/minuto e você vende por R$ 0,69 (**lucro líquido de mais de 330%** sobre o tráfego de voz).
+
+### 6.2 Comparativo que Fecha o Contrato na Hora:
+* **Recepcionista CLT:** Custo de **R$ 2.900,00/mês** com encargos e impostos, atendendo apenas 8h por dia de segunda a sexta.
+* **Vocalis AI:** Custo de **R$ 497,00/mês**, atendendo 24 horas por dia, 7 dias por semana, inclusive feriados e madrugadas, com agendamento automático na agenda.
+* **Economia Líquida para o Cliente:** Mais de **R$ 28.000,00 por ano** economizados diretamente no caixa da empresa.
+
+---
+
 *Manual Operacional de Vendas mantido como guia estratégico da Vocalis AI & AI Agency OS.*
