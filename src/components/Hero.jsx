@@ -6,6 +6,7 @@ import { BRAND } from '../data/content';
 import TestCallModal from './TestCallModal';
 import VoiceWaveformHeroCard from './VoiceWaveformHeroCard';
 import BrazilFlag from './BrazilFlag';
+import { FlagBR, FlagPT, FlagUS, FlagAR, FlagMX, FlagES, FlagDE, FlagUK } from './CountryFlags';
 import { formatPhoneMask, cleanRawPhone } from '../utils/phoneUtils';
 
 const ROTATING_PHRASES = [
@@ -17,9 +18,20 @@ const ROTATING_PHRASES = [
   'do seu negócio,'
 ];
 
+const COUNTRIES = [
+  { name: 'Brasil', code: '+55', Flag: FlagBR },
+  { name: 'Portugal', code: '+351', Flag: FlagPT },
+  { name: 'Estados Unidos', code: '+1', Flag: FlagUS },
+  { name: 'Argentina', code: '+54', Flag: FlagAR },
+  { name: 'México', code: '+52', Flag: FlagMX },
+  { name: 'Espanha', code: '+34', Flag: FlagES },
+  { name: 'Alemanha', code: '+49', Flag: FlagDE },
+  { name: 'Reino Unido', code: '+44', Flag: FlagUK }
+];
+
 export default function Hero({ onOpenDemo, onOpenAuth }) {
   const [phoneInput, setPhoneInput] = useState('');
-  const [selectedCountry, setSelectedCountry] = useState({ name: 'Brasil', code: '+55', flag: '🇧🇷' });
+  const [selectedCountry, setSelectedCountry] = useState(COUNTRIES[0]);
   const [countryPickerOpen, setCountryPickerOpen] = useState(false);
   const [testCallModalOpen, setTestCallModalOpen] = useState(false);
 
@@ -60,17 +72,6 @@ export default function Hero({ onOpenDemo, onOpenAuth }) {
 
     return () => clearTimeout(timer);
   }, [displayedPhrase, isDeleting, phraseIndex, typingSpeed]);
-
-  const countries = [
-    { name: 'Brasil', code: '+55', flag: '🇧🇷' },
-    { name: 'Portugal', code: '+351', flag: '🇵🇹' },
-    { name: 'Estados Unidos', code: '+1', flag: '🇺🇸' },
-    { name: 'Argentina', code: '+54', flag: '🇦🇷' },
-    { name: 'México', code: '+52', flag: '🇲🇽' },
-    { name: 'Espanha', code: '+34', flag: '🇪🇸' },
-    { name: 'Alemanha', code: '+49', flag: '🇩🇪' },
-    { name: 'Reino Unido', code: '+44', flag: '🇬🇧' }
-  ];
 
   // Close country picker on outside click
   useEffect(() => {
@@ -149,10 +150,10 @@ export default function Hero({ onOpenDemo, onOpenAuth }) {
                   onClick={() => setCountryPickerOpen(!countryPickerOpen)}
                   className="flex items-center gap-1.5 text-sm font-medium text-[#1A1816] pl-1.5 pr-2 py-1 hover:opacity-80 transition-opacity shrink-0 cursor-pointer"
                 >
-                  {selectedCountry.code === '+55' ? (
-                    <BrazilFlag className="w-5 h-3.5" />
+                  {selectedCountry.Flag ? (
+                    <selectedCountry.Flag className="w-5 h-3.5 rounded-[2px] shadow-2xs border border-stone-200/50" />
                   ) : (
-                    <span className="text-base leading-none">{selectedCountry.flag}</span>
+                    <BrazilFlag className="w-5 h-3.5" />
                   )}
                   <ChevronDown className="w-3 h-3 text-[#736F69]" />
                 </button>
@@ -160,23 +161,26 @@ export default function Hero({ onOpenDemo, onOpenAuth }) {
                 {/* Country Picker Dropdown */}
                 {countryPickerOpen && (
                   <div className="absolute top-10 left-0 w-60 bg-white rounded-2xl border border-[#E7E4DC] shadow-2xl p-2 z-50 animate-fadeIn text-left space-y-0.5">
-                    {countries.map((c) => (
-                      <button
-                        key={c.code}
-                        type="button"
-                        onClick={() => {
-                          setSelectedCountry(c);
-                          setCountryPickerOpen(false);
-                        }}
-                        className="w-full flex items-center justify-between px-3 py-2 rounded-xl text-xs font-medium text-[#1A1816] hover:bg-[#FAF9F5] transition-colors"
-                      >
-                        <span className="flex items-center gap-2.5">
-                          {c.code === '+55' ? <BrazilFlag className="w-4 h-3" /> : <span>{c.flag}</span>}
-                          <span>{c.name}</span>
-                        </span>
-                        <span className="text-[11px] text-[#8C8881] font-mono">{c.code}</span>
-                      </button>
-                    ))}
+                    {COUNTRIES.map((c) => {
+                      const FlagComponent = c.Flag;
+                      return (
+                        <button
+                          key={c.code}
+                          type="button"
+                          onClick={() => {
+                            setSelectedCountry(c);
+                            setCountryPickerOpen(false);
+                          }}
+                          className="w-full flex items-center justify-between px-3 py-2 rounded-xl text-xs font-medium text-[#1A1816] hover:bg-[#FAF9F5] transition-colors cursor-pointer"
+                        >
+                          <span className="flex items-center gap-2.5">
+                            <FlagComponent className="w-4 h-3 rounded-[2px] shadow-2xs border border-stone-200/50" />
+                            <span>{c.name}</span>
+                          </span>
+                          <span className="text-[11px] text-[#8C8881] font-mono">{c.code}</span>
+                        </button>
+                      );
+                    })}
                   </div>
                 )}
               </div>

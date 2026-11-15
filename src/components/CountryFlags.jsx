@@ -124,6 +124,17 @@ export function FlagNL({ className = "w-6 h-4" }) {
   );
 }
 
+export function FlagPL({ className = "w-6 h-4" }) {
+  return (
+    <svg viewBox="0 0 800 500" className={`rounded-[2px] object-cover shrink-0 border border-stone-200/80 ${className}`}>
+      <rect width="800" height="250" fill="#ffffff" />
+      <rect y="250" width="800" height="250" fill="#dc143c" />
+    </svg>
+  );
+}
+
+export const FlagGB = FlagUK;
+
 export function FlagJP({ className = "w-6 h-4" }) {
   return (
     <svg viewBox="0 0 900 600" className={`rounded-[2px] object-cover shrink-0 ${className}`}>

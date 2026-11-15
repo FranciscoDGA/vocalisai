@@ -8,6 +8,7 @@ import {
 } from 'lucide-react';
 import { BRAND } from '../data/content';
 import BrazilFlag from './BrazilFlag';
+import { FlagUK, FlagFR, FlagDE, FlagES, FlagNL, FlagPL, FlagIT } from './CountryFlags';
 import VocalisLogo from './VocalisLogo';
 
 export default function Navbar({ onOpenDemo, onOpenAuth, onOpenLegal, onOpenDocs, currentPage = 'home', onNavigate, currentUser, onLogout, onOpenPresentation }) {
@@ -463,25 +464,28 @@ export default function Navbar({ onOpenDemo, onOpenAuth, onOpenLegal, onOpenDocs
 
                   {/* Other Languages (Em breve) */}
                   {[
-                    { flag: '🇬🇧', name: 'English' },
-                    { flag: '🇫🇷', name: 'Français' },
-                    { flag: '🇩🇪', name: 'Deutsch' },
-                    { flag: '🇪🇸', name: 'Español' },
-                    { flag: '🇳🇱', name: 'Nederlands' },
-                    { flag: '🇵🇱', name: 'Polski' },
-                    { flag: '🇮🇹', name: 'Italiano' }
-                  ].map((lang) => (
-                    <div 
-                      key={lang.name}
-                      className="w-full flex items-center justify-between px-3 py-2 rounded-xl text-xs font-medium text-[#5C5955] hover:bg-[#FAF9F5] transition-colors cursor-default"
-                    >
-                      <span className="flex items-center gap-2.5">
-                        <span className="text-base leading-none opacity-80">{lang.flag}</span>
-                        <span>{lang.name}</span>
-                      </span>
-                      <span className="text-[11px] text-[#A6A29A]">Em breve</span>
-                    </div>
-                  ))}
+                    { Flag: FlagUK, name: 'English' },
+                    { Flag: FlagFR, name: 'Français' },
+                    { Flag: FlagDE, name: 'Deutsch' },
+                    { Flag: FlagES, name: 'Español' },
+                    { Flag: FlagNL, name: 'Nederlands' },
+                    { Flag: FlagPL, name: 'Polski' },
+                    { Flag: FlagIT, name: 'Italiano' }
+                  ].map((lang) => {
+                    const FlagIcon = lang.Flag;
+                    return (
+                      <div 
+                        key={lang.name}
+                        className="w-full flex items-center justify-between px-3 py-2 rounded-xl text-xs font-medium text-[#5C5955] hover:bg-[#FAF9F5] transition-colors cursor-default"
+                      >
+                        <span className="flex items-center gap-2.5">
+                          <FlagIcon className="w-4 h-3 rounded-[2px] shadow-2xs border border-stone-200/50" />
+                          <span>{lang.name}</span>
+                        </span>
+                        <span className="text-[11px] text-[#A6A29A]">Em breve</span>
+                      </div>
+                    );
+                  })}
                 </div>
               )}
             </div>
