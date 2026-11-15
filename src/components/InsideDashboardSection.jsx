@@ -2874,49 +2874,118 @@ export default function InsideDashboardSection({ onOpenDemo, onOpenLegal, onOpen
                   </div>
                 </form>
 
-                {/* Seção 2: Conexão Nativa com o OpenBot (Local Desktop & Cloud) */}
-                <div className="p-6 rounded-2xl bg-[#0F172A] text-white border border-slate-800 space-y-4">
-                  <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
-                    <div className="flex items-center gap-2.5">
-                      <div className="w-9 h-9 rounded-xl bg-indigo-600 flex items-center justify-center font-bold text-xs shadow-md">
+                {/* Seção 2: Conexão Nativa com o OpenBot (Equipe Virtual 24/7) */}
+                <div className="p-6 rounded-2xl bg-[#0F172A] text-white border border-slate-800 space-y-6">
+                  <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-4 border-b border-slate-800">
+                    <div className="flex items-center gap-3">
+                      <div className="w-10 h-10 rounded-xl bg-gradient-to-tr from-indigo-600 to-violet-500 flex items-center justify-center font-bold text-sm shadow-md">
                         OB
                       </div>
                       <div>
                         <div className="text-xs font-bold flex items-center gap-2">
-                          <span>Conector OpenBot Oficial</span>
-                          <span className="text-[10px] text-emerald-400 font-mono bg-emerald-950/80 px-2 py-0.5 rounded border border-emerald-800/60">
-                            ● Detectado em C:\Users\User\OpenBot
+                          <span>Conector OpenBot Oficial (openbot.run)</span>
+                          <span className="text-[10px] text-emerald-400 font-mono bg-emerald-950/80 px-2 py-0.5 rounded border border-emerald-800/60 flex items-center gap-1">
+                            <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse" />
+                            <span>Equipes Virtuais Prontas</span>
                           </span>
                         </div>
-                        <p className="text-[10px] text-slate-400">Motor visual de fluxos, condicionais de IA e bancos de dados externos</p>
+                        <p className="text-[11px] text-slate-400">Orquestrador de agentes autônomos persistentes (Codex, Claude Code, Grok, Gemini)</p>
                       </div>
                     </div>
                     
                     <div className="flex items-center gap-2">
                       <a 
-                        href="http://localhost:3000" 
+                        href="https://openbot.run" 
                         target="_blank" 
                         rel="noopener noreferrer"
-                        className="px-2.5 py-1.5 rounded-lg bg-indigo-600 hover:bg-indigo-500 text-white text-[10px] font-bold flex items-center gap-1 transition-colors"
+                        className="px-3 py-1.5 rounded-lg bg-indigo-600 hover:bg-indigo-500 text-white text-[11px] font-bold flex items-center gap-1.5 transition-colors shadow-xs"
                       >
                         <ExternalLink className="w-3 h-3" />
-                        <span>Abrir OpenBot Local</span>
+                        <span>Abrir openbot.run</span>
                       </a>
                       <a 
-                        href="https://github.com/openbot-ai" 
+                        href="https://github.com/nightly-labs/openbot" 
                         target="_blank" 
                         rel="noopener noreferrer"
-                        className="px-2.5 py-1.5 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-200 text-[10px] font-bold flex items-center gap-1 transition-colors"
+                        className="px-3 py-1.5 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-200 text-[11px] font-bold flex items-center gap-1.5 transition-colors border border-slate-700"
                       >
-                        <span>Código Aberto (GitHub)</span>
+                        <span>GitHub Repositório</span>
                         <ExternalLink className="w-3 h-3" />
                       </a>
                     </div>
                   </div>
 
                   <p className="text-xs text-slate-300 leading-relaxed">
-                    Você pode usar o <strong>OpenBot</strong> (já instalado no seu computador ou via cloud) como o orquestrador dos seus fluxos avançados. A Vocalis atua como a camada de voz neural ultra-rápida (&lt;450ms), ligando diretamente para o webhook do OpenBot para disparar nós, consultar bancos SQL e processar lógicas complexas.
+                    Com o <strong>OpenBot</strong>, você constrói uma agência completa de inteligência artificial sem necessidade de equipe física. A <strong>Vocalis AI</strong> opera como a camada de voz neural em tempo real (&lt;380ms) e mensageria WhatsApp oficial, conectando diretamente com as rotas da <strong>Team API</strong> e do <strong>Model Context Protocol (MCP)</strong> do OpenBot.
                   </p>
+
+                  {/* Agentes Virtuais da Equipe Conectados */}
+                  <div>
+                    <h5 className="text-[11px] font-bold text-slate-300 uppercase tracking-wider mb-2.5">
+                      Agentes da Equipe Vocalis Prontos para o OpenBot:
+                    </h5>
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
+                      <div className="p-3 rounded-xl bg-slate-900 border border-slate-800 flex items-start gap-2.5">
+                        <div className="w-7 h-7 rounded-lg bg-indigo-500/20 text-indigo-400 flex items-center justify-center font-bold text-xs shrink-0">
+                          R
+                        </div>
+                        <div className="text-left min-w-0">
+                          <div className="text-xs font-bold text-white flex items-center gap-1.5">
+                            <span>Roberta · SDR Voz</span>
+                            <span className="text-[9px] bg-indigo-950 text-indigo-300 px-1.5 py-0.2 rounded font-mono">Telefonia</span>
+                          </div>
+                          <p className="text-[10px] text-slate-400 leading-tight mt-0.5">
+                            Atendimento telefônico imediato, triagem neural e qualificação de negócios.
+                          </p>
+                        </div>
+                      </div>
+
+                      <div className="p-3 rounded-xl bg-slate-900 border border-slate-800 flex items-start gap-2.5">
+                        <div className="w-7 h-7 rounded-lg bg-emerald-500/20 text-emerald-400 flex items-center justify-center font-bold text-xs shrink-0">
+                          C
+                        </div>
+                        <div className="text-left min-w-0">
+                          <div className="text-xs font-bold text-white flex items-center gap-1.5">
+                            <span>Camila · WhatsApp</span>
+                            <span className="text-[9px] bg-emerald-950 text-emerald-300 px-1.5 py-0.2 rounded font-mono">WhatsApp 24/7</span>
+                          </div>
+                          <p className="text-[10px] text-slate-400 leading-tight mt-0.5">
+                            Notas de voz humanizadas, orçamentos rápidos e geração de Pix.
+                          </p>
+                        </div>
+                      </div>
+
+                      <div className="p-3 rounded-xl bg-slate-900 border border-slate-800 flex items-start gap-2.5">
+                        <div className="w-7 h-7 rounded-lg bg-purple-500/20 text-purple-400 flex items-center justify-center font-bold text-xs shrink-0">
+                          B
+                        </div>
+                        <div className="text-left min-w-0">
+                          <div className="text-xs font-bold text-white flex items-center gap-1.5">
+                            <span>Beatriz · Agendamentos</span>
+                            <span className="text-[9px] bg-purple-950 text-purple-300 px-1.5 py-0.2 rounded font-mono">Google Agenda</span>
+                          </div>
+                          <p className="text-[10px] text-slate-400 leading-tight mt-0.5">
+                            Sincroniza horários vagos, agenda visitas e envia lembretes.
+                          </p>
+                        </div>
+                      </div>
+
+                      <div className="p-3 rounded-xl bg-slate-900 border border-slate-800 flex items-start gap-2.5">
+                        <div className="w-7 h-7 rounded-lg bg-amber-500/20 text-amber-400 flex items-center justify-center font-bold text-xs shrink-0">
+                          M
+                        </div>
+                        <div className="text-left min-w-0">
+                          <div className="text-xs font-bold text-white flex items-center gap-1.5">
+                            <span>Marcus · Triagem & Suporte</span>
+                            <span className="text-[9px] bg-amber-950 text-amber-300 px-1.5 py-0.2 rounded font-mono">Processos</span>
+                          </div>
+                          <p className="text-[10px] text-slate-400 leading-tight mt-0.5">
+                            Tira dúvidas avançadas e encaminha chamadas urgentes para o especialista humano.
+                          </p>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
 
                   {/* Seletor de Modo: Local vs Cloud */}
                   <div className="flex items-center gap-2 p-1 bg-slate-900 rounded-xl w-fit border border-slate-800">
@@ -2929,7 +2998,7 @@ export default function InsideDashboardSection({ onOpenDemo, onOpenLegal, onOpen
                           : 'text-slate-400 hover:text-white'
                       }`}
                     >
-                      OpenBot Local (Instalado no PC)
+                      OpenBot Team API (Local / Porta)
                     </button>
                     <button
                       type="button"
@@ -2942,13 +3011,24 @@ export default function InsideDashboardSection({ onOpenDemo, onOpenLegal, onOpen
                     >
                       OpenBot Cloud / Webhook URL
                     </button>
+                    <button
+                      type="button"
+                      onClick={() => setOpenbotMode('mcp')}
+                      className={`px-3 py-1 rounded-lg text-xs font-bold transition-all cursor-pointer ${
+                        openbotMode === 'mcp' 
+                          ? 'bg-indigo-600 text-white shadow-xs' 
+                          : 'text-slate-400 hover:text-white'
+                      }`}
+                    >
+                      Configuração MCP Server (Vocalis)
+                    </button>
                   </div>
 
                   {/* Configuração do Endpoint */}
-                  <div className="space-y-2">
+                  <div className="space-y-3">
                     {openbotMode === 'local' ? (
                       <div>
-                        <label className="block text-[11px] font-semibold text-slate-300 mb-1">Porta do OpenBot Local</label>
+                        <label className="block text-[11px] font-semibold text-slate-300 mb-1">Porta do OpenBot Team API Local</label>
                         <div className="flex items-center gap-2">
                           <span className="px-3 py-2 rounded-xl bg-slate-900 border border-slate-700 text-xs font-mono text-slate-400">
                             http://localhost:
@@ -2973,7 +3053,7 @@ export default function InsideDashboardSection({ onOpenDemo, onOpenLegal, onOpen
                           </button>
                         </div>
                       </div>
-                    ) : (
+                    ) : openbotMode === 'cloud' ? (
                       <div>
                         <label className="block text-[11px] font-semibold text-slate-300 mb-1">URL do Webhook do OpenBot</label>
                         <div className="flex items-center gap-2">
@@ -2992,6 +3072,45 @@ export default function InsideDashboardSection({ onOpenDemo, onOpenLegal, onOpen
                             {isTestingOpenbot ? 'Testando...' : openbotTestSuccess ? '✓ Sincronizado!' : 'Testar Webhook'}
                           </button>
                         </div>
+                      </div>
+                    ) : (
+                      /* Modo MCP Server */
+                      <div className="space-y-2">
+                        <div className="flex items-center justify-between">
+                          <label className="block text-[11px] font-semibold text-slate-300">
+                            Cole no seu arquivo de configuração MCP do OpenBot:
+                          </label>
+                          <button
+                            type="button"
+                            onClick={() => {
+                              const snippet = JSON.stringify({
+                                mcpServers: {
+                                  "vocalis-ai": {
+                                    url: `${typeof window !== 'undefined' ? window.location.origin : 'https://vocalisai-phi.vercel.app'}/api/mcp`,
+                                    description: "Vocalis AI Voice & WhatsApp Infrastructure",
+                                    tools: ["vocalis_trigger_call", "vocalis_send_whatsapp", "vocalis_get_leads", "vocalis_system_status"]
+                                  }
+                                }
+                              }, null, 2);
+                              navigator.clipboard?.writeText(snippet);
+                              alert('Configuração MCP copiada para a área de transferência!');
+                            }}
+                            className="text-[10px] font-mono text-indigo-400 hover:text-indigo-300 underline cursor-pointer"
+                          >
+                            Copiar Configuração JSON
+                          </button>
+                        </div>
+                        <pre className="p-3 rounded-xl bg-slate-950 border border-slate-800 text-[10px] font-mono text-emerald-400 overflow-x-auto leading-relaxed">
+{JSON.stringify({
+  mcpServers: {
+    "vocalis-ai": {
+      url: "https://vocalisai-phi.vercel.app/api/mcp",
+      description: "Vocalis AI Voice & WhatsApp Infrastructure",
+      tools: ["vocalis_trigger_call", "vocalis_send_whatsapp", "vocalis_get_leads", "vocalis_system_status"]
+    }
+  }
+}, null, 2)}
+                        </pre>
                       </div>
                     )}
 

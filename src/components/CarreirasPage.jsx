@@ -68,7 +68,7 @@ export default function CarreirasPage({ onOpenDemo, onOpenAuth, onNavigateHome }
 
         {/* Main Headline */}
         <h1 className="text-3xl sm:text-4xl md:text-5xl font-extrabold text-[#1A1816] tracking-tight leading-tight max-w-3xl mx-auto mb-6">
-          Junte-se a nÃ³s para construir a suÃ­te de comunicaÃ§Ã£o com IA para PMEs.
+          Junte-se a nós para construir a suíte de comunicação com IA para PMEs.
         </h1>
 
         {/* CTA Button */}
@@ -115,7 +115,7 @@ export default function CarreirasPage({ onOpenDemo, onOpenAuth, onNavigateHome }
               Dono do resultado
             </h3>
             <p className="text-xs text-[#736F69] leading-relaxed">
-              VocÃª cuida da sua Ã¡rea como se fosse a sua empresa.
+              Você cuida da sua área como se fosse a sua empresa.
             </p>
           </div>
 
@@ -142,10 +142,10 @@ export default function CarreirasPage({ onOpenDemo, onOpenAuth, onNavigateHome }
           {/* Card 4 */}
           <div className="p-6 rounded-2xl bg-white border border-[#E7E4DC] shadow-2xs hover:shadow-md transition-shadow">
             <h3 className="text-sm font-bold text-[#1A1816] mb-3">
-              Sem reuniÃµes recorrentes
+              Sem reuniões recorrentes
             </h3>
             <p className="text-xs text-[#736F69] leading-relaxed">
-              AssÃ­ncrono Ã© frequÃªncia padrÃ£o. SÃ­ncrono sÃ³ quando realmente faz sentido.
+              Assíncrono é frequência padrão. Síncrono só quando realmente faz sentido.
             </p>
           </div>
         </div>
@@ -154,19 +154,19 @@ export default function CarreirasPage({ onOpenDemo, onOpenAuth, onNavigateHome }
       {/* 3. VAGAS E OPORTUNIDADES (Status Card) */}
       <section id="oportunidades" className="py-16 px-4 sm:px-6 lg:px-8 max-w-4xl mx-auto text-center">
         <h2 className="text-2xl sm:text-3xl font-extrabold text-[#1A1816] tracking-tight mb-3">
-          Junte-se ao time para avanÃ§ar rÃ¡pido e se divertir no caminho.
+          Junte-se ao time para avançar rápido e se divertir no caminho.
         </h2>
         <p className="text-xs sm:text-sm text-[#736F69] max-w-xl mx-auto mb-10">
-          NÃ£o mora na cidade da vaga? Sem problema: temos vagas remotas e ajudamos na mudanÃ§a.
+          Não mora na cidade da vaga? Sem problema: temos vagas remotas e ajudamos na mudança.
         </p>
 
         {/* Status Box matching print */}
         <div className="p-8 sm:p-12 rounded-2xl bg-white border border-[#E7E4DC] shadow-sm max-w-2xl mx-auto">
           <h3 className="text-base font-bold text-[#1A1816] mb-3">
-            No momento nÃ£o hÃ¡ vagas abertas.
+            No momento não há vagas abertas.
           </h3>
           <p className="text-xs sm:text-sm text-[#736F69] leading-relaxed mb-6 max-w-lg mx-auto">
-            Envie sua candidatura espontÃ¢nea: o time da Vocalis recebe o seu contato e responde pelo e-mail informado quando surgir uma oportunidade com o seu perfil.
+            Envie sua candidatura espontânea: o time da Vocalis recebe o seu contato e responde pelo e-mail informado quando surgir uma oportunidade com o seu perfil.
           </p>
           <button
             onClick={() => setIsApplyModalOpen(true)}
@@ -177,7 +177,7 @@ export default function CarreirasPage({ onOpenDemo, onOpenAuth, onNavigateHome }
         </div>
       </section>
 
-      {/* 4. DARK BANNER CTA (NÃ£o encontrou a vaga ideal?) */}
+      {/* 4. DARK BANNER CTA (Não encontrou a vaga ideal?) */}
       <section className="px-4 sm:px-6 lg:px-8 max-w-5xl mx-auto pb-16">
         <div className="relative rounded-3xl bg-[#11100F] text-white p-8 sm:p-12 text-center overflow-hidden shadow-2xl">
           {/* Subtle golden ambient glow */}
@@ -185,22 +185,21 @@ export default function CarreirasPage({ onOpenDemo, onOpenAuth, onNavigateHome }
 
           <div className="relative z-10 max-w-xl mx-auto">
             <h2 className="text-2xl sm:text-3xl font-bold tracking-tight mb-3">
-              NÃ£o encontrou a vaga ideal?
+              Não encontrou a vaga ideal?
             </h2>
             <p className="text-xs sm:text-sm text-[#A8A49C] leading-relaxed mb-8">
-              Envie uma candidatura espontÃ¢nea. Guardamos o seu contato e avisamos quando surgir uma oportunidade com o seu perfil.
+              Envie uma candidatura espontânea. Guardamos o seu contato e avisamos quando surgir uma oportunidade com o seu perfil.
             </p>
             <button
               onClick={() => setIsApplyModalOpen(true)}
               className="px-6 py-3 rounded-full bg-white hover:bg-[#F2EFE9] text-[#11100F] text-xs font-bold transition-all shadow-md cursor-pointer"
             >
-              Enviar candidatura espontÃ¢nea
+              Enviar candidatura espontânea
             </button>
           </div>
 
-          {/* Soundwave animada + latÃªncia ao vivo */}
+          {/* Soundwave animada com frequência e latência ao vivo */}
           <LiveSoundwaveBars />
-
         </div>
       </section>
 
@@ -210,11 +209,11 @@ export default function CarreirasPage({ onOpenDemo, onOpenAuth, onNavigateHome }
           Toda empresa tem uma voz.
         </h2>
         <p className="text-2xl sm:text-3xl md:text-4xl font-serif italic text-[#4F46E5] tracking-tight mt-1">
-          A sua nunca mais fica em silÃªncio.
+          A sua nunca mais fica em silêncio.
         </p>
       </section>
 
-      {/* 6. MODAL: CANDIDATURA ESPONTÃ‚NEA */}
+      {/* 6. MODAL: CANDIDATURA ESPONTÂNEA */}
       {isApplyModalOpen && (
         <div className="fixed inset-0 bg-black/60 backdrop-blur-xs z-50 flex items-center justify-center p-4 animate-fadeIn">
           <div className="bg-white rounded-3xl border border-[#E7E4DC] shadow-2xl w-full max-w-lg p-6 sm:p-8 relative animate-scaleUp">
@@ -237,7 +236,7 @@ export default function CarreirasPage({ onOpenDemo, onOpenAuth, onNavigateHome }
                 </div>
 
                 <h3 className="text-xl font-extrabold text-[#1A1816] tracking-tight mb-2">
-                  Candidatura EspontÃ¢nea
+                  Candidatura Espontânea
                 </h3>
                 <p className="text-xs text-[#736F69] leading-relaxed mb-6">
                   Preencha seus dados abaixo. Quando abrirmos vagas que combinem com suas habilidades, entraremos em contato diretamente.
@@ -288,25 +287,25 @@ export default function CarreirasPage({ onOpenDemo, onOpenAuth, onNavigateHome }
 
                   <div>
                     <label className="block text-xs font-semibold text-[#1A1816] mb-1">
-                      Ãrea de interesse
+                      Área de interesse
                     </label>
                     <select
                       value={formData.roleArea}
                       onChange={(e) => setFormData({ ...formData, roleArea: e.target.value })}
                       className="w-full px-3.5 py-2.5 rounded-xl border border-[#D5D2C9] bg-white text-xs text-[#1A1816] outline-none focus:border-[#4F46E5]"
                     >
-                      <option value="Engenharia de Software & IA">Engenharia de Software & IA (Backend, LLMs, Ãudio)</option>
+                      <option value="Engenharia de Software & IA">Engenharia de Software & IA (Backend, LLMs, Áudio)</option>
                       <option value="Frontend & Design">Frontend (React, WebRTC, UX/UI)</option>
                       <option value="Vendas B2B & Parcerias">Vendas B2B & Parcerias</option>
-                      <option value="Suporte TÃ©cnico & Customer Success">Suporte TÃ©cnico & Customer Success</option>
-                      <option value="Marketing & ConteÃºdo">Marketing & ConteÃºdo</option>
-                      <option value="OperaÃ§Ãµes & JurÃ­dico">OperaÃ§Ãµes & JurÃ­dico</option>
+                      <option value="Suporte Técnico & Customer Success">Suporte Técnico & Customer Success</option>
+                      <option value="Marketing & Conteúdo">Marketing & Conteúdo</option>
+                      <option value="Operações & Jurídico">Operações & Jurídico</option>
                     </select>
                   </div>
 
                   <div>
                     <label className="block text-xs font-semibold text-[#1A1816] mb-1">
-                      Link do LinkedIn ou PortfÃ³lio / GitHub
+                      Link do LinkedIn ou Portfólio / GitHub
                     </label>
                     <input
                       type="url"
@@ -323,7 +322,7 @@ export default function CarreirasPage({ onOpenDemo, onOpenAuth, onNavigateHome }
                     </label>
                     <textarea
                       rows={3}
-                      placeholder="Conte um pouco sobre suas experiÃªncias recentes..."
+                      placeholder="Conte um pouco sobre suas experiências recentes..."
                       value={formData.message}
                       onChange={(e) => setFormData({ ...formData, message: e.target.value })}
                       className="w-full px-3.5 py-2.5 rounded-xl border border-[#D5D2C9] bg-white text-xs text-[#1A1816] placeholder:text-[#9A968E] outline-none focus:border-[#4F46E5] resize-none"
@@ -348,7 +347,7 @@ export default function CarreirasPage({ onOpenDemo, onOpenAuth, onNavigateHome }
                   Candidatura enviada com sucesso!
                 </h3>
                 <p className="text-xs text-[#736F69] max-w-sm mx-auto leading-relaxed">
-                  Obrigado, <strong className="text-[#1A1816]">{formData.name}</strong>. Seus dados foram cadastrados em nosso banco de talentos. Avisaremos por e-mail assim que abrirmos oportunidades na Ã¡rea de <strong>{formData.roleArea}</strong>.
+                  Obrigado, <strong className="text-[#1A1816]">{formData.name}</strong>. Seus dados foram cadastrados em nosso banco de talentos. Avisaremos por e-mail assim que abrirmos oportunidades na área de <strong>{formData.roleArea}</strong>.
                 </p>
                 <button
                   onClick={handleResetForm}

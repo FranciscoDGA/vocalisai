@@ -14,39 +14,39 @@ export default function ParceirosPage({ onOpenDemo, onOpenAuth, onNavigateHome }
 
   const faqList = [
     {
-      q: 'Indicar e revender â€” qual Ã© a diferenÃ§a?',
+      q: 'Indicar e revender — qual é a diferença?',
       cat: 'indicar',
-      a: 'No modelo Indicar, vocÃª apenas apresenta o cliente Ã  Vocalis atravÃ©s do seu link exclusivo ou cadastro direto. NÃ³s cuidamos de toda a demonstraÃ§Ã£o, cobranÃ§a, suporte tÃ©cnico e atendimento. VocÃª recebe de 15% a 35% de comissÃ£o recorrente todos os meses enquanto o cliente permanecer ativo. No modelo Revender, vocÃª mesmo comercializa o serviÃ§o, embute sua prÃ³pria margem de lucro e presta o primeiro nÃ­vel de atendimento.'
+      a: 'No modelo Indicar, você apenas apresenta o cliente à Vocalis através do seu link exclusivo ou cadastro direto. Nós cuidamos de toda a demonstração, cobrança, suporte técnico e atendimento. Você recebe de 15% a 35% de comissão recorrente todos os meses enquanto o cliente permanecer ativo. No modelo Revender, você mesmo comercializa o serviço, embute sua própria margem de lucro e presta o primeiro nível de atendimento.'
     },
     {
-      q: 'E se minha indicaÃ§Ã£o cancelar?',
+      q: 'E se minha indicação cancelar?',
       cat: 'indicar',
-      a: 'A comissÃ£o Ã© recorrente mensal sobre os valores efetivamente pagos pelo cliente. Caso ele encerre o contrato, os pagamentos referentes a essa conta sÃ£o cessados sem nenhuma penalidade ou estorno de comissÃµes passadas para vocÃª.'
+      a: 'A comissão é recorrente mensal sobre os valores efetivamente pagos pelo cliente. Caso ele encerre o contrato, os pagamentos referentes a essa conta são cessados sem nenhuma penalidade ou estorno de comissões passadas para você.'
     },
     {
-      q: 'Quando e como recebo minhas comissÃµes?',
+      q: 'Quando e como recebo minhas comissões?',
       cat: 'tudo',
-      a: 'Os pagamentos sÃ£o apurados mensalmente e creditados atÃ© o dia 10 de cada mÃªs diretamente na sua conta corrente via PIX ou transferÃªncia bancÃ¡ria, com emissÃ£o de nota fiscal de prestaÃ§Ã£o de serviÃ§os ou RPA.'
+      a: 'Os pagamentos são apurados mensalmente e creditados até o dia 10 de cada mês diretamente na sua conta corrente via PIX ou transferência bancária, com emissão de nota fiscal de prestação de serviços ou RPA.'
     },
     {
-      q: 'Posso vender meus prÃ³prios serviÃ§os em conjunto?',
+      q: 'Posso vender meus próprios serviços em conjunto?',
       cat: 'revender',
-      a: 'Com certeza! A maioria dos nossos parceiros revendedores agrega serviÃ§os de consultoria de processos, treinamento de equipes, configuraÃ§Ã£o de prompts neurais, integraÃ§Ã£o de CRMs e marketing, aumentando expressivamente o ticket mÃ©dio.'
+      a: 'Com certeza! A maioria dos nossos parceiros revendedores agrega serviços de consultoria de processos, treinamento de equipes, configuração de prompts neurais, integração de CRMs e marketing, aumentando expressivamente o ticket médio.'
     },
     {
       q: 'Como funciona o suporte para os clientes que indiquei?',
       cat: 'indicar',
-      a: 'Clientes indicados contam com o suporte oficial da engenharia da Vocalis em horÃ¡rio comercial via WhatsApp, e-mail e central de ajuda, com SLA prioritÃ¡rio para planos corporativos.'
+      a: 'Clientes indicados contam com o suporte oficial da engenharia da Vocalis em horário comercial via WhatsApp, e-mail e central de ajuda, com SLA prioritário para planos corporativos.'
     },
     {
-      q: 'A conta de parceiro Ã© gratuita ou hÃ¡ faturamento mÃ­nimo?',
+      q: 'A conta de parceiro é gratuita ou há faturamento mínimo?',
       cat: 'tudo',
-      a: 'Ã‰ 100% gratuita! NÃ£o cobramos mensalidade de adesÃ£o nem exigimos faturamento mÃ­nimo para vocÃª comeÃ§ar a faturar suas primeiras comissÃµes.'
+      a: 'É 100% gratuita! Não cobramos mensalidade de adesão nem exigimos faturamento mínimo para você começar a faturar suas primeiras comissões.'
     },
     {
       q: 'Existe treinamento ou materiais de venda?',
       cat: 'tudo',
-      a: 'Sim! VocÃª terÃ¡ acesso imediato Ã  Central do Parceiro com apresentaÃ§Ãµes em PDF/PPT personalizÃ¡veis, roteiros de vendas, calculadoras de ROI para clientes e sessÃµes gravadas de demonstraÃ§Ã£o.'
+      a: 'Sim! Você terá acesso imediato à Central do Parceiro com apresentações em PDF/PPT personalizáveis, roteiros de vendas, calculadoras de ROI para clientes e sessões gravadas de demonstração.'
     }
   ];
 
@@ -67,13 +67,13 @@ export default function ParceirosPage({ onOpenDemo, onOpenAuth, onNavigateHome }
 
           {/* Big Title */}
           <h1 className="text-4xl sm:text-6xl font-normal text-[#1A1816] tracking-tight leading-[1.1]">
-            Receba atÃ© 35% de<br />
-            <span className="font-serif-title italic text-[#4F46E5]">comissÃ£o sobre as vendas</span>
+            Receba até 35% de<br />
+            <span className="font-serif-title italic text-[#4F46E5]">comissão sobre as vendas</span>
           </h1>
 
           {/* Subtitle */}
           <p className="mt-5 text-base sm:text-lg text-[#5C5955] max-w-2xl mx-auto leading-relaxed">
-            Torne-se parceiro da lÃ­der em atendimento por voz e conecte seus clientes com o futuro do atendimento. A melhor tecnologia, com 0 preocupaÃ§Ã£o tÃ©cnica.
+            Torne-se parceiro da líder em atendimento por voz e conecte seus clientes com o futuro do atendimento. A melhor tecnologia, com 0 preocupação técnica.
           </p>
 
           {/* CTA Button */}
@@ -96,7 +96,7 @@ export default function ParceirosPage({ onOpenDemo, onOpenAuth, onNavigateHome }
               <div className="w-7 h-7 rounded-full bg-emerald-600 text-white flex items-center justify-center text-[10px] font-bold border-2 border-white">+</div>
             </div>
             <span>
-              Mais de <strong className="text-[#1A1816]">120 parceiros</strong> jÃ¡ ganham conosco
+              Mais de <strong className="text-[#1A1816]">120 parceiros</strong> já ganham conosco
             </span>
           </div>
         </div>
@@ -116,11 +116,11 @@ export default function ParceirosPage({ onOpenDemo, onOpenAuth, onNavigateHome }
           {/* 5 Feature Cards */}
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-3 mb-10">
             {[
-              'Receba atÃ© 35% de comissÃ£o sobre as vendas',
-              'Renda recorrente previsÃ­vel todo mÃªs',
-              'VocÃª indica, a Vocalis faz o resto',
-              'Co-branding disponÃ­vel (powered by Vocalis)',
-              'Minutos grÃ¡tis de demonstraÃ§Ã£o para seus clientes'
+              'Receba até 35% de comissão sobre as vendas',
+              'Renda recorrente previsível todo mês',
+              'Você indica, a Vocalis faz o resto',
+              'Co-branding disponível (powered by Vocalis)',
+              'Minutos grátis de demonstração para seus clientes'
             ].map((text, i) => (
               <div key={i} className="p-4 rounded-2xl border border-[#E7E4DC] bg-[#FAF9F5] flex flex-col justify-between space-y-3">
                 <div className="w-6 h-6 rounded-full bg-[#EEF2FF] border border-[#F2E8DC] text-[#4F46E5] flex items-center justify-center">
@@ -152,7 +152,7 @@ export default function ParceirosPage({ onOpenDemo, onOpenAuth, onNavigateHome }
                   O programa de parceria Vocalis
                 </h3>
                 <p className="text-sm text-white/70 max-w-sm">
-                  Descubra como agÃªncias, consultorias e integradores estÃ£o faturando alto adicionando inteligÃªncia de voz ao seu portfÃ³lio.
+                  Descubra como agências, consultorias e integradores estão faturando alto adicionando inteligência de voz ao seu portfólio.
                 </p>
               </div>
 
@@ -163,20 +163,20 @@ export default function ParceirosPage({ onOpenDemo, onOpenAuth, onNavigateHome }
                     Painel do parceiro
                   </span>
                   <span className="px-2 py-0.5 rounded-full text-[10px] font-bold bg-[#EEF2FF] text-[#4F46E5] border border-[#F2E8DC]">
-                    NÃ­vel Diamond
+                    Nível Diamond
                   </span>
                 </div>
 
                 <div className="grid grid-cols-2 gap-4">
                   <div className="p-3 rounded-xl bg-[#FAF9F5] border border-[#EBE8E2]">
-                    <div className="text-[11px] text-[#736F69]">ComissÃ£o este mÃªs</div>
+                    <div className="text-[11px] text-[#736F69]">Comissão este mês</div>
                     <div className="text-xl sm:text-2xl font-bold text-[#1A1816] mt-0.5">R$ 21.450</div>
-                    <div className="text-[10px] text-emerald-600 font-semibold mt-0.5">+18% vs mÃªs anterior</div>
+                    <div className="text-[10px] text-emerald-600 font-semibold mt-0.5">+18% vs mês anterior</div>
                   </div>
                   <div className="p-3 rounded-xl bg-[#FAF9F5] border border-[#EBE8E2]">
-                    <div className="text-[11px] text-[#736F69]">ParticipaÃ§Ã£o do faturamento</div>
+                    <div className="text-[11px] text-[#736F69]">Participação do faturamento</div>
                     <div className="text-xl sm:text-2xl font-bold text-[#4F46E5] mt-0.5">35%</div>
-                    <div className="text-[10px] text-[#8C8881] mt-0.5">ComissÃ£o recorrente</div>
+                    <div className="text-[10px] text-[#8C8881] mt-0.5">Comissão recorrente</div>
                   </div>
                 </div>
 
@@ -186,7 +186,7 @@ export default function ParceirosPage({ onOpenDemo, onOpenAuth, onNavigateHome }
                     <strong className="text-[#1A1816]">42 empresas</strong>
                   </div>
                   <div className="flex justify-between py-1 border-b border-[#F0EDE8]">
-                    <span>PrÃ³ximo pagamento</span>
+                    <span>Próximo pagamento</span>
                     <strong className="text-[#1A1816]">10 de Dezembro via PIX</strong>
                   </div>
                 </div>
@@ -207,7 +207,7 @@ export default function ParceirosPage({ onOpenDemo, onOpenAuth, onNavigateHome }
               Indicar ou revender
             </h2>
             <p className="mt-3 text-base text-[#5C5955]">
-              Dois modelos para vocÃª lucrar. <strong className="text-[#1A1816]">Escolha o que melhor se adapta a seu negÃ³cio!</strong>
+              Dois modelos para você lucrar. <strong className="text-[#1A1816]">Escolha o que melhor se adapta a seu negócio!</strong>
             </p>
           </div>
 
@@ -222,7 +222,7 @@ export default function ParceirosPage({ onOpenDemo, onOpenAuth, onNavigateHome }
                 </span>
                 <h3 className="text-lg font-bold text-[#1A1816] mt-4 mb-2">Como funciona</h3>
                 <p className="text-xs text-[#5C5955] leading-relaxed">
-                  VocÃª escolhe entre indicar novos clientes diretamente ou integrar e revender sob a sua marca.
+                  Você escolhe entre indicar novos clientes diretamente ou integrar e revender sob a sua marca.
                 </p>
               </div>
 
@@ -230,7 +230,7 @@ export default function ParceirosPage({ onOpenDemo, onOpenAuth, onNavigateHome }
               <div className="py-8 my-auto">
                 <div className="flex flex-col items-center space-y-3">
                   <div className="w-12 h-12 rounded-2xl bg-[#1A1816] text-white flex items-center justify-center font-bold text-xs shadow-md">
-                    VocÃª
+                    Você
                   </div>
                   <div className="w-[1.5px] h-6 bg-[#4F46E5]"></div>
                   <div className="grid grid-cols-2 gap-3 w-full">
@@ -258,11 +258,11 @@ export default function ParceirosPage({ onOpenDemo, onOpenAuth, onNavigateHome }
                   <span className="text-[10px] font-bold text-[#8C8881] border border-[#E0DCD4] rounded-md px-1.5 py-0.5">
                     02
                   </span>
-                  <span className="text-xs font-bold text-[#4F46E5]">15% a 35% comissÃ£o</span>
+                  <span className="text-xs font-bold text-[#4F46E5]">15% a 35% comissão</span>
                 </div>
                 <h4 className="text-base font-bold text-[#1A1816]">Indicar</h4>
                 <p className="text-xs text-[#5C5955] leading-relaxed">
-                  <strong>Indique a Vocalis</strong> e nÃ³s cuidamos de todo o processo de venda, ativaÃ§Ã£o e suporte tÃ©cnico. VocÃª recebe comissÃµes mensais recorrentes enquanto o cliente pagar a mensalidade.
+                  <strong>Indique a Vocalis</strong> e nós cuidamos de todo o processo de venda, ativação e suporte técnico. Você recebe comissões mensais recorrentes enquanto o cliente pagar a mensalidade.
                 </p>
               </div>
 
@@ -276,30 +276,30 @@ export default function ParceirosPage({ onOpenDemo, onOpenAuth, onNavigateHome }
                 </div>
                 <h4 className="text-base font-bold text-[#1A1816]">Revender</h4>
                 <p className="text-xs text-[#5C5955] leading-relaxed">
-                  <strong>Revenda a Vocalis</strong> sob a sua prÃ³pria soluÃ§Ã£o. VocÃª define o preÃ§o cobrado do cliente final e adquire minutos e licenÃ§as a preÃ§o de atacado conosco.
+                  <strong>Revenda a Vocalis</strong> sob a sua própria solução. Você define o preço cobrado do cliente final e adquire minutos e licenças a preço de atacado conosco.
                 </p>
               </div>
 
             </div>
 
-            {/* Card 3: Suporte e AtivaÃ§Ã£o */}
+            {/* Card 3: Suporte e Ativação */}
             <div className="p-6 rounded-3xl border border-[#E7E4DC] bg-white flex flex-col justify-between">
               <div>
                 <span className="text-[10px] font-bold text-[#8C8881] border border-[#E0DCD4] rounded-md px-1.5 py-0.5">
                   04
                 </span>
-                <h3 className="text-lg font-bold text-[#1A1816] mt-4 mb-2">Suporte & ativaÃ§Ã£o</h3>
+                <h3 className="text-lg font-bold text-[#1A1816] mt-4 mb-2">Suporte & ativação</h3>
                 <p className="text-xs text-[#5C5955] leading-relaxed">
-                  Plataforma pronta em que seu cliente tem acesso a nÃºmeros nacionais, gravaÃ§Ã£o em nuvem e painel de controle prÃ³prio.
+                  Plataforma pronta em que seu cliente tem acesso a números nacionais, gravação em nuvem e painel de controle próprio.
                 </p>
               </div>
 
               {/* Mockup cards */}
               <div className="space-y-2 py-4">
                 {[
-                  { name: 'ClÃ­nica OdontoMais', valor: 'R$ 690/mÃªs', status: 'Ativo' },
-                  { name: 'ImobiliÃ¡ria Prime SP', valor: 'R$ 1.800/mÃªs', status: 'Ativo' },
-                  { name: 'Advocacia Freitas', valor: 'R$ 690/mÃªs', status: 'Ativo' }
+                  { name: 'Clínica OdontoMais', valor: 'R$ 690/mês', status: 'Ativo' },
+                  { name: 'Imobiliária Prime SP', valor: 'R$ 1.800/mês', status: 'Ativo' },
+                  { name: 'Advocacia Freitas', valor: 'R$ 690/mês', status: 'Ativo' }
                 ].map((c, i) => (
                   <div key={i} className="p-3 rounded-xl border border-[#E7E4DC] bg-[#FAF9F5] flex items-center justify-between text-xs">
                     <div>
@@ -314,7 +314,7 @@ export default function ParceirosPage({ onOpenDemo, onOpenAuth, onNavigateHome }
               </div>
 
               <div className="text-[11px] text-[#8C8881] text-center pt-2 border-t border-[#F0EDE8]">
-                MÃ©tricas atualizadas em tempo real
+                Métricas atualizadas em tempo real
               </div>
             </div>
 
@@ -333,16 +333,16 @@ export default function ParceirosPage({ onOpenDemo, onOpenAuth, onNavigateHome }
         </div>
       </section>
 
-      {/* 4. SECTION: NÃVEL DA PARCERIA (Tiered Table) */}
+      {/* 4. SECTION: NÍVEL DA PARCERIA (Tiered Table) */}
       <section className="py-20 bg-white border-t border-[#EBE8E2]">
         <div className="max-w-3xl mx-auto px-4 sm:px-6">
           
           <div className="text-center mb-10">
             <h2 className="text-3xl sm:text-4xl font-normal text-[#1A1816] tracking-tight">
-              NÃ­vel da parceria
+              Nível da parceria
             </h2>
             <p className="mt-2 text-sm text-[#5C5955]">
-              Identifique sua faixa de comissÃµes conforme seu faturamento gerado para a Vocalis.
+              Identifique sua faixa de comissões conforme seu faturamento gerado para a Vocalis.
             </p>
 
             {/* Toggle Indicar / Revender */}
@@ -371,52 +371,52 @@ export default function ParceirosPage({ onOpenDemo, onOpenAuth, onNavigateHome }
             <table className="w-full text-left text-xs sm:text-sm">
               <thead>
                 <tr className="bg-[#FAF9F5] border-b border-[#E7E4DC] text-[#736F69] font-semibold">
-                  <th className="p-4 sm:p-5">NÃ­vel</th>
-                  <th className="p-4 sm:p-5 text-right">ComissÃ£o</th>
+                  <th className="p-4 sm:p-5">Nível</th>
+                  <th className="p-4 sm:p-5 text-right">Comissão</th>
                 </tr>
               </thead>
               <tbody className="divide-y divide-[#EBE8E2]">
                 <tr className="hover:bg-[#FAF9F5]">
                   <td className="p-4 sm:p-5">
                     <div className="font-bold text-[#1A1816]">Bronze</div>
-                    <div className="text-xs text-[#8C8881]">Faturamento mensal atÃ© R$ 5.000</div>
+                    <div className="text-xs text-[#8C8881]">Faturamento mensal até R$ 5.000</div>
                   </td>
                   <td className="p-4 sm:p-5 text-right">
                     <span className="text-base sm:text-lg font-bold text-[#1A1816]">15%</span>
-                    <span className="text-xs text-[#8C8881] block">~ R$ 750/mÃªs</span>
+                    <span className="text-xs text-[#8C8881] block">~ R$ 750/mês</span>
                   </td>
                 </tr>
 
                 <tr className="hover:bg-[#FAF9F5]">
                   <td className="p-4 sm:p-5">
                     <div className="font-bold text-[#1A1816]">Silver</div>
-                    <div className="text-xs text-[#8C8881]">Faturamento mensal atÃ© R$ 20.000</div>
+                    <div className="text-xs text-[#8C8881]">Faturamento mensal até R$ 20.000</div>
                   </td>
                   <td className="p-4 sm:p-5 text-right">
                     <span className="text-base sm:text-lg font-bold text-[#1A1816]">20%</span>
-                    <span className="text-xs text-[#8C8881] block">~ R$ 4.000/mÃªs</span>
+                    <span className="text-xs text-[#8C8881] block">~ R$ 4.000/mês</span>
                   </td>
                 </tr>
 
                 <tr className="hover:bg-[#FAF9F5]">
                   <td className="p-4 sm:p-5">
                     <div className="font-bold text-[#1A1816]">Gold</div>
-                    <div className="text-xs text-[#8C8881]">Faturamento mensal atÃ© R$ 50.000</div>
+                    <div className="text-xs text-[#8C8881]">Faturamento mensal até R$ 50.000</div>
                   </td>
                   <td className="p-4 sm:p-5 text-right">
                     <span className="text-base sm:text-lg font-bold text-[#1A1816]">25%</span>
-                    <span className="text-xs text-[#8C8881] block">~ R$ 12.500/mÃªs</span>
+                    <span className="text-xs text-[#8C8881] block">~ R$ 12.500/mês</span>
                   </td>
                 </tr>
 
                 <tr className="hover:bg-[#FAF9F5]">
                   <td className="p-4 sm:p-5">
                     <div className="font-bold text-[#1A1816]">Platinum</div>
-                    <div className="text-xs text-[#8C8881]">Faturamento mensal atÃ© R$ 100.000</div>
+                    <div className="text-xs text-[#8C8881]">Faturamento mensal até R$ 100.000</div>
                   </td>
                   <td className="p-4 sm:p-5 text-right">
                     <span className="text-base sm:text-lg font-bold text-[#1A1816]">30%</span>
-                    <span className="text-xs text-[#8C8881] block">~ R$ 30.000/mÃªs</span>
+                    <span className="text-xs text-[#8C8881] block">~ R$ 30.000/mês</span>
                   </td>
                 </tr>
 
@@ -430,7 +430,7 @@ export default function ParceirosPage({ onOpenDemo, onOpenAuth, onNavigateHome }
                   </td>
                   <td className="p-4 sm:p-5 text-right">
                     <span className="text-base sm:text-lg font-bold text-[#4F46E5]">35%</span>
-                    <span className="text-xs text-[#8C8881] block">~ R$ 35.000+/mÃªs</span>
+                    <span className="text-xs text-[#8C8881] block">~ R$ 35.000+/mês</span>
                   </td>
                 </tr>
               </tbody>
@@ -450,15 +450,15 @@ export default function ParceirosPage({ onOpenDemo, onOpenAuth, onNavigateHome }
         </div>
       </section>
 
-      {/* 5. SECTION: UMA BASE EM QUE VOCÃŠ PODE SE APOIAR */}
+      {/* 5. SECTION: UMA BASE EM QUE VOCÊ PODE SE APOIAR */}
       <section className="py-16 bg-[#FAF9F5] border-t border-[#EBE8E2] text-center">
         <div className="max-w-4xl mx-auto px-4 sm:px-6">
           <h2 className="text-3xl sm:text-4xl font-normal text-[#1A1816] tracking-tight">
             Uma base em que<br />
-            <span className="font-serif-title italic text-[#4F46E5]">vocÃª pode se apoiar.</span>
+            <span className="font-serif-title italic text-[#4F46E5]">você pode se apoiar.</span>
           </h2>
           <p className="mt-3 text-sm sm:text-base text-[#5C5955] max-w-2xl mx-auto leading-relaxed">
-            A Vocalis integra-se com mais de 2.000+ ferramentas disponÃ­veis no mercado. Seus clientes vÃ£o poder usar a Vocalis com seus sistemas atuais.
+            A Vocalis integra-se com mais de 2.000+ ferramentas disponíveis no mercado. Seus clientes vão poder usar a Vocalis com seus sistemas atuais.
           </p>
 
           <div className="mt-8 flex flex-wrap items-center justify-center gap-3 sm:gap-6 text-xs sm:text-sm font-semibold text-[#1A1816]">
@@ -472,7 +472,7 @@ export default function ParceirosPage({ onOpenDemo, onOpenAuth, onNavigateHome }
             </div>
             <div className="flex items-center gap-2 bg-white px-4 py-2 rounded-full border border-[#E7E4DC] shadow-sm">
               <span className="w-2 h-2 rounded-full bg-[#4F46E5]"></span>
-              <span>DocumentaÃ§Ã£o com API pÃºblica</span>
+              <span>Documentação com API pública</span>
             </div>
           </div>
         </div>
@@ -552,7 +552,7 @@ export default function ParceirosPage({ onOpenDemo, onOpenAuth, onNavigateHome }
 
             <div className="relative z-10 space-y-4 max-w-2xl mx-auto">
               <h3 className="text-2xl sm:text-4xl font-normal tracking-tight">
-                VocÃª procura uma parceria personalizada?
+                Você procura uma parceria personalizada?
               </h3>
               <p className="text-xs sm:text-sm text-white/70 leading-relaxed">
                 Tem uma comunidade, co-branding ou algo que ainda nem imaginamos? Converse com nosso time de parcerias e definiremos um modelo personalizado.
@@ -563,12 +563,12 @@ export default function ParceirosPage({ onOpenDemo, onOpenAuth, onNavigateHome }
                   onClick={onOpenDemo}
                   className="px-8 py-3 rounded-full bg-white text-[#1A1816] text-xs sm:text-sm font-bold hover:bg-[#FAF9F5] transition-colors shadow-lg"
                 >
-                  VocÃª procura uma parceria personalizada?
+                  Você procura uma parceria personalizada?
                 </button>
               </div>
             </div>
 
-            {/* Audio Waveform Graphic */}
+            {/* Soundwave animada com frequência e latência ao vivo */}
             <LiveSoundwaveBars
               palette="indigo"
               className="mt-10"
@@ -585,7 +585,7 @@ export default function ParceirosPage({ onOpenDemo, onOpenAuth, onNavigateHome }
         <div className="max-w-4xl mx-auto px-4">
           <h2 className="text-4xl sm:text-6xl font-normal text-[#1A1816] tracking-tight leading-[1.12]">
             Toda empresa tem uma voz.<br />
-            <span className="font-serif-title italic text-[#4F46E5]">A sua nunca mais fica em silÃªncio.</span>
+            <span className="font-serif-title italic text-[#4F46E5]">A sua nunca mais fica em silêncio.</span>
           </h2>
         </div>
       </section>

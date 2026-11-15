@@ -6,7 +6,7 @@ import {
 } from 'lucide-react';
 import { BRAND } from '../data/content';
 import { formatPhoneMask, formatPhoneForVoice, cleanRawPhone } from '../utils/phoneUtils';
-import { speakFemalePt, stopSpeech } from '../utils/voiceUtils';
+import { speakRobertaVoice as speakFemalePt, stopRobertaVoice as stopSpeech } from '../utils/geminiAudioService';
 import { saveLead, updateLead } from '../utils/supabaseClient';
 import { sendWhatsAppMessage } from '../utils/uazapiClient';
 import { askRobertaAI } from '../utils/aiService';

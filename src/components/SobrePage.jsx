@@ -9,32 +9,32 @@ import VocalisLogo from './VocalisLogo';
 
 export default function SobrePage({ onOpenDemo, onOpenAuth, onNavigate }) {
   const milestones = [
-    { number: '<380ms', label: 'LatÃªncia de ConversaÃ§Ã£o', desc: 'Respostas quase instantÃ¢neas que eliminam silÃªncios e pausas mecÃ¢nicas.' },
-    { number: '+150.000', label: 'Chamadas Processadas', desc: 'Minutos de conversas reais gerenciados com precisÃ£o e empatia no Brasil.' },
-    { number: '99.8%', label: 'Taxa de Disponibilidade', desc: 'Infraestrutura redundante com comutaÃ§Ã£o de alta disponibilidade 24/7/365.' },
-    { number: 'Zero', label: 'Perda de Vendas Fora do HorÃ¡rio', desc: 'Atendimento e agendamento contÃ­nuos em noites, fins de semana e feriados.' }
+    { number: '<380ms', label: 'Latência de Conversação', desc: 'Respostas quase instantâneas que eliminam silêncios e pausas mecânicas.' },
+    { number: '+150.000', label: 'Chamadas Processadas', desc: 'Minutos de conversas reais gerenciados com precisão e empatia no Brasil.' },
+    { number: '99.8%', label: 'Taxa de Disponibilidade', desc: 'Infraestrutura redundante com comutação de alta disponibilidade 24/7/365.' },
+    { number: 'Zero', label: 'Perda de Vendas Fora do Horário', desc: 'Atendimento e agendamento contínuos em noites, fins de semana e feriados.' }
   ];
 
   const pillars = [
     {
       icon: Zap,
-      title: 'Action-First AI (AÃ§Ãµes em Tempo Real)',
-      desc: 'Nossa inteligÃªncia nÃ£o se limita a anotar recados ou responder dÃºvidas bÃ¡sicas. Durante a chamada telefÃ´nica ou conversa de WhatsApp, a Vocalis emite cobranÃ§as Pix com desconto, sincroniza horÃ¡rios no Google Agenda e transfere clientes quentes para o especialista humano.'
+      title: 'Action-First AI (Ações em Tempo Real)',
+      desc: 'Nossa inteligência não se limita a anotar recados ou responder dúvidas básicas. Durante a chamada telefônica ou conversa de WhatsApp, a Vocalis emite cobranças Pix com desconto, sincroniza horários no Google Agenda e transfere clientes quentes para o especialista humano.'
     },
     {
       icon: Headphones,
       title: 'Voz Neural Brasileira com Sotaque Nativo',
-      desc: 'Adeus Ã s URAs robÃ³ticas de "digite 1 para falar com financeiro". A Vocalis foi calibrada para a cadÃªncia, respiraÃ§Ã£o e modulaÃ§Ã£o fonÃ©tica autÃªntica do portuguÃªs brasileiro, entendendo interrupÃ§Ãµes naturais e expressÃµes regionais.'
+      desc: 'Adeus às URAs robóticas de "digite 1 para falar com financeiro". A Vocalis foi calibrada para a cadência, respiração e modulação fonética autêntica do português brasileiro, entendendo interrupções naturais e expressões regionais.'
     },
     {
       icon: ShieldCheck,
-      title: 'SeguranÃ§a Institucional & Blindagem LGPD',
-      desc: 'Em total conformidade com a Lei Geral de ProteÃ§Ã£o de Dados (Lei nÂº 13.709/2018). Dados criptografados de ponta a ponta, armazenamento seguro em solo brasileiro e garantia absoluta de que seus dados e de seus clientes jamais serÃ£o compartilhados ou usados para treinar IAs pÃºblicas.'
+      title: 'Segurança Institucional & Blindagem LGPD',
+      desc: 'Em total conformidade com a Lei Geral de Proteção de Dados (Lei nº 13.709/2018). Dados criptografados de ponta a ponta, armazenamento seguro em solo brasileiro e garantia absoluta de que seus dados e de seus clientes jamais serão compartilhados ou usados para treinar IAs públicas.'
     },
     {
       icon: HeartHandshake,
-      title: 'Modelo White-Label para AgÃªncias & NegÃ³cios',
-      desc: 'Criada para empoderar tanto o empresÃ¡rio final quanto donos de agÃªncia de inteligÃªncia artificial. Permite personalizaÃ§Ã£o de marca, implantaÃ§Ã£o Ã¡gil em menos de 24 horas e suporte prioritÃ¡rio de engenharia.'
+      title: 'Modelo White-Label para Agências & Negócios',
+      desc: 'Criada para empoderar tanto o empresário final quanto donos de agência de inteligência artificial. Permite personalização de marca, implantação ágil em menos de 24 horas e suporte prioritário de engenharia.'
     }
   ];
 
@@ -43,21 +43,21 @@ export default function SobrePage({ onOpenDemo, onOpenAuth, onNavigate }) {
       name: 'Roberta',
       role: 'SDR & Consultora Comercial de Voz',
       channel: 'Telefonia VoIP & Chamadas Outbound',
-      desc: 'Atende clientes no primeiro toque, realiza diagnÃ³stico rÃ¡pido de negÃ³cios, tira dÃºvidas em tempo real e encaminha oportunidades prontas para a mesa de fechamento.',
-      badge: 'Linha de Frente TelefÃ´nica'
+      desc: 'Atende clientes no primeiro toque, realiza diagnóstico rápido de negócios, tira dúvidas em tempo real e encaminha oportunidades prontas para a mesa de fechamento.',
+      badge: 'Linha de Frente Telefônica'
     },
     {
       name: 'Camila',
       role: 'Especialista em WhatsApp Business',
       channel: 'WhatsApp Omnichannel 24/7',
-      desc: 'Conversa no WhatsApp com notas de voz humanizadas, envia propostas comerciais em PDF, gera Pix copia-e-cola e recupera clientes inativos de forma automÃ¡tica.',
-      badge: 'Fechamento & ConversÃ£o'
+      desc: 'Conversa no WhatsApp com notas de voz humanizadas, envia propostas comerciais em PDF, gera Pix copia-e-cola e recupera clientes inativos de forma automática.',
+      badge: 'Fechamento & Conversão'
     },
     {
       name: 'Beatriz',
       role: 'Atendente de Webchat Interativo',
       channel: 'Widget Web no Site',
-      desc: 'Engaja visitantes assim que eles entram no site, reduzindo a taxa de rejeiÃ§Ã£o e capturando nÃºmeros de telefone qualificados para a equipe comercial.',
+      desc: 'Engaja visitantes assim que eles entram no site, reduzindo a taxa de rejeição e capturando números de telefone qualificados para a equipe comercial.',
       badge: 'Engajamento no Site'
     }
   ];
@@ -72,17 +72,17 @@ export default function SobrePage({ onOpenDemo, onOpenAuth, onNavigate }) {
         <div className="max-w-4xl mx-auto px-4 sm:px-6">
           <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-white border border-[#E7E4DC] text-xs font-semibold text-[#4F46E5] shadow-xs mb-6">
             <Sparkles className="w-3.5 h-3.5" />
-            <span>Nossa HistÃ³ria & PropÃ³sito</span>
+            <span>Nossa História & Propósito</span>
           </div>
 
           <h1 className="text-4xl sm:text-5xl md:text-6xl font-normal text-[#1A1816] tracking-tight leading-[1.12] mb-6">
             A voz inteligente que devolve o{' '}
             <span className="font-serif-title italic text-[#4F46E5]">tempo e o lucro</span>{' '}
-            Ã s empresas do Brasil.
+            às empresas do Brasil.
           </h1>
 
           <p className="text-base sm:text-lg text-[#5C5955] max-w-2xl mx-auto leading-relaxed mb-8">
-            Nascemos com uma missÃ£o clara: erradicar a perda de clientes por falta de atendimento imediato. Unimos o que hÃ¡ de mais avanÃ§ado em inteligÃªncia artificial conversacional Ã  naturalidade e calidez humana do portuguÃªs brasileiro.
+            Nascemos com uma missão clara: erradicar a perda de clientes por falta de atendimento imediato. Unimos o que há de mais avançado em inteligência artificial conversacional à naturalidade e calidez humana do português brasileiro.
           </p>
 
           <div className="flex flex-col sm:flex-row items-center justify-center gap-3">
@@ -97,7 +97,7 @@ export default function SobrePage({ onOpenDemo, onOpenAuth, onNavigate }) {
               className="w-full sm:w-auto px-6 py-3.5 rounded-full bg-[#11100F] text-white text-xs sm:text-sm font-semibold hover:bg-black transition-all flex items-center justify-center gap-2 shadow-md cursor-pointer hover:scale-[1.01]"
             >
               <Phone className="w-4 h-4 text-[#6366F1]" />
-              <span>Testar LigaÃ§Ã£o da Roberta</span>
+              <span>Testar Ligação da Roberta</span>
             </button>
 
             <button
@@ -150,28 +150,28 @@ export default function SobrePage({ onOpenDemo, onOpenAuth, onNavigate }) {
 
           <div className="space-y-4 text-sm sm:text-base text-[#5C5955] leading-relaxed">
             <p>
-              No Brasil, mais de <strong>60% das oportunidades de vendas e agendamentos mÃ©dicos sÃ£o perdidas</strong> simplesmente porque o cliente liga ou manda mensagem fora do horÃ¡rio comercial, no intervalo de almoÃ§o ou nos finais de semana â€” exatamente nos momentos em que ele tem tempo livre para pesquisar e contratar.
+              No Brasil, mais de <strong>60% das oportunidades de vendas e agendamentos médicos são perdidas</strong> simplesmente porque o cliente liga ou manda mensagem fora do horário comercial, no intervalo de almoço ou nos finais de semana — exatamente nos momentos em que ele tem tempo livre para pesquisar e contratar.
             </p>
             <p>
-              As soluÃ§Ãµes tradicionais do mercado ou sÃ£o caras demais para o pequeno e mÃ©dio empresÃ¡rio (contratar turnos inteiros de atendentes CLT) ou geram uma pÃ©ssima experiÃªncia para quem liga (URAs mecÃ¢nicas e robÃ´s que nÃ£o entendem sotaques e irritam quem estÃ¡ com pressa).
+              As soluções tradicionais do mercado ou são caras demais para o pequeno e médio empresário (contratar turnos inteiros de atendentes CLT) ou geram uma péssima experiência para quem liga (URAs mecânicas e robôs que não entendem sotaques e irritam quem está com pressa).
             </p>
             <p>
-              A <strong>Vocalis AI</strong> nasceu para quebrar esse paradigma. ConstruÃ­mos uma plataforma onde qualquer consultÃ³rio, imobiliÃ¡ria, escritÃ³rio ou empresa comercial possa ter uma equipe de atendimento com voz neural humana operando 24 horas por dia, 7 dias por semana, com custo acessÃ­vel e retorno financeiro imediato.
+              A <strong>Vocalis AI</strong> nasceu para quebrar esse paradigma. Construímos uma plataforma onde qualquer consultório, imobiliária, escritório ou empresa comercial possa ter uma equipe de atendimento com voz neural humana operando 24 horas por dia, 7 dias por semana, com custo acessível e retorno financeiro imediato.
             </p>
           </div>
         </div>
       </section>
 
-      {/* 4. OS 4 PILARES TECNOLÃ“GICOS */}
+      {/* 4. OS 4 PILARES TECNOLÓGICOS */}
       <section className="py-16 bg-[#F6F5F0] border-t border-b border-[#EBE8E2]">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center max-w-3xl mx-auto mb-14">
             <h2 className="text-3xl sm:text-4xl font-normal text-[#1A1816] tracking-tight">
               Os pilares que sustentam a nossa{' '}
-              <span className="font-serif-title italic text-[#4F46E5]">excelÃªncia tÃ©cnica.</span>
+              <span className="font-serif-title italic text-[#4F46E5]">excelência técnica.</span>
             </h2>
             <p className="text-sm text-[#5C5955] mt-3">
-              Engenharia de precisÃ£o desenvolvida no Brasil e para o mercado brasileiro.
+              Engenharia de precisão desenvolvida no Brasil e para o mercado brasileiro.
             </p>
           </div>
 
@@ -204,7 +204,7 @@ export default function SobrePage({ onOpenDemo, onOpenAuth, onNavigate }) {
             <span>Nossos Agentes Neurais</span>
           </div>
           <h2 className="text-3xl sm:text-4xl font-normal text-[#1A1816] tracking-tight">
-            ConheÃ§a os funcionÃ¡rios virtuais da{' '}
+            Conheça os funcionários virtuais da{' '}
             <span className="font-serif-title italic text-[#4F46E5]">sua empresa.</span>
           </h2>
           <p className="text-sm text-[#5C5955] mt-3">
@@ -220,7 +220,7 @@ export default function SobrePage({ onOpenDemo, onOpenAuth, onNavigate }) {
                   <span className="text-[10px] font-bold uppercase tracking-wider px-2.5 py-1 rounded-full bg-[#EEF2FF] text-[#4F46E5] border border-[#E0E7FF]">
                     {agent.badge}
                   </span>
-                  <span className="text-[11px] font-mono text-emerald-600 font-bold">â— Ativa 24/7</span>
+                  <span className="text-[11px] font-mono text-emerald-600 font-bold">● Ativa 24/7</span>
                 </div>
 
                 <h3 className="text-2xl font-serif-title font-normal text-[#1A1816] mb-1">
@@ -258,44 +258,45 @@ export default function SobrePage({ onOpenDemo, onOpenAuth, onNavigate }) {
         </div>
       </section>
 
-      {/* 6. CTA FINAL (banner escuro com frequência de voz em movimento) */}
+      {/* 6. CTA FINAL (Banner com Frequência Sonora & Latência em Tempo Real) */}
       <section className="py-16 bg-white border-t border-[#EBE8E2] px-4 sm:px-6 lg:px-8">
         <div className="relative max-w-5xl mx-auto rounded-3xl bg-[#11100F] text-white p-8 sm:p-12 text-center overflow-hidden shadow-2xl">
           <div className="absolute top-0 left-1/2 -translate-x-1/2 w-96 h-40 bg-[#4F46E5]/20 rounded-full blur-3xl pointer-events-none" />
+
           <div className="relative z-10 max-w-2xl mx-auto">
-          <h2 className="text-3xl sm:text-4xl font-normal text-white tracking-tight mb-4">
-            Pronto para colocar a Vocalis na{' '}
-            <span className="font-serif-title italic text-[#E89574]">sua empresa hoje?</span>
-          </h2>
-          <p className="text-sm text-[#A8A49C] max-w-xl mx-auto mb-8">
-            Nossos engenheiros entregam sua assistente configurada, integrada Ã  sua agenda e com garantia incondicional de 14 dias.
-          </p>
+            <h2 className="text-3xl sm:text-4xl font-normal text-white tracking-tight mb-4">
+              Pronto para colocar a Vocalis na{' '}
+              <span className="font-serif-title italic text-[#E89574]">sua empresa hoje?</span>
+            </h2>
+            <p className="text-sm text-[#A8A49C] max-w-xl mx-auto mb-8">
+              Nossos engenheiros entregam sua assistente configurada, integrada à sua agenda e com garantia incondicional de 14 dias.
+            </p>
 
-          <div className="flex flex-col sm:flex-row items-center justify-center gap-3">
-            <button
-              onClick={() => {
-                if (onNavigate) onNavigate('precos');
-                window.scrollTo({ top: 0, behavior: 'smooth' });
-              }}
-              className="w-full sm:w-auto px-8 py-3.5 rounded-full bg-[#4F46E5] text-white text-xs sm:text-sm font-bold hover:bg-[#4338CA] transition-all shadow-md cursor-pointer flex items-center justify-center gap-2"
-            >
-              <span>Ver Planos & PreÃ§os</span>
-              <ArrowRight className="w-4 h-4" />
-            </button>
+            <div className="flex flex-col sm:flex-row items-center justify-center gap-3">
+              <button
+                onClick={() => {
+                  if (onNavigate) onNavigate('precos');
+                  window.scrollTo({ top: 0, behavior: 'smooth' });
+                }}
+                className="w-full sm:w-auto px-8 py-3.5 rounded-full bg-[#4F46E5] text-white text-xs sm:text-sm font-bold hover:bg-[#4338CA] transition-all shadow-md cursor-pointer flex items-center justify-center gap-2"
+              >
+                <span>Ver Planos & Preços</span>
+                <ArrowRight className="w-4 h-4" />
+              </button>
 
-            <a
-              href="https://wa.me/5594984423948?text=Ol%C3%A1%20Francisco!%20Li%20a%20p%C3%A1gina%20Sobre%20da%20Vocalis%20AI%20e%20gostaria%20de%20conversar."
-              target="_blank"
-              rel="noreferrer"
-              className="w-full sm:w-auto px-8 py-3.5 rounded-full bg-emerald-600 text-white text-xs sm:text-sm font-bold hover:bg-emerald-700 transition-all shadow-sm cursor-pointer flex items-center justify-center gap-2"
-            >
-              <MessageSquare className="w-4 h-4" />
-              <span>Falar no WhatsApp: (94) 98442-3948</span>
-            </a>
+              <a
+                href="https://wa.me/5594984423948?text=Ol%C3%A1%20Francisco!%20Li%20a%20p%C3%A1gina%20Sobre%20da%20Vocalis%20AI%20e%20gostaria%20de%20conversar."
+                target="_blank"
+                rel="noreferrer"
+                className="w-full sm:w-auto px-8 py-3.5 rounded-full bg-emerald-600 text-white text-xs sm:text-sm font-bold hover:bg-emerald-700 transition-all shadow-sm cursor-pointer flex items-center justify-center gap-2"
+              >
+                <MessageSquare className="w-4 h-4" />
+                <span>Falar no WhatsApp: (94) 98442-3948</span>
+              </a>
+            </div>
           </div>
-          </div>
 
-          {/* Soundwave animada + latência ao vivo */}
+          {/* Soundwave animada com frequência e latência ao vivo */}
           <LiveSoundwaveBars />
         </div>
       </section>
