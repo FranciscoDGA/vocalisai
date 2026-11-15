@@ -3,6 +3,12 @@
  * Focado em fluidez máxima, entonação natural e ritmo acolhedor de atendimento
  */
 
+import {
+  speakRobertaVoice as speakGeminiRoberta,
+  speakPersonaVoice as speakGeminiPersona,
+  stopRobertaVoice as stopGeminiAudio
+} from './geminiAudioService';
+
 let cachedVoices = [];
 
 // Carrega as vozes do sistema de forma segura e reativa
@@ -136,9 +142,19 @@ export function getBestMalePtVoice() {
 }
 
 /**
- * Executa a fala de acordo com a Persona selecionada
+ * Executa a fala de acordo com a Persona selecionada (Roberta, Marcus, Camila, etc.)
+ * Prioriza o áudio neural humano do Google Gemini; fallback para navegador se offline.
  */
 export function speakPersonaPt(personaKey = 'roberta', rawText, onStart, onEnd, onError) {
+  // 1. Tenta reproduzir o áudio neural ultra-realista do Google Gemini
+  try {
+    speakGeminiPersona(personaKey, rawText, onStart, onEnd, onError);
+    return;
+  } catch (err) {
+    console.warn('Fallback para síntese do navegador:', err);
+  }
+
+  // 2. Fallback caso a API do Gemini não responda
   if (typeof window === 'undefined' || !('speechSynthesis' in window)) {
     if (onEnd) onEnd();
     return;
@@ -248,9 +264,19 @@ export function cleanTextForSpeech(text) {
 }
 
 /**
- * Fala o texto usando a voz de Roberta com cancelamento prévio e tratamento de erro
+ * Fala o texto usando a voz neural de Roberta (Google Gemini com áudio humano real)
+ * Cancela qualquer fala anterior imediatamente.
  */
 export function speakFemalePt(rawText, onStart, onEnd, onError) {
+  // 1. Prioriza a voz humana ultra-fluida do Google Gemini
+  try {
+    speakGeminiRoberta(rawText, onStart, onEnd, onError);
+    return;
+  } catch (err) {
+    console.warn('Fallback para síntese do navegador:', err);
+  }
+
+  // 2. Fallback local de emergência
   if (typeof window === 'undefined' || !('speechSynthesis' in window)) {
     if (onEnd) onEnd();
     return;
@@ -297,6 +323,11 @@ export function speakFemalePt(rawText, onStart, onEnd, onError) {
 }
 
 export function stopSpeech() {
+  try {
+    stopGeminiAudio();
+  } catch {
+    // Ignora
+  }
   if (typeof window !== 'undefined' && 'speechSynthesis' in window) {
     window.speechSynthesis.cancel();
   }

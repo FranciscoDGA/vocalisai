@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { NICHES } from '../data/content';
+import { speakFemalePt, stopSpeech } from '../utils/voiceUtils';
 import { 
   Stethoscope, 
   Building2, 
@@ -40,31 +41,18 @@ export default function NichesSection({ onOpenDemo }) {
   const IconComponent = iconMap[activeNiche.icon] || Sparkles;
 
   const handlePlayVoice = (text) => {
-    if ('speechSynthesis' in window) {
-      if (isPlayingAudio) {
-        window.speechSynthesis.cancel();
-        setIsPlayingAudio(false);
-        return;
-      }
-
-      window.speechSynthesis.cancel();
-      const utterance = new SpeechSynthesisUtterance(text);
-      utterance.lang = 'pt-BR';
-      utterance.rate = 1.05;
-
-      const voices = window.speechSynthesis.getVoices();
-      const ptVoice = voices.find(v => v.lang.includes('pt-BR') || v.lang.includes('pt'));
-      if (ptVoice) utterance.voice = ptVoice;
-
-      utterance.onstart = () => setIsPlayingAudio(true);
-      utterance.onend = () => setIsPlayingAudio(false);
-      utterance.onerror = () => setIsPlayingAudio(false);
-
-      window.speechSynthesis.speak(utterance);
-    } else {
-      setIsPlayingAudio(!isPlayingAudio);
-      setTimeout(() => setIsPlayingAudio(false), 3500);
+    if (isPlayingAudio) {
+      stopSpeech();
+      setIsPlayingAudio(false);
+      return;
     }
+
+    speakFemalePt(
+      text,
+      () => setIsPlayingAudio(true),
+      () => setIsPlayingAudio(false),
+      () => setIsPlayingAudio(false)
+    );
   };
 
   return (
