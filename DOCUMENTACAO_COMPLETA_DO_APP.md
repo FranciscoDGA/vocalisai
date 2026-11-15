@@ -687,73 +687,66 @@ python app.py
 
 ---
 
-## 16. MANUAL DE PRECIFICAÇÃO, CUSTOS REAIS E MINUTAGEM TRANSPARENTE
+## 16. MANUAL OFICIAL DE PRECIFICAÇÃO (BASE KLOEL), MINUTAGEM & BLINDAGEM CAMBIAL CONTRA DÓLAR ALTO
 
-### 16.1 Decomposição de Custos Reais da Vocalis AI (Custo para a Agência Rodar)
+### 16.1 Tabela Oficial de Planos (Base Kloel / Vocalis AI)
 
-| Componente da Chamada | Tecnologia / Provedor | Custo em Real (R$) |
-| :--- | :--- | :--- |
-| **Transcrição de Fala (STT)** | Deepgram Nova-2 | R$ 0,025 / min |
-| **Cérebro LLM (Raciocínio)** | Google Gemini 2.5 Flash | R$ 0,005 / min |
-| **Voz Neural Humana (TTS)** | Google Gemini Audio (Kore) | R$ 0,024 / min |
-| **Linha Telefônica SIP Brasil**| Vapi / Telecom Parceira | R$ 0,100 / min |
-| **CUSTO TOTAL DIRETO POR MINUTO**| — | **≈ R$ 0,154 / minuto** |
+#### A. CANAL 1: Assistente Telefônico IA (Voz com Roberta)
+| Plano | Perfil de Volume | Mensal Normal | Mensal Promo (-30%) | Anual Normal (/mês) | Anual Promo (-30%) | Franquia de Voz Inclusa | Recursos & Conectores Inclusos |
+| :--- | :--- | :--- | :--- | :--- | :--- | :--- | :--- |
+| **SOLO** | Até 20 chamadas/dia | R$ 719,00/mês | **R$ 503,00/mês** | R$ 575,00/mês | **R$ 402,00/mês** | **1.500 min/mês** (~500 chamadas) | 1 chamada simultânea, 1 número nacional, 4 assistentes, 1 usuário, agendador **Cal.com** |
+| **TEAM** | 20 a 100 chamadas/dia *(Mais Escolhido)* | R$ 2.159,00/mês | **R$ 1.511,00/mês** | R$ 1.727,00/mês | **R$ 1.209,00/mês** | **3.600 min/mês** (~1.200 chamadas) | 3 chamadas simultâneas, 2 números nacionais, assistentes ilimitados, tronco SIP, transbordo **Chatwoot** |
+| **SCALE** | Mais de 100 chamadas/dia | R$ 3.599,00/mês | **R$ 2.519,00/mês** | R$ 2.879,00/mês | **R$ 2.015,00/mês** | **6.000+ min/mês** | Chamadas simultâneas ilimitadas, 1 clonagem **Voice Studio** inclusa, suporte dedicado |
 
-#### Custo Mensal por Perfil de Cliente:
-* **Cliente Pequeno (100 min/mês):** Custa para você **R$ 15,50/mês**.
-* **Cliente Médio (250 min/mês):** Custa para você **R$ 41,00/mês**.
-* **Cliente Grande (600 min/mês):** Custa para você **R$ 95,00/mês**.
-* **WhatsApp (UazAPI / Servidor Próprio):** **R$ 0,00 por mensagem** (Zero taxas cobradas pela Meta).
-* **Cal.com & Chatwoot:** **R$ 0,00** (Open-source auto-hospedado).
+#### B. CANAL 2: IA de WhatsApp (Vendas e Atendimento 24/7 com Camila)
+| Plano | Perfil de Volume | Mensal Normal | Mensal Promo (-30%) | Anual Normal (/mês) | Anual Promo (-30%) | Conversas Inclusas | Recursos Inclusos |
+| :--- | :--- | :--- | :--- | :--- | :--- | :--- | :--- |
+| **SOLO** | Até 450 conversas/mês | R$ 499,00/mês | **R$ 349,00/mês** | R$ 399,00/mês | **R$ 279,00/mês** | **450 conversas/mês** | 1 número WhatsApp, assistentes ilimitados, agendador **Cal.com** |
+| **TEAM** | Até 2.000 conversas/mês | R$ 1.999,00/mês | **R$ 1.399,00/mês** | R$ 1.599,00/mês | **R$ 1.119,00/mês** | **2.000 conversas/mês** | 3 números de WhatsApp, usuários ilimitados, transbordo **Chatwoot** |
+| **SCALE** | A partir de 5.000 conversas/mês | R$ 4.499,00/mês | **R$ 3.149,00/mês** | R$ 3.599,00/mês | **R$ 2.519,00/mês** | **5.000+ conversas/mês** | Números personalizados, webhook avançado e inteligência dedicada |
 
----
-
-### 16.2 Estrutura Comercial de Venda (Sem Pegadinhas para o Cliente)
-
-A proposta deve ser apresentada em 3 blocos cristalinos:
-
-#### 1. Setup de Implantação (Cobrança Única):
-* Treinamento da IA com regras do negócio, catálogo e perguntas frequentes.
-* Integração com WhatsApp, linha telefônica 0800 / DDD e Google Agenda/Cal.com.
-* **Valor Recomendado:** **R$ 1.500,00** (à vista ou em até 12x no cartão).
-
-#### 2. Assinatura da Plataforma (Mensalidade Recorrente):
-* IA ativa 24/7 atendendo ligações e WhatsApp.
-* Painel de relatórios, transcrições e transbordo para equipe humana (Chatwoot).
-* **Franquia de 250 minutos de chamadas já inclusa.**
-* **Valor Recomendado:** **R$ 497,00/mês**.
-
-#### 3. Política de Minutagem Transparente (Pré-Paga):
-* Se o cliente ultrapassar a franquia de 250 minutos: **R$ 0,69 por minuto excedente**.
-* O cliente recarrega créditos no painel quando quiser e o saldo nunca expira.
-* **Margem da Agência:** Você compra a R$ 0,16 e vende a R$ 0,69 (**lucro superior a 330%** sobre o tráfego telefônico).
+#### C. CANAL 3: Omnichannel Completo (Telefone + WhatsApp Integrados)
+* **Mensal Normal:** R$ 1.119,00/mês | **Mensal Promo:** **R$ 783,00/mês**
+* **Anual Normal:** R$ 895,00/mês | **Anual Promo:** **R$ 626,00/mês**
 
 ---
 
-### 16.3 Tabela de Pacotes Prontos para Venda
+### 16.2 Tabela de Complementos Oficiais (Sem Pegadinhas)
+* **Minutos Extras de Telefone:** **R$ 50,00 por pacote de 100 minutos** (R$ 0,50 por minuto pré-pago).
+* **Número de Telefone Adicional:** **R$ 49,00/mês**.
+* **Conexão de WhatsApp Extra:** **R$ 119,00/mês** por número.
+* **Taxa de Setup & Implantação da Agência:** **R$ 990,00 a R$ 1.500,00** (cobrada uma única vez no onboarding).
+* **Clonagem de Voz Exclusiva (Voice Studio):** **R$ 1.500,00 a R$ 2.500,00** (taxa única).
 
-| Recurso | Plano Essencial | Plano Profissional (Recomendado) | Plano Escala / VIP |
-| :--- | :--- | :--- | :--- |
-| **Taxa de Setup Única** | R$ 990,00 | **R$ 1.500,00** | R$ 2.500,00 a R$ 3.500,00 |
-| **Mensalidade** | R$ 397,00/mês | **R$ 497,00/mês** | R$ 897,00/mês |
-| **Franquia de Voz Inclusa** | 100 minutos | **250 minutos** | 600 minutos |
-| **Minuto Excedente** | R$ 0,79 / min | **R$ 0,69 / min** | R$ 0,59 / min |
-| **WhatsApp Oficial** | Ilimitado | **Ilimitado** | Ilimitado |
-| **Agendamento Cal.com** | 1 agenda | **Até 5 agendas** | Equipe ilimitada |
-| **Transbordo Chatwoot** | Opcional (+ R$ 99/mês) | **Incluso** | **Incluso** |
-| **Clonagem de Voz (Voice Studio)** | Opcional | Opcional | **1 Voz Clonada Inclusa** |
-| **Seu Custo Estimado** | ≈ R$ 16,00/mês | **≈ R$ 41,00/mês** | ≈ R$ 95,00/mês |
-| **Seu Lucro Líquido** | **R$ 381,00/mês (96%)** | **R$ 456,00/mês (91%)** | **R$ 802,00/mês (89%)** |
+---
+
+### 16.3 Blindagem Contra o Dólar Alto na Vapi (Como Nunca Ficar no Prejuízo)
+
+Como a Vapi fatura em Dólar Americano (USD), a volatilidade cambial pode assustar quem está iniciando. Abaixo está a comprovação matemática de que sua agência está 100% protegida:
+
+| Cotação do Dólar (USD) | Custo Médio Vapi por Minuto (US$ 0.028) | Custo em Reais (R$) | Preço de Venda do Minuto Extra | Sua Margem de Lucro Bruto |
+| :--- | :--- | :--- | :--- | :--- |
+| **US$ 1.00 = R$ 5,50** | $0.028 / min | **R$ 0,154 / min** | R$ 0,50 / min | **+224% de Lucro** |
+| **US$ 1.00 = R$ 6,00** | $0.028 / min | **R$ 0,168 / min** | R$ 0,50 / min | **+197% de Lucro** |
+| **US$ 1.00 = R$ 6,50** | $0.028 / min | **R$ 0,182 / min** | R$ 0,50 / min | **+174% de Lucro** |
+| **US$ 1.00 = R$ 7,00 (Extremo)** | $0.028 / min | **R$ 0,196 / min** | R$ 0,50 / min | **+155% de Lucro** |
+
+#### As 2 Travas de Segurança Operacional:
+1. **O Colchão do Setup Inicial (R$ 990 a R$ 1.500):**
+   * Esse valor cai 100% líquido no seu bolso no dia 1, antes de qualquer ligação ser disparada.
+   * Ele cobre antecipadamente os custos da Vapi de **mais de 1 ano inteiro** de consumo daquele cliente.
+2. **O Modelo BYOK (Cartão do Próprio Cliente na Vapi para Grandes Contas):**
+   * Se entrar um cliente de grande porte (call center ou imobiliária com 10 corretores rodando mais de 3.000 ligações/mês):
+   * O cliente cadastra o **próprio cartão de crédito dele na Vapi**.
+   * Você cobra apenas a **mensalidade de software e gestão** da sua agência (R$ 1.500 a R$ 2.500/mês).
+   * **Seu risco cambial é ZERO e seu lucro é 100% líquido.**
 
 ---
 
 ### 16.4 Roteiro de Fechamento por Contraste CLT
-
-> *"Doutor / Seu Carlos, uma recepcionista física para sua empresa custa no mínimo R$ 2.900,00 por mês (salário + encargos + VT + férias), trabalhando apenas 8h por dia de segunda a sexta.*
->
-> *A Vocalis AI fica ativa **24 horas por dia, 7 dias por semana**, atende no telefone, no WhatsApp, nunca fica doente, não perde clientes à noite e agenda consultas direto na sua agenda por apenas **R$ 497,00 por mês**, com 250 minutos já inclusos.*
->
-> *Se sua empresa receber muitas ligações e passar de 250 minutos, cada minuto adicional custa centavos (R$ 0,69) de forma pré-paga e transparente, sem nenhum centavo de surpresa na sua fatura."*
+> *"Doutor / Seu Carlos, uma recepcionista física para sua empresa custa mais de **R$ 2.900,00 por mês** somando encargos e benefícios, atendendo apenas 8h por dia.*
+> *A Vocalis AI atende **24 horas por dia, 7 dias por semana**, inclusive à noite e nos fins de semana, agenda clientes na hora pelo **Cal.com** e transborda para sua equipe pelo **Chatwoot** por apenas **R$ 503,00 por mês** no plano promocional, com 1.500 minutos inclusos.*
+> *E se você precisar de mais minutos, cada pacote de 100 minutos adicionais custa apenas R$ 50, de forma pré-paga e transparente, sem nenhum susto no final do mês."*
 
 ---
 
