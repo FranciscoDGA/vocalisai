@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import LiveSoundwaveBars from './LiveSoundwaveBars';
 import {
   Phone,
   MessageCircle,
@@ -67,23 +68,23 @@ export default function ContatoPage({ onOpenDemo, onOpenAuth, onNavigate }) {
   const faqs = [
     {
       q: 'Por que escolher a Vocalis como assistente de voz com IA?',
-      a: 'A Vocalis é pioneira no Brasil em modelos acústicos calibrados especificamente para a prosódia, cadência e sotaques regionais do português brasileiro. Nossa latência ponta a ponta é inferior a 500ms, proporcionando conversas ultra-realistas com compreensão de interrupções naturais, sem parecer robótica. Além disso, unificamos telefone, WhatsApp e Webchat em um único painel inteligente com suporte a agendamento automático e CRM.'
+      a: 'A Vocalis Ã© pioneira no Brasil em modelos acÃºsticos calibrados especificamente para a prosÃ³dia, cadÃªncia e sotaques regionais do portuguÃªs brasileiro. Nossa latÃªncia ponta a ponta Ã© inferior a 500ms, proporcionando conversas ultra-realistas com compreensÃ£o de interrupÃ§Ãµes naturais, sem parecer robÃ³tica. AlÃ©m disso, unificamos telefone, WhatsApp e Webchat em um Ãºnico painel inteligente com suporte a agendamento automÃ¡tico e CRM.'
     },
     {
-      q: 'Onde os dados são armazenados?',
-      a: 'Todos os dados de chamadas, áudios e transcrições são armazenados em data centers de nível militar no Brasil (São Paulo - região South America East da AWS e GCP), em estrita conformidade com a Lei Geral de Proteção de Dados (LGPD - Lei 13.709/2018). As gravações contam com criptografia AES-256 em repouso e TLS 1.3 em trânsito.'
+      q: 'Onde os dados sÃ£o armazenados?',
+      a: 'Todos os dados de chamadas, Ã¡udios e transcriÃ§Ãµes sÃ£o armazenados em data centers de nÃ­vel militar no Brasil (SÃ£o Paulo - regiÃ£o South America East da AWS e GCP), em estrita conformidade com a Lei Geral de ProteÃ§Ã£o de Dados (LGPD - Lei 13.709/2018). As gravaÃ§Ãµes contam com criptografia AES-256 em repouso e TLS 1.3 em trÃ¢nsito.'
     },
     {
-      q: 'Onde e como a Vocalis é desenvolvida?',
-      a: 'A Vocalis é 100% desenvolvida no Brasil por uma equipe sênior de engenheiros de inteligência artificial, especialistas em processamento de sinais de áudio (DSP), telecomunicações VoIP e segurança da informação, com sede em São Paulo (SP).'
+      q: 'Onde e como a Vocalis Ã© desenvolvida?',
+      a: 'A Vocalis Ã© 100% desenvolvida no Brasil por uma equipe sÃªnior de engenheiros de inteligÃªncia artificial, especialistas em processamento de sinais de Ã¡udio (DSP), telecomunicaÃ§Ãµes VoIP e seguranÃ§a da informaÃ§Ã£o, com sede em SÃ£o Paulo (SP).'
     },
     {
-      q: 'Em quanto tempo posso ter o assistente telefônico pronto para uso?',
-      a: 'Em menos de 10 minutos! O painel da Vocalis é totalmente intuitivo e no-code: basta escolher a voz, definir as instruções do prompt ou subir os documentos da sua empresa em PDF. Você já pode testar ligando para o assistente imediatamente ou apontar seu número atual para a plataforma.'
+      q: 'Em quanto tempo posso ter o assistente telefÃ´nico pronto para uso?',
+      a: 'Em menos de 10 minutos! O painel da Vocalis Ã© totalmente intuitivo e no-code: basta escolher a voz, definir as instruÃ§Ãµes do prompt ou subir os documentos da sua empresa em PDF. VocÃª jÃ¡ pode testar ligando para o assistente imediatamente ou apontar seu nÃºmero atual para a plataforma.'
     },
     {
       q: 'E se a IA cometer erros?',
-      a: 'A Vocalis possui guardrails avançados para impedir alucinações. Você delimita exatamente o que o assistente pode ou não responder. Caso surja uma pergunta fora do escopo ou uma situação complexa imprevista, a IA oferece transferir a chamada em tempo real para um ramal humano ou registrar o recado estruturado para retorno imediato.'
+      a: 'A Vocalis possui guardrails avanÃ§ados para impedir alucinaÃ§Ãµes. VocÃª delimita exatamente o que o assistente pode ou nÃ£o responder. Caso surja uma pergunta fora do escopo ou uma situaÃ§Ã£o complexa imprevista, a IA oferece transferir a chamada em tempo real para um ramal humano ou registrar o recado estruturado para retorno imediato.'
     }
   ];
 
@@ -127,7 +128,7 @@ export default function ContatoPage({ onOpenDemo, onOpenAuth, onNavigate }) {
             className="w-full p-4 rounded-2xl bg-white border border-[#E7E4DC] hover:border-[#4F46E5] shadow-2xs hover:shadow-md transition-all flex items-center justify-center gap-3 text-xs sm:text-sm font-bold text-[#1A1816] cursor-pointer group"
           >
             <Laptop className="w-4 h-4 text-[#4F46E5] group-hover:scale-110 transition-transform" />
-            <span>💻 Quero ser cliente</span>
+            <span>ðŸ’» Quero ser cliente</span>
           </button>
 
           {/* Option 2: Quero ser parceiro */}
@@ -142,15 +143,15 @@ export default function ContatoPage({ onOpenDemo, onOpenAuth, onNavigate }) {
             className="w-full p-4 rounded-2xl bg-white border border-[#E7E4DC] hover:border-[#4F46E5] shadow-2xs hover:shadow-md transition-all flex items-center justify-center gap-3 text-xs sm:text-sm font-bold text-[#1A1816] cursor-pointer group"
           >
             <HeartHandshake className="w-4 h-4 text-[#D97706] group-hover:scale-110 transition-transform" />
-            <span>🤝 Quero ser parceiro</span>
+            <span>ðŸ¤ Quero ser parceiro</span>
           </button>
         </div>
       </section>
 
-      {/* 2. ATUAÇÃO NACIONAL, COM SEDE (2 Columns) */}
+      {/* 2. ATUAÃ‡ÃƒO NACIONAL, COM SEDE (2 Columns) */}
       <section className="py-16 px-4 sm:px-6 lg:px-8 max-w-5xl mx-auto">
         <h2 className="text-xl sm:text-2xl font-bold text-[#1A1816] text-center mb-10">
-          Atuação nacional, com sede em São Paulo (SP)
+          AtuaÃ§Ã£o nacional, com sede em SÃ£o Paulo (SP)
         </h2>
 
         <div className="grid grid-cols-1 md:grid-cols-12 gap-8 items-center">
@@ -172,7 +173,7 @@ export default function ContatoPage({ onOpenDemo, onOpenAuth, onNavigate }) {
             <div className="relative z-10 self-start">
               <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-xl bg-white/20 backdrop-blur-md border border-white/30 text-white text-xs font-semibold shadow-xs">
                 <MapPin className="w-3.5 h-3.5 text-white" />
-                <span>Sede Vocalis: São Paulo (SP)</span>
+                <span>Sede Vocalis: SÃ£o Paulo (SP)</span>
               </div>
             </div>
           </div>
@@ -184,8 +185,8 @@ export default function ContatoPage({ onOpenDemo, onOpenAuth, onNavigate }) {
                 Vocalis Tecnologia Ltda.
               </h3>
               <p className="text-xs text-[#736F69]">
-                Av. Paulista, 1374, 11º andar — Bela Vista<br />
-                São Paulo - SP, CEP 01310-100
+                Av. Paulista, 1374, 11Âº andar â€” Bela Vista<br />
+                SÃ£o Paulo - SP, CEP 01310-100
               </p>
             </div>
 
@@ -208,7 +209,7 @@ export default function ContatoPage({ onOpenDemo, onOpenAuth, onNavigate }) {
 
               <div className="flex items-center gap-2">
                 <Phone className="w-3.5 h-3.5 text-[#8C8881]" />
-                <span className="text-[#5C5955]">Falar ou receber ligação da Roberta:</span>
+                <span className="text-[#5C5955]">Falar ou receber ligaÃ§Ã£o da Roberta:</span>
                 <a
                   href="tel:+5594984478168"
                   className="font-bold text-[#1A1816] hover:text-[#4F46E5] transition-colors cursor-pointer inline-flex items-center gap-1"
@@ -234,7 +235,7 @@ export default function ContatoPage({ onOpenDemo, onOpenAuth, onNavigate }) {
             {/* Note about in-person visits */}
             <div className="pt-3 border-t border-[#ECEAE4]">
               <p className="text-[11px] text-[#8C8881] leading-relaxed">
-                Não prestamos atendimento presencial sem agendamento prévio. Utilize os canais digitais ou telefônicos para agendar uma reunião com nossa equipe.
+                NÃ£o prestamos atendimento presencial sem agendamento prÃ©vio. Utilize os canais digitais ou telefÃ´nicos para agendar uma reuniÃ£o com nossa equipe.
               </p>
             </div>
           </div>
@@ -285,13 +286,13 @@ export default function ContatoPage({ onOpenDemo, onOpenAuth, onNavigate }) {
 
           <div className="relative z-10 max-w-xl mx-auto">
             <h2 className="text-2xl sm:text-3xl font-bold tracking-tight mb-3">
-              Hoje alguém vai ligar.{' '}
+              Hoje alguÃ©m vai ligar.{' '}
               <span className="font-serif italic font-normal text-[#E89574]">
                 Deixe a Vocalis atender.
               </span>
             </h2>
             <p className="text-xs sm:text-sm text-[#A8A49C] leading-relaxed mb-8">
-              Crie a sua assistente em poucos minutos e ouça como ela atende os seus clientes: por telefone, no WhatsApp e no chat do site.
+              Crie a sua assistente em poucos minutos e ouÃ§a como ela atende os seus clientes: por telefone, no WhatsApp e no chat do site.
             </p>
             <button
               onClick={() => {
@@ -303,19 +304,9 @@ export default function ContatoPage({ onOpenDemo, onOpenAuth, onNavigate }) {
             </button>
           </div>
 
-          {/* Soundwave audio graphic bars */}
-          <div className="mt-12 flex items-end justify-center gap-1 sm:gap-1.5 h-14 opacity-75">
-            {[
-              12, 18, 26, 38, 22, 15, 30, 48, 55, 32, 20, 35, 50, 42, 28, 18, 24, 38,
-              54, 30, 22, 40, 52, 45, 30, 16, 25, 36, 48, 32, 19, 28, 42, 24, 15, 10
-            ].map((height, i) => (
-              <span
-                key={i}
-                className="w-1 sm:w-1.5 rounded-full bg-gradient-to-t from-[#B04118] via-[#E25C2B] to-[#F39C6B]"
-                style={{ height: `${height}%` }}
-              />
-            ))}
-          </div>
+          {/* Soundwave animada + latÃªncia ao vivo */}
+          <LiveSoundwaveBars />
+
         </div>
       </section>
 
@@ -325,11 +316,11 @@ export default function ContatoPage({ onOpenDemo, onOpenAuth, onNavigate }) {
           Toda empresa tem uma voz.
         </h2>
         <p className="text-2xl sm:text-3xl md:text-4xl font-serif italic text-[#4F46E5] tracking-tight mt-1">
-          A sua nunca mais fica em silêncio.
+          A sua nunca mais fica em silÃªncio.
         </p>
       </section>
 
-      {/* 6. MODAL: FORMULÁRIO DE CONTATO (Quero ser cliente) */}
+      {/* 6. MODAL: FORMULÃRIO DE CONTATO (Quero ser cliente) */}
       {contactType && (
         <div className="fixed inset-0 bg-black/60 backdrop-blur-xs z-50 flex items-center justify-center p-4 animate-fadeIn">
           <div className="bg-white rounded-3xl border border-[#E7E4DC] shadow-2xl w-full max-w-md p-6 sm:p-8 relative animate-scaleUp">
@@ -355,7 +346,7 @@ export default function ContatoPage({ onOpenDemo, onOpenAuth, onNavigate }) {
                   {contactType === 'cliente' ? 'Quero ser cliente' : 'Quero ser parceiro'}
                 </h3>
                 <p className="text-xs text-[#736F69] leading-relaxed mb-6">
-                  Preencha seus dados para receber uma demonstração personalizada no seu próprio telefone em menos de 10 minutos.
+                  Preencha seus dados para receber uma demonstraÃ§Ã£o personalizada no seu prÃ³prio telefone em menos de 10 minutos.
                 </p>
 
                 <form onSubmit={handleSubmitForm} className="space-y-4 text-left">
@@ -404,11 +395,11 @@ export default function ContatoPage({ onOpenDemo, onOpenAuth, onNavigate }) {
 
                   <div>
                     <label className="block text-xs font-semibold text-[#1A1816] mb-1">
-                      Nome da empresa ou clínica
+                      Nome da empresa ou clÃ­nica
                     </label>
                     <input
                       type="text"
-                      placeholder="Ex: Clínica Saúde Total"
+                      placeholder="Ex: ClÃ­nica SaÃºde Total"
                       value={formData.company}
                       onChange={(e) => setFormData({ ...formData, company: e.target.value })}
                       className="w-full px-3.5 py-2.5 rounded-xl border border-[#D5D2C9] bg-white text-xs text-[#1A1816] placeholder:text-[#9A968E] outline-none focus:border-[#4F46E5]"
@@ -417,7 +408,7 @@ export default function ContatoPage({ onOpenDemo, onOpenAuth, onNavigate }) {
 
                   <div>
                     <label className="block text-xs font-semibold text-[#1A1816] mb-1">
-                      Mensagem / Canal prioritário
+                      Mensagem / Canal prioritÃ¡rio
                     </label>
                     <textarea
                       rows={2}
@@ -446,7 +437,7 @@ export default function ContatoPage({ onOpenDemo, onOpenAuth, onNavigate }) {
                   Mensagem recebida com sucesso!
                 </h3>
                 <p className="text-xs text-[#736F69] max-w-sm mx-auto leading-relaxed">
-                  Obrigado, <strong className="text-[#1A1816]">{formData.name}</strong>. Nosso especialista entrará em contato pelo telefone <strong>{formData.phone}</strong> para demonstrar a IA da Vocalis ao vivo.
+                  Obrigado, <strong className="text-[#1A1816]">{formData.name}</strong>. Nosso especialista entrarÃ¡ em contato pelo telefone <strong>{formData.phone}</strong> para demonstrar a IA da Vocalis ao vivo.
                 </p>
                 <button
                   onClick={handleResetForm}
