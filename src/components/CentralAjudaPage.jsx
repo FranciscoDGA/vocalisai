@@ -550,7 +550,7 @@ Nunca dê diagnósticos médicos. Se o paciente relatar emergência grave, orien
               }}
               className="flex items-center gap-2 group cursor-pointer text-left"
             >
-              <div className="w-8 h-8 rounded-lg bg-[#C84B1F] flex items-center justify-center text-white font-bold shadow-sm group-hover:scale-105 transition-transform">
+              <div className="w-8 h-8 rounded-lg bg-[#4F46E5] flex items-center justify-center text-white font-bold shadow-sm group-hover:scale-105 transition-transform">
                 <span className="text-base tracking-tighter">|||</span>
               </div>
               <span className="text-xl font-bold tracking-tight text-[#1A1816]">
@@ -564,7 +564,7 @@ Nunca dê diagnósticos médicos. Se o paciente relatar emergência grave, orien
             {/* Search Input Box with Ctrl K */}
             <div
               onClick={() => setIsSearchModalOpen(true)}
-              className="flex-1 flex items-center justify-between px-3.5 py-2 rounded-xl border border-[#E4E1D8] bg-[#FAF9F6] text-[#736F69] text-xs hover:border-[#C84B1F]/40 cursor-pointer transition-colors shadow-2xs"
+              className="flex-1 flex items-center justify-between px-3.5 py-2 rounded-xl border border-[#E4E1D8] bg-[#FAF9F6] text-[#736F69] text-xs hover:border-[#4F46E5]/40 cursor-pointer transition-colors shadow-2xs"
             >
               <div className="flex items-center gap-2">
                 <Search className="w-3.5 h-3.5 text-[#8C8881]" />
@@ -583,9 +583,9 @@ Nunca dê diagnósticos médicos. Se o paciente relatar emergência grave, orien
                   aiInputRef.current.scrollIntoView({ behavior: 'smooth', block: 'center' });
                 }
               }}
-              className="flex items-center gap-2 px-3.5 py-2 rounded-xl border border-[#E4E1D8] bg-white text-xs font-medium text-[#403E39] hover:bg-[#FAF9F5] hover:border-[#C84B1F]/40 transition-colors shadow-2xs cursor-pointer whitespace-nowrap"
+              className="flex items-center gap-2 px-3.5 py-2 rounded-xl border border-[#E4E1D8] bg-white text-xs font-medium text-[#403E39] hover:bg-[#FAF9F5] hover:border-[#4F46E5]/40 transition-colors shadow-2xs cursor-pointer whitespace-nowrap"
             >
-              <Sparkles className="w-3.5 h-3.5 text-[#C84B1F]" />
+              <Sparkles className="w-3.5 h-3.5 text-[#4F46E5]" />
               <span>Perguntar ao assistente</span>
               <kbd className="px-1.5 py-0.5 text-[10px] font-medium bg-[#FAF9F6] border border-[#D5D2C9] rounded text-[#8C8881]">
                 Ctrl I
@@ -667,12 +667,12 @@ Nunca dê diagnósticos médicos. Se o paciente relatar emergência grave, orien
                         }}
                         className={`w-full text-left px-3 py-2 rounded-xl text-xs font-medium transition-colors cursor-pointer flex items-center justify-between ${
                           isSelected
-                            ? 'bg-[#FAF5EE] text-[#C84B1F] font-bold'
+                            ? 'bg-[#EEF2FF] text-[#4F46E5] font-bold'
                             : 'text-[#5C5955] hover:text-[#1A1816] hover:bg-[#FAF9F5]'
                         }`}
                       >
                         <span className="truncate">{art.title}</span>
-                        {isSelected && <ChevronRight className="w-3.5 h-3.5 text-[#C84B1F] shrink-0" />}
+                        {isSelected && <ChevronRight className="w-3.5 h-3.5 text-[#4F46E5] shrink-0" />}
                       </button>
                     </li>
                   );
@@ -719,7 +719,7 @@ Nunca dê diagnósticos médicos. Se o paciente relatar emergência grave, orien
             {/* Quick Contact Box in Sidebar */}
             <div className="p-4 rounded-2xl bg-[#FAF9F6] border border-[#E7E4DC] text-xs text-[#736F69] space-y-2">
               <div className="font-semibold text-[#1A1816] flex items-center gap-1.5">
-                <HelpCircle className="w-4 h-4 text-[#C84B1F]" />
+                <HelpCircle className="w-4 h-4 text-[#4F46E5]" />
                 <span>Precisa de ajuda humana?</span>
               </div>
               <p className="text-[11px] leading-relaxed">
@@ -727,7 +727,7 @@ Nunca dê diagnósticos médicos. Se o paciente relatar emergência grave, orien
               </p>
               <button
                 onClick={() => onOpenDemo && onOpenDemo()}
-                className="w-full py-1.5 px-3 rounded-lg bg-white border border-[#D5D2C9] text-[11px] font-semibold text-[#1A1816] hover:bg-[#FAF5EE] transition-colors text-center cursor-pointer shadow-2xs"
+                className="w-full py-1.5 px-3 rounded-lg bg-white border border-[#D5D2C9] text-[11px] font-semibold text-[#1A1816] hover:bg-[#EEF2FF] transition-colors text-center cursor-pointer shadow-2xs"
               >
                 Falar com consultor
               </button>
@@ -752,10 +752,10 @@ Nunca dê diagnósticos médicos. Se o paciente relatar emergência grave, orien
 
                 {/* Center Brand Waveform Logo */}
                 <div className="flex items-center gap-3 mb-6 relative">
-                  <div className="flex items-center gap-1 text-[#C84B1F]">
-                    <span className="inline-block w-1 h-5 bg-[#C84B1F] rounded-full animate-pulse" />
-                    <span className="inline-block w-1.5 h-8 bg-[#C84B1F] rounded-full" />
-                    <span className="inline-block w-1 h-4 bg-[#C84B1F] rounded-full" />
+                  <div className="flex items-center gap-1 text-[#4F46E5]">
+                    <span className="inline-block w-1 h-5 bg-[#4F46E5] rounded-full animate-pulse" />
+                    <span className="inline-block w-1.5 h-8 bg-[#4F46E5] rounded-full" />
+                    <span className="inline-block w-1 h-4 bg-[#4F46E5] rounded-full" />
                   </div>
                   <span className="text-3xl font-extrabold tracking-tight text-[#1A1816]">
                     vocalis
@@ -787,7 +787,7 @@ Nunca dê diagnósticos médicos. Se o paciente relatar emergência grave, orien
                     <button
                       type="submit"
                       disabled={isAiThinking}
-                      className="w-10 h-10 rounded-full bg-[#E08A68] hover:bg-[#C84B1F] text-white flex items-center justify-center shrink-0 transition-colors shadow-sm cursor-pointer disabled:opacity-50"
+                      className="w-10 h-10 rounded-full bg-[#E08A68] hover:bg-[#4F46E5] text-white flex items-center justify-center shrink-0 transition-colors shadow-sm cursor-pointer disabled:opacity-50"
                       title="Enviar pergunta ao assistente"
                     >
                       {isAiThinking ? (
@@ -816,10 +816,10 @@ Nunca dê diagnósticos médicos. Se o paciente relatar emergência grave, orien
 
                 {/* AI Response Card (If generated) */}
                 {aiResponse && (
-                  <div className="w-full max-w-2xl mt-6 p-6 rounded-2xl bg-[#FAF5EE] border border-[#E8D9C8] text-left shadow-sm animate-fadeIn relative z-10">
+                  <div className="w-full max-w-2xl mt-6 p-6 rounded-2xl bg-[#EEF2FF] border border-[#E8D9C8] text-left shadow-sm animate-fadeIn relative z-10">
                     <div className="flex items-center justify-between mb-3">
                       <div className="flex items-center gap-2">
-                        <div className="w-6 h-6 rounded-full bg-[#C84B1F] text-white flex items-center justify-center">
+                        <div className="w-6 h-6 rounded-full bg-[#4F46E5] text-white flex items-center justify-center">
                           <Sparkles className="w-3.5 h-3.5" />
                         </div>
                         <span className="text-xs font-bold text-[#1A1816]">
@@ -868,7 +868,7 @@ Nunca dê diagnósticos médicos. Se o paciente relatar emergência grave, orien
                           setAiQuestion(q);
                           handleAskAi(q);
                         }}
-                        className="px-3 py-1.5 rounded-full border border-[#E7E4DC] bg-white text-xs text-[#5C5955] hover:border-[#C84B1F] hover:text-[#C84B1F] hover:bg-[#FAF5EE] transition-all cursor-pointer shadow-2xs"
+                        className="px-3 py-1.5 rounded-full border border-[#E7E4DC] bg-white text-xs text-[#5C5955] hover:border-[#4F46E5] hover:text-[#4F46E5] hover:bg-[#EEF2FF] transition-all cursor-pointer shadow-2xs"
                       >
                         {q}
                       </button>
@@ -880,12 +880,12 @@ Nunca dê diagnósticos médicos. Se o paciente relatar emergência grave, orien
                 <div className="w-full max-w-3xl grid grid-cols-1 sm:grid-cols-3 gap-4 mt-12 text-left relative z-10">
                   <div
                     onClick={() => setSelectedArticleId('primeiros-passos')}
-                    className="p-4 rounded-xl bg-white border border-[#E7E4DC] hover:border-[#C84B1F]/60 transition-all cursor-pointer group shadow-2xs"
+                    className="p-4 rounded-xl bg-white border border-[#E7E4DC] hover:border-[#4F46E5]/60 transition-all cursor-pointer group shadow-2xs"
                   >
-                    <div className="w-8 h-8 rounded-lg bg-[#FAF5EE] text-[#C84B1F] flex items-center justify-center mb-3 group-hover:scale-110 transition-transform">
+                    <div className="w-8 h-8 rounded-lg bg-[#EEF2FF] text-[#4F46E5] flex items-center justify-center mb-3 group-hover:scale-110 transition-transform">
                       <Zap className="w-4 h-4" />
                     </div>
-                    <h4 className="text-sm font-bold text-[#1A1816] mb-1 group-hover:text-[#C84B1F] transition-colors">
+                    <h4 className="text-sm font-bold text-[#1A1816] mb-1 group-hover:text-[#4F46E5] transition-colors">
                       Primeiros passos
                     </h4>
                     <p className="text-xs text-[#736F69] line-clamp-2">
@@ -895,12 +895,12 @@ Nunca dê diagnósticos médicos. Se o paciente relatar emergência grave, orien
 
                   <div
                     onClick={() => setSelectedArticleId('numeros-de-telefone')}
-                    className="p-4 rounded-xl bg-white border border-[#E7E4DC] hover:border-[#C84B1F]/60 transition-all cursor-pointer group shadow-2xs"
+                    className="p-4 rounded-xl bg-white border border-[#E7E4DC] hover:border-[#4F46E5]/60 transition-all cursor-pointer group shadow-2xs"
                   >
-                    <div className="w-8 h-8 rounded-lg bg-[#FAF5EE] text-[#C84B1F] flex items-center justify-center mb-3 group-hover:scale-110 transition-transform">
+                    <div className="w-8 h-8 rounded-lg bg-[#EEF2FF] text-[#4F46E5] flex items-center justify-center mb-3 group-hover:scale-110 transition-transform">
                       <Phone className="w-4 h-4" />
                     </div>
-                    <h4 className="text-sm font-bold text-[#1A1816] mb-1 group-hover:text-[#C84B1F] transition-colors">
+                    <h4 className="text-sm font-bold text-[#1A1816] mb-1 group-hover:text-[#4F46E5] transition-colors">
                       Números e Tronco SIP
                     </h4>
                     <p className="text-xs text-[#736F69] line-clamp-2">
@@ -910,12 +910,12 @@ Nunca dê diagnósticos médicos. Se o paciente relatar emergência grave, orien
 
                   <div
                     onClick={() => setSelectedArticleId('como-escrever-um-otimo-prompt')}
-                    className="p-4 rounded-xl bg-white border border-[#E7E4DC] hover:border-[#C84B1F]/60 transition-all cursor-pointer group shadow-2xs"
+                    className="p-4 rounded-xl bg-white border border-[#E7E4DC] hover:border-[#4F46E5]/60 transition-all cursor-pointer group shadow-2xs"
                   >
-                    <div className="w-8 h-8 rounded-lg bg-[#FAF5EE] text-[#C84B1F] flex items-center justify-center mb-3 group-hover:scale-110 transition-transform">
+                    <div className="w-8 h-8 rounded-lg bg-[#EEF2FF] text-[#4F46E5] flex items-center justify-center mb-3 group-hover:scale-110 transition-transform">
                       <FileText className="w-4 h-4" />
                     </div>
-                    <h4 className="text-sm font-bold text-[#1A1816] mb-1 group-hover:text-[#C84B1F] transition-colors">
+                    <h4 className="text-sm font-bold text-[#1A1816] mb-1 group-hover:text-[#4F46E5] transition-colors">
                       Engenharia de Prompt
                     </h4>
                     <p className="text-xs text-[#736F69] line-clamp-2">
@@ -948,7 +948,7 @@ Nunca dê diagnósticos médicos. Se o paciente relatar emergência grave, orien
 
                 {/* Article Header */}
                 <div>
-                  <div className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-[#FAF5EE] text-[#C84B1F] text-[11px] font-bold border border-[#E8D9C8] mb-3">
+                  <div className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-[#EEF2FF] text-[#4F46E5] text-[11px] font-bold border border-[#E8D9C8] mb-3">
                     <Sparkles className="w-3 h-3" />
                     <span>{currentSelectedArticle.content.badge}</span>
                   </div>
@@ -961,7 +961,7 @@ Nunca dê diagnósticos médicos. Se o paciente relatar emergência grave, orien
                 </div>
 
                 {/* Intro paragraph */}
-                <p className="text-base text-[#403E39] leading-relaxed border-l-4 border-[#C84B1F] pl-4 py-1 bg-[#FAF9F6]">
+                <p className="text-base text-[#403E39] leading-relaxed border-l-4 border-[#4F46E5] pl-4 py-1 bg-[#FAF9F6]">
                   {currentSelectedArticle.content.intro}
                 </p>
 
@@ -1002,7 +1002,7 @@ Nunca dê diagnósticos médicos. Se o paciente relatar emergência grave, orien
                           setCopiedCode(true);
                           setTimeout(() => setCopiedCode(false), 2000);
                         }}
-                        className="flex items-center gap-1 text-[11px] font-medium text-[#C84B1F] hover:underline cursor-pointer"
+                        className="flex items-center gap-1 text-[11px] font-medium text-[#4F46E5] hover:underline cursor-pointer"
                       >
                         {copiedCode ? <Check className="w-3.5 h-3.5" /> : <Copy className="w-3.5 h-3.5" />}
                         <span>{copiedCode ? 'Copiado!' : 'Copiar prompt'}</span>
@@ -1028,7 +1028,7 @@ Nunca dê diagnósticos médicos. Se o paciente relatar emergência grave, orien
                           setCopiedCode(true);
                           setTimeout(() => setCopiedCode(false), 2000);
                         }}
-                        className="flex items-center gap-1 text-[11px] font-medium text-[#C84B1F] hover:underline cursor-pointer"
+                        className="flex items-center gap-1 text-[11px] font-medium text-[#4F46E5] hover:underline cursor-pointer"
                       >
                         {copiedCode ? <Check className="w-3.5 h-3.5" /> : <Copy className="w-3.5 h-3.5" />}
                         <span>{copiedCode ? 'Copiado!' : 'Copiar JSON'}</span>
@@ -1042,8 +1042,8 @@ Nunca dê diagnósticos médicos. Se o paciente relatar emergência grave, orien
 
                 {/* Golden Tip box */}
                 {currentSelectedArticle.content.tip && (
-                  <div className="p-4 rounded-xl bg-[#FAF5EE] border border-[#E8D9C8] flex items-start gap-3">
-                    <Sparkles className="w-4 h-4 text-[#C84B1F] shrink-0 mt-0.5" />
+                  <div className="p-4 rounded-xl bg-[#EEF2FF] border border-[#E8D9C8] flex items-start gap-3">
+                    <Sparkles className="w-4 h-4 text-[#4F46E5] shrink-0 mt-0.5" />
                     <p className="text-xs text-[#5C3A21] leading-relaxed font-medium">
                       {currentSelectedArticle.content.tip}
                     </p>
@@ -1072,7 +1072,7 @@ Nunca dê diagnósticos médicos. Se o paciente relatar emergência grave, orien
 
                   <button
                     onClick={() => onOpenDemo && onOpenDemo()}
-                    className="inline-flex items-center gap-2 text-xs font-semibold text-[#C84B1F] hover:underline cursor-pointer"
+                    className="inline-flex items-center gap-2 text-xs font-semibold text-[#4F46E5] hover:underline cursor-pointer"
                   >
                     <span>Falar com especialista em suporte</span>
                     <ChevronRight className="w-3.5 h-3.5" />
@@ -1117,13 +1117,13 @@ Nunca dê diagnósticos médicos. Se o paciente relatar emergência grave, orien
                       setIsSearchModalOpen(false);
                       setSearchQuery('');
                     }}
-                    className="w-full text-left p-2.5 rounded-xl hover:bg-[#FAF5EE] transition-colors cursor-pointer group flex items-start gap-3"
+                    className="w-full text-left p-2.5 rounded-xl hover:bg-[#EEF2FF] transition-colors cursor-pointer group flex items-start gap-3"
                   >
-                    <div className="w-6 h-6 rounded-md bg-[#FAF9F5] text-[#736F69] group-hover:bg-[#C84B1F] group-hover:text-white flex items-center justify-center shrink-0 transition-colors mt-0.5">
+                    <div className="w-6 h-6 rounded-md bg-[#FAF9F5] text-[#736F69] group-hover:bg-[#4F46E5] group-hover:text-white flex items-center justify-center shrink-0 transition-colors mt-0.5">
                       <FileText className="w-3.5 h-3.5" />
                     </div>
                     <div>
-                      <div className="text-xs font-bold text-[#1A1816] group-hover:text-[#C84B1F]">
+                      <div className="text-xs font-bold text-[#1A1816] group-hover:text-[#4F46E5]">
                         {art.title}
                       </div>
                       <div className="text-[11px] text-[#736F69] line-clamp-1">

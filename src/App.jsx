@@ -43,7 +43,7 @@ function PageFallback() {
   return (
     <div className="flex items-center justify-center min-h-[50vh] p-8">
       <div className="flex flex-col items-center gap-3">
-        <div className="w-8 h-8 border-2 border-[#C84B1F] border-t-transparent rounded-full animate-spin" />
+        <div className="w-8 h-8 border-2 border-[#4F46E5] border-t-transparent rounded-full animate-spin" />
         <span className="text-xs font-semibold text-[#736F69]">Carregando...</span>
       </div>
     </div>
@@ -107,7 +107,7 @@ export default function App() {
   };
 
   return (
-    <div className="min-h-screen bg-[#FAF9F5] text-[#1A1816] flex flex-col font-sans selection:bg-[#C84B1F] selection:text-white">
+    <div className="min-h-screen bg-[#FAF9F5] text-[#1A1816] flex flex-col font-sans selection:bg-[#4F46E5] selection:text-white">
       {/* Top Navbar (oculto no Dashboard e na Central de Ajuda para ser 1:1 com o Kloel) */}
       {currentPage !== 'central-ajuda' && currentPage !== 'dashboard' && (
         <Navbar 

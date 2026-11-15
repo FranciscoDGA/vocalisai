@@ -113,8 +113,8 @@ export default function OutboundCampaignsSection() {
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div>
           <div className="flex items-center gap-2 mb-1">
-            <span className="px-2.5 py-0.5 rounded-full text-[10px] font-bold bg-[#FAF5EE] text-[#C84B1F] border border-[#F2E8DC] uppercase tracking-wider flex items-center gap-1">
-              <Megaphone className="w-3 h-3 text-[#C84B1F]" />
+            <span className="px-2.5 py-0.5 rounded-full text-[10px] font-bold bg-[#EEF2FF] text-[#4F46E5] border border-[#F2E8DC] uppercase tracking-wider flex items-center gap-1">
+              <Megaphone className="w-3 h-3 text-[#4F46E5]" />
               Campanhas Outbound com IA
             </span>
             <span className="text-[10px] text-emerald-700 bg-emerald-50 px-2 py-0.5 rounded-full font-bold">
@@ -133,7 +133,7 @@ export default function OutboundCampaignsSection() {
           onClick={() => setCreateModalOpen(true)}
           className="flex items-center gap-2 px-4 py-2.5 rounded-xl bg-[#1A1816] text-white text-xs font-bold hover:bg-black transition-colors shadow-sm self-start cursor-pointer"
         >
-          <Plus className="w-4 h-4 text-[#C84B1F]" />
+          <Plus className="w-4 h-4 text-[#4F46E5]" />
           <span>Criar Nova Campanha</span>
         </button>
       </div>
@@ -143,7 +143,7 @@ export default function OutboundCampaignsSection() {
         <div className="bg-white p-5 rounded-2xl border border-[#E7E4DC] shadow-xs">
           <div className="flex items-center justify-between text-[#736F69] mb-2">
             <span className="text-[11px] font-bold uppercase tracking-wider">Total Discadas</span>
-            <PhoneCall className="w-4 h-4 text-[#C84B1F]" />
+            <PhoneCall className="w-4 h-4 text-[#4F46E5]" />
           </div>
           <div className="text-2xl font-bold text-[#1A1816]">298</div>
           <div className="text-[11px] text-[#736F69] mt-1">Ligações efetuadas pela IA</div>
@@ -242,7 +242,7 @@ export default function OutboundCampaignsSection() {
 
                   <div className="text-left md:text-right">
                     <div className="text-[10px] uppercase font-bold text-[#736F69]">Confirmados</div>
-                    <div className="text-xs font-bold text-[#C84B1F]">{camp.confirmed} leads</div>
+                    <div className="text-xs font-bold text-[#4F46E5]">{camp.confirmed} leads</div>
                   </div>
                 </div>
               </div>
@@ -266,7 +266,7 @@ export default function OutboundCampaignsSection() {
             </button>
 
             <div className="mb-5">
-              <span className="text-[10px] font-bold text-[#C84B1F] uppercase tracking-wider bg-[#FAF5EE] px-2 py-0.5 rounded border border-[#F2E8DC]">
+              <span className="text-[10px] font-bold text-[#4F46E5] uppercase tracking-wider bg-[#EEF2FF] px-2 py-0.5 rounded border border-[#F2E8DC]">
                 Assistente de Saída
               </span>
               <h3 className="text-xl font-bold text-[#1A1816] mt-1">Configurar Campanha Outbound</h3>
@@ -281,7 +281,7 @@ export default function OutboundCampaignsSection() {
                   value={newCampaignName}
                   onChange={(e) => setNewCampaignName(e.target.value)}
                   placeholder="Ex: Confirmação de Consultas D-1 ou Reativação WhatsApp"
-                  className="w-full px-3 py-2 rounded-xl border border-[#D0CBC0] text-xs focus:outline-none focus:border-[#C84B1F]"
+                  className="w-full px-3 py-2 rounded-xl border border-[#D0CBC0] text-xs focus:outline-none focus:border-[#4F46E5]"
                   required
                 />
               </div>
@@ -292,7 +292,7 @@ export default function OutboundCampaignsSection() {
                   <select 
                     value={selectedAssistant}
                     onChange={(e) => setSelectedAssistant(e.target.value)}
-                    className="w-full px-3 py-2 rounded-xl border border-[#D0CBC0] text-xs bg-white focus:outline-none focus:border-[#C84B1F]"
+                    className="w-full px-3 py-2 rounded-xl border border-[#D0CBC0] text-xs bg-white focus:outline-none focus:border-[#4F46E5]"
                   >
                     <option value="Roberta">Roberta (Clara Neural - Padrão)</option>
                     <option value="Lucas">Lucas (Comercial)</option>
@@ -305,7 +305,7 @@ export default function OutboundCampaignsSection() {
                   <select 
                     value={concurrentCalls}
                     onChange={(e) => setConcurrentCalls(Number(e.target.value))}
-                    className="w-full px-3 py-2 rounded-xl border border-[#D0CBC0] text-xs bg-white focus:outline-none focus:border-[#C84B1F]"
+                    className="w-full px-3 py-2 rounded-xl border border-[#D0CBC0] text-xs bg-white focus:outline-none focus:border-[#4F46E5]"
                   >
                     <option value={1}>1 chamada por vez</option>
                     <option value={3}>3 chamadas simultâneas (Recomendado)</option>
@@ -316,8 +316,8 @@ export default function OutboundCampaignsSection() {
               </div>
 
               {/* Upload de Planilha */}
-              <div className="p-4 rounded-2xl bg-[#FAF9F5] border border-dashed border-[#C84B1F]/40 text-center space-y-2">
-                <Upload className="w-6 h-6 text-[#C84B1F] mx-auto" />
+              <div className="p-4 rounded-2xl bg-[#FAF9F5] border border-dashed border-[#4F46E5]/40 text-center space-y-2">
+                <Upload className="w-6 h-6 text-[#4F46E5] mx-auto" />
                 <div>
                   <div className="text-xs font-bold text-[#1A1816]">Subir Planilha de Contatos (.csv ou .xlsx)</div>
                   <div className="text-[10px] text-[#736F69]">Colunas aceitas: Nome, Telefone, Horário, Parâmetro</div>
@@ -332,7 +332,7 @@ export default function OutboundCampaignsSection() {
                   <button 
                     type="button" 
                     onClick={handleLoadSampleCSV}
-                    className="px-3 py-1.5 rounded-lg bg-[#FAF5EE] border border-[#F2E8DC] text-xs font-bold text-[#C84B1F] hover:bg-[#F5EADB] transition-colors cursor-pointer"
+                    className="px-3 py-1.5 rounded-lg bg-[#EEF2FF] border border-[#F2E8DC] text-xs font-bold text-[#4F46E5] hover:bg-[#F5EADB] transition-colors cursor-pointer"
                   >
                     Carregar Planilha Modelo
                   </button>
@@ -359,7 +359,7 @@ export default function OutboundCampaignsSection() {
                   type="checkbox" 
                   checked={sendWhatsAppPix}
                   onChange={(e) => setSendWhatsAppPix(e.target.checked)}
-                  className="rounded text-[#C84B1F] focus:ring-[#C84B1F] w-4 h-4 cursor-pointer"
+                  className="rounded text-[#4F46E5] focus:ring-[#4F46E5] w-4 h-4 cursor-pointer"
                 />
               </label>
 
@@ -368,7 +368,7 @@ export default function OutboundCampaignsSection() {
                   type="submit"
                   className="w-full py-3.5 rounded-xl bg-[#1A1816] hover:bg-black text-white text-xs font-bold transition-all shadow-md cursor-pointer flex items-center justify-center gap-2"
                 >
-                  <Play className="w-4 h-4 text-[#C84B1F]" />
+                  <Play className="w-4 h-4 text-[#4F46E5]" />
                   <span>Iniciar Campanha Outbound</span>
                 </button>
               </div>

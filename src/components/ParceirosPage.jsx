@@ -50,24 +50,24 @@ export default function ParceirosPage({ onOpenDemo, onOpenAuth, onNavigateHome }
   ];
 
   return (
-    <div className="min-h-screen bg-[#FAF9F5] text-[#1A1816] font-sans selection:bg-[#C84B1F] selection:text-white animate-fadeIn">
+    <div className="min-h-screen bg-[#FAF9F5] text-[#1A1816] font-sans selection:bg-[#4F46E5] selection:text-white animate-fadeIn">
       
       {/* 1. HERO SECTION (Exact replica of screenshot) */}
       <section className="relative pt-16 pb-20 overflow-hidden text-center">
         {/* Subtle radial warmth background */}
-        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[700px] h-[400px] bg-gradient-to-b from-[#FAF5EE] via-[#F6ECE0] to-transparent rounded-full blur-3xl opacity-70 -z-10 pointer-events-none" />
+        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[700px] h-[400px] bg-gradient-to-b from-[#EEF2FF] via-[#F6ECE0] to-transparent rounded-full blur-3xl opacity-70 -z-10 pointer-events-none" />
 
         <div className="max-w-4xl mx-auto px-4 sm:px-6">
           {/* Badge pill */}
           <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-white border border-[#E7E4DC] shadow-sm text-xs font-semibold text-[#1A1816] mb-6">
-            <span className="w-2 h-2 rounded-full bg-[#C84B1F] animate-pulse"></span>
+            <span className="w-2 h-2 rounded-full bg-[#4F46E5] animate-pulse"></span>
             <span>Programa de parceria Vocalis</span>
           </div>
 
           {/* Big Title */}
           <h1 className="text-4xl sm:text-6xl font-normal text-[#1A1816] tracking-tight leading-[1.1]">
             Receba até 35% de<br />
-            <span className="font-serif-title italic text-[#C84B1F]">comissão sobre as vendas</span>
+            <span className="font-serif-title italic text-[#4F46E5]">comissão sobre as vendas</span>
           </h1>
 
           {/* Subtitle */}
@@ -90,7 +90,7 @@ export default function ParceirosPage({ onOpenDemo, onOpenAuth, onNavigateHome }
           <div className="mt-8 flex items-center justify-center gap-3 text-xs text-[#5C5955]">
             <div className="flex -space-x-2">
               <div className="w-7 h-7 rounded-full bg-[#1A1816] text-white flex items-center justify-center text-[10px] font-bold border-2 border-white">JS</div>
-              <div className="w-7 h-7 rounded-full bg-[#C84B1F] text-white flex items-center justify-center text-[10px] font-bold border-2 border-white">MR</div>
+              <div className="w-7 h-7 rounded-full bg-[#4F46E5] text-white flex items-center justify-center text-[10px] font-bold border-2 border-white">MR</div>
               <div className="w-7 h-7 rounded-full bg-[#4285F4] text-white flex items-center justify-center text-[10px] font-bold border-2 border-white">FL</div>
               <div className="w-7 h-7 rounded-full bg-emerald-600 text-white flex items-center justify-center text-[10px] font-bold border-2 border-white">+</div>
             </div>
@@ -108,7 +108,7 @@ export default function ParceirosPage({ onOpenDemo, onOpenAuth, onNavigateHome }
           <div className="text-center max-w-xl mx-auto mb-12">
             <h2 className="text-3xl sm:text-4xl font-normal text-[#1A1816] tracking-tight">
               Vantagens de ser<br />
-              <span className="font-serif-title italic text-[#C84B1F]">um parceiro da Vocalis</span>
+              <span className="font-serif-title italic text-[#4F46E5]">um parceiro da Vocalis</span>
             </h2>
           </div>
 
@@ -122,7 +122,7 @@ export default function ParceirosPage({ onOpenDemo, onOpenAuth, onNavigateHome }
               'Minutos grátis de demonstração para seus clientes'
             ].map((text, i) => (
               <div key={i} className="p-4 rounded-2xl border border-[#E7E4DC] bg-[#FAF9F5] flex flex-col justify-between space-y-3">
-                <div className="w-6 h-6 rounded-full bg-[#FAF5EE] border border-[#F2E8DC] text-[#C84B1F] flex items-center justify-center">
+                <div className="w-6 h-6 rounded-full bg-[#EEF2FF] border border-[#F2E8DC] text-[#4F46E5] flex items-center justify-center">
                   <Check className="w-3.5 h-3.5 stroke-[2.5]" />
                 </div>
                 <p className="text-xs font-semibold text-[#1A1816] leading-snug">
@@ -135,7 +135,7 @@ export default function ParceirosPage({ onOpenDemo, onOpenAuth, onNavigateHome }
           {/* Big Visual Video / Dashboard Card */}
           <div className="rounded-3xl border border-[#E7E4DC] bg-gradient-to-br from-[#1A1816] via-[#2A1E18] to-[#1A1816] p-6 sm:p-12 text-white overflow-hidden relative shadow-2xl">
             {/* Glowing circle background */}
-            <div className="absolute -left-20 -top-20 w-96 h-96 bg-[#C84B1F]/30 rounded-full blur-3xl pointer-events-none" />
+            <div className="absolute -left-20 -top-20 w-96 h-96 bg-[#4F46E5]/30 rounded-full blur-3xl pointer-events-none" />
 
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 items-center relative z-10">
               
@@ -145,7 +145,7 @@ export default function ParceirosPage({ onOpenDemo, onOpenAuth, onNavigateHome }
                   onClick={onOpenDemo}
                   className="w-16 h-16 rounded-full bg-white text-[#1A1816] flex items-center justify-center hover:scale-105 transition-transform shadow-xl"
                 >
-                  <Play className="w-6 h-6 fill-current ml-1 text-[#C84B1F]" />
+                  <Play className="w-6 h-6 fill-current ml-1 text-[#4F46E5]" />
                 </button>
                 <h3 className="text-2xl sm:text-3xl font-bold tracking-tight">
                   O programa de parceria Vocalis
@@ -161,7 +161,7 @@ export default function ParceirosPage({ onOpenDemo, onOpenAuth, onNavigateHome }
                   <span className="text-xs font-bold uppercase tracking-wider text-[#8C8881]">
                     Painel do parceiro
                   </span>
-                  <span className="px-2 py-0.5 rounded-full text-[10px] font-bold bg-[#FAF5EE] text-[#C84B1F] border border-[#F2E8DC]">
+                  <span className="px-2 py-0.5 rounded-full text-[10px] font-bold bg-[#EEF2FF] text-[#4F46E5] border border-[#F2E8DC]">
                     Nível Diamond
                   </span>
                 </div>
@@ -174,7 +174,7 @@ export default function ParceirosPage({ onOpenDemo, onOpenAuth, onNavigateHome }
                   </div>
                   <div className="p-3 rounded-xl bg-[#FAF9F5] border border-[#EBE8E2]">
                     <div className="text-[11px] text-[#736F69]">Participação do faturamento</div>
-                    <div className="text-xl sm:text-2xl font-bold text-[#C84B1F] mt-0.5">35%</div>
+                    <div className="text-xl sm:text-2xl font-bold text-[#4F46E5] mt-0.5">35%</div>
                     <div className="text-[10px] text-[#8C8881] mt-0.5">Comissão recorrente</div>
                   </div>
                 </div>
@@ -231,12 +231,12 @@ export default function ParceirosPage({ onOpenDemo, onOpenAuth, onNavigateHome }
                   <div className="w-12 h-12 rounded-2xl bg-[#1A1816] text-white flex items-center justify-center font-bold text-xs shadow-md">
                     Você
                   </div>
-                  <div className="w-[1.5px] h-6 bg-[#C84B1F]"></div>
+                  <div className="w-[1.5px] h-6 bg-[#4F46E5]"></div>
                   <div className="grid grid-cols-2 gap-3 w-full">
-                    <div className="p-2.5 rounded-xl bg-[#FAF5EE] border border-[#F2E8DC] text-center text-[11px] font-bold text-[#C84B1F]">
+                    <div className="p-2.5 rounded-xl bg-[#EEF2FF] border border-[#F2E8DC] text-center text-[11px] font-bold text-[#4F46E5]">
                       Indicar (Link)
                     </div>
-                    <div className="p-2.5 rounded-xl bg-[#FAF5EE] border border-[#F2E8DC] text-center text-[11px] font-bold text-[#C84B1F]">
+                    <div className="p-2.5 rounded-xl bg-[#EEF2FF] border border-[#F2E8DC] text-center text-[11px] font-bold text-[#4F46E5]">
                       Revender (API)
                     </div>
                   </div>
@@ -257,7 +257,7 @@ export default function ParceirosPage({ onOpenDemo, onOpenAuth, onNavigateHome }
                   <span className="text-[10px] font-bold text-[#8C8881] border border-[#E0DCD4] rounded-md px-1.5 py-0.5">
                     02
                   </span>
-                  <span className="text-xs font-bold text-[#C84B1F]">15% a 35% comissão</span>
+                  <span className="text-xs font-bold text-[#4F46E5]">15% a 35% comissão</span>
                 </div>
                 <h4 className="text-base font-bold text-[#1A1816]">Indicar</h4>
                 <p className="text-xs text-[#5C5955] leading-relaxed">
@@ -271,7 +271,7 @@ export default function ParceirosPage({ onOpenDemo, onOpenAuth, onNavigateHome }
                   <span className="text-[10px] font-bold text-[#8C8881] border border-[#E0DCD4] rounded-md px-1.5 py-0.5">
                     03
                   </span>
-                  <span className="text-xs font-bold text-[#C84B1F]">Margem livre</span>
+                  <span className="text-xs font-bold text-[#4F46E5]">Margem livre</span>
                 </div>
                 <h4 className="text-base font-bold text-[#1A1816]">Revender</h4>
                 <p className="text-xs text-[#5C5955] leading-relaxed">
@@ -419,16 +419,16 @@ export default function ParceirosPage({ onOpenDemo, onOpenAuth, onNavigateHome }
                   </td>
                 </tr>
 
-                <tr className="bg-[#FAF5EE]/50 hover:bg-[#FAF5EE]">
+                <tr className="bg-[#EEF2FF]/50 hover:bg-[#EEF2FF]">
                   <td className="p-4 sm:p-5">
-                    <div className="font-bold text-[#C84B1F] flex items-center gap-1.5">
+                    <div className="font-bold text-[#4F46E5] flex items-center gap-1.5">
                       <span>Diamond</span>
                       <Award className="w-4 h-4" />
                     </div>
                     <div className="text-xs text-[#8C8881]">Faturamento mensal acima de R$ 100.000</div>
                   </td>
                   <td className="p-4 sm:p-5 text-right">
-                    <span className="text-base sm:text-lg font-bold text-[#C84B1F]">35%</span>
+                    <span className="text-base sm:text-lg font-bold text-[#4F46E5]">35%</span>
                     <span className="text-xs text-[#8C8881] block">~ R$ 35.000+/mês</span>
                   </td>
                 </tr>
@@ -454,7 +454,7 @@ export default function ParceirosPage({ onOpenDemo, onOpenAuth, onNavigateHome }
         <div className="max-w-4xl mx-auto px-4 sm:px-6">
           <h2 className="text-3xl sm:text-4xl font-normal text-[#1A1816] tracking-tight">
             Uma base em que<br />
-            <span className="font-serif-title italic text-[#C84B1F]">você pode se apoiar.</span>
+            <span className="font-serif-title italic text-[#4F46E5]">você pode se apoiar.</span>
           </h2>
           <p className="mt-3 text-sm sm:text-base text-[#5C5955] max-w-2xl mx-auto leading-relaxed">
             A Vocalis integra-se com mais de 2.000+ ferramentas disponíveis no mercado. Seus clientes vão poder usar a Vocalis com seus sistemas atuais.
@@ -462,15 +462,15 @@ export default function ParceirosPage({ onOpenDemo, onOpenAuth, onNavigateHome }
 
           <div className="mt-8 flex flex-wrap items-center justify-center gap-3 sm:gap-6 text-xs sm:text-sm font-semibold text-[#1A1816]">
             <div className="flex items-center gap-2 bg-white px-4 py-2 rounded-full border border-[#E7E4DC] shadow-sm">
-              <span className="w-2 h-2 rounded-full bg-[#C84B1F]"></span>
+              <span className="w-2 h-2 rounded-full bg-[#4F46E5]"></span>
               <span>Mais de 100 conectores nativos de CRM</span>
             </div>
             <div className="flex items-center gap-2 bg-white px-4 py-2 rounded-full border border-[#E7E4DC] shadow-sm">
-              <span className="w-2 h-2 rounded-full bg-[#C84B1F]"></span>
+              <span className="w-2 h-2 rounded-full bg-[#4F46E5]"></span>
               <span>Webhooks em tempo real</span>
             </div>
             <div className="flex items-center gap-2 bg-white px-4 py-2 rounded-full border border-[#E7E4DC] shadow-sm">
-              <span className="w-2 h-2 rounded-full bg-[#C84B1F]"></span>
+              <span className="w-2 h-2 rounded-full bg-[#4F46E5]"></span>
               <span>Documentação com API pública</span>
             </div>
           </div>
@@ -519,7 +519,7 @@ export default function ParceirosPage({ onOpenDemo, onOpenAuth, onNavigateHome }
                   >
                     <button
                       onClick={() => setOpenFaq(isOpen ? null : index)}
-                      className="w-full p-4 sm:p-5 text-left flex items-center justify-between gap-4 font-bold text-xs sm:text-sm text-[#1A1816] hover:text-[#C84B1F] transition-colors"
+                      className="w-full p-4 sm:p-5 text-left flex items-center justify-between gap-4 font-bold text-xs sm:text-sm text-[#1A1816] hover:text-[#4F46E5] transition-colors"
                     >
                       <span>{item.q}</span>
                       {isOpen ? (
@@ -547,7 +547,7 @@ export default function ParceirosPage({ onOpenDemo, onOpenAuth, onNavigateHome }
           <div className="rounded-3xl bg-[#1A1816] p-8 sm:p-14 text-white text-center relative overflow-hidden shadow-2xl">
             
             {/* Radial warmth glow */}
-            <div className="absolute top-0 left-1/2 -translate-x-1/2 w-96 h-48 bg-[#C84B1F]/20 rounded-full blur-3xl pointer-events-none" />
+            <div className="absolute top-0 left-1/2 -translate-x-1/2 w-96 h-48 bg-[#4F46E5]/20 rounded-full blur-3xl pointer-events-none" />
 
             <div className="relative z-10 space-y-4 max-w-2xl mx-auto">
               <h3 className="text-2xl sm:text-4xl font-normal tracking-tight">
@@ -573,7 +573,7 @@ export default function ParceirosPage({ onOpenDemo, onOpenAuth, onNavigateHome }
                 <span 
                   key={i} 
                   style={{ height: `${h * 0.4}px` }} 
-                  className="w-1 bg-[#C84B1F] rounded-full"
+                  className="w-1 bg-[#4F46E5] rounded-full"
                 />
               ))}
             </div>
@@ -587,7 +587,7 @@ export default function ParceirosPage({ onOpenDemo, onOpenAuth, onNavigateHome }
         <div className="max-w-4xl mx-auto px-4">
           <h2 className="text-4xl sm:text-6xl font-normal text-[#1A1816] tracking-tight leading-[1.12]">
             Toda empresa tem uma voz.<br />
-            <span className="font-serif-title italic text-[#C84B1F]">A sua nunca mais fica em silêncio.</span>
+            <span className="font-serif-title italic text-[#4F46E5]">A sua nunca mais fica em silêncio.</span>
           </h2>
         </div>
       </section>

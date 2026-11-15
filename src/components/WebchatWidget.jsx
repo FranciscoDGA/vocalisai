@@ -79,7 +79,7 @@ export default function WebchatWidget({ onOpenDemo, onOpenAuth }) {
           className="flex items-center gap-2.5 px-4 py-2.5 rounded-full bg-[#11100F] text-white hover:bg-black shadow-xl hover:shadow-2xl transition-all cursor-pointer border border-[#383531] group hover:scale-105"
         >
           <div className="relative">
-            <div className="w-8 h-8 rounded-full bg-[#FAF5EE] text-[#C84B1F] flex items-center justify-center font-bold text-xs border border-[#F2E8DC]">
+            <div className="w-8 h-8 rounded-full bg-[#EEF2FF] text-[#4F46E5] flex items-center justify-center font-bold text-xs border border-[#F2E8DC]">
               👩🏼
             </div>
             <span className="absolute -bottom-0.5 -right-0.5 w-2.5 h-2.5 bg-emerald-500 rounded-full border-2 border-[#11100F]"></span>
@@ -88,7 +88,7 @@ export default function WebchatWidget({ onOpenDemo, onOpenAuth }) {
             <div className="text-xs font-bold leading-none text-white">Beatriz</div>
             <div className="text-[10px] text-emerald-400 font-medium">Webchat Online</div>
           </div>
-          <MessageSquare className="w-4 h-4 text-[#FF9E7D] ml-1 group-hover:rotate-12 transition-transform" />
+          <MessageSquare className="w-4 h-4 text-[#A5B4FC] ml-1 group-hover:rotate-12 transition-transform" />
         </button>
       )}
 
@@ -100,7 +100,7 @@ export default function WebchatWidget({ onOpenDemo, onOpenAuth }) {
           <div className="p-4 bg-[#11100F] text-white flex items-center justify-between border-b border-[#2D2A26]">
             <div className="flex items-center gap-3">
               <div className="relative">
-                <div className="w-10 h-10 rounded-full bg-[#FAF5EE] text-[#C84B1F] flex items-center justify-center text-lg border border-[#F2E8DC]">
+                <div className="w-10 h-10 rounded-full bg-[#EEF2FF] text-[#4F46E5] flex items-center justify-center text-lg border border-[#F2E8DC]">
                   👩🏼
                 </div>
                 <span className="absolute bottom-0 right-0 w-3 h-3 bg-emerald-500 rounded-full border-2 border-[#11100F]"></span>
@@ -127,7 +127,7 @@ export default function WebchatWidget({ onOpenDemo, onOpenAuth }) {
           {/* Quick Info Ribbon */}
           <div className="bg-[#FAF9F5] px-3.5 py-2 border-b border-[#EBE8E2] text-[11px] text-[#5C5955] flex items-center justify-between">
             <span className="flex items-center gap-1">
-              <Sparkles className="w-3 h-3 text-[#C84B1F]" />
+              <Sparkles className="w-3 h-3 text-[#4F46E5]" />
               <span>Respondendo via IA e Base RAG</span>
             </span>
             <span className="text-[10px] text-[#8C8881]">Tempo médio: 1s</span>
@@ -155,9 +155,9 @@ export default function WebchatWidget({ onOpenDemo, onOpenAuth }) {
 
             {isTyping && (
               <div className="flex items-center gap-1.5 p-2 bg-white rounded-2xl w-16 border border-[#E7E4DC]">
-                <span className="w-1.5 h-1.5 bg-[#C84B1F] rounded-full animate-bounce"></span>
-                <span className="w-1.5 h-1.5 bg-[#C84B1F] rounded-full animate-bounce [animation-delay:0.2s]"></span>
-                <span className="w-1.5 h-1.5 bg-[#C84B1F] rounded-full animate-bounce [animation-delay:0.4s]"></span>
+                <span className="w-1.5 h-1.5 bg-[#4F46E5] rounded-full animate-bounce"></span>
+                <span className="w-1.5 h-1.5 bg-[#4F46E5] rounded-full animate-bounce [animation-delay:0.2s]"></span>
+                <span className="w-1.5 h-1.5 bg-[#4F46E5] rounded-full animate-bounce [animation-delay:0.4s]"></span>
               </div>
             )}
             <div ref={messagesEndRef} />
@@ -167,7 +167,7 @@ export default function WebchatWidget({ onOpenDemo, onOpenAuth }) {
           <div className="p-2 bg-white border-t border-[#EBE8E2] flex items-center gap-1.5 overflow-x-auto no-scrollbar">
             <button
               onClick={() => handleSendMessage('Como funciona a Débora no telefone?')}
-              className="text-[10px] whitespace-nowrap px-2.5 py-1 rounded-full bg-[#FAF5EE] text-[#C84B1F] border border-[#F2E8DC] hover:bg-[#F5ECE0] font-medium transition-colors"
+              className="text-[10px] whitespace-nowrap px-2.5 py-1 rounded-full bg-[#EEF2FF] text-[#4F46E5] border border-[#F2E8DC] hover:bg-[#F5ECE0] font-medium transition-colors"
             >
               📞 Débora no Telefone
             </button>
@@ -198,12 +198,12 @@ export default function WebchatWidget({ onOpenDemo, onOpenAuth }) {
               value={inputMessage}
               onChange={(e) => setInputMessage(e.target.value)}
               placeholder="Pergunte à Beatriz..."
-              className="flex-1 px-3 py-2 rounded-xl border border-[#D0CBC0] text-xs text-[#1A1816] focus:outline-none focus:border-[#C84B1F] bg-white placeholder-[#A6A29A]"
+              className="flex-1 px-3 py-2 rounded-xl border border-[#D0CBC0] text-xs text-[#1A1816] focus:outline-none focus:border-[#4F46E5] bg-white placeholder-[#A6A29A]"
             />
             <button
               type="submit"
               disabled={!inputMessage.trim()}
-              className="w-8 h-8 rounded-xl bg-[#C84B1F] disabled:opacity-40 text-white flex items-center justify-center hover:bg-[#B34018] transition-colors cursor-pointer shrink-0"
+              className="w-8 h-8 rounded-xl bg-[#4F46E5] disabled:opacity-40 text-white flex items-center justify-center hover:bg-[#B34018] transition-colors cursor-pointer shrink-0"
             >
               <Send className="w-3.5 h-3.5" />
             </button>

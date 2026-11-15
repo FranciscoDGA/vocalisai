@@ -17,8 +17,8 @@ export default function LegalModal({ isOpen, initialTab = 'privacidade', onClose
         {/* Header Bar */}
         <div className="bg-[#FAF9F5] px-6 py-4 border-b border-[#EBE8E2] flex items-center justify-between shrink-0">
           <div className="flex items-center gap-3">
-            <div className="w-8 h-8 rounded-lg bg-[#C84B1F]/10 flex items-center justify-center border border-[#C84B1F]/20">
-              <ShieldCheck className="w-4 h-4 text-[#C84B1F]" />
+            <div className="w-8 h-8 rounded-lg bg-[#4F46E5]/10 flex items-center justify-center border border-[#4F46E5]/20">
+              <ShieldCheck className="w-4 h-4 text-[#4F46E5]" />
             </div>
             <div>
               <span className="text-sm font-bold text-[#1A1816]">Central Jurídica & LGPD</span>
@@ -63,7 +63,7 @@ export default function LegalModal({ isOpen, initialTab = 'privacidade', onClose
           {activeTab === 'privacidade' && (
             <div className="space-y-8">
               <div>
-                <span className="text-xs font-bold text-[#C84B1F] uppercase tracking-wider">
+                <span className="text-xs font-bold text-[#4F46E5] uppercase tracking-wider">
                   LGPD & PROTEÇÃO DE DADOS
                 </span>
                 <h2 className="text-3xl font-normal text-[#1A1816] tracking-tight mt-1 mb-2">
@@ -148,14 +148,14 @@ export default function LegalModal({ isOpen, initialTab = 'privacidade', onClose
 
                   {/* DPO box */}
                   {sec.dpoEmail && (
-                    <div className="p-4 rounded-xl bg-[#FAF5EE] border border-[#EDE5D8] flex items-center justify-between">
+                    <div className="p-4 rounded-xl bg-[#EEF2FF] border border-[#E0E7FF] flex items-center justify-between">
                       <div>
-                        <div className="text-xs font-bold text-[#C84B1F]">Encarregado de Proteção de Dados (DPO)</div>
+                        <div className="text-xs font-bold text-[#4F46E5]">Encarregado de Proteção de Dados (DPO)</div>
                         <div className="text-xs text-[#5C5955]">Canal oficial de atendimento aos titulares</div>
                       </div>
                       <a 
                         href={`mailto:${sec.dpoEmail}`}
-                        className="px-3 py-1.5 rounded-lg bg-white border border-[#E7E4DC] font-mono text-xs font-bold text-[#C84B1F] hover:bg-[#FAF9F5]"
+                        className="px-3 py-1.5 rounded-lg bg-white border border-[#E7E4DC] font-mono text-xs font-bold text-[#4F46E5] hover:bg-[#FAF9F5]"
                       >
                         {sec.dpoEmail}
                       </a>
@@ -170,7 +170,7 @@ export default function LegalModal({ isOpen, initialTab = 'privacidade', onClose
           {activeTab === 'termos' && (
             <div className="space-y-8">
               <div>
-                <span className="text-xs font-bold text-[#C84B1F] uppercase tracking-wider">
+                <span className="text-xs font-bold text-[#4F46E5] uppercase tracking-wider">
                   TERMOS CONTRATUAIS
                 </span>
                 <h2 className="text-3xl font-normal text-[#1A1816] tracking-tight mt-1 mb-2">

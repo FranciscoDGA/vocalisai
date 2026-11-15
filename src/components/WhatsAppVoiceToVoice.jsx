@@ -75,7 +75,7 @@ export default function WhatsAppVoiceToVoice() {
               <Zap className="w-3 h-3 text-emerald-600" />
               WhatsApp Voice-to-Voice Pro
             </span>
-            <span className="text-[10px] text-[#C84B1F] bg-[#FAF5EE] px-2 py-0.5 rounded-full font-bold border border-[#F2E8DC]">
+            <span className="text-[10px] text-[#4F46E5] bg-[#EEF2FF] px-2 py-0.5 rounded-full font-bold border border-[#F2E8DC]">
               STT ➔ LLM ➔ TTS Nativo
             </span>
           </div>
@@ -108,7 +108,7 @@ export default function WhatsAppVoiceToVoice() {
         <div className="lg:col-span-5 space-y-4">
           <div className="bg-white rounded-2xl border border-[#E7E4DC] p-5 shadow-xs space-y-4">
             <h4 className="text-xs font-bold uppercase tracking-wider text-[#1A1816] flex items-center gap-2">
-              <Sliders className="w-3.5 h-3.5 text-[#C84B1F]" />
+              <Sliders className="w-3.5 h-3.5 text-[#4F46E5]" />
               Configuração Acústica & Comportamental
             </h4>
 
@@ -118,7 +118,7 @@ export default function WhatsAppVoiceToVoice() {
               <select 
                 value={selectedVoice}
                 onChange={(e) => setSelectedVoice(e.target.value)}
-                className="w-full px-3 py-2 rounded-xl border border-[#D0CBC0] text-xs bg-white focus:outline-none focus:border-[#C84B1F]"
+                className="w-full px-3 py-2 rounded-xl border border-[#D0CBC0] text-xs bg-white focus:outline-none focus:border-[#4F46E5]"
               >
                 <option value="clara">Clara (Voz Amigável, Português do Brasil - Padrão)</option>
                 <option value="roberta">Roberta (Voz Executiva & Comercial)</option>
@@ -130,7 +130,7 @@ export default function WhatsAppVoiceToVoice() {
             <div>
               <div className="flex justify-between text-[11px] font-semibold text-[#1A1816] mb-1">
                 <span>Velocidade de Conversação</span>
-                <span className="font-mono text-[#C84B1F]">{speedRate}x</span>
+                <span className="font-mono text-[#4F46E5]">{speedRate}x</span>
               </div>
               <input 
                 type="range" 
@@ -139,7 +139,7 @@ export default function WhatsAppVoiceToVoice() {
                 step="0.05"
                 value={speedRate}
                 onChange={(e) => setSpeedRate(parseFloat(e.target.value))}
-                className="w-full accent-[#C84B1F] cursor-pointer"
+                className="w-full accent-[#4F46E5] cursor-pointer"
               />
               <div className="flex justify-between text-[10px] text-[#736F69] mt-0.5">
                 <span>0.9x (Pausado)</span>
@@ -180,7 +180,7 @@ export default function WhatsAppVoiceToVoice() {
                   type="checkbox" 
                   checked={naturalBreaths}
                   onChange={(e) => setNaturalBreaths(e.target.checked)}
-                  className="rounded text-[#C84B1F] focus:ring-[#C84B1F] w-4 h-4 cursor-pointer"
+                  className="rounded text-[#4F46E5] focus:ring-[#4F46E5] w-4 h-4 cursor-pointer"
                 />
               </label>
 
@@ -193,7 +193,7 @@ export default function WhatsAppVoiceToVoice() {
                   type="checkbox" 
                   checked={sendTranscriptAlso}
                   onChange={(e) => setSendTranscriptAlso(e.target.checked)}
-                  className="rounded text-[#C84B1F] focus:ring-[#C84B1F] w-4 h-4 cursor-pointer"
+                  className="rounded text-[#4F46E5] focus:ring-[#4F46E5] w-4 h-4 cursor-pointer"
                 />
               </label>
             </div>
@@ -261,7 +261,7 @@ export default function WhatsAppVoiceToVoice() {
               {simulationStatus === 'transcribing' && (
                 <div className="text-center">
                   <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-white/80 text-[10px] font-bold text-stone-700 shadow-xs border border-stone-200">
-                    <Sparkles className="w-3 h-3 text-[#C84B1F] animate-spin" />
+                    <Sparkles className="w-3 h-3 text-[#4F46E5] animate-spin" />
                     Transcrevendo áudio do lead com Whisper Deepgram...
                   </span>
                 </div>

@@ -236,7 +236,7 @@ export default function VoiceWaveformHeroCard({ onTestCall, onOpenAuth }) {
 
       {/* Ambient background glows */}
       <div className="absolute top-0 right-1/4 w-80 h-80 bg-orange-600/10 rounded-full blur-3xl pointer-events-none" />
-      <div className="absolute bottom-0 left-10 w-72 h-72 bg-[#C84B1F]/15 rounded-full blur-3xl pointer-events-none" />
+      <div className="absolute bottom-0 left-10 w-72 h-72 bg-[#4F46E5]/15 rounded-full blur-3xl pointer-events-none" />
 
       {/* ========================================================
           1. TOP STATUS BAR (Exact Kloel replica)
@@ -328,7 +328,7 @@ export default function VoiceWaveformHeroCard({ onTestCall, onOpenAuth }) {
                       <div
                         className={`w-full max-w-[4px] rounded-full transition-all duration-200 ${
                           isVocalisSpeaking
-                            ? 'bg-gradient-to-t from-[#EA580C] via-[#F97316] to-[#FB923C] shadow-[0_0_8px_rgba(249,115,22,0.45)]'
+                            ? 'bg-gradient-to-t from-[#4338CA] via-[#4F46E5] to-[#818CF8] shadow-[0_0_8px_rgba(99,102,241,0.5)]'
                             : 'h-[3px] bg-stone-700/60'
                         } ${animClass}`}
                         style={{
@@ -580,7 +580,7 @@ export default function VoiceWaveformHeroCard({ onTestCall, onOpenAuth }) {
         {/* CTA Button to test directly */}
         <button
           onClick={onTestCall}
-          className="w-full sm:w-auto px-5 py-2.5 rounded-full bg-gradient-to-r from-orange-600 to-[#C84B1F] hover:from-orange-500 hover:to-orange-600 text-xs font-bold text-white transition-all flex items-center justify-center gap-2 shadow-lg shadow-orange-950/40 cursor-pointer border border-orange-500/30"
+          className="w-full sm:w-auto px-5 py-2.5 rounded-full bg-gradient-to-r from-orange-600 to-[#4F46E5] hover:from-orange-500 hover:to-orange-600 text-xs font-bold text-white transition-all flex items-center justify-center gap-2 shadow-lg shadow-orange-950/40 cursor-pointer border border-orange-500/30"
         >
           <span>Testar com a inteligência da minha empresa</span>
           <ArrowRight className="w-3.5 h-3.5" />

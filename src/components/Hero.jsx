@@ -106,39 +106,39 @@ export default function Hero({ onOpenDemo, onOpenAuth }) {
     <section className="relative pt-12 pb-24 md:pt-16 md:pb-32 overflow-hidden bg-[#FAF9F5] font-sans">
       
       {/* Subtle radial ambient warmth background */}
-      <div className="absolute top-0 left-1/2 -translate-x-1/2 w-full max-w-7xl h-96 bg-gradient-to-b from-[#FAF4EC]/80 via-[#FAF9F5]/40 to-transparent pointer-events-none -z-10" />
+      <div className="absolute top-0 left-1/2 -translate-x-1/2 w-full max-w-7xl h-96 bg-gradient-to-b from-[#F5F3FF]/80 via-[#FAF9F5]/40 to-transparent pointer-events-none -z-10" />
 
       <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
         
-        {/* Top category badge (Exact replica of user's uploaded print) */}
+        {/* Top category badge */}
         <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-white border border-[#E7E4DC] text-[#1A1816] text-xs font-semibold uppercase tracking-wider mb-8 shadow-sm">
-          <span className="w-2 h-2 rounded-full bg-[#C84B1F] animate-pulse"></span>
-          <span>IA DE VOZ FEITA NO BRASIL</span>
+          <span className="w-2 h-2 rounded-full bg-[#4F46E5] animate-pulse"></span>
+          <span>IA DE VOZ BRASILEIRA · SEM TAXAS META NO WHATSAPP</span>
         </div>
 
-        {/* Headline with dynamic typewriter niche rotation in signature Vocalis Orange */}
+        {/* Headline with dynamic typewriter niche rotation */}
         <h1 className="text-5xl sm:text-6xl md:text-7xl font-normal tracking-tight text-[#1A1816] max-w-4xl mx-auto leading-[1.08] mb-6">
-          A voz{' '}
-          <span className="text-[#C84B1F] font-medium inline-block min-h-[1.12em]">
+          A voz inteligente{' '}
+          <span className="text-[#4F46E5] font-medium inline-block min-h-[1.12em]">
             {displayedPhrase}
-            <span className="inline-block w-[3px] h-[0.78em] bg-[#C84B1F] ml-1.5 align-baseline animate-pulse rounded-full" />
+            <span className="inline-block w-[3px] h-[0.78em] bg-[#4F46E5] ml-1.5 align-baseline animate-pulse rounded-full" />
           </span>
           <br />
           <span className="font-serif-title italic font-normal text-[#1A1816]">
-            a qualquer hora.
+            que nunca perde uma venda.
           </span>
         </h1>
 
-        {/* Subtitle (Exact replica of user's uploaded print) */}
+        {/* Subtitle */}
         <p className="text-base sm:text-lg text-[#5C5955] max-w-2xl mx-auto font-normal leading-relaxed mb-8">
-          A Vocalis atende o telefone, o WhatsApp e o chat do seu site com a calma de quem conhece o seu negócio. Agenda, responde, resolve — e chama a sua equipe quando é preciso uma pessoa.
+          A Vocalis atende chamadas telefônicas, responde no WhatsApp e converte clientes no seu site com a calidez de uma pessoa real. Qualifica leads, agenda compromissos e transfere chamadas urgentes na hora.
         </p>
 
         {/* ========================================================
             PHONE TEST INPUT CONTAINER (Exact replica of Kloel print)
            ======================================================== */}
         <form onSubmit={handleTestCallSubmit} className="max-w-xl mx-auto mb-3">
-          <div className="flex flex-col sm:flex-row items-stretch sm:items-center bg-white rounded-2xl sm:rounded-full p-1.5 sm:pl-3 border border-[#DCD8D0] shadow-md focus-within:border-[#C84B1F] focus-within:ring-2 focus-within:ring-[#C84B1F]/15 transition-all relative gap-2 sm:gap-0">
+          <div className="flex flex-col sm:flex-row items-stretch sm:items-center bg-white rounded-2xl sm:rounded-full p-1.5 sm:pl-3 border border-[#DCD8D0] shadow-md focus-within:border-[#4F46E5] focus-within:ring-2 focus-within:ring-[#4F46E5]/20 transition-all relative gap-2 sm:gap-0">
             
             {/* Input Row on mobile / inline on desktop */}
             <div className="flex items-center flex-1 px-2 sm:px-0">
@@ -223,15 +223,15 @@ export default function Hero({ onOpenDemo, onOpenAuth }) {
         {/* Social Proof Checklist (Exact replica of user's uploaded print) */}
         <div className="flex flex-wrap items-center justify-center gap-6 md:gap-8 text-xs font-semibold text-[#5C5955] mb-14">
           <div className="flex items-center gap-1.5">
-            <Check className="w-4 h-4 text-[#C84B1F]" strokeWidth={2.5} />
+            <Check className="w-4 h-4 text-[#4F46E5]" strokeWidth={2.5} />
             <span>Garantia de 30 dias</span>
           </div>
           <div className="flex items-center gap-1.5">
-            <Check className="w-4 h-4 text-[#C84B1F]" strokeWidth={2.5} />
+            <Check className="w-4 h-4 text-[#4F46E5]" strokeWidth={2.5} />
             <span>Português do Brasil</span>
           </div>
           <div className="flex items-center gap-1.5">
-            <Check className="w-4 h-4 text-[#C84B1F]" strokeWidth={2.5} />
+            <Check className="w-4 h-4 text-[#4F46E5]" strokeWidth={2.5} />
             <span>No ar em minutos</span>
           </div>
         </div>

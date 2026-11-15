@@ -10,13 +10,13 @@ export default function RoiCalculator({ onOpenDemo }) {
   const totalHumanCostMonthly = humanAgentsNeeded * costPerHumanAgent;
   const totalHumanCostAnnual = totalHumanCostMonthly * 12;
 
-  // Custo estimado do Kloel (Plano Pro ou Business conforme volume)
-  const kloelCostMonthly = contactsPerMonth > 5000 ? 1490 : (contactsPerMonth > 1000 ? 697 : 297);
-  const kloelCostAnnual = kloelCostMonthly * 12;
+  // Custo estimado do Vocalis AI (Plano Pro ou Business conforme volume)
+  const vocalisCostMonthly = contactsPerMonth > 5000 ? 1490 : (contactsPerMonth > 1000 ? 697 : 297);
+  const vocalisCostAnnual = vocalisCostMonthly * 12;
 
   // Economia
-  const monthlySavings = totalHumanCostMonthly - kloelCostMonthly;
-  const annualSavings = totalHumanCostAnnual - kloelCostAnnual;
+  const monthlySavings = totalHumanCostMonthly - vocalisCostMonthly;
+  const annualSavings = totalHumanCostAnnual - vocalisCostAnnual;
 
   // Leads recuperados estimados (média de 32% dos contatos chegam fora do horário comercial)
   const afterHoursLeads = Math.round(contactsPerMonth * 0.35);
@@ -138,7 +138,7 @@ export default function RoiCalculator({ onOpenDemo }) {
                 <div className="flex justify-between text-slate-300 font-medium">
                   <span>Investimento Vocalis AI:</span>
                   <span className="text-emerald-400 font-bold">
-                    R$ {kloelCostMonthly.toLocaleString('pt-BR')}/mês
+                    R$ {vocalisCostMonthly.toLocaleString('pt-BR')}/mês
                   </span>
                 </div>
 

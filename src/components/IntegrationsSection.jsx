@@ -8,7 +8,7 @@ export default function IntegrationsSection({ onOpenDemo }) {
     { name: 'WhatsApp Cloud API', type: 'Envio de áudio e texto', icon: MessageSquare, color: '#25D366' },
     { name: 'HubSpot & RD Station', type: 'CRM e criação de leads', icon: Database, color: '#FF7A59' },
     { name: 'Stripe & Asaas', type: 'Pagamentos e Pix imediato', icon: CreditCard, color: '#635BFF' },
-    { name: 'Webhooks & API REST', type: 'Conexão com ERP próprio', icon: Code2, color: '#C84B1F' },
+    { name: 'Webhooks & API REST', type: 'Conexão com ERP próprio', icon: Code2, color: '#4F46E5' },
     { name: 'PABX SIP Corporativo', type: '0800 e ramais telefônicos', icon: PhoneCall, color: '#0088CC' },
   ];
 
@@ -18,12 +18,12 @@ export default function IntegrationsSection({ onOpenDemo }) {
         
         {/* Section Header */}
         <div className="text-center max-w-2xl mx-auto mb-16">
-          <span className="inline-block text-xs font-semibold text-[#C84B1F] uppercase tracking-wider mb-3">
+          <span className="inline-block text-xs font-semibold text-[#4F46E5] uppercase tracking-wider mb-3">
             CONECTIVIDADE TOTAL
           </span>
           <h2 className="text-4xl sm:text-5xl font-normal text-[#1A1816] tracking-tight leading-[1.12]">
             Conversa com as ferramentas<br />
-            <span className="font-serif-title italic text-[#C84B1F]">que você já usa.</span>
+            <span className="font-serif-title italic text-[#4F46E5]">que você já usa.</span>
           </h2>
           <p className="mt-4 text-base sm:text-lg text-[#5C5955] leading-relaxed">
             Agendas, CRMs e gateways: a Vocalis se integra em minutos às ferramentas do seu dia a dia, mantendo cada dado registrado automaticamente.
@@ -37,7 +37,7 @@ export default function IntegrationsSection({ onOpenDemo }) {
             return (
               <div
                 key={idx}
-                className="bg-white rounded-2xl p-6 border border-[#E7E4DC] shadow-clean shadow-card-hover flex items-start gap-4 hover:border-[#C84B1F]/30 transition-all cursor-pointer group"
+                className="bg-white rounded-2xl p-6 border border-[#E7E4DC] shadow-clean shadow-card-hover flex items-start gap-4 hover:border-[#4F46E5]/30 transition-all cursor-pointer group"
                 onClick={onOpenDemo}
               >
                 <div 
@@ -48,7 +48,7 @@ export default function IntegrationsSection({ onOpenDemo }) {
                 <div className="flex-1">
                   <div className="flex items-center justify-between">
                     <h3 className="font-bold text-[#1A1816] text-base">{item.name}</h3>
-                    <ArrowUpRight className="w-4 h-4 text-[#A6A29A] group-hover:text-[#C84B1F] transition-colors" />
+                    <ArrowUpRight className="w-4 h-4 text-[#A6A29A] group-hover:text-[#4F46E5] transition-colors" />
                   </div>
                   <p className="text-xs text-[#5C5955] mt-1 leading-relaxed">
                     {item.type}
@@ -65,7 +65,7 @@ export default function IntegrationsSection({ onOpenDemo }) {
             Precisa integrar com seu ERP ou sistema interno?{' '}
             <button 
               onClick={onOpenDemo}
-              className="font-semibold text-[#C84B1F] hover:underline"
+              className="font-semibold text-[#4F46E5] hover:underline"
             >
               Fale com nosso time de engenharia →
             </button>

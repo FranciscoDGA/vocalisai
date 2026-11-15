@@ -106,10 +106,10 @@ export default function AtendedorAutomaticoPage({ onOpenDemo, onOpenAuth, onNavi
       shortDesc: 'Com o nosso atendedor automático por IA, o cliente fala diretamente o que precisa sem ter que ouvir menus numéricos...',
       fullDesc: 'Com o nosso atendedor automático por IA, o cliente fala diretamente o que precisa sem ter que ouvir menus numéricos longos e cansativos de "digite 1 ou 2".',
       visual: (
-        <div className="bg-[#FAF5EE] rounded-2xl p-4 border border-[#EDE5D8] text-xs font-mono space-y-2">
+        <div className="bg-[#EEF2FF] rounded-2xl p-4 border border-[#E0E7FF] text-xs font-mono space-y-2">
           <div className="flex items-center justify-between text-[11px] text-stone-500">
             <span>Conversa natural</span>
-            <span className="text-[#C84B1F] font-bold">Sem menus</span>
+            <span className="text-[#4F46E5] font-bold">Sem menus</span>
           </div>
           <div className="bg-white p-2.5 rounded-xl border border-stone-200 text-stone-800">
             <span className="text-[10px] text-stone-400 block">Cliente diz:</span>
@@ -123,7 +123,7 @@ export default function AtendedorAutomaticoPage({ onOpenDemo, onOpenAuth, onNavi
       shortDesc: 'O atendedor automático por IA está sempre disponível e atende ligações 24/7, impedindo que você perca clientes que...',
       fullDesc: 'O atendedor automático por IA está sempre disponível e atende ligações 24/7, impedindo que você perca clientes que ligam no almoço, à noite ou em feriados.',
       visual: (
-        <div className="bg-[#FAF5EE] rounded-2xl p-4 border border-[#EDE5D8] flex items-center justify-around text-center py-2">
+        <div className="bg-[#EEF2FF] rounded-2xl p-4 border border-[#E0E7FF] flex items-center justify-around text-center py-2">
           <div className="space-y-1">
             <span className="text-2xl font-serif-title font-bold text-[#1A1816]">0s</span>
             <span className="text-[10px] text-stone-500 block uppercase">Tempo de espera</span>
@@ -141,8 +141,8 @@ export default function AtendedorAutomaticoPage({ onOpenDemo, onOpenAuth, onNavi
       shortDesc: 'Com nosso atendedor automático por IA você economiza tempo e custos, cobrindo o expediente sem necessidade de...',
       fullDesc: 'Com nosso atendedor automático por IA você economiza tempo e custos, cobrindo o expediente sem necessidade de plantões caros de horas extras.',
       visual: (
-        <div className="bg-[#FAF5EE] rounded-2xl p-4 border border-[#EDE5D8] text-xs space-y-1.5 font-sans">
-          <div className="flex items-center gap-2 text-[#C84B1F] font-bold">
+        <div className="bg-[#EEF2FF] rounded-2xl p-4 border border-[#E0E7FF] text-xs space-y-1.5 font-sans">
+          <div className="flex items-center gap-2 text-[#4F46E5] font-bold">
             <DollarSign className="w-4 h-4" />
             <span>Redução de até 70% dos custos</span>
           </div>
@@ -190,7 +190,7 @@ export default function AtendedorAutomaticoPage({ onOpenDemo, onOpenAuth, onNavi
          ======================================================== */}
       <section className="relative pt-12 pb-20 md:pt-16 md:pb-28 overflow-hidden">
         {/* Subtle Ambient Radial Glow */}
-        <div className="absolute top-0 left-1/2 -translate-x-1/2 w-full max-w-7xl h-96 bg-gradient-to-b from-[#FAF4EC]/80 via-[#FAF9F5]/40 to-transparent pointer-events-none -z-10" />
+        <div className="absolute top-0 left-1/2 -translate-x-1/2 w-full max-w-7xl h-96 bg-gradient-to-b from-[#F5F3FF]/80 via-[#FAF9F5]/40 to-transparent pointer-events-none -z-10" />
 
         <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
           
@@ -215,7 +215,7 @@ export default function AtendedorAutomaticoPage({ onOpenDemo, onOpenAuth, onNavi
 
           {/* Phone Input Box matching print */}
           <form onSubmit={handleTestCallSubmit} className="max-w-xl mx-auto mb-3">
-            <div className="flex items-center bg-white rounded-full p-1.5 pl-3 border border-[#DCD8D0] shadow-md focus-within:border-[#C84B1F] focus-within:ring-2 focus-within:ring-[#C84B1F]/15 transition-all relative">
+            <div className="flex items-center bg-white rounded-full p-1.5 pl-3 border border-[#DCD8D0] shadow-md focus-within:border-[#4F46E5] focus-within:ring-2 focus-within:ring-[#4F46E5]/15 transition-all relative">
               
               {/* Country Flag Selector (1:1 com o Kloel) */}
               <div className="relative">
@@ -289,15 +289,15 @@ export default function AtendedorAutomaticoPage({ onOpenDemo, onOpenAuth, onNavi
           {/* Checklist */}
           <div className="flex flex-wrap items-center justify-center gap-6 md:gap-8 text-xs font-semibold text-[#5C5955]">
             <div className="flex items-center gap-1.5">
-              <Check className="w-4 h-4 text-[#C84B1F]" strokeWidth={2.5} />
+              <Check className="w-4 h-4 text-[#4F46E5]" strokeWidth={2.5} />
               <span>Garantia de 30 dias</span>
             </div>
             <div className="flex items-center gap-1.5">
-              <Check className="w-4 h-4 text-[#C84B1F]" strokeWidth={2.5} />
+              <Check className="w-4 h-4 text-[#4F46E5]" strokeWidth={2.5} />
               <span>Português do Brasil</span>
             </div>
             <div className="flex items-center gap-1.5">
-              <Check className="w-4 h-4 text-[#C84B1F]" strokeWidth={2.5} />
+              <Check className="w-4 h-4 text-[#4F46E5]" strokeWidth={2.5} />
               <span>No ar em minutos</span>
             </div>
           </div>
@@ -377,7 +377,7 @@ export default function AtendedorAutomaticoPage({ onOpenDemo, onOpenAuth, onNavi
                   className="bg-white rounded-3xl p-7 sm:p-8 border border-[#E7E4DC] shadow-sm flex flex-col justify-between transition-all duration-300"
                 >
                   <div>
-                    <div className="w-8 h-8 rounded-full bg-[#FAF5EE] border border-[#EDE5D8] text-[#C84B1F] flex items-center justify-center font-bold text-xs mb-4">
+                    <div className="w-8 h-8 rounded-full bg-[#EEF2FF] border border-[#E0E7FF] text-[#4F46E5] flex items-center justify-center font-bold text-xs mb-4">
                       {c.num}
                     </div>
                     <h3 className="text-base sm:text-lg font-bold text-[#1A1816] mb-3 leading-snug">
@@ -414,7 +414,7 @@ export default function AtendedorAutomaticoPage({ onOpenDemo, onOpenAuth, onNavi
             <div className="max-w-xl">
               <h2 className="text-3xl sm:text-4xl font-normal text-[#1A1816] tracking-tight leading-tight">
                 Vantagens do nosso<br />
-                <span className="font-serif-title italic text-[#C84B1F]">atendedor automático por IA</span>
+                <span className="font-serif-title italic text-[#4F46E5]">atendedor automático por IA</span>
               </h2>
             </div>
             <div className="max-w-md text-xs sm:text-sm text-[#5C5955]">
@@ -470,7 +470,7 @@ export default function AtendedorAutomaticoPage({ onOpenDemo, onOpenAuth, onNavi
             <div className="lg:col-span-6 space-y-6">
               <h2 className="text-3xl sm:text-4xl font-normal text-[#1A1816] tracking-tight leading-tight">
                 Para quem é adequado um<br />
-                <span className="font-serif-title italic text-[#C84B1F]">atendedor automático por IA?</span>
+                <span className="font-serif-title italic text-[#4F46E5]">atendedor automático por IA?</span>
               </h2>
 
               <p className="text-xs sm:text-sm text-[#5C5955] leading-relaxed">
@@ -510,17 +510,17 @@ export default function AtendedorAutomaticoPage({ onOpenDemo, onOpenAuth, onNavi
                   onClick={() => setSelectedSegment(tab.id)}
                   className={`p-5 rounded-2xl border transition-all cursor-pointer flex items-center justify-between ${
                     selectedSegment === tab.id
-                      ? 'bg-white border-[#C84B1F] shadow-md'
+                      ? 'bg-white border-[#4F46E5] shadow-md'
                       : 'bg-[#FAF9F5] border-stone-200 hover:border-stone-300'
                   }`}
                 >
                   <span className={`text-sm font-bold ${
-                    selectedSegment === tab.id ? 'text-[#C84B1F]' : 'text-[#1A1816]'
+                    selectedSegment === tab.id ? 'text-[#4F46E5]' : 'text-[#1A1816]'
                   }`}>
                     {tab.title}
                   </span>
                   <ArrowRight className={`w-4 h-4 ${
-                    selectedSegment === tab.id ? 'text-[#C84B1F]' : 'text-stone-400'
+                    selectedSegment === tab.id ? 'text-[#4F46E5]' : 'text-stone-400'
                   }`} />
                 </div>
               ))}
@@ -553,7 +553,7 @@ export default function AtendedorAutomaticoPage({ onOpenDemo, onOpenAuth, onNavi
                 >
                   <button
                     onClick={() => setFaqOpenIndex(isOpen ? -1 : i)}
-                    className="w-full flex items-center justify-between text-left py-2 font-bold text-base text-[#1A1816] hover:text-[#C84B1F] transition-colors cursor-pointer"
+                    className="w-full flex items-center justify-between text-left py-2 font-bold text-base text-[#1A1816] hover:text-[#4F46E5] transition-colors cursor-pointer"
                   >
                     <span>{item.title}</span>
                     <span className="text-stone-400 text-lg font-mono">
@@ -584,7 +584,7 @@ export default function AtendedorAutomaticoPage({ onOpenDemo, onOpenAuth, onNavi
             <div className="relative z-10 max-w-2xl mx-auto space-y-5">
               <h2 className="text-4xl sm:text-5xl font-normal tracking-tight text-white leading-tight">
                 Hoje alguém vai ligar.<br />
-                <span className="font-serif-title italic text-[#FF9E7D]">Deixe a Vocalis atender.</span>
+                <span className="font-serif-title italic text-[#A5B4FC]">Deixe a Vocalis atender.</span>
               </h2>
 
               <p className="text-sm text-stone-300 leading-relaxed max-w-xl mx-auto">

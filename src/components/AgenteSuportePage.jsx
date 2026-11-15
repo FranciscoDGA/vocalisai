@@ -122,7 +122,7 @@ export default function AgenteSuportePage({ onOpenDemo, onOpenAuth, onNavigateHo
          ======================================================== */}
       <section className="relative pt-12 pb-20 md:pt-16 md:pb-28 overflow-hidden">
         {/* Subtle Ambient Radial Glow */}
-        <div className="absolute top-0 left-1/2 -translate-x-1/2 w-full max-w-7xl h-96 bg-gradient-to-b from-[#FAF4EC]/80 via-[#FAF9F5]/40 to-transparent pointer-events-none -z-10" />
+        <div className="absolute top-0 left-1/2 -translate-x-1/2 w-full max-w-7xl h-96 bg-gradient-to-b from-[#F5F3FF]/80 via-[#FAF9F5]/40 to-transparent pointer-events-none -z-10" />
 
         <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
           
@@ -147,7 +147,7 @@ export default function AgenteSuportePage({ onOpenDemo, onOpenAuth, onNavigateHo
 
           {/* Phone Input Box matching print */}
           <form onSubmit={handleTestCallSubmit} className="max-w-xl mx-auto mb-3">
-            <div className="flex items-center bg-white rounded-full p-1.5 pl-3 border border-[#DCD8D0] shadow-md focus-within:border-[#C84B1F] focus-within:ring-2 focus-within:ring-[#C84B1F]/15 transition-all relative">
+            <div className="flex items-center bg-white rounded-full p-1.5 pl-3 border border-[#DCD8D0] shadow-md focus-within:border-[#4F46E5] focus-within:ring-2 focus-within:ring-[#4F46E5]/15 transition-all relative">
               
               {/* Country Flag Selector (1:1 com o Kloel) */}
               <div className="relative">
@@ -221,15 +221,15 @@ export default function AgenteSuportePage({ onOpenDemo, onOpenAuth, onNavigateHo
           {/* Checklist */}
           <div className="flex flex-wrap items-center justify-center gap-6 md:gap-8 text-xs font-semibold text-[#5C5955]">
             <div className="flex items-center gap-1.5">
-              <Check className="w-4 h-4 text-[#C84B1F]" strokeWidth={2.5} />
+              <Check className="w-4 h-4 text-[#4F46E5]" strokeWidth={2.5} />
               <span>Garantia de 30 dias</span>
             </div>
             <div className="flex items-center gap-1.5">
-              <Check className="w-4 h-4 text-[#C84B1F]" strokeWidth={2.5} />
+              <Check className="w-4 h-4 text-[#4F46E5]" strokeWidth={2.5} />
               <span>Português do Brasil</span>
             </div>
             <div className="flex items-center gap-1.5">
-              <Check className="w-4 h-4 text-[#C84B1F]" strokeWidth={2.5} />
+              <Check className="w-4 h-4 text-[#4F46E5]" strokeWidth={2.5} />
               <span>No ar em minutos</span>
             </div>
           </div>
@@ -313,7 +313,7 @@ export default function AgenteSuportePage({ onOpenDemo, onOpenAuth, onNavigateHo
                     className="bg-white rounded-3xl p-7 border border-[#E7E4DC] shadow-clean flex flex-col justify-between transition-all duration-300"
                   >
                     <div>
-                      <div className="w-8 h-8 rounded-full bg-[#FAF5EE] border border-[#EDE5D8] text-[#C84B1F] flex items-center justify-center font-bold text-xs mb-5">
+                      <div className="w-8 h-8 rounded-full bg-[#EEF2FF] border border-[#E0E7FF] text-[#4F46E5] flex items-center justify-center font-bold text-xs mb-5">
                         {item.num}
                       </div>
                       <h3 className="text-base font-bold text-[#1A1816] mb-2 leading-snug">
@@ -352,7 +352,7 @@ export default function AgenteSuportePage({ onOpenDemo, onOpenAuth, onNavigateHo
                     className="bg-white rounded-3xl p-7 border border-[#E7E4DC] shadow-clean flex flex-col justify-between transition-all duration-300"
                   >
                     <div>
-                      <div className="w-8 h-8 rounded-full bg-[#FAF5EE] border border-[#EDE5D8] text-[#C84B1F] flex items-center justify-center font-bold text-xs mb-5">
+                      <div className="w-8 h-8 rounded-full bg-[#EEF2FF] border border-[#E0E7FF] text-[#4F46E5] flex items-center justify-center font-bold text-xs mb-5">
                         {item.num}
                       </div>
                       <h3 className="text-base font-bold text-[#1A1816] mb-2 leading-snug">
@@ -409,7 +409,7 @@ export default function AgenteSuportePage({ onOpenDemo, onOpenAuth, onNavigateHo
                 >
                   <button
                     onClick={() => setFaqOpenIndex(isOpen ? -1 : i)}
-                    className="w-full flex items-center justify-between text-left py-2 font-bold text-base text-[#1A1816] hover:text-[#C84B1F] transition-colors cursor-pointer"
+                    className="w-full flex items-center justify-between text-left py-2 font-bold text-base text-[#1A1816] hover:text-[#4F46E5] transition-colors cursor-pointer"
                   >
                     <span>{faq.title}</span>
                     <span className="text-stone-400 text-lg font-mono">
@@ -440,7 +440,7 @@ export default function AgenteSuportePage({ onOpenDemo, onOpenAuth, onNavigateHo
             <div className="relative z-10 max-w-2xl mx-auto space-y-5">
               <h2 className="text-4xl sm:text-5xl font-normal tracking-tight text-white leading-tight">
                 Hoje alguém vai ligar.<br />
-                <span className="font-serif-title italic text-[#FF9E7D]">Deixe a Vocalis atender.</span>
+                <span className="font-serif-title italic text-[#A5B4FC]">Deixe a Vocalis atender.</span>
               </h2>
 
               <p className="text-sm text-stone-300 leading-relaxed max-w-xl mx-auto">

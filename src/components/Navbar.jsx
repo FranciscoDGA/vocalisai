@@ -8,6 +8,7 @@ import {
 } from 'lucide-react';
 import { BRAND } from '../data/content';
 import BrazilFlag from './BrazilFlag';
+import VocalisLogo from './VocalisLogo';
 
 export default function Navbar({ onOpenDemo, onOpenAuth, onOpenLegal, onOpenDocs, currentPage = 'home', onNavigate, currentUser, onLogout, onOpenPresentation }) {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
@@ -52,19 +53,12 @@ export default function Navbar({ onOpenDemo, onOpenAuth, onOpenLegal, onOpenDocs
           {/* Left Group: Logo + Desktop Navigation */}
           <div className="flex items-center gap-8 lg:gap-10">
             
-            {/* Clean Modern Logo (Matching user's print with Vocalis AI) */}
+            {/* Clean Modern Vocalis Logo */}
             <button 
               onClick={() => { if (onNavigate) onNavigate('home'); }} 
-              className="flex items-center gap-2.5 group shrink-0 text-left"
+              className="flex items-center group shrink-0 text-left hover:opacity-90 transition-opacity cursor-pointer"
             >
-              <div className="flex items-center gap-[3px] h-5">
-                <span className="w-[3px] h-3.5 bg-gradient-to-t from-[#C84B1F] to-[#EA580C] rounded-full"></span>
-                <span className="w-[3px] h-5 bg-gradient-to-t from-[#C84B1F] to-[#EA580C] rounded-full"></span>
-                <span className="w-[3px] h-3 bg-gradient-to-t from-[#C84B1F] to-[#EA580C] rounded-full"></span>
-              </div>
-              <span className="text-xl font-bold tracking-tight text-[#1A1816] font-sans">
-                Vocalis <span className="text-[#C84B1F] font-extrabold">AI</span>
-              </span>
+              <VocalisLogo size="md" />
             </button>
 
             {/* Desktop Navigation Links (Exact replica of user's uploaded print) */}
@@ -113,7 +107,7 @@ export default function Navbar({ onOpenDemo, onOpenAuth, onOpenLegal, onOpenDocs
                         }}
                         className={`w-full flex items-center gap-3 px-3 py-2 rounded-xl text-xs font-medium transition-colors text-left cursor-pointer ${
                           currentPage === 'whatsapp' 
-                            ? 'bg-[#FAF5EE] text-[#C84B1F] font-bold' 
+                            ? 'bg-[#EEF2FF] text-[#4F46E5] font-bold' 
                             : 'text-[#1A1816] hover:bg-[#FAF9F5]'
                         }`}
                       >
@@ -129,15 +123,15 @@ export default function Navbar({ onOpenDemo, onOpenAuth, onOpenLegal, onOpenDocs
                         }}
                         className={`w-full flex items-center justify-between px-3 py-2 rounded-xl text-xs font-medium transition-colors text-left cursor-pointer ${
                           currentPage === 'webchat'
-                            ? 'bg-[#FAF5EE] text-[#C84B1F] font-bold'
+                            ? 'bg-[#EEF2FF] text-[#4F46E5] font-bold'
                             : 'text-[#1A1816] hover:bg-[#FAF9F5]'
                         }`}
                       >
                         <span className="flex items-center gap-3">
-                          <MessageSquare className="w-4 h-4 text-[#C84B1F]" />
+                          <MessageSquare className="w-4 h-4 text-[#4F46E5]" />
                           <span>Webchat de IA</span>
                         </span>
-                        <span className="px-1.5 py-0.5 rounded-full text-[10px] font-medium border border-[#C84B1F]/30 bg-[#C84B1F]/10 text-[#C84B1F]">
+                        <span className="px-1.5 py-0.5 rounded-full text-[10px] font-medium border border-[#4F46E5]/30 bg-[#4F46E5]/10 text-[#4F46E5]">
                           Novo
                         </span>
                       </button>
@@ -199,11 +193,11 @@ export default function Navbar({ onOpenDemo, onOpenAuth, onOpenLegal, onOpenDocs
                         }}
                         className={`w-full flex items-center gap-3 px-3 py-2 rounded-xl text-xs font-medium transition-colors text-left cursor-pointer ${
                           currentPage === 'agente-suporte'
-                            ? 'bg-[#FAF5EE] text-[#C84B1F] font-bold'
+                            ? 'bg-[#EEF2FF] text-[#4F46E5] font-bold'
                             : 'text-[#1A1816] hover:bg-[#FAF9F5]'
                         }`}
                       >
-                        <Headphones className="w-4 h-4 text-[#C84B1F]" />
+                        <Headphones className="w-4 h-4 text-[#4F46E5]" />
                         <span>Agente de suporte com IA</span>
                       </button>
                       <button 
@@ -213,11 +207,11 @@ export default function Navbar({ onOpenDemo, onOpenAuth, onOpenLegal, onOpenDocs
                         }}
                         className={`w-full flex items-center gap-3 px-3 py-2 rounded-xl text-xs font-medium transition-colors text-left cursor-pointer ${
                           currentPage === 'agendamentos'
-                            ? 'bg-[#FAF5EE] text-[#C84B1F] font-bold'
+                            ? 'bg-[#EEF2FF] text-[#4F46E5] font-bold'
                             : 'text-[#1A1816] hover:bg-[#FAF9F5]'
                         }`}
                       >
-                        <Calendar className="w-4 h-4 text-[#C84B1F]" />
+                        <Calendar className="w-4 h-4 text-[#4F46E5]" />
                         <span>Agendamentos e perguntas frequentes</span>
                       </button>
                       <button 
@@ -227,11 +221,11 @@ export default function Navbar({ onOpenDemo, onOpenAuth, onOpenLegal, onOpenDocs
                         }}
                         className={`w-full flex items-center gap-3 px-3 py-2 rounded-xl text-xs font-medium transition-colors text-left cursor-pointer ${
                           currentPage === 'recepcionista-virtual'
-                            ? 'bg-[#FAF5EE] text-[#C84B1F] font-bold'
+                            ? 'bg-[#EEF2FF] text-[#4F46E5] font-bold'
                             : 'text-[#1A1816] hover:bg-[#FAF9F5]'
                         }`}
                       >
-                        <ClipboardList className="w-4 h-4 text-[#C84B1F]" />
+                        <ClipboardList className="w-4 h-4 text-[#4F46E5]" />
                         <span>Recepcionista virtual com IA</span>
                       </button>
                       <button 
@@ -241,11 +235,11 @@ export default function Navbar({ onOpenDemo, onOpenAuth, onOpenLegal, onOpenDocs
                         }}
                         className={`w-full flex items-center gap-3 px-3 py-2 rounded-xl text-xs font-medium transition-colors text-left cursor-pointer ${
                           currentPage === 'atendedor-automatico'
-                            ? 'bg-[#FAF5EE] text-[#C84B1F] font-bold'
+                            ? 'bg-[#EEF2FF] text-[#4F46E5] font-bold'
                             : 'text-[#1A1816] hover:bg-[#FAF9F5]'
                         }`}
                       >
-                        <Voicemail className="w-4 h-4 text-[#C84B1F]" />
+                        <Voicemail className="w-4 h-4 text-[#4F46E5]" />
                         <span>Atendedor automático por IA</span>
                       </button>
                       <button 
@@ -255,11 +249,11 @@ export default function Navbar({ onOpenDemo, onOpenAuth, onOpenLegal, onOpenDocs
                         }}
                         className={`w-full flex items-center gap-3 px-3 py-2 rounded-xl text-xs font-medium transition-colors text-left cursor-pointer ${
                           currentPage === 'equipe-externa'
-                            ? 'bg-[#FAF5EE] text-[#C84B1F] font-bold'
+                            ? 'bg-[#EEF2FF] text-[#4F46E5] font-bold'
                             : 'text-[#1A1816] hover:bg-[#FAF9F5]'
                         }`}
                       >
-                        <Truck className="w-4 h-4 text-[#C84B1F]" />
+                        <Truck className="w-4 h-4 text-[#4F46E5]" />
                         <span>Assistente de IA para equipe externa</span>
                       </button>
                     </div>
@@ -298,11 +292,11 @@ export default function Navbar({ onOpenDemo, onOpenAuth, onOpenLegal, onOpenDocs
                         }}
                         className={`w-full flex items-center gap-2.5 px-3 py-2 rounded-xl text-xs font-medium transition-colors text-left cursor-pointer ${
                           currentPage === 'webinars'
-                            ? 'bg-[#FAF5EE] text-[#C84B1F] font-bold'
+                            ? 'bg-[#EEF2FF] text-[#4F46E5] font-bold'
                             : 'text-[#1A1816] hover:bg-[#FAF9F5]'
                         }`}
                       >
-                        <Video className="w-4 h-4 text-[#C84B1F]" />
+                        <Video className="w-4 h-4 text-[#4F46E5]" />
                         <span>Webinars</span>
                       </button>
                       <button
@@ -312,15 +306,15 @@ export default function Navbar({ onOpenDemo, onOpenAuth, onOpenLegal, onOpenDocs
                         }}
                         className={`w-full flex items-center justify-between px-3 py-2 rounded-xl text-xs font-medium transition-colors cursor-pointer ${
                           currentPage === 'integracoes'
-                            ? 'bg-[#FAF5EE] text-[#C84B1F] font-bold'
+                            ? 'bg-[#EEF2FF] text-[#4F46E5] font-bold'
                             : 'text-[#1A1816] hover:bg-[#FAF9F5]'
                         }`}
                       >
                         <span className="flex items-center gap-2.5">
-                          <LayoutGrid className="w-4 h-4 text-[#C84B1F]" />
+                          <LayoutGrid className="w-4 h-4 text-[#4F46E5]" />
                           <span>Integrações</span>
                         </span>
-                        <span className="px-1.5 py-0.5 rounded-full text-[10px] font-medium border border-[#C84B1F]/30 bg-[#C84B1F]/10 text-[#C84B1F]">
+                        <span className="px-1.5 py-0.5 rounded-full text-[10px] font-medium border border-[#4F46E5]/30 bg-[#4F46E5]/10 text-[#4F46E5]">
                           Novo
                         </span>
                       </button>
@@ -331,7 +325,7 @@ export default function Navbar({ onOpenDemo, onOpenAuth, onOpenLegal, onOpenDocs
                         }} 
                         className={`w-full flex items-center gap-2.5 px-3 py-2 rounded-xl text-xs font-medium transition-colors text-left cursor-pointer ${
                           currentPage === 'central-ajuda'
-                            ? 'bg-[#FAF5EE] text-[#C84B1F] font-bold'
+                            ? 'bg-[#EEF2FF] text-[#4F46E5] font-bold'
                             : 'text-[#1A1816] hover:bg-[#FAF9F5]'
                         }`}
                       >
@@ -351,7 +345,7 @@ export default function Navbar({ onOpenDemo, onOpenAuth, onOpenLegal, onOpenDocs
                         }} 
                         className={`w-full flex items-center gap-2.5 px-3 py-2 rounded-xl text-xs font-medium transition-colors text-left cursor-pointer ${
                           currentPage === 'carreiras'
-                            ? 'bg-[#FAF5EE] text-[#C84B1F] font-bold'
+                            ? 'bg-[#EEF2FF] text-[#4F46E5] font-bold'
                             : 'text-[#1A1816] hover:bg-[#FAF9F5]'
                         }`}
                       >
@@ -365,7 +359,7 @@ export default function Navbar({ onOpenDemo, onOpenAuth, onOpenLegal, onOpenDocs
                         }} 
                         className={`w-full flex items-center gap-2.5 px-3 py-2 rounded-xl text-xs font-medium transition-colors text-left cursor-pointer ${
                           currentPage === 'imprensa'
-                            ? 'bg-[#FAF5EE] text-[#C84B1F] font-bold'
+                            ? 'bg-[#EEF2FF] text-[#4F46E5] font-bold'
                             : 'text-[#1A1816] hover:bg-[#FAF9F5]'
                         }`}
                       >
@@ -379,7 +373,7 @@ export default function Navbar({ onOpenDemo, onOpenAuth, onOpenLegal, onOpenDocs
                         }} 
                         className={`w-full flex items-center gap-2.5 px-3 py-2 rounded-xl text-xs font-medium transition-colors text-left cursor-pointer ${
                           currentPage === 'contato'
-                            ? 'bg-[#FAF5EE] text-[#C84B1F] font-bold'
+                            ? 'bg-[#EEF2FF] text-[#4F46E5] font-bold'
                             : 'text-[#1A1816] hover:bg-[#FAF9F5]'
                         }`}
                       >
@@ -450,7 +444,7 @@ export default function Navbar({ onOpenDemo, onOpenAuth, onOpenLegal, onOpenDocs
                       <BrazilFlag className="w-4 h-3" />
                       <span>Português (BR)</span>
                     </span>
-                    <Check className="w-4 h-4 text-[#C84B1F]" />
+                    <Check className="w-4 h-4 text-[#4F46E5]" />
                   </button>
 
                   {/* Other Languages (Em breve) */}
@@ -481,7 +475,7 @@ export default function Navbar({ onOpenDemo, onOpenAuth, onOpenLegal, onOpenDocs
             {/* Falar com a gente */}
             <button 
               onClick={onOpenDemo}
-              className="text-[13.5px] font-medium text-[#1A1816] hover:text-[#C84B1F] transition-colors cursor-pointer whitespace-nowrap"
+              className="text-[13.5px] font-medium text-[#1A1816] hover:text-[#4F46E5] transition-colors cursor-pointer whitespace-nowrap"
             >
               Falar com a gente
             </button>
@@ -492,8 +486,8 @@ export default function Navbar({ onOpenDemo, onOpenAuth, onOpenLegal, onOpenDocs
                   onClick={() => { if (onNavigate) onNavigate('dashboard'); }}
                   className={`inline-flex items-center gap-2 px-5 py-2.5 rounded-full text-[13.5px] font-semibold transition-all shadow-sm cursor-pointer ${
                     currentPage === 'dashboard'
-                      ? 'bg-[#C84B1F] text-white shadow-md'
-                      : 'bg-[#11100F] text-white hover:bg-[#C84B1F]'
+                      ? 'bg-[#4F46E5] text-white shadow-md'
+                      : 'bg-[#11100F] text-white hover:bg-[#4F46E5]'
                   }`}
                 >
                   <Sparkles className="w-3.5 h-3.5" />
@@ -532,7 +526,7 @@ export default function Navbar({ onOpenDemo, onOpenAuth, onOpenLegal, onOpenDocs
             {currentUser ? (
               <button
                 onClick={() => { if (onNavigate) onNavigate('dashboard'); }}
-                className="px-3.5 py-1.5 rounded-full bg-[#C84B1F] text-white text-xs font-semibold cursor-pointer"
+                className="px-3.5 py-1.5 rounded-full bg-[#4F46E5] text-white text-xs font-semibold cursor-pointer"
               >
                 Painel
               </button>
@@ -577,7 +571,7 @@ export default function Navbar({ onOpenDemo, onOpenAuth, onOpenLegal, onOpenDocs
             className="flex items-center justify-between w-full text-left py-1 text-[#1A1816] font-medium"
           >
             <span>Webchat de IA</span>
-            <span className="text-[10px] text-[#C84B1F] font-bold">(Novo)</span>
+            <span className="text-[10px] text-[#4F46E5] font-bold">(Novo)</span>
           </button>
 
           <div className="font-bold text-xs uppercase tracking-wider text-[#8C8881]">Soluções</div>
@@ -645,7 +639,7 @@ export default function Navbar({ onOpenDemo, onOpenAuth, onOpenLegal, onOpenDocs
             className="flex items-center justify-between w-full text-left py-1 text-[#1A1816] font-medium"
           >
             <span>Integrações</span>
-            <span className="text-[10px] text-[#C84B1F] font-bold">(Novo)</span>
+            <span className="text-[10px] text-[#4F46E5] font-bold">(Novo)</span>
           </button>
           <button 
             onClick={() => { 
@@ -694,7 +688,7 @@ export default function Navbar({ onOpenDemo, onOpenAuth, onOpenLegal, onOpenDocs
               <>
                 <button
                   onClick={() => { setMobileMenuOpen(false); if (onNavigate) onNavigate('dashboard'); }}
-                  className="w-full py-2.5 rounded-xl bg-[#C84B1F] text-white text-center font-bold text-sm cursor-pointer"
+                  className="w-full py-2.5 rounded-xl bg-[#4F46E5] text-white text-center font-bold text-sm cursor-pointer"
                 >
                   Acessar Meu Painel
                 </button>

@@ -19,7 +19,7 @@ export default function PlatformPresentationSlider({ isOpen, onClose }) {
       content: (
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mt-6">
           <div className="p-5 rounded-2xl bg-white/5 border border-white/10 text-white">
-            <div className="w-10 h-10 rounded-xl bg-[#C84B1F]/20 text-[#C84B1F] flex items-center justify-center font-bold mb-3">
+            <div className="w-10 h-10 rounded-xl bg-[#4F46E5]/20 text-[#4F46E5] flex items-center justify-center font-bold mb-3">
               <Phone className="w-5 h-5" />
             </div>
             <h4 className="font-bold text-sm mb-1">Voz Neural Brasileira</h4>
@@ -69,7 +69,7 @@ export default function PlatformPresentationSlider({ isOpen, onClose }) {
           </div>
 
           <div className="p-5 rounded-2xl bg-[#FAF9F5] border border-[#E7E4DC] relative">
-            <div className="w-8 h-8 rounded-full bg-[#C84B1F] text-white flex items-center justify-center text-xs font-bold mb-3">
+            <div className="w-8 h-8 rounded-full bg-[#4F46E5] text-white flex items-center justify-center text-xs font-bold mb-3">
               2
             </div>
             <h4 className="font-bold text-sm text-[#1A1816] mb-1.5">Defina a Voz e Regras</h4>
@@ -151,7 +151,7 @@ export default function PlatformPresentationSlider({ isOpen, onClose }) {
       content: (
         <div className="space-y-3 mt-6">
           <div className="p-4 rounded-xl bg-white/5 border border-white/10 flex items-start gap-3 text-white">
-            <span className="px-2 py-0.5 rounded bg-[#C84B1F] text-[10px] font-bold shrink-0 mt-0.5">00-05 min</span>
+            <span className="px-2 py-0.5 rounded bg-[#4F46E5] text-[10px] font-bold shrink-0 mt-0.5">00-05 min</span>
             <div>
               <h5 className="text-xs font-bold text-white">Diagnóstico do Gargalo Financeiro</h5>
               <p className="text-[11px] text-stone-300 mt-0.5">
@@ -201,12 +201,12 @@ export default function PlatformPresentationSlider({ isOpen, onClose }) {
             </p>
           </div>
 
-          <div className="p-5 rounded-2xl bg-[#FAF5EE] border border-[#F2E8DC] shadow-xs">
-            <div className="flex items-center gap-2 mb-2 text-[#C84B1F]">
+          <div className="p-5 rounded-2xl bg-[#EEF2FF] border border-[#F2E8DC] shadow-xs">
+            <div className="flex items-center gap-2 mb-2 text-[#4F46E5]">
               <Cloud className="w-5 h-5" />
               <h4 className="font-bold text-sm">OpenBot 24/7 na Nuvem (Railway / Render)</h4>
             </div>
-            <div className="text-[11px] font-mono text-[#C84B1F] mb-2">https://seu-openbot.up.railway.app</div>
+            <div className="text-[11px] font-mono text-[#4F46E5] mb-2">https://seu-openbot.up.railway.app</div>
             <p className="text-xs text-[#5C5955] leading-relaxed">
               Hospedado por ~R$ 35/mês para atender dezenas de clientes da sua agência simultaneamente, mesmo quando seu computador estiver desligado ou sem internet.
             </p>
@@ -223,7 +223,7 @@ export default function PlatformPresentationSlider({ isOpen, onClose }) {
       content: (
         <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 mt-6">
           <div className="p-5 rounded-2xl bg-white/5 border border-white/10 text-white">
-            <div className="text-[10px] uppercase font-bold text-[#C84B1F] mb-1">Passo 1: Setup</div>
+            <div className="text-[10px] uppercase font-bold text-[#4F46E5] mb-1">Passo 1: Setup</div>
             <div className="text-2xl font-bold text-white mb-2">R$ 2.500</div>
             <p className="text-xs text-stone-300">
               Cobrado à vista de cada nova clínica médica, imobiliária ou advogado para cadastrar os serviços e calibrar o prompt.
@@ -288,7 +288,7 @@ export default function PlatformPresentationSlider({ isOpen, onClose }) {
             <span className={`px-2.5 py-0.5 rounded-full text-[10px] font-bold uppercase tracking-wider ${
               slide.theme === 'dark'
                 ? 'bg-white/10 text-white border border-white/10'
-                : 'bg-[#FAF5EE] text-[#C84B1F] border border-[#F2E8DC]'
+                : 'bg-[#EEF2FF] text-[#4F46E5] border border-[#F2E8DC]'
             }`}>
               {slide.badge}
             </span>
@@ -341,7 +341,7 @@ export default function PlatformPresentationSlider({ isOpen, onClose }) {
                 onClick={() => setCurrentSlide(i)}
                 className={`h-2 rounded-full transition-all cursor-pointer ${
                   currentSlide === i 
-                    ? 'w-6 bg-[#C84B1F]' 
+                    ? 'w-6 bg-[#4F46E5]' 
                     : 'w-2 bg-stone-400/40 hover:bg-stone-400'
                 }`}
                 title={`Ir para o slide ${i + 1}`}
@@ -363,7 +363,7 @@ export default function PlatformPresentationSlider({ isOpen, onClose }) {
             {currentSlide < slides.length - 1 ? (
               <button
                 onClick={() => setCurrentSlide((prev) => prev + 1)}
-                className="px-5 py-2 rounded-xl bg-[#C84B1F] hover:bg-[#B33E15] text-white text-xs font-bold transition-all shadow-md flex items-center gap-1.5 cursor-pointer"
+                className="px-5 py-2 rounded-xl bg-[#4F46E5] hover:bg-[#B33E15] text-white text-xs font-bold transition-all shadow-md flex items-center gap-1.5 cursor-pointer"
               >
                 <span>Próximo</span>
                 <ChevronRight className="w-4 h-4" />

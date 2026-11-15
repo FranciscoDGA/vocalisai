@@ -31,10 +31,10 @@ export const CHANNELS = [
   },
   {
     id: 'whatsapp',
-    title: 'WhatsApp',
-    badge: 'API Oficial Meta',
-    description: 'Responda na hora com áudio e texto, envie catálogos, botões interativos e links de agendamento ou Pix.',
-    details: 'Sem risco de bloqueio de chip. Homologado na Meta Cloud API Oficial.',
+    title: 'WhatsApp Web & Cloud',
+    badge: 'Zero Taxas por Mensagem',
+    description: 'Conecte via WhatsApp Web (QR Code direto sem pagar taxas por conversa à Meta) ou API Oficial. Responda na hora com notas de voz e texto.',
+    details: 'Automação completa com Baileys nativo ou Meta Cloud API.',
     icon: 'MessageSquare',
   },
   {

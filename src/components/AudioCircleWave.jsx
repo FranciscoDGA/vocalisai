@@ -18,23 +18,23 @@ export default function AudioCircleWave({
     <div className={`relative inline-flex items-center justify-center ${className}`}>
       {/* Outer Glowing Breathing Ring (Loop Suave) */}
       <div 
-        className={`absolute -inset-2.5 rounded-full border border-[#F0D5C7]/70 bg-gradient-to-tr from-[#C84B1F]/10 via-[#F3DFD6]/30 to-transparent pointer-events-none transition-all ${
+        className={`absolute -inset-2.5 rounded-full border border-indigo-200/60 bg-gradient-to-tr from-[#4F46E5]/15 via-indigo-100/30 to-transparent pointer-events-none transition-all ${
           isPlaying ? 'animate-ping opacity-75' : 'animate-circle-glow'
         }`} 
       />
 
-      {/* Second Inner Ring (Fine Peach Border) */}
-      <div className="absolute -inset-1 rounded-full border border-[#E8D4C8]/80 pointer-events-none shadow-[0_0_24px_rgba(200,75,31,0.18)]" />
+      {/* Second Inner Ring (Fine Indigo Border) */}
+      <div className="absolute -inset-1 rounded-full border border-indigo-200/80 pointer-events-none shadow-[0_0_24px_rgba(79,70,229,0.2)]" />
 
       {/* Main Dark Circular Button */}
       <button
         type="button"
         onClick={onToggle}
-        className={`group relative ${sizeClasses} rounded-full bg-[#11100F] border border-[#2A2724] shadow-2xl flex items-center justify-center hover:scale-105 active:scale-95 transition-all duration-300 cursor-pointer overflow-hidden z-10`}
+        className={`group relative ${sizeClasses} rounded-full bg-[#0F0E17] border border-[#232136] shadow-2xl flex items-center justify-center hover:scale-105 active:scale-95 transition-all duration-300 cursor-pointer overflow-hidden z-10`}
         title={isPlaying ? "Clique para pausar" : "Clique para ouvir a voz neural em tempo real"}
       >
         {/* Subtle Ambient Radial Glow inside circle */}
-        <div className="absolute inset-0 bg-radial from-[#C84B1F]/15 via-transparent to-transparent pointer-events-none" />
+        <div className="absolute inset-0 bg-radial from-[#4F46E5]/25 via-transparent to-transparent pointer-events-none" />
 
         {/* Waveform Bars in Continuous Natural Loop */}
         <div className="flex items-center gap-[4px] h-10 relative z-10">
@@ -53,8 +53,8 @@ export default function AudioCircleWave({
                 }}
                 className={`w-[3.5px] rounded-full transition-colors duration-300 animate-wave-center-${animIndex} ${
                   isPlaying
-                    ? 'bg-gradient-to-t from-[#E25C2B] via-[#FF9E7D] to-white shadow-[0_0_8px_rgba(255,158,125,0.7)]'
-                    : 'bg-gradient-to-t from-[#A63812] via-[#C84B1F] to-[#E25C2B] shadow-[0_0_4px_rgba(200,75,31,0.35)]'
+                    ? 'bg-gradient-to-t from-[#4F46E5] via-[#818CF8] to-white shadow-[0_0_10px_rgba(129,140,248,0.8)]'
+                    : 'bg-gradient-to-t from-[#3730A3] via-[#4F46E5] to-[#818CF8] shadow-[0_0_5px_rgba(79,70,229,0.4)]'
                 }`}
               />
             );

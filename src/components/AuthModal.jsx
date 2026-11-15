@@ -154,11 +154,11 @@ export default function AuthModal({ isOpen, onClose, onOpenLegal, onSuccessLogin
           <div>
             {/* Logo */}
             <div className="flex items-center gap-2 mb-8">
-              <div className="w-8 h-8 rounded-lg bg-[#C84B1F]/10 flex items-center justify-center border border-[#C84B1F]/20">
+              <div className="w-8 h-8 rounded-lg bg-[#4F46E5]/10 flex items-center justify-center border border-[#4F46E5]/20">
                 <div className="flex items-center gap-[2px] h-3.5">
-                  <span className="w-[2.5px] h-2 bg-[#C84B1F] rounded-full"></span>
-                  <span className="w-[2.5px] h-3.5 bg-[#C84B1F] rounded-full"></span>
-                  <span className="w-[2.5px] h-2.5 bg-[#C84B1F] rounded-full"></span>
+                  <span className="w-[2.5px] h-2 bg-[#4F46E5] rounded-full"></span>
+                  <span className="w-[2.5px] h-3.5 bg-[#4F46E5] rounded-full"></span>
+                  <span className="w-[2.5px] h-2.5 bg-[#4F46E5] rounded-full"></span>
                 </div>
               </div>
               <span className="font-bold text-lg text-[#1A1816]">{BRAND.name}</span>
@@ -173,7 +173,7 @@ export default function AuthModal({ isOpen, onClose, onOpenLegal, onSuccessLogin
             </h3>
 
             {loginSuccess ? (
-              <div className="p-8 rounded-2xl bg-[#FAF5EE] border border-[#EDE5D8] text-center space-y-3 animate-fadeIn">
+              <div className="p-8 rounded-2xl bg-[#EEF2FF] border border-[#E0E7FF] text-center space-y-3 animate-fadeIn">
                 <div className="w-14 h-14 rounded-full bg-emerald-100 text-emerald-700 flex items-center justify-center mx-auto">
                   <CheckCircle2 className="w-7 h-7" />
                 </div>
@@ -182,11 +182,11 @@ export default function AuthModal({ isOpen, onClose, onOpenLegal, onSuccessLogin
                   Carregando o painel de controle da <strong>Vocalis AI</strong>...
                 </p>
                 <div className="pt-2 flex justify-center">
-                  <Loader2 className="w-5 h-5 text-[#C84B1F] animate-spin" />
+                  <Loader2 className="w-5 h-5 text-[#4F46E5] animate-spin" />
                 </div>
               </div>
             ) : submitted ? (
-              <div className="p-6 rounded-2xl bg-[#FAF5EE] border border-[#EDE5D8] text-center space-y-3 animate-fadeIn">
+              <div className="p-6 rounded-2xl bg-[#EEF2FF] border border-[#E0E7FF] text-center space-y-3 animate-fadeIn">
                 <div className="w-12 h-12 rounded-full bg-emerald-100 text-emerald-700 flex items-center justify-center mx-auto">
                   <Mail className="w-6 h-6" />
                 </div>
@@ -220,7 +220,7 @@ export default function AuthModal({ isOpen, onClose, onOpenLegal, onSuccessLogin
                       setIsLogin(true);
                       setErrorMessage('');
                     }}
-                    className="px-5 py-2.5 rounded-xl bg-[#C84B1F] text-white text-xs font-semibold hover:bg-[#B34018] transition-colors cursor-pointer"
+                    className="px-5 py-2.5 rounded-xl bg-[#4F46E5] text-white text-xs font-semibold hover:bg-[#B34018] transition-colors cursor-pointer"
                   >
                     Já confirmei, Fazer Login
                   </button>
@@ -238,7 +238,7 @@ export default function AuthModal({ isOpen, onClose, onOpenLegal, onSuccessLogin
                     <button
                       type="button"
                       onClick={handleAdminBypass}
-                      className="px-3 py-1.5 rounded-lg bg-[#1A1816] text-white text-xs font-bold hover:bg-[#C84B1F] transition-colors cursor-pointer"
+                      className="px-3 py-1.5 rounded-lg bg-[#1A1816] text-white text-xs font-bold hover:bg-[#4F46E5] transition-colors cursor-pointer"
                     >
                       Acesso Imediato
                     </button>
@@ -292,7 +292,7 @@ export default function AuthModal({ isOpen, onClose, onOpenLegal, onSuccessLogin
                       value={empresa}
                       onChange={(e) => setEmpresa(e.target.value)}
                       required
-                      className="w-full px-3.5 py-2.5 rounded-xl border border-[#D0CBC0] text-sm focus:outline-none focus:border-[#C84B1F]"
+                      className="w-full px-3.5 py-2.5 rounded-xl border border-[#D0CBC0] text-sm focus:outline-none focus:border-[#4F46E5]"
                     />
                   </div>
                 )}
@@ -307,7 +307,7 @@ export default function AuthModal({ isOpen, onClose, onOpenLegal, onSuccessLogin
                     value={email}
                     onChange={(e) => setEmail(e.target.value)}
                     required
-                    className="w-full px-3.5 py-2.5 rounded-xl border border-[#D0CBC0] text-sm focus:outline-none focus:border-[#C84B1F]"
+                    className="w-full px-3.5 py-2.5 rounded-xl border border-[#D0CBC0] text-sm focus:outline-none focus:border-[#4F46E5]"
                   />
                 </div>
 
@@ -321,14 +321,14 @@ export default function AuthModal({ isOpen, onClose, onOpenLegal, onSuccessLogin
                     value={senha}
                     onChange={(e) => setSenha(e.target.value)}
                     required
-                    className="w-full px-3.5 py-2.5 rounded-xl border border-[#D0CBC0] text-sm focus:outline-none focus:border-[#C84B1F]"
+                    className="w-full px-3.5 py-2.5 rounded-xl border border-[#D0CBC0] text-sm focus:outline-none focus:border-[#4F46E5]"
                   />
                 </div>
 
                 <button
                   type="submit"
                   disabled={loading}
-                  className="w-full py-3 rounded-xl bg-[#C84B1F] text-white text-sm font-bold hover:bg-[#B34018] transition-colors mt-2 flex items-center justify-center gap-2 cursor-pointer disabled:opacity-70"
+                  className="w-full py-3 rounded-xl bg-[#4F46E5] text-white text-sm font-bold hover:bg-[#B34018] transition-colors mt-2 flex items-center justify-center gap-2 cursor-pointer disabled:opacity-70"
                 >
                   {loading ? (
                     <>
@@ -354,7 +354,7 @@ export default function AuthModal({ isOpen, onClose, onOpenLegal, onSuccessLogin
                       setErrorMessage('');
                       setIsEmailNotConfirmed(false);
                     }} 
-                    className="font-bold text-[#C84B1F] hover:underline cursor-pointer"
+                    className="font-bold text-[#4F46E5] hover:underline cursor-pointer"
                   >
                     Criar conta grátis
                   </button>
@@ -368,7 +368,7 @@ export default function AuthModal({ isOpen, onClose, onOpenLegal, onSuccessLogin
                       setErrorMessage('');
                       setIsEmailNotConfirmed(false);
                     }} 
-                    className="font-bold text-[#C84B1F] hover:underline cursor-pointer"
+                    className="font-bold text-[#4F46E5] hover:underline cursor-pointer"
                   >
                     Entrar
                   </button>
@@ -398,14 +398,14 @@ export default function AuthModal({ isOpen, onClose, onOpenLegal, onSuccessLogin
         {/* Right Dark Card Area (Matching uploaded print) */}
         <div className="hidden md:flex md:w-[45%] bg-[#121110] text-white p-10 flex-col justify-between relative overflow-hidden border-l border-[#2D2A26]">
           {/* Subtle warm glow */}
-          <div className="absolute top-0 right-0 w-64 h-64 bg-[#C84B1F]/20 rounded-full blur-3xl pointer-events-none"></div>
+          <div className="absolute top-0 right-0 w-64 h-64 bg-[#4F46E5]/20 rounded-full blur-3xl pointer-events-none"></div>
 
           <div className="relative z-10 space-y-4">
-            <span className="inline-block text-[10px] font-bold uppercase tracking-widest text-[#FF9E7D]">
+            <span className="inline-block text-[10px] font-bold uppercase tracking-widest text-[#A5B4FC]">
               INTELIGÊNCIA DE VOZ NEURAL
             </span>
             <h4 className="text-3xl font-normal leading-snug font-serif-title text-[#F5EDE0]">
-              Em poucos minutos, sua empresa <span className="italic text-[#FF9E7D]">ganha uma voz.</span>
+              Em poucos minutos, sua empresa <span className="italic text-[#A5B4FC]">ganha uma voz.</span>
             </h4>
             <p className="text-xs text-[#B5B0A8] leading-relaxed">
               Conte o que ela precisa saber, escolha como ela soa e ligue para ouvir a mágica acontecer.

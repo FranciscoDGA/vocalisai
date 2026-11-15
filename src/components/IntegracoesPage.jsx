@@ -237,7 +237,7 @@ export default function IntegracoesPage({ onOpenDemo, onOpenAuth, onNavigateHome
       name: 'Webhooks / API REST',
       desc: 'Conecte qualquer sistema próprio, Zapier, Make ou backend customizado através de requisições HTTP JSON.',
       tag: 'Universal',
-      color: 'bg-[#C84B1F]'
+      color: 'bg-[#4F46E5]'
     },
 
     // Restaurantes
@@ -344,7 +344,7 @@ export default function IntegracoesPage({ onOpenDemo, onOpenAuth, onNavigateHome
 
           {/* Search Bar Input */}
           <div className="max-w-xl mx-auto relative">
-            <div className="flex items-center bg-white rounded-full p-2 pl-5 border border-[#DCD8D0] shadow-md focus-within:border-[#C84B1F] focus-within:ring-2 focus-within:ring-[#C84B1F]/15 transition-all">
+            <div className="flex items-center bg-white rounded-full p-2 pl-5 border border-[#DCD8D0] shadow-md focus-within:border-[#4F46E5] focus-within:ring-2 focus-within:ring-[#4F46E5]/15 transition-all">
               <Search className="w-5 h-5 text-stone-400 mr-3 shrink-0" />
               <input
                 type="text"
@@ -394,7 +394,7 @@ export default function IntegracoesPage({ onOpenDemo, onOpenAuth, onNavigateHome
                         : 'text-[#5C5955] hover:bg-white hover:text-[#1A1816]'
                     }`}
                   >
-                    <Icon className={`w-4 h-4 ${isSelected ? 'text-[#FF9E7D]' : 'text-stone-400'}`} />
+                    <Icon className={`w-4 h-4 ${isSelected ? 'text-[#A5B4FC]' : 'text-stone-400'}`} />
                     <span>{cat.name}</span>
                   </button>
                 );
@@ -411,7 +411,7 @@ export default function IntegracoesPage({ onOpenDemo, onOpenAuth, onNavigateHome
                 {selectedCategory !== 'all' && (
                   <button
                     onClick={() => setSelectedCategory('all')}
-                    className="text-xs text-[#C84B1F] font-semibold hover:underline"
+                    className="text-xs text-[#4F46E5] font-semibold hover:underline"
                   >
                     Ver todas
                   </button>
@@ -428,7 +428,7 @@ export default function IntegracoesPage({ onOpenDemo, onOpenAuth, onNavigateHome
                   </p>
                   <button
                     onClick={() => setRequestModalOpen(true)}
-                    className="px-6 py-2.5 rounded-full bg-[#C84B1F] text-white text-xs font-bold hover:bg-[#B34018] transition-colors"
+                    className="px-6 py-2.5 rounded-full bg-[#4F46E5] text-white text-xs font-bold hover:bg-[#B34018] transition-colors"
                   >
                     Solicitar esta integração
                   </button>
@@ -474,7 +474,7 @@ export default function IntegracoesPage({ onOpenDemo, onOpenAuth, onNavigateHome
 
                       <button
                         onClick={onOpenAuth}
-                        className="text-xs font-semibold text-[#C84B1F] group-hover:text-[#9E3612] transition-colors inline-flex items-center gap-1 cursor-pointer pt-2 border-t border-stone-200/60"
+                        className="text-xs font-semibold text-[#4F46E5] group-hover:text-[#9E3612] transition-colors inline-flex items-center gap-1 cursor-pointer pt-2 border-t border-stone-200/60"
                       >
                         <span>Conectar assistente</span>
                         <ArrowRight className="w-3.5 h-3.5" />
@@ -488,9 +488,9 @@ export default function IntegracoesPage({ onOpenDemo, onOpenAuth, onNavigateHome
               <div className="grid grid-cols-1 md:grid-cols-2 gap-5 pt-8">
                 
                 {/* Card 1: Falta alguma integração? */}
-                <div className="bg-[#FAF5EE] rounded-3xl p-7 border border-[#EDE5D8] flex flex-col justify-between text-left">
+                <div className="bg-[#EEF2FF] rounded-3xl p-7 border border-[#E0E7FF] flex flex-col justify-between text-left">
                   <div>
-                    <div className="w-8 h-8 rounded-full bg-white text-[#C84B1F] flex items-center justify-center mb-4 shadow-sm font-bold text-xs">
+                    <div className="w-8 h-8 rounded-full bg-white text-[#4F46E5] flex items-center justify-center mb-4 shadow-sm font-bold text-xs">
                       ✎
                     </div>
                     <h3 className="text-base font-bold text-[#1A1816] mb-1.5">
@@ -502,7 +502,7 @@ export default function IntegracoesPage({ onOpenDemo, onOpenAuth, onNavigateHome
                   </div>
                   <button
                     onClick={() => setRequestModalOpen(true)}
-                    className="text-xs font-bold text-[#C84B1F] hover:underline inline-flex items-center gap-1 cursor-pointer"
+                    className="text-xs font-bold text-[#4F46E5] hover:underline inline-flex items-center gap-1 cursor-pointer"
                   >
                     <span>Solicitar integração</span>
                     <ArrowRight className="w-3.5 h-3.5" />
@@ -510,9 +510,9 @@ export default function IntegracoesPage({ onOpenDemo, onOpenAuth, onNavigateHome
                 </div>
 
                 {/* Card 2: Precisa de uma conexão própria? */}
-                <div className="bg-[#FAF5EE] rounded-3xl p-7 border border-[#EDE5D8] flex flex-col justify-between text-left">
+                <div className="bg-[#EEF2FF] rounded-3xl p-7 border border-[#E0E7FF] flex flex-col justify-between text-left">
                   <div>
-                    <div className="w-8 h-8 rounded-full bg-white text-[#C84B1F] flex items-center justify-center mb-4 shadow-sm font-bold text-xs">
+                    <div className="w-8 h-8 rounded-full bg-white text-[#4F46E5] flex items-center justify-center mb-4 shadow-sm font-bold text-xs">
                       ⚡
                     </div>
                     <h3 className="text-base font-bold text-[#1A1816] mb-1.5">
@@ -524,7 +524,7 @@ export default function IntegracoesPage({ onOpenDemo, onOpenAuth, onNavigateHome
                   </div>
                   <button
                     onClick={onOpenDemo}
-                    className="text-xs font-bold text-[#C84B1F] hover:underline inline-flex items-center gap-1 cursor-pointer"
+                    className="text-xs font-bold text-[#4F46E5] hover:underline inline-flex items-center gap-1 cursor-pointer"
                   >
                     <span>Falar com um especialista</span>
                     <ArrowRight className="w-3.5 h-3.5" />
@@ -550,7 +550,7 @@ export default function IntegracoesPage({ onOpenDemo, onOpenAuth, onNavigateHome
             <div className="relative z-10 max-w-2xl mx-auto space-y-5">
               <h2 className="text-4xl sm:text-5xl font-normal tracking-tight text-white leading-tight">
                 Hoje alguém vai ligar.<br />
-                <span className="font-serif-title italic text-[#FF9E7D]">Deixe a Vocalis atender.</span>
+                <span className="font-serif-title italic text-[#A5B4FC]">Deixe a Vocalis atender.</span>
               </h2>
 
               <p className="text-sm text-stone-300 leading-relaxed max-w-xl mx-auto">
@@ -594,7 +594,7 @@ export default function IntegracoesPage({ onOpenDemo, onOpenAuth, onNavigateHome
             {!requestSubmitted ? (
               <form onSubmit={handleRequestSubmit} className="space-y-4">
                 <div className="space-y-1">
-                  <span className="text-[10px] font-bold text-[#C84B1F] uppercase tracking-wider">
+                  <span className="text-[10px] font-bold text-[#4F46E5] uppercase tracking-wider">
                     Solicitação de Integração
                   </span>
                   <h3 className="text-xl font-bold text-[#1A1816]">
@@ -613,7 +613,7 @@ export default function IntegracoesPage({ onOpenDemo, onOpenAuth, onNavigateHome
                     value={requestedApp}
                     onChange={(e) => setRequestedApp(e.target.value)}
                     placeholder="Ex: Tiny ERP, Bling, Clinab, etc."
-                    className="w-full px-3.5 py-2.5 rounded-xl border border-stone-300 text-sm focus:outline-none focus:border-[#C84B1F]"
+                    className="w-full px-3.5 py-2.5 rounded-xl border border-stone-300 text-sm focus:outline-none focus:border-[#4F46E5]"
                   />
                 </div>
 

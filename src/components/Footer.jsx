@@ -1,6 +1,7 @@
 import React from 'react';
 import { Phone, MessageCircle } from 'lucide-react';
 import { BRAND } from '../data/content';
+import VocalisLogo from './VocalisLogo';
 
 export default function Footer({ onOpenDocs, onOpenDemo, onNavigate }) {
   return (
@@ -13,16 +14,9 @@ export default function Footer({ onOpenDocs, onOpenDemo, onNavigate }) {
           {/* Col 1: Brand Info & Contacts (Spans 2 columns) */}
           <div className="md:col-span-2 space-y-4">
             
-            {/* Logo clean soundwave bars */}
-            <div className="flex items-center gap-2.5">
-              <div className="flex items-center gap-[3px] h-5">
-                <span className="w-[3px] h-3.5 bg-gradient-to-t from-[#C84B1F] to-[#EA580C] rounded-full"></span>
-                <span className="w-[3px] h-5 bg-gradient-to-t from-[#C84B1F] to-[#EA580C] rounded-full"></span>
-                <span className="w-[3px] h-3 bg-gradient-to-t from-[#C84B1F] to-[#EA580C] rounded-full"></span>
-              </div>
-              <span className="text-2xl font-bold tracking-tight text-[#1A1816] font-sans">
-                Vocalis <span className="text-[#C84B1F] font-extrabold">AI</span>
-              </span>
+            {/* Logo Vocalis AI */}
+            <div className="flex items-center">
+              <VocalisLogo size="lg" />
             </div>
 
             <p className="text-xs text-[#736F69] max-w-xs leading-relaxed">
@@ -32,7 +26,7 @@ export default function Footer({ onOpenDocs, onOpenDemo, onNavigate }) {
             {/* Contacts */}
             <div className="space-y-2 text-xs text-[#1A1816] pt-1">
               <div>
-                <a href="mailto:contato@vocalis.ai" className="text-[#1A1816] hover:text-[#C84B1F] transition-colors">
+                <a href="mailto:contato@vocalis.ai" className="text-[#1A1816] hover:text-[#4F46E5] transition-colors">
                   contato@vocalis.ai
                 </a>
               </div>
@@ -40,11 +34,11 @@ export default function Footer({ onOpenDocs, onOpenDemo, onNavigate }) {
               <div>
                 <a 
                   href="tel:+5594984478168"
-                  className="flex items-center gap-2 hover:text-[#C84B1F] transition-colors group cursor-pointer"
+                  className="flex items-center gap-2 hover:text-[#4F46E5] transition-colors group cursor-pointer"
                   title="Falar ou receber ligação da Roberta"
                 >
-                  <Phone className="w-3.5 h-3.5 text-[#5C5955] group-hover:text-[#C84B1F] shrink-0" />
-                  <span className="font-semibold text-[#1A1816] group-hover:text-[#C84B1F]">(94) 98447-8168</span>
+                  <Phone className="w-3.5 h-3.5 text-[#5C5955] group-hover:text-[#4F46E5] shrink-0" />
+                  <span className="font-semibold text-[#1A1816] group-hover:text-[#4F46E5]">(94) 98447-8168</span>
                   <span className="text-[#8C8881]">· Falar ou receber ligação da Roberta</span>
                 </a>
               </div>
@@ -95,7 +89,7 @@ export default function Footer({ onOpenDocs, onOpenDemo, onNavigate }) {
             {/* Badge: Feita no Brasil, em português */}
             <div className="pt-2">
               <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full border border-[#E7E4DC] bg-[#FAF9F5] text-[11px] font-medium text-[#5C5955]">
-                <span className="w-1.5 h-1.5 rounded-full bg-[#C84B1F]"></span>
+                <span className="w-1.5 h-1.5 rounded-full bg-[#4F46E5]"></span>
                 <span>Feita no Brasil, em português</span>
               </span>
             </div>

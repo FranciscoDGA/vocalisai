@@ -21,6 +21,7 @@ import AgencySubaccountsSection from './AgencySubaccountsSection';
 import OutboundCampaignsSection from './OutboundCampaignsSection';
 import PlatformPresentationSlider from './PlatformPresentationSlider';
 import WhatsAppConnectorDashboard from './WhatsAppConnectorDashboard';
+import VocalisLogo from './VocalisLogo';
 import { sendWhatsAppMessage } from '../utils/uazapiClient';
 
 export default function InsideDashboardSection({ onOpenDemo, onOpenLegal, onOpenAuth, onOpenDocs, isStandalone = false, onLogout, currentUser, onNavigateHome, onOpenPresentation }) {
@@ -566,12 +567,12 @@ export default function InsideDashboardSection({ onOpenDemo, onOpenLegal, onOpen
         {/* Section Header (Apenas na Landing Page) */}
         {!isStandalone && (
           <div className="text-center max-w-2xl mx-auto mb-14">
-            <span className="inline-block text-xs font-semibold text-[#C84B1F] uppercase tracking-wider mb-3">
+            <span className="inline-block text-xs font-semibold text-[#4F46E5] uppercase tracking-wider mb-3">
               SISTEMA OPERACIONAL VOCALIS
             </span>
             <h2 className="text-4xl sm:text-5xl font-normal text-[#1A1816] tracking-tight leading-[1.12]">
               Tudo o que sua empresa precisa<br />
-              <span className="font-serif-title italic text-[#C84B1F]">em um só lugar.</span>
+              <span className="font-serif-title italic text-[#4F46E5]">em um só lugar.</span>
             </h2>
             <p className="mt-4 text-base sm:text-lg text-[#5C5955] leading-relaxed">
               Navegue pelo painel completo da Vocalis: crie assistentes, conecte números, configure o WhatsApp Business, gerencie membros e faturamento.
@@ -585,16 +586,7 @@ export default function InsideDashboardSection({ onOpenDemo, onOpenLegal, onOpen
           {/* Mobile Navigation Header (Visível apenas em telas menores que md) */}
           <div className="md:hidden bg-[#FAF9F5] border-b border-[#EBE8E2] p-3 space-y-2.5 shrink-0">
             <div className="flex items-center justify-between">
-              <div className="flex items-center gap-2">
-                <div className="w-7 h-7 rounded-lg bg-[#C84B1F]/10 flex items-center justify-center border border-[#C84B1F]/20">
-                  <div className="flex items-center gap-[2px] h-3">
-                    <span className="w-[2px] h-1.5 bg-[#C84B1F] rounded-full"></span>
-                    <span className="w-[2px] h-3 bg-[#C84B1F] rounded-full"></span>
-                    <span className="w-[2px] h-2 bg-[#C84B1F] rounded-full"></span>
-                  </div>
-                </div>
-                <span className="font-bold text-sm text-[#1A1816] tracking-tight">Vocalis <span className="text-[#C84B1F]">AI</span></span>
-              </div>
+              <VocalisLogo size="sm" />
 
               {/* Workspace Profile Button Mobile */}
               <div className="relative">
@@ -672,7 +664,7 @@ export default function InsideDashboardSection({ onOpenDemo, onOpenLegal, onOpen
                 <button onClick={() => { setActiveTab('subcontas'); setMoreMenuOpen(false); }} className={`p-2 rounded-lg text-left truncate transition-colors ${activeTab === 'subcontas' ? 'bg-[#EFECE6] font-bold text-[#1A1816]' : 'bg-white border border-[#E7E4DC] text-[#5C5955]'}`}>
                   Subcontas (Agência)
                 </button>
-                <button onClick={() => { setVoiceCloningOpen(true); setMoreMenuOpen(false); }} className="p-2 rounded-lg text-left truncate bg-[#FAF5EE] border border-[#F2E8DC] text-[#C84B1F] font-bold">
+                <button onClick={() => { setVoiceCloningOpen(true); setMoreMenuOpen(false); }} className="p-2 rounded-lg text-left truncate bg-[#EEF2FF] border border-[#F2E8DC] text-[#4F46E5] font-bold">
                   Clonar Voz (60s)
                 </button>
                 <button onClick={() => { setActiveTab('templates'); setMoreMenuOpen(false); }} className={`p-2 rounded-lg text-left truncate transition-colors ${activeTab === 'templates' ? 'bg-[#EFECE6] font-bold text-[#1A1816]' : 'bg-white border border-[#E7E4DC] text-[#5C5955]'}`}>
@@ -698,7 +690,7 @@ export default function InsideDashboardSection({ onOpenDemo, onOpenLegal, onOpen
                 </button>
                 <button onClick={() => { setActiveTab('email-ia'); setMoreMenuOpen(false); }} className={`p-2 rounded-lg text-left flex items-center justify-between transition-colors ${activeTab === 'email-ia' ? 'bg-[#EFECE6] font-bold text-[#1A1816]' : 'bg-white border border-[#E7E4DC] text-[#5C5955]'}`}>
                   <span className="truncate">E-Mail IA</span>
-                  <span className="text-[8px] bg-[#C84B1F] text-white px-1 py-0.2 rounded font-bold">BETA</span>
+                  <span className="text-[8px] bg-[#4F46E5] text-white px-1 py-0.2 rounded font-bold">BETA</span>
                 </button>
                 <button onClick={() => { setActiveTab('contatos'); setMoreMenuOpen(false); }} className={`p-2 rounded-lg text-left truncate transition-colors ${activeTab === 'contatos' ? 'bg-[#EFECE6] font-bold text-[#1A1816]' : 'bg-white border border-[#E7E4DC] text-[#5C5955]'}`}>
                   Contatos
@@ -732,15 +724,18 @@ export default function InsideDashboardSection({ onOpenDemo, onOpenLegal, onOpen
             <div>
               {/* Vocalis Logo */}
               <div className="flex items-center gap-2.5 px-2 py-2 mb-6">
-                <div className="w-8 h-8 rounded-lg bg-[#C84B1F]/10 flex items-center justify-center border border-[#C84B1F]/20 shrink-0">
-                  <div className="flex items-center gap-[2px] h-3.5">
-                    <span className="w-[2.5px] h-2 bg-[#C84B1F] rounded-full"></span>
-                    <span className="w-[2.5px] h-3.5 bg-[#C84B1F] rounded-full"></span>
-                    <span className="w-[2.5px] h-2.5 bg-[#C84B1F] rounded-full"></span>
+                {sidebarCollapsed ? (
+                  <div className="w-8 h-8 rounded-xl bg-gradient-to-br from-[#4F46E5] to-[#7C3AED] flex items-center justify-center shadow-sm shadow-indigo-500/25 shrink-0 mx-auto">
+                    <svg viewBox="0 0 24 24" fill="none" className="w-[62%] h-[62%]" stroke="currentColor">
+                      <path d="M4 7v10" stroke="white" strokeWidth="2.4" strokeLinecap="round" />
+                      <path d="M8 4v16" stroke="white" strokeWidth="2.4" strokeLinecap="round" />
+                      <path d="M12 11v2" stroke="white" strokeWidth="2.4" strokeLinecap="round" />
+                      <path d="M16 4v16" stroke="white" strokeWidth="2.4" strokeLinecap="round" />
+                      <path d="M20 7v10" stroke="white" strokeWidth="2.4" strokeLinecap="round" />
+                    </svg>
                   </div>
-                </div>
-                {!sidebarCollapsed && (
-                  <span className="font-bold text-lg text-[#1A1816] tracking-tight truncate">Vocalis <span className="text-[#C84B1F]">AI</span></span>
+                ) : (
+                  <VocalisLogo size="md" />
                 )}
               </div>
 
@@ -829,7 +824,7 @@ export default function InsideDashboardSection({ onOpenDemo, onOpenLegal, onOpen
                         }`}
                       >
                         <span>WhatsApp Voice-to-Voice</span>
-                        <span className="text-[9px] font-bold px-1.5 py-0.2 rounded bg-[#C84B1F] text-white">NOVO</span>
+                        <span className="text-[9px] font-bold px-1.5 py-0.2 rounded bg-[#4F46E5] text-white">NOVO</span>
                       </button>
 
                       <button 
@@ -844,10 +839,10 @@ export default function InsideDashboardSection({ onOpenDemo, onOpenLegal, onOpen
 
                       <button 
                         onClick={() => { setVoiceCloningOpen(true); }}
-                        className="w-full text-left py-1.5 px-2 rounded-lg transition-colors cursor-pointer text-[#C84B1F] hover:bg-[#FAF5EE] font-bold flex items-center justify-between"
+                        className="w-full text-left py-1.5 px-2 rounded-lg transition-colors cursor-pointer text-[#4F46E5] hover:bg-[#EEF2FF] font-bold flex items-center justify-between"
                       >
                         <span>Clonar Voz (60s)</span>
-                        <Sparkles className="w-3 h-3 text-[#C84B1F]" />
+                        <Sparkles className="w-3 h-3 text-[#4F46E5]" />
                       </button>
 
                       <button 
@@ -921,7 +916,7 @@ export default function InsideDashboardSection({ onOpenDemo, onOpenLegal, onOpen
                         }`}
                       >
                         <span>E-Mail IA</span>
-                        <span className="text-[9px] font-bold px-1.5 py-0.2 rounded bg-[#C84B1F] text-white">
+                        <span className="text-[9px] font-bold px-1.5 py-0.2 rounded bg-[#4F46E5] text-white">
                           BETA
                         </span>
                       </button>
@@ -1002,35 +997,35 @@ export default function InsideDashboardSection({ onOpenDemo, onOpenLegal, onOpen
                     </div>
                     <button 
                       onClick={() => { setPricingModalOpen(true); setProfileMenuOpen(false); }}
-                      className={`w-full flex items-center gap-2.5 px-3 py-2 rounded-lg text-left transition-colors ${activeTab === 'faturamento' ? 'bg-[#FAF5EE] text-[#C84B1F] font-bold' : 'text-[#1A1816] hover:bg-[#FAF9F5]'}`}
+                      className={`w-full flex items-center gap-2.5 px-3 py-2 rounded-lg text-left transition-colors ${activeTab === 'faturamento' ? 'bg-[#EEF2FF] text-[#4F46E5] font-bold' : 'text-[#1A1816] hover:bg-[#FAF9F5]'}`}
                     >
                       <CreditCard className="w-3.5 h-3.5 text-[#5C5955]" />
                       <span>Assinatura e planos</span>
                     </button>
                     <button 
                       onClick={() => { setActiveTab('bonus'); setProfileMenuOpen(false); }}
-                      className={`w-full flex items-center gap-2.5 px-3 py-2 rounded-lg text-left transition-colors ${activeTab === 'bonus' ? 'bg-[#FAF5EE] text-[#C84B1F] font-bold' : 'text-[#1A1816] hover:bg-[#FAF9F5]'}`}
+                      className={`w-full flex items-center gap-2.5 px-3 py-2 rounded-lg text-left transition-colors ${activeTab === 'bonus' ? 'bg-[#EEF2FF] text-[#4F46E5] font-bold' : 'text-[#1A1816] hover:bg-[#FAF9F5]'}`}
                     >
-                      <Sparkles className="w-3.5 h-3.5 text-[#C84B1F]" />
+                      <Sparkles className="w-3.5 h-3.5 text-[#4F46E5]" />
                       <span>Bônus grátis</span>
                     </button>
                     <button 
                       onClick={() => { setActiveTab('api'); setProfileMenuOpen(false); }}
-                      className={`w-full flex items-center gap-2.5 px-3 py-2 rounded-lg text-left transition-colors ${activeTab === 'api' ? 'bg-[#FAF5EE] text-[#C84B1F] font-bold' : 'text-[#1A1816] hover:bg-[#FAF9F5]'}`}
+                      className={`w-full flex items-center gap-2.5 px-3 py-2 rounded-lg text-left transition-colors ${activeTab === 'api' ? 'bg-[#EEF2FF] text-[#4F46E5] font-bold' : 'text-[#1A1816] hover:bg-[#FAF9F5]'}`}
                     >
                       <Key className="w-3.5 h-3.5 text-[#5C5955]" />
                       <span>Chaves de API</span>
                     </button>
                     <button 
                       onClick={() => { setActiveTab('configuracoes'); setProfileMenuOpen(false); }}
-                      className={`w-full flex items-center gap-2.5 px-3 py-2 rounded-lg text-left transition-colors ${activeTab === 'configuracoes' ? 'bg-[#FAF5EE] text-[#C84B1F] font-bold' : 'text-[#1A1816] hover:bg-[#FAF9F5]'}`}
+                      className={`w-full flex items-center gap-2.5 px-3 py-2 rounded-lg text-left transition-colors ${activeTab === 'configuracoes' ? 'bg-[#EEF2FF] text-[#4F46E5] font-bold' : 'text-[#1A1816] hover:bg-[#FAF9F5]'}`}
                     >
                       <Settings className="w-3.5 h-3.5 text-[#5C5955]" />
                       <span>Configurações da empresa</span>
                     </button>
                     <button 
                       onClick={() => { setActiveTab('usuarios'); setProfileMenuOpen(false); }}
-                      className={`w-full flex items-center gap-2.5 px-3 py-2 rounded-lg text-left transition-colors ${activeTab === 'usuarios' ? 'bg-[#FAF5EE] text-[#C84B1F] font-bold' : 'text-[#1A1816] hover:bg-[#FAF9F5]'}`}
+                      className={`w-full flex items-center gap-2.5 px-3 py-2 rounded-lg text-left transition-colors ${activeTab === 'usuarios' ? 'bg-[#EEF2FF] text-[#4F46E5] font-bold' : 'text-[#1A1816] hover:bg-[#FAF9F5]'}`}
                     >
                       <Users className="w-3.5 h-3.5 text-[#5C5955]" />
                       <span>Usuários</span>
@@ -1043,7 +1038,7 @@ export default function InsideDashboardSection({ onOpenDemo, onOpenLegal, onOpen
                     </div>
                     <button 
                       onClick={() => { setActiveTab('conta'); setProfileMenuOpen(false); }}
-                      className={`w-full flex items-center gap-2.5 px-3 py-2 rounded-lg text-left transition-colors ${activeTab === 'conta' ? 'bg-[#FAF5EE] text-[#C84B1F] font-bold' : 'text-[#1A1816] hover:bg-[#FAF9F5]'}`}
+                      className={`w-full flex items-center gap-2.5 px-3 py-2 rounded-lg text-left transition-colors ${activeTab === 'conta' ? 'bg-[#EEF2FF] text-[#4F46E5] font-bold' : 'text-[#1A1816] hover:bg-[#FAF9F5]'}`}
                     >
                       <UserCheck className="w-3.5 h-3.5 text-[#5C5955]" />
                       <span>Conta</span>
@@ -1067,7 +1062,7 @@ export default function InsideDashboardSection({ onOpenDemo, onOpenLegal, onOpen
                       }}
                       className="w-full flex items-center gap-2.5 px-3 py-2 rounded-lg text-[#1A1816] hover:bg-[#FAF9F5] text-left"
                     >
-                      <ShieldCheck className="w-3.5 h-3.5 text-[#C84B1F]" />
+                      <ShieldCheck className="w-3.5 h-3.5 text-[#4F46E5]" />
                       <span>Política de Privacidade</span>
                     </button>
                     {onNavigateHome && (
@@ -1088,7 +1083,7 @@ export default function InsideDashboardSection({ onOpenDemo, onOpenLegal, onOpen
                         if (onLogout) onLogout();
                         else if (onOpenAuth) onOpenAuth(); 
                       }}
-                      className="w-full flex items-center gap-2.5 px-3 py-2 rounded-lg text-[#C84B1F] hover:bg-[#FAF5EE] text-left font-medium cursor-pointer"
+                      className="w-full flex items-center gap-2.5 px-3 py-2 rounded-lg text-[#4F46E5] hover:bg-[#EEF2FF] text-left font-medium cursor-pointer"
                     >
                       <LogOut className="w-3.5 h-3.5" />
                       <span>Sair da conta</span>
@@ -1114,10 +1109,10 @@ export default function InsideDashboardSection({ onOpenDemo, onOpenLegal, onOpen
                     <h3 className="text-2xl font-bold text-[#1A1816]">Início</h3>
                     <button
                       onClick={() => setPresentationOpen(true)}
-                      className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-[#FAF5EE] border border-[#F2E8DC] text-[#C84B1F] text-xs font-bold hover:bg-[#F5EADB] transition-all cursor-pointer shadow-xs"
+                      className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-[#EEF2FF] border border-[#F2E8DC] text-[#4F46E5] text-xs font-bold hover:bg-[#F5EADB] transition-all cursor-pointer shadow-xs"
                       title="Abrir apresentação completa do sistema para reuniões com clientes"
                     >
-                      <Play className="w-3 h-3 fill-[#C84B1F]" />
+                      <Play className="w-3 h-3 fill-[#4F46E5]" />
                       <span>Slides de Apresentação (Pitch Deck)</span>
                     </button>
                   </div>
@@ -1243,8 +1238,8 @@ export default function InsideDashboardSection({ onOpenDemo, onOpenLegal, onOpen
 
                   {/* Card 2: Análise quase pronta */}
                   <div className="p-6 rounded-2xl border border-[#E7E4DC] bg-white flex flex-col items-center justify-center text-center space-y-4">
-                    <div className="w-10 h-10 rounded-full bg-[#FAF5EE] border border-[#F2E8DC] flex items-center justify-center">
-                      <Sparkles className="w-5 h-5 text-[#C84B1F]" />
+                    <div className="w-10 h-10 rounded-full bg-[#EEF2FF] border border-[#F2E8DC] flex items-center justify-center">
+                      <Sparkles className="w-5 h-5 text-[#4F46E5]" />
                     </div>
                     <div>
                       <h4 className="text-sm font-bold text-[#1A1816]">Sua análise está quase pronta</h4>
@@ -1254,7 +1249,7 @@ export default function InsideDashboardSection({ onOpenDemo, onOpenLegal, onOpen
                     </div>
                     <div className="w-full max-w-xs">
                       <div className="w-full bg-[#EFECE6] h-1.5 rounded-full overflow-hidden">
-                        <div className="bg-[#C84B1F] h-full w-0"></div>
+                        <div className="bg-[#4F46E5] h-full w-0"></div>
                       </div>
                       <div className="text-[10px] text-[#8C8881] mt-1.5">Faltam 15 de 15 conversas</div>
                     </div>
@@ -1278,12 +1273,12 @@ export default function InsideDashboardSection({ onOpenDemo, onOpenLegal, onOpen
                   <div className="relative">
                     <div className="w-24 h-16 rounded-2xl bg-white border border-[#E7E4DC] shadow-md flex flex-col justify-center px-4 space-y-1.5">
                       <div className="flex items-center gap-1.5">
-                        <span className="w-2 h-2 rounded-full bg-[#C84B1F]"></span>
+                        <span className="w-2 h-2 rounded-full bg-[#4F46E5]"></span>
                         <div className="w-14 h-2 bg-[#EFECE6] rounded-full"></div>
                       </div>
                       <div className="w-16 h-1.5 bg-[#E8F5E9] rounded-full"></div>
                     </div>
-                    <div className="w-8 h-8 rounded-full bg-[#C84B1F] text-white flex items-center justify-center absolute -top-3 -right-3 shadow">
+                    <div className="w-8 h-8 rounded-full bg-[#4F46E5] text-white flex items-center justify-center absolute -top-3 -right-3 shadow">
                       <MessageSquare className="w-4 h-4" />
                     </div>
                   </div>
@@ -1298,7 +1293,7 @@ export default function InsideDashboardSection({ onOpenDemo, onOpenLegal, onOpen
                   <div className="flex flex-col sm:flex-row items-center gap-3 pt-2">
                     <button 
                       onClick={() => setTestCallModalOpen(true)}
-                      className="px-5 py-2.5 rounded-xl bg-[#C84B1F] text-white text-xs font-bold hover:bg-[#B33E15] transition-colors flex items-center gap-2 shadow-sm"
+                      className="px-5 py-2.5 rounded-xl bg-[#4F46E5] text-white text-xs font-bold hover:bg-[#B33E15] transition-colors flex items-center gap-2 shadow-sm"
                     >
                       <Phone className="w-3.5 h-3.5" />
                       <span>Testar ligação</span>
@@ -1387,7 +1382,7 @@ export default function InsideDashboardSection({ onOpenDemo, onOpenLegal, onOpen
                             <sub.icon className="w-4 h-4 text-[#8C8881]" />
                             <span className="text-xs font-bold text-[#1A1816]">{sub.title}</span>
                             {sub.beta && (
-                              <span className="px-1.5 py-0.2 rounded text-[9px] font-bold bg-[#C84B1F]/10 text-[#C84B1F]">
+                              <span className="px-1.5 py-0.2 rounded text-[9px] font-bold bg-[#4F46E5]/10 text-[#4F46E5]">
                                 BETA
                               </span>
                             )}
@@ -1482,7 +1477,7 @@ export default function InsideDashboardSection({ onOpenDemo, onOpenLegal, onOpen
                   <h4 className="text-xs font-bold text-[#1A1816]">Verificação de identidade</h4>
                   <div className="p-4 rounded-xl border border-[#E7E4DC] bg-white flex items-center justify-between">
                     <div className="flex items-center gap-3">
-                      <ShieldCheck className="w-5 h-5 text-[#C84B1F]" />
+                      <ShieldCheck className="w-5 h-5 text-[#4F46E5]" />
                       <div>
                         <div className="text-xs font-bold text-[#1A1816]">Verifique a identidade de um representante da empresa</div>
                         <div className="text-[11px] text-[#8C8881]">Não iniciado</div>
@@ -1576,7 +1571,7 @@ export default function InsideDashboardSection({ onOpenDemo, onOpenLegal, onOpen
                     {/* Item 1: Indique um amigo */}
                     <div className="py-4 flex items-start justify-between gap-4">
                       <div className="flex items-start gap-3">
-                        <Gift className="w-4 h-4 text-[#C84B1F] shrink-0 mt-0.5" />
+                        <Gift className="w-4 h-4 text-[#4F46E5] shrink-0 mt-0.5" />
                         <div>
                           <div className="font-bold text-[#1A1816]">Indique um amigo</div>
                           <p className="text-[#736F69] mt-0.5">
@@ -1584,7 +1579,7 @@ export default function InsideDashboardSection({ onOpenDemo, onOpenLegal, onOpen
                           </p>
                           <button 
                             onClick={handleCopy}
-                            className="mt-1 text-[#C84B1F] font-semibold hover:underline flex items-center gap-1"
+                            className="mt-1 text-[#4F46E5] font-semibold hover:underline flex items-center gap-1"
                           >
                             <span>{copiedLink ? 'Link copiado!' : 'Copiar link'}</span>
                             <Copy className="w-3 h-3" />
@@ -1604,7 +1599,7 @@ export default function InsideDashboardSection({ onOpenDemo, onOpenLegal, onOpen
                           <div className="font-bold text-[#1A1816]">LinkedIn</div>
                           <p className="text-[#736F69] mt-0.5">
                             Faça uma publicação no LinkedIn sobre a Vocalis.{' '}
-                            <button onClick={onOpenDemo} className="text-[#C84B1F] underline">Como participar</button>
+                            <button onClick={onOpenDemo} className="text-[#4F46E5] underline">Como participar</button>
                           </p>
                         </div>
                       </div>
@@ -1614,12 +1609,12 @@ export default function InsideDashboardSection({ onOpenDemo, onOpenLegal, onOpen
                     {/* Item 3: Post sobre a Vocalis no blog */}
                     <div className="py-4 flex items-start justify-between gap-4">
                       <div className="flex items-start gap-3">
-                        <FileText className="w-4 h-4 text-[#C84B1F] shrink-0 mt-0.5" />
+                        <FileText className="w-4 h-4 text-[#4F46E5] shrink-0 mt-0.5" />
                         <div>
                           <div className="font-bold text-[#1A1816]">Post sobre a Vocalis no blog</div>
                           <p className="text-[#736F69] mt-0.5">
                             Publique um post sobre a Vocalis no seu site.{' '}
-                            <button onClick={onOpenDemo} className="text-[#C84B1F] underline">Como participar</button>
+                            <button onClick={onOpenDemo} className="text-[#4F46E5] underline">Como participar</button>
                           </p>
                         </div>
                       </div>
@@ -1629,11 +1624,11 @@ export default function InsideDashboardSection({ onOpenDemo, onOpenLegal, onOpen
                     {/* Item 4: Case study */}
                     <div className="py-4 flex items-start justify-between gap-4">
                       <div className="flex items-start gap-3">
-                        <Video className="w-4 h-4 text-[#C84B1F] shrink-0 mt-0.5" />
+                        <Video className="w-4 h-4 text-[#4F46E5] shrink-0 mt-0.5" />
                         <div>
                           <div className="font-bold text-[#1A1816]">Case study com entrevista em vídeo de 5 minutos</div>
                           <p className="text-[#736F69] mt-0.5">
-                            Faça um case study com a gente para publicarmos na Vocalis. E-mail para <a href="mailto:contato@vocalis.ai" className="text-[#C84B1F] underline">contato@vocalis.ai</a>
+                            Faça um case study com a gente para publicarmos na Vocalis. E-mail para <a href="mailto:contato@vocalis.ai" className="text-[#4F46E5] underline">contato@vocalis.ai</a>
                           </p>
                         </div>
                       </div>
@@ -1650,7 +1645,7 @@ export default function InsideDashboardSection({ onOpenDemo, onOpenLegal, onOpen
                           <div className="font-bold text-[#1A1816]">YouTube</div>
                           <p className="text-[#736F69] mt-0.5">
                             Publique um vídeo no YouTube sobre a Vocalis.{' '}
-                            <button onClick={onOpenDemo} className="text-[#C84B1F] underline">Como participar</button>
+                            <button onClick={onOpenDemo} className="text-[#4F46E5] underline">Como participar</button>
                           </p>
                         </div>
                       </div>
@@ -1679,7 +1674,7 @@ export default function InsideDashboardSection({ onOpenDemo, onOpenLegal, onOpen
                       placeholder="Pesquisar" 
                       value={apiKeySearch}
                       onChange={(e) => setApiKeySearch(e.target.value)}
-                      className="w-full pl-9 pr-3 py-1.5 rounded-xl border border-[#D0CBC0] text-xs focus:outline-none focus:border-[#C84B1F]"
+                      className="w-full pl-9 pr-3 py-1.5 rounded-xl border border-[#D0CBC0] text-xs focus:outline-none focus:border-[#4F46E5]"
                     />
                   </div>
                   <button 
@@ -1775,7 +1770,7 @@ export default function InsideDashboardSection({ onOpenDemo, onOpenLegal, onOpen
                           placeholder="Pesquisar" 
                           value={userSearch}
                           onChange={(e) => setUserSearch(e.target.value)}
-                          className="w-full pl-9 pr-3 py-1.5 rounded-xl border border-[#D0CBC0] text-xs focus:outline-none focus:border-[#C84B1F]"
+                          className="w-full pl-9 pr-3 py-1.5 rounded-xl border border-[#D0CBC0] text-xs focus:outline-none focus:border-[#4F46E5]"
                         />
                       </div>
                       <button 
@@ -1807,7 +1802,7 @@ export default function InsideDashboardSection({ onOpenDemo, onOpenLegal, onOpen
                                 <td className="p-3 text-[#5C5955]">{m.email}</td>
                                 <td className="p-3 text-[#736F69]">{m.phone}</td>
                                 <td className="p-3">
-                                  <span className="px-2 py-0.5 rounded-full text-[10px] font-bold bg-[#FAF5EE] text-[#C84B1F] border border-[#F2E8DC]">
+                                  <span className="px-2 py-0.5 rounded-full text-[10px] font-bold bg-[#EEF2FF] text-[#4F46E5] border border-[#F2E8DC]">
                                     {m.role}
                                   </span>
                                 </td>
@@ -1898,7 +1893,7 @@ export default function InsideDashboardSection({ onOpenDemo, onOpenLegal, onOpen
                         type="text" 
                         defaultValue="Francisco" 
                         placeholder="Nome"
-                        className="w-full px-3 py-2 rounded-xl border border-[#D0CBC0] text-xs focus:outline-none focus:border-[#C84B1F]"
+                        className="w-full px-3 py-2 rounded-xl border border-[#D0CBC0] text-xs focus:outline-none focus:border-[#4F46E5]"
                       />
                     </div>
                     <div>
@@ -1906,14 +1901,14 @@ export default function InsideDashboardSection({ onOpenDemo, onOpenLegal, onOpen
                       <input 
                         type="text" 
                         placeholder="Sobrenome"
-                        className="w-full px-3 py-2 rounded-xl border border-[#D0CBC0] text-xs focus:outline-none focus:border-[#C84B1F]"
+                        className="w-full px-3 py-2 rounded-xl border border-[#D0CBC0] text-xs focus:outline-none focus:border-[#4F46E5]"
                       />
                     </div>
                   </div>
 
                   <div>
                     <label className="block text-[11px] font-semibold text-[#1A1816] mb-1">Idioma</label>
-                    <select className="w-full px-3 py-2 rounded-xl border border-[#D0CBC0] bg-white text-xs font-medium focus:outline-none focus:border-[#C84B1F]">
+                    <select className="w-full px-3 py-2 rounded-xl border border-[#D0CBC0] bg-white text-xs font-medium focus:outline-none focus:border-[#4F46E5]">
                       <option value="pt-BR">Português (Brasil)</option>
                       <option value="en-US">English (US)</option>
                       <option value="es-ES">Español</option>
@@ -1931,7 +1926,7 @@ export default function InsideDashboardSection({ onOpenDemo, onOpenLegal, onOpen
                         type="tel" 
                         defaultValue="(11) 98412-3456" 
                         placeholder="(DDD) 00000-0000"
-                        className="flex-1 px-3 py-2 rounded-xl border border-[#D0CBC0] text-xs focus:outline-none focus:border-[#C84B1F]"
+                        className="flex-1 px-3 py-2 rounded-xl border border-[#D0CBC0] text-xs focus:outline-none focus:border-[#4F46E5]"
                       />
                     </div>
                   </div>
@@ -1991,7 +1986,7 @@ export default function InsideDashboardSection({ onOpenDemo, onOpenLegal, onOpen
                       <input 
                         type={showPassword ? "text" : "password"} 
                         placeholder="Senha atual"
-                        className="w-full px-3 py-2 pr-10 rounded-xl border border-[#D0CBC0] text-xs focus:outline-none focus:border-[#C84B1F]"
+                        className="w-full px-3 py-2 pr-10 rounded-xl border border-[#D0CBC0] text-xs focus:outline-none focus:border-[#4F46E5]"
                       />
                       <button 
                         type="button" 
@@ -2009,7 +2004,7 @@ export default function InsideDashboardSection({ onOpenDemo, onOpenLegal, onOpen
                       <input 
                         type={showPassword ? "text" : "password"} 
                         placeholder="Senha"
-                        className="w-full px-3 py-2 pr-10 rounded-xl border border-[#D0CBC0] text-xs focus:outline-none focus:border-[#C84B1F]"
+                        className="w-full px-3 py-2 pr-10 rounded-xl border border-[#D0CBC0] text-xs focus:outline-none focus:border-[#4F46E5]"
                       />
                       <button 
                         type="button" 
@@ -2027,7 +2022,7 @@ export default function InsideDashboardSection({ onOpenDemo, onOpenLegal, onOpen
                       <input 
                         type={showPassword ? "text" : "password"} 
                         placeholder="Senha"
-                        className="w-full px-3 py-2 pr-10 rounded-xl border border-[#D0CBC0] text-xs focus:outline-none focus:border-[#C84B1F]"
+                        className="w-full px-3 py-2 pr-10 rounded-xl border border-[#D0CBC0] text-xs focus:outline-none focus:border-[#4F46E5]"
                       />
                       <button 
                         type="button" 
@@ -2052,7 +2047,7 @@ export default function InsideDashboardSection({ onOpenDemo, onOpenLegal, onOpen
                   <h4 className="text-xs font-bold text-[#1A1816]">Fuso horário da empresa</h4>
                   
                   <div>
-                    <select className="w-full px-3 py-2 rounded-xl border border-[#D0CBC0] bg-white text-xs font-medium focus:outline-none focus:border-[#C84B1F]">
+                    <select className="w-full px-3 py-2 rounded-xl border border-[#D0CBC0] bg-white text-xs font-medium focus:outline-none focus:border-[#4F46E5]">
                       <option value="Sao Paulo (GMT-3) — 16:19">Sao Paulo (GMT-3) — 16:19</option>
                       <option value="Manaus (GMT-4)">Manaus (GMT-4)</option>
                       <option value="Rio Branco (GMT-5)">Rio Branco (GMT-5)</option>
@@ -2095,9 +2090,9 @@ export default function InsideDashboardSection({ onOpenDemo, onOpenLegal, onOpen
                     <div className="flex items-center gap-2">
                       <button 
                         onClick={() => setVoiceCloningOpen(true)}
-                        className="px-4 py-2 rounded-xl bg-[#FAF5EE] text-[#C84B1F] border border-[#F2E8DC] text-xs font-bold hover:bg-[#F5EADB] transition-colors flex items-center gap-1.5 cursor-pointer shadow-xs"
+                        className="px-4 py-2 rounded-xl bg-[#EEF2FF] text-[#4F46E5] border border-[#F2E8DC] text-xs font-bold hover:bg-[#F5EADB] transition-colors flex items-center gap-1.5 cursor-pointer shadow-xs"
                       >
-                        <Sparkles className="w-3.5 h-3.5 text-[#C84B1F]" />
+                        <Sparkles className="w-3.5 h-3.5 text-[#4F46E5]" />
                         <span>Clonar Voz (60s)</span>
                       </button>
 
@@ -2113,7 +2108,7 @@ export default function InsideDashboardSection({ onOpenDemo, onOpenLegal, onOpen
 
                   {createdAssistants.length === 0 ? (
                     <div className="py-20 flex flex-col items-center justify-center text-center max-w-xl mx-auto bg-white rounded-3xl border border-[#E7E4DC] p-12 shadow-sm animate-fadeIn">
-                      <div className="w-14 h-14 rounded-full bg-[#FAF5EE] border border-[#EDE5D8] flex items-center justify-center text-[#8C8881] mb-4">
+                      <div className="w-14 h-14 rounded-full bg-[#EEF2FF] border border-[#E0E7FF] flex items-center justify-center text-[#8C8881] mb-4">
                         <Bot className="w-7 h-7 text-[#736F69]" />
                       </div>
                       <h4 className="text-lg font-bold text-[#1A1816] mb-5">Nenhum assistente ainda</h4>
@@ -2135,7 +2130,7 @@ export default function InsideDashboardSection({ onOpenDemo, onOpenLegal, onOpen
                       >
                         <div className="flex items-start justify-between">
                           <div className="flex items-center gap-3">
-                            <div className="w-10 h-10 rounded-xl bg-[#FAF5EE] border border-[#F2E8DC] flex items-center justify-center text-[#C84B1F]">
+                            <div className="w-10 h-10 rounded-xl bg-[#EEF2FF] border border-[#F2E8DC] flex items-center justify-center text-[#4F46E5]">
                               <Bot className="w-5 h-5" />
                             </div>
                             <div>
@@ -2148,7 +2143,7 @@ export default function InsideDashboardSection({ onOpenDemo, onOpenLegal, onOpen
                               {ass.status}
                             </span>
                             {ass.vapi_assistant_id && (
-                              <span className="px-2 py-0.5 rounded-full text-[9px] font-mono font-bold bg-[#FAF5EE] text-[#C84B1F] border border-[#F2E8DC]">
+                              <span className="px-2 py-0.5 rounded-full text-[9px] font-mono font-bold bg-[#EEF2FF] text-[#4F46E5] border border-[#F2E8DC]">
                                 Vapi: {ass.vapi_assistant_id.slice(0, 8)}...
                               </span>
                             )}
@@ -2232,7 +2227,7 @@ export default function InsideDashboardSection({ onOpenDemo, onOpenLegal, onOpen
                       placeholder="Pesquisar número..." 
                       value={phoneSearch}
                       onChange={(e) => setPhoneSearch(e.target.value)}
-                      className="w-full pl-9 pr-3 py-1.5 rounded-xl border border-[#D0CBC0] text-xs focus:outline-none focus:border-[#C84B1F]"
+                      className="w-full pl-9 pr-3 py-1.5 rounded-xl border border-[#D0CBC0] text-xs focus:outline-none focus:border-[#4F46E5]"
                     />
                   </div>
                 </div>
@@ -2257,7 +2252,7 @@ export default function InsideDashboardSection({ onOpenDemo, onOpenLegal, onOpen
                           <td className="p-3.5 text-[#736F69]">{num.uso}</td>
                           <td className="p-3.5 text-[#1A1816] font-medium">{num.vinculacao}</td>
                           <td className="p-3.5">
-                            <span className="px-2 py-0.5 rounded-full text-[10px] font-bold bg-[#FAF5EE] text-[#C84B1F]">
+                            <span className="px-2 py-0.5 rounded-full text-[10px] font-bold bg-[#EEF2FF] text-[#4F46E5]">
                               {num.type}
                             </span>
                           </td>
@@ -2301,7 +2296,7 @@ export default function InsideDashboardSection({ onOpenDemo, onOpenLegal, onOpen
                     <input 
                       type="text" 
                       defaultValue="Empresa do Francisco Ltda." 
-                      className="w-full px-3 py-2 rounded-xl border border-[#D0CBC0] text-xs focus:outline-none focus:border-[#C84B1F]"
+                      className="w-full px-3 py-2 rounded-xl border border-[#D0CBC0] text-xs focus:outline-none focus:border-[#4F46E5]"
                     />
                   </div>
                   <div>
@@ -2309,7 +2304,7 @@ export default function InsideDashboardSection({ onOpenDemo, onOpenLegal, onOpen
                     <input 
                       type="text" 
                       defaultValue="12.345.678/0001-90" 
-                      className="w-full px-3 py-2 rounded-xl border border-[#D0CBC0] text-xs focus:outline-none focus:border-[#C84B1F]"
+                      className="w-full px-3 py-2 rounded-xl border border-[#D0CBC0] text-xs focus:outline-none focus:border-[#4F46E5]"
                     />
                   </div>
                   <button 
@@ -2362,7 +2357,7 @@ export default function InsideDashboardSection({ onOpenDemo, onOpenLegal, onOpen
                 </div>
 
                 <div className="p-12 rounded-2xl border border-[#E7E4DC] bg-white text-center space-y-4">
-                  <div className="w-12 h-12 rounded-2xl bg-[#FAF5EE] text-[#C84B1F] flex items-center justify-center mx-auto border border-[#F2E8DC]">
+                  <div className="w-12 h-12 rounded-2xl bg-[#EEF2FF] text-[#4F46E5] flex items-center justify-center mx-auto border border-[#F2E8DC]">
                     {activeTab === 'agendador' && <Calendar className="w-6 h-6" />}
                     {activeTab === 'email-ia' && <Mail className="w-6 h-6" />}
                     {activeTab === 'contatos' && <UserPlus className="w-6 h-6" />}
@@ -2392,7 +2387,7 @@ export default function InsideDashboardSection({ onOpenDemo, onOpenLegal, onOpen
               <div className="space-y-6 animate-fadeIn max-w-4xl">
                 <div>
                   <div className="flex items-center gap-2">
-                    <span className="px-2 py-0.5 rounded text-[10px] font-bold bg-[#C84B1F]/10 text-[#C84B1F] uppercase tracking-wider">
+                    <span className="px-2 py-0.5 rounded text-[10px] font-bold bg-[#4F46E5]/10 text-[#4F46E5] uppercase tracking-wider">
                       AI Agency OS Ready
                     </span>
                     <span className="text-[10px] text-emerald-600 font-bold bg-emerald-50 px-2 py-0.5 rounded border border-emerald-200">
@@ -2463,10 +2458,10 @@ export default function InsideDashboardSection({ onOpenDemo, onOpenLegal, onOpen
                       channels: 'Telefone + Pix Instantâneo'
                     }
                   ].map((tpl, i) => (
-                    <div key={i} className="p-5 rounded-2xl bg-white border border-[#E7E4DC] hover:border-[#C84B1F] transition-all shadow-sm space-y-3.5 flex flex-col justify-between">
+                    <div key={i} className="p-5 rounded-2xl bg-white border border-[#E7E4DC] hover:border-[#4F46E5] transition-all shadow-sm space-y-3.5 flex flex-col justify-between">
                       <div className="space-y-2">
                         <div className="flex items-center justify-between">
-                          <span className="text-[10px] font-bold px-2 py-0.5 rounded-full bg-[#FAF5EE] text-[#C84B1F] border border-[#F2E8DC]">
+                          <span className="text-[10px] font-bold px-2 py-0.5 rounded-full bg-[#EEF2FF] text-[#4F46E5] border border-[#F2E8DC]">
                             {tpl.badge}
                           </span>
                           <span className="text-[10px] text-emerald-700 font-mono font-bold bg-emerald-50 px-2 py-0.5 rounded">
@@ -2481,7 +2476,7 @@ export default function InsideDashboardSection({ onOpenDemo, onOpenLegal, onOpen
                         <span className="text-[10px] text-[#8C8881] font-mono">{tpl.channels}</span>
                         <button
                           onClick={() => handleCloneTemplate(tpl)}
-                          className="px-3.5 py-1.5 rounded-xl bg-[#1A1816] hover:bg-[#C84B1F] text-white text-xs font-bold transition-all flex items-center gap-1.5 cursor-pointer shadow-sm hover:scale-[1.02]"
+                          className="px-3.5 py-1.5 rounded-xl bg-[#1A1816] hover:bg-[#4F46E5] text-white text-xs font-bold transition-all flex items-center gap-1.5 cursor-pointer shadow-sm hover:scale-[1.02]"
                         >
                           <Sparkles className="w-3.5 h-3.5" />
                           <span>Clonar & Ativar</span>
@@ -2530,16 +2525,16 @@ export default function InsideDashboardSection({ onOpenDemo, onOpenLegal, onOpen
 
                   <div className="p-4 rounded-2xl bg-white border border-[#E7E4DC] space-y-1">
                     <div className="text-[10px] font-bold text-[#8C8881] uppercase">Transbordo Silencioso</div>
-                    <div className="text-2xl font-mono font-bold text-[#C84B1F]">Ativo</div>
+                    <div className="text-2xl font-mono font-bold text-[#4F46E5]">Ativo</div>
                     <div className="text-[11px] text-[#5C5955]">Chama atendente se confiança &lt; 90%</div>
                   </div>
                 </div>
 
                 {/* Shadow Mode Toggle */}
-                <div className="p-4 rounded-2xl bg-[#FAF5EE] border border-[#F2E8DC] flex items-center justify-between">
+                <div className="p-4 rounded-2xl bg-[#EEF2FF] border border-[#F2E8DC] flex items-center justify-between">
                   <div className="space-y-0.5">
                     <div className="text-xs font-bold text-[#1A1816] flex items-center gap-1.5">
-                      <Sparkles className="w-3.5 h-3.5 text-[#C84B1F]" />
+                      <Sparkles className="w-3.5 h-3.5 text-[#4F46E5]" />
                       <span>Modo Copiloto / Shadow Mode</span>
                     </div>
                     <p className="text-[11px] text-[#5C5955]">
@@ -2549,7 +2544,7 @@ export default function InsideDashboardSection({ onOpenDemo, onOpenLegal, onOpen
                   <button 
                     onClick={() => setShadowModeActive(!shadowModeActive)}
                     className={`px-3 py-1.5 rounded-full text-xs font-bold transition-all cursor-pointer ${
-                      shadowModeActive ? 'bg-[#C84B1F] text-white shadow-sm' : 'bg-white border border-[#D0CBC0] text-[#1A1816]'
+                      shadowModeActive ? 'bg-[#4F46E5] text-white shadow-sm' : 'bg-white border border-[#D0CBC0] text-[#1A1816]'
                     }`}
                   >
                     {shadowModeActive ? 'Shadow Mode Ativo' : 'Ativar Shadow Mode'}
@@ -2621,7 +2616,7 @@ export default function InsideDashboardSection({ onOpenDemo, onOpenLegal, onOpen
               <div className="space-y-6 animate-fadeIn max-w-4xl">
                 <div>
                   <div className="flex items-center gap-2">
-                    <span className="px-2 py-0.5 rounded text-[10px] font-bold bg-[#C84B1F]/10 text-[#C84B1F] uppercase tracking-wider">
+                    <span className="px-2 py-0.5 rounded text-[10px] font-bold bg-[#4F46E5]/10 text-[#4F46E5] uppercase tracking-wider">
                       Inteligência Acionável
                     </span>
                     <span className="text-[10px] text-emerald-600 font-bold bg-emerald-50 px-2 py-0.5 rounded border border-emerald-200">
@@ -2644,7 +2639,7 @@ export default function InsideDashboardSection({ onOpenDemo, onOpenLegal, onOpen
 
                   <div className="p-4 rounded-2xl bg-white border border-[#E7E4DC] space-y-1">
                     <div className="text-[10px] font-bold text-[#8C8881] uppercase">Lead Scoring Médio</div>
-                    <div className="text-xl font-mono font-bold text-[#C84B1F]">8.6 / 10</div>
+                    <div className="text-xl font-mono font-bold text-[#4F46E5]">8.6 / 10</div>
                     <div className="text-[10px] text-[#5C5955]">Alta propensão de compra</div>
                   </div>
 
@@ -2671,10 +2666,10 @@ export default function InsideDashboardSection({ onOpenDemo, onOpenLegal, onOpen
                     <div>
                       <div className="flex items-center justify-between text-xs mb-1">
                         <span className="font-semibold text-[#1A1816]">1. Preço / Condições de Pagamento</span>
-                        <span className="font-mono text-xs font-bold text-[#C84B1F]">34% das ligações</span>
+                        <span className="font-mono text-xs font-bold text-[#4F46E5]">34% das ligações</span>
                       </div>
                       <div className="h-2 rounded-full bg-[#EFECE6] overflow-hidden">
-                        <div className="h-full bg-[#C84B1F] rounded-full w-[34%]" />
+                        <div className="h-full bg-[#4F46E5] rounded-full w-[34%]" />
                       </div>
                       <p className="text-[11px] text-[#5C5955] mt-1">
                         💡 <strong>Ação Recomendada pela IA:</strong> Habilitar envio automático de link de parcelamento em até 10x sem juros no WhatsApp durante a chamada.
@@ -2800,7 +2795,7 @@ export default function InsideDashboardSection({ onOpenDemo, onOpenLegal, onOpen
                     <span className="px-2 py-0.5 rounded text-[10px] font-bold bg-[#1A1816] text-white uppercase tracking-wider">
                       AI Agency OS Partner
                     </span>
-                    <span className="text-[10px] text-[#C84B1F] font-bold bg-[#FAF5EE] px-2 py-0.5 rounded border border-[#F2E8DC]">
+                    <span className="text-[10px] text-[#4F46E5] font-bold bg-[#EEF2FF] px-2 py-0.5 rounded border border-[#F2E8DC]">
                       100% White-Label
                     </span>
                   </div>
@@ -2820,7 +2815,7 @@ export default function InsideDashboardSection({ onOpenDemo, onOpenLegal, onOpen
                 {/* Seção 1: Customização White-Label */}
                 <form onSubmit={handleSaveAgency} className="p-6 rounded-2xl bg-white border border-[#E7E4DC] space-y-4">
                   <h4 className="text-xs font-bold uppercase tracking-wider text-[#1A1816] flex items-center gap-1.5">
-                    <Globe className="w-3.5 h-3.5 text-[#C84B1F]" />
+                    <Globe className="w-3.5 h-3.5 text-[#4F46E5]" />
                     <span>Configuração de Marca e Domínio Próprio:</span>
                   </h4>
 
@@ -2832,7 +2827,7 @@ export default function InsideDashboardSection({ onOpenDemo, onOpenLegal, onOpen
                         value={agencyBrandName}
                         onChange={(e) => setAgencyBrandName(e.target.value)}
                         placeholder="Ex: AgencyVoice Pro"
-                        className="w-full px-3 py-2 rounded-xl border border-[#D0CBC0] text-xs focus:outline-none focus:border-[#C84B1F]"
+                        className="w-full px-3 py-2 rounded-xl border border-[#D0CBC0] text-xs focus:outline-none focus:border-[#4F46E5]"
                         required
                       />
                     </div>
@@ -2844,7 +2839,7 @@ export default function InsideDashboardSection({ onOpenDemo, onOpenLegal, onOpen
                         value={agencyDomain}
                         onChange={(e) => setAgencyDomain(e.target.value)}
                         placeholder="voz.suaagencia.com.br"
-                        className="w-full px-3 py-2 rounded-xl border border-[#D0CBC0] text-xs font-mono focus:outline-none focus:border-[#C84B1F]"
+                        className="w-full px-3 py-2 rounded-xl border border-[#D0CBC0] text-xs font-mono focus:outline-none focus:border-[#4F46E5]"
                         required
                       />
                     </div>
@@ -2857,7 +2852,7 @@ export default function InsideDashboardSection({ onOpenDemo, onOpenLegal, onOpen
                         <select 
                           value={marginMultiplier}
                           onChange={(e) => setMarginMultiplier(Number(e.target.value))}
-                          className="px-3 py-2 rounded-xl border border-[#D0CBC0] text-xs bg-white focus:outline-none focus:border-[#C84B1F]"
+                          className="px-3 py-2 rounded-xl border border-[#D0CBC0] text-xs bg-white focus:outline-none focus:border-[#4F46E5]"
                         >
                           <option value={1.5}>1.5x (Lucro de 50%)</option>
                           <option value={2.0}>2.0x (Lucro de 100%)</option>
@@ -3301,7 +3296,7 @@ export default function InsideDashboardSection({ onOpenDemo, onOpenLegal, onOpen
               <X className="w-4 h-4" />
             </button>
             
-            <div className="w-12 h-12 rounded-2xl bg-[#FAF5EE] text-[#C84B1F] flex items-center justify-center mx-auto mb-3 border border-[#F2E8DC]">
+            <div className="w-12 h-12 rounded-2xl bg-[#EEF2FF] text-[#4F46E5] flex items-center justify-center mx-auto mb-3 border border-[#F2E8DC]">
               <Phone className="w-6 h-6" />
             </div>
 
@@ -3323,14 +3318,14 @@ export default function InsideDashboardSection({ onOpenDemo, onOpenLegal, onOpen
                     value={testPhoneNumber}
                     onChange={(e) => setTestPhoneNumber(e.target.value)}
                     placeholder="(11) 98765-4321"
-                    className="w-full px-3 py-2.5 rounded-xl border border-[#D0CBC0] text-xs focus:outline-none focus:border-[#C84B1F]"
+                    className="w-full px-3 py-2.5 rounded-xl border border-[#D0CBC0] text-xs focus:outline-none focus:border-[#4F46E5]"
                     required
                   />
                 </div>
 
                 <button 
                   type="submit"
-                  className="w-full py-2.5 rounded-xl bg-[#C84B1F] text-white text-xs font-bold hover:bg-[#B33E15] transition-colors"
+                  className="w-full py-2.5 rounded-xl bg-[#4F46E5] text-white text-xs font-bold hover:bg-[#B33E15] transition-colors"
                 >
                   Receber chamada de teste
                 </button>

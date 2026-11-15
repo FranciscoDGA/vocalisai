@@ -51,8 +51,8 @@ export default function AudioFrequencyWave({
                 }}
                 className={`w-full rounded-full transition-all duration-300 animate-freq-${animIndex} ${
                   isCompact
-                    ? 'bg-gradient-to-t from-[#C84B1F] via-[#E25C2B] to-[#FF9E7D] shadow-[0_0_6px_rgba(200,75,31,0.4)]'
-                    : 'bg-gradient-to-t from-[#7A2105] via-[#C84B1F] to-[#FF9E7D] shadow-[0_0_8px_rgba(200,75,31,0.35)]'
+                    ? 'bg-gradient-to-t from-[#4F46E5] via-[#6366F1] to-[#A5B4FC] shadow-[0_0_6px_rgba(99,102,241,0.5)]'
+                    : 'bg-gradient-to-t from-[#312E81] via-[#4F46E5] to-[#A5B4FC] shadow-[0_0_8px_rgba(99,102,241,0.4)]'
                 }`}
               />
             </div>

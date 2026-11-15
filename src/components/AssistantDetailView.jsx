@@ -331,7 +331,7 @@ export default function AssistantDetailView({
                           setAssistantDropdownOpen(false);
                         }}
                         className={`w-full px-2.5 py-2 rounded-lg text-left flex items-center justify-between font-medium cursor-pointer transition-colors ${
-                          assistant?.id === a.id ? 'bg-[#FAF5EE] text-[#C84B1F] font-bold' : 'hover:bg-[#FAF9F5] text-[#1A1816]'
+                          assistant?.id === a.id ? 'bg-[#EEF2FF] text-[#4F46E5] font-bold' : 'hover:bg-[#FAF9F5] text-[#1A1816]'
                         }`}
                       >
                         <span className="truncate">{a.name}</span>
@@ -379,7 +379,7 @@ export default function AssistantDetailView({
 
         {/* Promo Card: Conheça seu chatbot de IA (Réplica 1:1 Kloel) */}
         {promoBannerVisible && (
-          <div className="mt-8 p-3.5 rounded-2xl bg-gradient-to-b from-[#FFF5F0] to-[#FAF5EE] border border-[#F3E2D5] relative animate-fadeIn">
+          <div className="mt-8 p-3.5 rounded-2xl bg-gradient-to-b from-[#FFF5F0] to-[#EEF2FF] border border-[#F3E2D5] relative animate-fadeIn">
             <button 
               onClick={() => setPromoBannerVisible(false)}
               className="absolute right-2.5 top-2.5 text-[#8C8881] hover:text-[#1A1816] cursor-pointer"
@@ -387,12 +387,12 @@ export default function AssistantDetailView({
               <X className="w-3.5 h-3.5" />
             </button>
             <div className="flex items-center gap-1.5 mb-2">
-              <span className="px-2 py-0.5 rounded-full bg-[#C84B1F] text-white text-[9px] font-bold uppercase">
+              <span className="px-2 py-0.5 rounded-full bg-[#4F46E5] text-white text-[9px] font-bold uppercase">
                 Novo
               </span>
             </div>
             <div className="flex items-center gap-2 mb-1.5">
-              <div className="w-6 h-6 rounded-lg bg-[#FFE6D9] text-[#C84B1F] flex items-center justify-center">
+              <div className="w-6 h-6 rounded-lg bg-[#FFE6D9] text-[#4F46E5] flex items-center justify-center">
                 <MessageSquare className="w-3.5 h-3.5" />
               </div>
               <h5 className="text-xs font-bold text-[#1A1816]">Conheça seu chatbot de IA</h5>
@@ -402,7 +402,7 @@ export default function AssistantDetailView({
             </p>
             <button
               onClick={onOpenPricing}
-              className="w-full py-1.5 rounded-xl bg-[#C84B1F] hover:bg-[#B34018] text-white text-xs font-bold transition-all shadow-sm cursor-pointer"
+              className="w-full py-1.5 rounded-xl bg-[#4F46E5] hover:bg-[#B34018] text-white text-xs font-bold transition-all shadow-sm cursor-pointer"
             >
               Criar chatbot de IA
             </button>
@@ -465,7 +465,7 @@ export default function AssistantDetailView({
                 </>
               ) : (
                 <>
-                  <Sparkles className="w-3.5 h-3.5 text-[#FF9E7D]" />
+                  <Sparkles className="w-3.5 h-3.5 text-[#A5B4FC]" />
                   <span>Salvar & Sincronizar na Vapi</span>
                 </>
               )}
@@ -668,7 +668,7 @@ export default function AssistantDetailView({
                   type="button"
                   onClick={() => setSellerProfile(!sellerProfile)}
                   className={`w-11 h-6 rounded-full transition-colors relative cursor-pointer shrink-0 mt-1 ${
-                    sellerProfile ? 'bg-[#C84B1F]' : 'bg-[#E7E4DC]'
+                    sellerProfile ? 'bg-[#4F46E5]' : 'bg-[#E7E4DC]'
                   }`}
                 >
                   <span className={`w-5 h-5 rounded-full bg-white shadow-sm absolute top-0.5 transition-transform ${
@@ -702,7 +702,7 @@ export default function AssistantDetailView({
                       type="button"
                       onClick={() => setWelcomeMessageActive(!welcomeMessageActive)}
                       className={`w-11 h-6 rounded-full transition-colors relative cursor-pointer ${
-                        welcomeMessageActive ? 'bg-[#C84B1F]' : 'bg-[#E7E4DC]'
+                        welcomeMessageActive ? 'bg-[#4F46E5]' : 'bg-[#E7E4DC]'
                       }`}
                     >
                       <span className={`w-5 h-5 rounded-full bg-white shadow-sm absolute top-0.5 transition-transform ${
@@ -722,7 +722,7 @@ export default function AssistantDetailView({
                 {/* 1. Conectar contatos (Ativo com Check) */}
                 <div className="p-4 rounded-2xl border border-[#E7E4DC] bg-white flex flex-col justify-between min-h-[95px] hover:border-[#D0CBC0] transition-colors">
                   <div className="flex items-center justify-between">
-                    <div className="w-7 h-7 rounded-lg bg-[#FAF5EE] text-[#C84B1F] flex items-center justify-center">
+                    <div className="w-7 h-7 rounded-lg bg-[#EEF2FF] text-[#4F46E5] flex items-center justify-center">
                       <FileText className="w-4 h-4" />
                     </div>
                     <span className="w-5 h-5 rounded-full bg-emerald-50 text-emerald-600 border border-emerald-200 flex items-center justify-center">
@@ -994,7 +994,7 @@ export default function AssistantDetailView({
 
                 <button 
                   type="button"
-                  className="w-full p-4 text-center text-xs font-bold text-[#C84B1F] hover:bg-[#FFF5F0] transition-colors cursor-pointer flex items-center justify-center gap-1.5"
+                  className="w-full p-4 text-center text-xs font-bold text-[#4F46E5] hover:bg-[#FFF5F0] transition-colors cursor-pointer flex items-center justify-center gap-1.5"
                 >
                   <span>⊕ Adicionar regra própria</span>
                 </button>
@@ -1070,7 +1070,7 @@ export default function AssistantDetailView({
               <div className="p-4 relative">
                 <button 
                   onClick={() => setAddSourceDropdownOpen(!addSourceDropdownOpen)}
-                  className="w-full text-center text-xs font-bold text-[#C84B1F] flex items-center justify-center gap-1.5 cursor-pointer"
+                  className="w-full text-center text-xs font-bold text-[#4F46E5] flex items-center justify-center gap-1.5 cursor-pointer"
                 >
                   <span>⊕ Adicionar fonte</span>
                 </button>
@@ -1140,10 +1140,10 @@ export default function AssistantDetailView({
             <h2 className="text-2xl font-bold text-[#1A1816]">Técnico</h2>
 
             {/* CARD ESPECIAL: Conexão Direta com Telefonia Vapi AI */}
-            <div className="p-5 rounded-2xl border-2 border-[#C84B1F]/20 bg-gradient-to-br from-[#FFFBF8] to-[#FAF5EE] space-y-4 shadow-sm">
+            <div className="p-5 rounded-2xl border-2 border-[#4F46E5]/20 bg-gradient-to-br from-[#FFFBF8] to-[#EEF2FF] space-y-4 shadow-sm">
               <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-3 border-b border-[#F0E6DC]">
                 <div className="flex items-center gap-3">
-                  <div className="w-9 h-9 rounded-xl bg-[#C84B1F] text-white flex items-center justify-center font-bold shadow-xs">
+                  <div className="w-9 h-9 rounded-xl bg-[#4F46E5] text-white flex items-center justify-center font-bold shadow-xs">
                     <Phone className="w-4 h-4" />
                   </div>
                   <div>
@@ -1190,13 +1190,13 @@ export default function AssistantDetailView({
                     value={testPhone}
                     onChange={(e) => setTestPhone(e.target.value)}
                     placeholder="Seu celular: (11) 98765-4321"
-                    className="w-full px-3.5 py-2.5 rounded-xl border border-[#D0CBC0] bg-white text-xs font-medium text-[#1A1816] focus:outline-none focus:border-[#C84B1F]"
+                    className="w-full px-3.5 py-2.5 rounded-xl border border-[#D0CBC0] bg-white text-xs font-medium text-[#1A1816] focus:outline-none focus:border-[#4F46E5]"
                   />
                 </div>
                 <button
                   type="submit"
                   disabled={callingState}
-                  className="px-4 py-2.5 rounded-xl bg-[#C84B1F] hover:bg-[#B34018] text-white text-xs font-bold transition-all flex items-center justify-center gap-2 cursor-pointer shadow-sm disabled:opacity-60"
+                  className="px-4 py-2.5 rounded-xl bg-[#4F46E5] hover:bg-[#B34018] text-white text-xs font-bold transition-all flex items-center justify-center gap-2 cursor-pointer shadow-sm disabled:opacity-60"
                 >
                   {callingState ? (
                     <>
@@ -1414,7 +1414,7 @@ export default function AssistantDetailView({
               <div className="pt-2 border-t border-[#F0EDE8]">
                 <div className="flex items-center justify-between">
                   <h4 className="text-xs font-bold text-[#1A1816]">Processamento preciso de informações</h4>
-                  <a href="#tutorial" className="text-xs text-[#C84B1F] hover:underline">— Vídeo tutorial</a>
+                  <a href="#tutorial" className="text-xs text-[#4F46E5] hover:underline">— Vídeo tutorial</a>
                 </div>
                 <p className="text-xs text-[#736F69] mt-1 leading-relaxed">
                   Defina quais informações o assistente deve coletar com precisão na ligação. Ele pede cada uma e confirma o valor com a pessoa (soletrando e-mails e números, por exemplo).
@@ -1432,7 +1432,7 @@ export default function AssistantDetailView({
                   {infoExtractionList.length > 0 && (
                     <div className="flex flex-wrap gap-1.5 mt-2">
                       {infoExtractionList.map((item, idx) => (
-                        <span key={idx} className="px-2.5 py-1 rounded-lg bg-[#FAF5EE] text-[#C84B1F] text-xs font-semibold border border-[#EDE5D8]">
+                        <span key={idx} className="px-2.5 py-1 rounded-lg bg-[#EEF2FF] text-[#4F46E5] text-xs font-semibold border border-[#E0E7FF]">
                           {item}
                         </span>
                       ))}
@@ -1579,7 +1579,7 @@ export default function AssistantDetailView({
                 onClick={onOpenPricing}
                 className="flex items-center gap-1 text-xs text-white hover:text-white/80 cursor-pointer font-medium"
               >
-                <Phone className="w-3.5 h-3.5 text-[#C84B1F]" />
+                <Phone className="w-3.5 h-3.5 text-[#4F46E5]" />
                 <span>Atribuir número</span>
               </button>
             </>
@@ -1588,7 +1588,7 @@ export default function AssistantDetailView({
           {/* Orange Test Button */}
           <button
             onClick={() => setTestChatOpen(true)}
-            className="ml-2 px-4 py-1.5 rounded-xl bg-[#C84B1F] hover:bg-[#B34018] text-white text-xs font-bold transition-all shadow flex items-center gap-1.5 cursor-pointer"
+            className="ml-2 px-4 py-1.5 rounded-xl bg-[#4F46E5] hover:bg-[#B34018] text-white text-xs font-bold transition-all shadow flex items-center gap-1.5 cursor-pointer"
           >
             <MessageSquare className="w-3.5 h-3.5" />
             <span>Testar</span>
@@ -1645,7 +1645,7 @@ export default function AssistantDetailView({
                     </div>
                   </div>
                   <div className={`w-4 h-4 rounded-full border flex items-center justify-center ${
-                    selectedVoice.name === v.name ? 'border-[#C84B1F] bg-[#C84B1F]' : 'border-[#D0CBC0]'
+                    selectedVoice.name === v.name ? 'border-[#4F46E5] bg-[#4F46E5]' : 'border-[#D0CBC0]'
                   }`}>
                     {selectedVoice.name === v.name && <span className="w-1.5 h-1.5 rounded-full bg-white" />}
                   </div>
@@ -1686,13 +1686,13 @@ export default function AssistantDetailView({
                   onClick={() => setAgendaResposta(opt.id)}
                   className={`p-4 rounded-2xl border cursor-pointer transition-all ${
                     agendaResposta === opt.id 
-                      ? 'border-[#C84B1F] bg-[#FAF5EE]' 
+                      ? 'border-[#4F46E5] bg-[#EEF2FF]' 
                       : 'border-[#E7E4DC] hover:border-[#D0CBC0]'
                   }`}
                 >
                   <div className="flex items-center gap-2.5 mb-1">
                     <span className={`w-4 h-4 rounded-full border flex items-center justify-center shrink-0 ${
-                      agendaResposta === opt.id ? 'border-[#C84B1F] bg-[#C84B1F]' : 'border-[#D0CBC0]'
+                      agendaResposta === opt.id ? 'border-[#4F46E5] bg-[#4F46E5]' : 'border-[#D0CBC0]'
                     }`}>
                       {agendaResposta === opt.id && <span className="w-1.5 h-1.5 rounded-full bg-white" />}
                     </span>
@@ -1851,13 +1851,13 @@ export default function AssistantDetailView({
                   onClick={() => setEntradaConversa(opt.id)}
                   className={`p-4 rounded-2xl border cursor-pointer transition-all ${
                     entradaConversa === opt.id 
-                      ? 'border-[#C84B1F] bg-[#FAF5EE]' 
+                      ? 'border-[#4F46E5] bg-[#EEF2FF]' 
                       : 'border-[#E7E4DC] hover:border-[#D0CBC0]'
                   }`}
                 >
                   <div className="flex items-center gap-2.5 mb-1">
                     <span className={`w-4 h-4 rounded-full border flex items-center justify-center shrink-0 ${
-                      entradaConversa === opt.id ? 'border-[#C84B1F] bg-[#C84B1F]' : 'border-[#D0CBC0]'
+                      entradaConversa === opt.id ? 'border-[#4F46E5] bg-[#4F46E5]' : 'border-[#D0CBC0]'
                     }`}>
                       {entradaConversa === opt.id && <span className="w-1.5 h-1.5 rounded-full bg-white" />}
                     </span>
@@ -1934,13 +1934,13 @@ export default function AssistantDetailView({
                   onClick={() => setTransferenciaModo(opt.id)}
                   className={`p-4 rounded-2xl border cursor-pointer transition-all ${
                     transferenciaModo === opt.id 
-                      ? 'border-[#C84B1F] bg-[#FAF5EE]' 
+                      ? 'border-[#4F46E5] bg-[#EEF2FF]' 
                       : 'border-[#E7E4DC] hover:border-[#D0CBC0]'
                   }`}
                 >
                   <div className="flex items-center gap-2.5 mb-1">
                     <span className={`w-4 h-4 rounded-full border flex items-center justify-center shrink-0 ${
-                      transferenciaModo === opt.id ? 'border-[#C84B1F] bg-[#C84B1F]' : 'border-[#D0CBC0]'
+                      transferenciaModo === opt.id ? 'border-[#4F46E5] bg-[#4F46E5]' : 'border-[#D0CBC0]'
                     }`}>
                       {transferenciaModo === opt.id && <span className="w-1.5 h-1.5 rounded-full bg-white" />}
                     </span>
@@ -2017,11 +2017,11 @@ export default function AssistantDetailView({
               <span className="text-[11px] font-bold text-[#8C8881] uppercase tracking-wider block">Avisar quando</span>
               <div className="space-y-2">
                 <label className="flex items-center gap-2.5 text-xs text-[#1A1816] font-medium cursor-pointer">
-                  <input type="checkbox" defaultChecked className="w-4 h-4 rounded text-[#C84B1F]" />
+                  <input type="checkbox" defaultChecked className="w-4 h-4 rounded text-[#4F46E5]" />
                   <span>Uma nova conversa começar com a equipe</span>
                 </label>
                 <label className="flex items-center gap-2.5 text-xs text-[#1A1816] font-medium cursor-pointer">
-                  <input type="checkbox" defaultChecked className="w-4 h-4 rounded text-[#C84B1F]" />
+                  <input type="checkbox" defaultChecked className="w-4 h-4 rounded text-[#4F46E5]" />
                   <span>A IA transferir uma conversa ativa</span>
                 </label>
               </div>
@@ -2034,7 +2034,7 @@ export default function AssistantDetailView({
                   type="checkbox" 
                   checked={notificarEmail} 
                   onChange={(e) => setNotificarEmail(e.target.checked)} 
-                  className="w-4 h-4 rounded text-[#C84B1F]" 
+                  className="w-4 h-4 rounded text-[#4F46E5]" 
                 />
                 <span>fc_go@hotmail.com</span>
               </label>
@@ -2110,9 +2110,9 @@ export default function AssistantDetailView({
               {chatTyping && (
                 <div className="flex justify-start">
                   <div className="bg-white text-[#736F69] border border-[#E7E4DC] p-2.5 rounded-2xl text-xs flex items-center gap-1 shadow-sm">
-                    <span className="w-1.5 h-1.5 bg-[#C84B1F] rounded-full animate-bounce"></span>
-                    <span className="w-1.5 h-1.5 bg-[#C84B1F] rounded-full animate-bounce [animation-delay:0.2s]"></span>
-                    <span className="w-1.5 h-1.5 bg-[#C84B1F] rounded-full animate-bounce [animation-delay:0.4s]"></span>
+                    <span className="w-1.5 h-1.5 bg-[#4F46E5] rounded-full animate-bounce"></span>
+                    <span className="w-1.5 h-1.5 bg-[#4F46E5] rounded-full animate-bounce [animation-delay:0.2s]"></span>
+                    <span className="w-1.5 h-1.5 bg-[#4F46E5] rounded-full animate-bounce [animation-delay:0.4s]"></span>
                   </div>
                 </div>
               )}
@@ -2129,7 +2129,7 @@ export default function AssistantDetailView({
               />
               <button 
                 type="submit"
-                className="w-10 h-10 rounded-xl bg-[#C84B1F] hover:bg-[#B34018] text-white flex items-center justify-center cursor-pointer transition-colors shadow-sm"
+                className="w-10 h-10 rounded-xl bg-[#4F46E5] hover:bg-[#B34018] text-white flex items-center justify-center cursor-pointer transition-colors shadow-sm"
               >
                 <Send className="w-4 h-4" />
               </button>

@@ -272,7 +272,7 @@ export default function WhatsAppConnectorDashboard({ userPhone = '559484423948' 
           {/* Teste de Mensagem de Texto */}
           <div className="p-6 rounded-3xl border border-[#E7E4DC] bg-white shadow-xs space-y-4">
             <div className="flex items-center gap-2 text-sm font-bold text-[#1A1816]">
-              <MessageSquare className="w-4 h-4 text-[#C84B1F]" />
+              <MessageSquare className="w-4 h-4 text-[#4F46E5]" />
               <span>Testar Envio de Mensagem de Texto</span>
             </div>
 
@@ -286,7 +286,7 @@ export default function WhatsAppConnectorDashboard({ userPhone = '559484423948' 
                   value={testNumber}
                   onChange={(e) => setTestNumber(e.target.value)}
                   placeholder="Ex: 5594984423948"
-                  className="w-full px-3.5 py-2 rounded-xl border border-[#D0CBC0] text-xs font-mono focus:outline-none focus:border-[#C84B1F]"
+                  className="w-full px-3.5 py-2 rounded-xl border border-[#D0CBC0] text-xs font-mono focus:outline-none focus:border-[#4F46E5]"
                 />
               </div>
 
@@ -298,7 +298,7 @@ export default function WhatsAppConnectorDashboard({ userPhone = '559484423948' 
                   rows={3}
                   value={testMessage}
                   onChange={(e) => setTestMessage(e.target.value)}
-                  className="w-full px-3.5 py-2 rounded-xl border border-[#D0CBC0] text-xs focus:outline-none focus:border-[#C84B1F]"
+                  className="w-full px-3.5 py-2 rounded-xl border border-[#D0CBC0] text-xs focus:outline-none focus:border-[#4F46E5]"
                 />
               </div>
 
@@ -313,7 +313,7 @@ export default function WhatsAppConnectorDashboard({ userPhone = '559484423948' 
               <button 
                 type="submit"
                 disabled={isSending}
-                className="w-full py-2.5 rounded-xl bg-[#C84B1F] hover:bg-[#A83812] text-white font-bold text-xs flex items-center justify-center gap-2 transition-colors cursor-pointer disabled:opacity-60 shadow-md shadow-[#C84B1F]/20"
+                className="w-full py-2.5 rounded-xl bg-[#4F46E5] hover:bg-[#A83812] text-white font-bold text-xs flex items-center justify-center gap-2 transition-colors cursor-pointer disabled:opacity-60 shadow-md shadow-[#4F46E5]/20"
               >
                 {isSending ? (
                   <span>Enviando pelo robô...</span>

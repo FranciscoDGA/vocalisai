@@ -29,7 +29,7 @@ export default function PricingSection({ onOpenAuth, onOpenDemo }) {
   const currentChannelData = PRICING_CHANNELS[selectedChannel];
 
   return (
-    <section id="precos" className="py-24 bg-[#FAF9F5] border-t border-[#EBE8E2] font-sans selection:bg-[#C84B1F] selection:text-white">
+    <section id="precos" className="py-24 bg-[#FAF9F5] border-t border-[#EBE8E2] font-sans selection:bg-[#4F46E5] selection:text-white">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         
         {/* ========================================================
@@ -38,7 +38,7 @@ export default function PricingSection({ onOpenAuth, onOpenDemo }) {
         <div className="text-center max-w-3xl mx-auto mb-10">
           <h2 className="text-4xl sm:text-6xl font-normal text-[#1A1816] tracking-tight leading-[1.12]">
             Planos para cada{' '}
-            <span className="font-serif-title italic text-[#C84B1F]">ritmo de conversa.</span>
+            <span className="font-serif-title italic text-[#4F46E5]">ritmo de conversa.</span>
           </h2>
 
           <div className="mt-4 inline-flex items-center gap-1.5 text-xs text-[#5C5955] bg-white border border-[#E7E4DC] px-4 py-1.5 rounded-full shadow-sm">
@@ -53,14 +53,14 @@ export default function PricingSection({ onOpenAuth, onOpenDemo }) {
         <div className="max-w-4xl mx-auto mb-10">
           <div className="bg-[#11100F] text-white rounded-full px-4 sm:px-6 py-2.5 flex flex-col sm:flex-row items-center justify-between gap-2 shadow-xl text-xs sm:text-sm">
             <div className="flex items-center gap-2">
-              <span className="px-2.5 py-0.5 rounded-full bg-[#C84B1F] text-white text-[11px] font-bold uppercase tracking-wider">
+              <span className="px-2.5 py-0.5 rounded-full bg-[#4F46E5] text-white text-[11px] font-bold uppercase tracking-wider">
                 Aproveite a promoção de lançamento
               </span>
               <span className="font-medium text-white/90 hidden md:inline">
                 · <strong>30% A MENOS NA SUA PRIMEIRA FATURA</strong> nos 3 primeiros meses de uso.
               </span>
             </div>
-            <div className="flex items-center gap-1.5 font-mono text-[#FF9E7D] font-bold shrink-0">
+            <div className="flex items-center gap-1.5 font-mono text-[#A5B4FC] font-bold shrink-0">
               <Clock className="w-3.5 h-3.5" />
               <span>EXPIRA EM {formatTimer(timeLeft)}</span>
             </div>
@@ -82,7 +82,7 @@ export default function PricingSection({ onOpenAuth, onOpenDemo }) {
                   : 'text-[#5C5955] hover:text-[#1A1816]'
               }`}
             >
-              <Phone className="w-4 h-4 text-[#C84B1F]" />
+              <Phone className="w-4 h-4 text-[#4F46E5]" />
               <span>Assistente telefônico IA</span>
             </button>
 
@@ -132,7 +132,7 @@ export default function PricingSection({ onOpenAuth, onOpenDemo }) {
               }`}
             >
               <span>Anual</span>
-              <span className="text-[11px] font-bold text-[#C84B1F]">
+              <span className="text-[11px] font-bold text-[#4F46E5]">
                 -20%
               </span>
             </button>
@@ -154,7 +154,7 @@ export default function PricingSection({ onOpenAuth, onOpenDemo }) {
                 key={plan.id}
                 className={`rounded-3xl p-6 sm:p-8 flex flex-col justify-between transition-all bg-white relative ${
                   isHighlight
-                    ? 'border-2 border-[#C84B1F] shadow-2xl scale-[1.02] ring-4 ring-[#C84B1F]/5'
+                    ? 'border-2 border-[#4F46E5] shadow-2xl scale-[1.02] ring-4 ring-[#4F46E5]/5'
                     : 'border border-[#E7E4DC] shadow-lg'
                 }`}
               >
@@ -175,7 +175,7 @@ export default function PricingSection({ onOpenAuth, onOpenDemo }) {
                   </p>
 
                   {/* 30% Promo Tag */}
-                  <div className="flex items-center gap-1 text-[11px] font-bold text-[#C84B1F] mb-3">
+                  <div className="flex items-center gap-1 text-[11px] font-bold text-[#4F46E5] mb-3">
                     <Sparkles className="w-3.5 h-3.5" />
                     <span>30% A MENOS NOS 3 PRIMEIROS MESES</span>
                   </div>
@@ -204,7 +204,7 @@ export default function PricingSection({ onOpenAuth, onOpenDemo }) {
                       onClick={onOpenAuth}
                       className={`w-full py-3 rounded-full text-xs font-bold transition-all shadow-md flex items-center justify-center gap-1.5 ${
                         isHighlight
-                          ? 'bg-[#C84B1F] text-white hover:bg-[#B33E15]'
+                          ? 'bg-[#4F46E5] text-white hover:bg-[#B33E15]'
                           : 'bg-[#11100F] text-white hover:bg-black'
                       }`}
                     >
@@ -221,7 +221,7 @@ export default function PricingSection({ onOpenAuth, onOpenDemo }) {
                     <ul className="space-y-2 text-xs text-[#4A4744]">
                       {plan.included.map((item, i) => (
                         <li key={i} className="flex items-start gap-2">
-                          <Check className="w-3.5 h-3.5 text-[#C84B1F] shrink-0 mt-0.5" />
+                          <Check className="w-3.5 h-3.5 text-[#4F46E5] shrink-0 mt-0.5" />
                           <span>{item}</span>
                         </li>
                       ))}
@@ -236,7 +236,7 @@ export default function PricingSection({ onOpenAuth, onOpenDemo }) {
                     <ul className="space-y-2 text-xs text-[#4A4744]">
                       {plan.features.map((item, i) => (
                         <li key={i} className="flex items-start gap-2">
-                          <Check className="w-3.5 h-3.5 text-[#C84B1F] shrink-0 mt-0.5" />
+                          <Check className="w-3.5 h-3.5 text-[#4F46E5] shrink-0 mt-0.5" />
                           <span>{item}</span>
                         </li>
                       ))}
@@ -253,7 +253,7 @@ export default function PricingSection({ onOpenAuth, onOpenDemo }) {
         <div className="text-center mb-24">
           <button 
             onClick={onOpenDemo}
-            className="inline-flex items-center gap-1.5 text-xs sm:text-sm font-semibold text-[#1A1816] hover:text-[#C84B1F] transition-colors border border-[#E0DCD4] bg-white px-5 py-2.5 rounded-full shadow-sm"
+            className="inline-flex items-center gap-1.5 text-xs sm:text-sm font-semibold text-[#1A1816] hover:text-[#4F46E5] transition-colors border border-[#E0DCD4] bg-white px-5 py-2.5 rounded-full shadow-sm"
           >
             <span>Ficou em dúvida? Converse com a gente</span>
             <ArrowRight className="w-4 h-4" />
@@ -293,7 +293,7 @@ export default function PricingSection({ onOpenAuth, onOpenDemo }) {
               </div>
 
               <div className="col-span-1 text-center space-y-1">
-                <div className="text-sm font-bold text-[#C84B1F]">Team</div>
+                <div className="text-sm font-bold text-[#4F46E5]">Team</div>
                 <div className="text-[11px] text-[#736F69]">a partir de R$ 1.511 / mês</div>
                 <button 
                   onClick={onOpenAuth}
@@ -319,7 +319,7 @@ export default function PricingSection({ onOpenAuth, onOpenDemo }) {
             <div className="divide-y divide-[#EBE8E2]">
               {COMPARISON_SECTIONS.map((sec, secIdx) => (
                 <div key={secIdx} className="pt-6 pb-2">
-                  <div className="text-xs font-bold uppercase tracking-wider text-[#C84B1F] mb-3 flex items-center gap-1.5">
+                  <div className="text-xs font-bold uppercase tracking-wider text-[#4F46E5] mb-3 flex items-center gap-1.5">
                     <span>{sec.category}</span>
                   </div>
 
@@ -334,7 +334,7 @@ export default function PricingSection({ onOpenAuth, onOpenDemo }) {
                         <div className="col-span-1 text-center text-[#5C5955]">
                           {typeof item.solo === 'boolean' ? (
                             item.solo ? (
-                              <Check className="w-4 h-4 text-[#C84B1F] mx-auto" />
+                              <Check className="w-4 h-4 text-[#4F46E5] mx-auto" />
                             ) : (
                               <X className="w-3.5 h-3.5 text-[#A6A29A] mx-auto" />
                             )
@@ -347,7 +347,7 @@ export default function PricingSection({ onOpenAuth, onOpenDemo }) {
                         <div className="col-span-1 text-center text-[#1A1816] font-semibold">
                           {typeof item.team === 'boolean' ? (
                             item.team ? (
-                              <Check className="w-4 h-4 text-[#C84B1F] mx-auto" />
+                              <Check className="w-4 h-4 text-[#4F46E5] mx-auto" />
                             ) : (
                               <X className="w-3.5 h-3.5 text-[#A6A29A] mx-auto" />
                             )
@@ -360,7 +360,7 @@ export default function PricingSection({ onOpenAuth, onOpenDemo }) {
                         <div className="col-span-1 text-center text-[#5C5955]">
                           {typeof item.scale === 'boolean' ? (
                             item.scale ? (
-                              <Check className="w-4 h-4 text-[#C84B1F] mx-auto" />
+                              <Check className="w-4 h-4 text-[#4F46E5] mx-auto" />
                             ) : (
                               <X className="w-3.5 h-3.5 text-[#A6A29A] mx-auto" />
                             )
@@ -384,12 +384,12 @@ export default function PricingSection({ onOpenAuth, onOpenDemo }) {
             6. BOTTOM CTA CARD: "Comece pequeno. Cresça falando."
            ======================================================== */}
         <div className="rounded-3xl bg-[#11100F] p-8 sm:p-14 text-white text-center relative overflow-hidden shadow-2xl mb-16">
-          <div className="absolute top-0 left-1/2 -translate-x-1/2 w-96 h-48 bg-[#C84B1F]/20 rounded-full blur-3xl pointer-events-none" />
+          <div className="absolute top-0 left-1/2 -translate-x-1/2 w-96 h-48 bg-[#4F46E5]/20 rounded-full blur-3xl pointer-events-none" />
 
           <div className="relative z-10 max-w-2xl mx-auto space-y-4">
             <h3 className="text-3xl sm:text-5xl font-normal tracking-tight">
               Comece pequeno.{' '}
-              <span className="font-serif-title italic text-[#FF9E7D]">Cresça falando.</span>
+              <span className="font-serif-title italic text-[#A5B4FC]">Cresça falando.</span>
             </h3>
             <p className="text-xs sm:text-sm text-white/70 leading-relaxed">
               Crie o seu assistente hoje mesmo e tenha o primeiro ativo ainda hoje. Você tem 30 dias para decidir.
@@ -411,7 +411,7 @@ export default function PricingSection({ onOpenAuth, onOpenDemo }) {
               <span 
                 key={i} 
                 style={{ height: `${h * 0.4}px` }} 
-                className="w-1 bg-[#C84B1F] rounded-full"
+                className="w-1 bg-[#4F46E5] rounded-full"
               />
             ))}
           </div>
@@ -423,7 +423,7 @@ export default function PricingSection({ onOpenAuth, onOpenDemo }) {
         <div className="text-center py-10">
           <h2 className="text-4xl sm:text-6xl font-normal text-[#1A1816] tracking-tight leading-[1.12]">
             Toda empresa tem uma voz.<br />
-            <span className="font-serif-title italic text-[#C84B1F]">A sua nunca mais fica em silêncio.</span>
+            <span className="font-serif-title italic text-[#4F46E5]">A sua nunca mais fica em silêncio.</span>
           </h2>
         </div>
 

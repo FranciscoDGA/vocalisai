@@ -30,11 +30,11 @@ export default function DocsPortal({ isOpen, initialDoc = 'privacidade', onClose
         {/* Left: Brand + Nav Links */}
         <div className="flex items-center gap-8">
           <div className="flex items-center gap-2 cursor-pointer" onClick={onClose}>
-            <div className="w-7 h-7 rounded-lg bg-[#C84B1F]/10 flex items-center justify-center border border-[#C84B1F]/20">
+            <div className="w-7 h-7 rounded-lg bg-[#4F46E5]/10 flex items-center justify-center border border-[#4F46E5]/20">
               <div className="flex items-center gap-[2px] h-3">
-                <span className="w-[2px] h-1.5 bg-[#C84B1F] rounded-full"></span>
-                <span className="w-[2px] h-3 bg-[#C84B1F] rounded-full"></span>
-                <span className="w-[2px] h-2 bg-[#C84B1F] rounded-full"></span>
+                <span className="w-[2px] h-1.5 bg-[#4F46E5] rounded-full"></span>
+                <span className="w-[2px] h-3 bg-[#4F46E5] rounded-full"></span>
+                <span className="w-[2px] h-2 bg-[#4F46E5] rounded-full"></span>
               </div>
             </div>
             <span className="font-bold text-base text-[#1A1816] tracking-tight">{BRAND.name}</span>
@@ -57,7 +57,7 @@ export default function DocsPortal({ isOpen, initialDoc = 'privacidade', onClose
               placeholder="Pesquisar..." 
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
-              className="w-full pl-9 pr-12 py-1.5 rounded-lg border border-[#E0DCD4] bg-[#FAF9F5] text-xs focus:outline-none focus:border-[#C84B1F] text-[#1A1816]"
+              className="w-full pl-9 pr-12 py-1.5 rounded-lg border border-[#E0DCD4] bg-[#FAF9F5] text-xs focus:outline-none focus:border-[#4F46E5] text-[#1A1816]"
             />
             <span className="absolute right-2.5 top-2 text-[10px] text-[#8C8881] border border-[#D5D0C6] rounded px-1 font-mono">
               Ctrl K
@@ -66,9 +66,9 @@ export default function DocsPortal({ isOpen, initialDoc = 'privacidade', onClose
 
           <button 
             onClick={() => setAiPromptOpen(true)}
-            className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg border border-[#E0DCD4] bg-white text-[#5C5955] hover:text-[#1A1816] hover:border-[#C84B1F] transition-colors shrink-0"
+            className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg border border-[#E0DCD4] bg-white text-[#5C5955] hover:text-[#1A1816] hover:border-[#4F46E5] transition-colors shrink-0"
           >
-            <Sparkles className="w-3 h-3 text-[#C84B1F]" />
+            <Sparkles className="w-3 h-3 text-[#4F46E5]" />
             <span>Perguntar à nossa IA...</span>
             <span className="text-[10px] text-[#8C8881] border border-[#D5D0C6] rounded px-1 font-mono ml-1">
               Ctrl I
@@ -187,7 +187,7 @@ export default function DocsPortal({ isOpen, initialDoc = 'privacidade', onClose
         <main className="flex-1 p-6 sm:p-12 overflow-y-auto max-w-3xl">
           
           {/* Breadcrumb */}
-          <div className="text-xs text-[#C84B1F] font-semibold mb-2">
+          <div className="text-xs text-[#4F46E5] font-semibold mb-2">
             Legal
           </div>
 
@@ -384,11 +384,11 @@ export default function DocsPortal({ isOpen, initialDoc = 'privacidade', onClose
                 {/* Box Encarregado */}
                 <div className="p-4 rounded-xl bg-[#FAF9F5] border border-[#E7E4DC] text-xs space-y-1">
                   <div className="font-bold text-[#1A1816] flex items-center gap-1.5">
-                    <ShieldCheck className="w-3.5 h-3.5 text-[#C84B1F]" />
+                    <ShieldCheck className="w-3.5 h-3.5 text-[#4F46E5]" />
                     <span>Encarregado de dados</span>
                   </div>
                   <p className="text-[#5C5955]">
-                    Encarregado (DPO): <strong>Sarah Freitas</strong> — <a href="mailto:privacidade@vocalis.ai" className="text-[#C84B1F] underline">privacidade@vocalis.ai</a>. Você também pode acionar a autoridade nacional de proteção de dados (ANPD).
+                    Encarregado (DPO): <strong>Sarah Freitas</strong> — <a href="mailto:privacidade@vocalis.ai" className="text-[#4F46E5] underline">privacidade@vocalis.ai</a>. Você também pode acionar a autoridade nacional de proteção de dados (ANPD).
                   </p>
                 </div>
               </section>
@@ -425,9 +425,9 @@ export default function DocsPortal({ isOpen, initialDoc = 'privacidade', onClose
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                   <button 
                     onClick={() => setActiveDoc('dpa')}
-                    className="p-3.5 rounded-xl border border-[#E7E4DC] bg-white text-left hover:border-[#C84B1F] transition-colors group"
+                    className="p-3.5 rounded-xl border border-[#E7E4DC] bg-white text-left hover:border-[#4F46E5] transition-colors group"
                   >
-                    <div className="text-xs font-bold text-[#1A1816] group-hover:text-[#C84B1F] flex items-center justify-between">
+                    <div className="text-xs font-bold text-[#1A1816] group-hover:text-[#4F46E5] flex items-center justify-between">
                       <span>Exclusão de dados</span>
                       <ChevronRight className="w-3.5 h-3.5 text-[#8C8881]" />
                     </div>
@@ -438,9 +438,9 @@ export default function DocsPortal({ isOpen, initialDoc = 'privacidade', onClose
 
                   <button 
                     onClick={() => setActiveDoc('dpa')}
-                    className="p-3.5 rounded-xl border border-[#E7E4DC] bg-white text-left hover:border-[#C84B1F] transition-colors group"
+                    className="p-3.5 rounded-xl border border-[#E7E4DC] bg-white text-left hover:border-[#4F46E5] transition-colors group"
                   >
-                    <div className="text-xs font-bold text-[#1A1816] group-hover:text-[#C84B1F] flex items-center justify-between">
+                    <div className="text-xs font-bold text-[#1A1816] group-hover:text-[#4F46E5] flex items-center justify-between">
                       <span>Proteção de dados</span>
                       <ChevronRight className="w-3.5 h-3.5 text-[#8C8881]" />
                     </div>
@@ -451,9 +451,9 @@ export default function DocsPortal({ isOpen, initialDoc = 'privacidade', onClose
 
                   <button 
                     onClick={() => setActiveDoc('termos')}
-                    className="p-3.5 rounded-xl border border-[#E7E4DC] bg-white text-left hover:border-[#C84B1F] transition-colors group"
+                    className="p-3.5 rounded-xl border border-[#E7E4DC] bg-white text-left hover:border-[#4F46E5] transition-colors group"
                   >
-                    <div className="text-xs font-bold text-[#1A1816] group-hover:text-[#C84B1F] flex items-center justify-between">
+                    <div className="text-xs font-bold text-[#1A1816] group-hover:text-[#4F46E5] flex items-center justify-between">
                       <span>Termos de condições</span>
                       <ChevronRight className="w-3.5 h-3.5 text-[#8C8881]" />
                     </div>
@@ -464,9 +464,9 @@ export default function DocsPortal({ isOpen, initialDoc = 'privacidade', onClose
 
                   <button 
                     onClick={() => setActiveDoc('dpa')}
-                    className="p-3.5 rounded-xl border border-[#E7E4DC] bg-white text-left hover:border-[#C84B1F] transition-colors group"
+                    className="p-3.5 rounded-xl border border-[#E7E4DC] bg-white text-left hover:border-[#4F46E5] transition-colors group"
                   >
-                    <div className="text-xs font-bold text-[#1A1816] group-hover:text-[#C84B1F] flex items-center justify-between">
+                    <div className="text-xs font-bold text-[#1A1816] group-hover:text-[#4F46E5] flex items-center justify-between">
                       <span>Retenção</span>
                       <ChevronRight className="w-3.5 h-3.5 text-[#8C8881]" />
                     </div>
@@ -504,7 +504,7 @@ export default function DocsPortal({ isOpen, initialDoc = 'privacidade', onClose
               <div className="pt-4 flex justify-end">
                 <button 
                   onClick={() => setActiveDoc('dpa')}
-                  className="inline-flex items-center gap-1.5 text-xs font-semibold text-[#1A1816] hover:text-[#C84B1F]"
+                  className="inline-flex items-center gap-1.5 text-xs font-semibold text-[#1A1816] hover:text-[#4F46E5]"
                 >
                   <span>Próximo: Proteção de dados (DPA)</span>
                   <ChevronRight className="w-3.5 h-3.5" />
@@ -557,7 +557,7 @@ export default function DocsPortal({ isOpen, initialDoc = 'privacidade', onClose
               <div className="p-4 rounded-xl bg-[#FAF9F5] border border-[#E7E4DC] text-xs space-y-2">
                 <h4 className="font-bold text-[#1A1816]">Canais para solicitação imediata:</h4>
                 <ul className="list-disc pl-5 space-y-1 text-[#5C5955]">
-                  <li>E-mail direto ao Encarregado (DPO): <a href="mailto:dpo@vocalis.ai" className="text-[#C84B1F] underline">dpo@vocalis.ai</a></li>
+                  <li>E-mail direto ao Encarregado (DPO): <a href="mailto:dpo@vocalis.ai" className="text-[#4F46E5] underline">dpo@vocalis.ai</a></li>
                   <li>WhatsApp de Privacidade: <strong>(94) 98442-3948</strong></li>
                   <li>Painel do Usuário: aba <em>Configurações da Conta &gt; Privacidade &gt; Solicitar Exclusão</em></li>
                 </ul>
@@ -583,28 +583,28 @@ export default function DocsPortal({ isOpen, initialDoc = 'privacidade', onClose
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 pt-2">
                 <div 
                   onClick={() => setActiveDoc('primeiros-passos')}
-                  className="p-4 rounded-xl border border-[#E7E4DC] hover:border-[#C84B1F] transition-colors cursor-pointer bg-white"
+                  className="p-4 rounded-xl border border-[#E7E4DC] hover:border-[#4F46E5] transition-colors cursor-pointer bg-white"
                 >
                   <h4 className="font-bold text-xs text-[#1A1816]">Primeiros Passos</h4>
                   <p className="text-[11px] text-[#736F69] mt-1">Como criar seu primeiro assistente e ativar seu número em 3 minutos.</p>
                 </div>
                 <div 
                   onClick={() => setActiveDoc('numeros')}
-                  className="p-4 rounded-xl border border-[#E7E4DC] hover:border-[#C84B1F] transition-colors cursor-pointer bg-white"
+                  className="p-4 rounded-xl border border-[#E7E4DC] hover:border-[#4F46E5] transition-colors cursor-pointer bg-white"
                 >
                   <h4 className="font-bold text-xs text-[#1A1816]">Telefonia & Tronco SIP</h4>
                   <p className="text-[11px] text-[#736F69] mt-1">Conecte números nacionais (DDDs 11..91) ou seu PABX existente.</p>
                 </div>
                 <div 
                   onClick={() => setActiveDoc('tecnicas')}
-                  className="p-4 rounded-xl border border-[#E7E4DC] hover:border-[#C84B1F] transition-colors cursor-pointer bg-white"
+                  className="p-4 rounded-xl border border-[#E7E4DC] hover:border-[#4F46E5] transition-colors cursor-pointer bg-white"
                 >
                   <h4 className="font-bold text-xs text-[#1A1816]">Integrações & Webhooks</h4>
                   <p className="text-[11px] text-[#736F69] mt-1">Sincronize com Google Calendar, RD Station, HubSpot e CRM próprio.</p>
                 </div>
                 <div 
                   onClick={() => setActiveDoc('privacidade')}
-                  className="p-4 rounded-xl border border-[#E7E4DC] hover:border-[#C84B1F] transition-colors cursor-pointer bg-white"
+                  className="p-4 rounded-xl border border-[#E7E4DC] hover:border-[#4F46E5] transition-colors cursor-pointer bg-white"
                 >
                   <h4 className="font-bold text-xs text-[#1A1816]">Segurança & LGPD</h4>
                   <p className="text-[11px] text-[#736F69] mt-1">Acordo de proteção de dados (DPA) e subprocessadores homologados.</p>
@@ -622,15 +622,15 @@ export default function DocsPortal({ isOpen, initialDoc = 'privacidade', onClose
               <span>Nesta página</span>
             </h4>
             <div className="space-y-1.5 text-[#5C5955]">
-              <a href="#controlador" className="block hover:text-[#C84B1F] transition-colors truncate">Quem é o controlador</a>
-              <a href="#dados" className="block hover:text-[#C84B1F] transition-colors truncate">Dados que tratamos</a>
-              <a href="#bases" className="block hover:text-[#C84B1F] transition-colors truncate">Bases legais</a>
-              <a href="#compartilhamento" className="block hover:text-[#C84B1F] transition-colors truncate">Compartilhamento</a>
-              <a href="#transferencia" className="block hover:text-[#C84B1F] transition-colors truncate">Transferência internacional</a>
-              <a href="#retencao" className="block hover:text-[#C84B1F] transition-colors truncate">Retenção</a>
-              <a href="#direitos" className="block hover:text-[#C84B1F] transition-colors truncate">Seus direitos</a>
-              <a href="#seguranca" className="block hover:text-[#C84B1F] transition-colors truncate">Segurança</a>
-              <a href="#alteracoes" className="block hover:text-[#C84B1F] transition-colors truncate">Alterações</a>
+              <a href="#controlador" className="block hover:text-[#4F46E5] transition-colors truncate">Quem é o controlador</a>
+              <a href="#dados" className="block hover:text-[#4F46E5] transition-colors truncate">Dados que tratamos</a>
+              <a href="#bases" className="block hover:text-[#4F46E5] transition-colors truncate">Bases legais</a>
+              <a href="#compartilhamento" className="block hover:text-[#4F46E5] transition-colors truncate">Compartilhamento</a>
+              <a href="#transferencia" className="block hover:text-[#4F46E5] transition-colors truncate">Transferência internacional</a>
+              <a href="#retencao" className="block hover:text-[#4F46E5] transition-colors truncate">Retenção</a>
+              <a href="#direitos" className="block hover:text-[#4F46E5] transition-colors truncate">Seus direitos</a>
+              <a href="#seguranca" className="block hover:text-[#4F46E5] transition-colors truncate">Segurança</a>
+              <a href="#alteracoes" className="block hover:text-[#4F46E5] transition-colors truncate">Alterações</a>
             </div>
           </div>
         </aside>

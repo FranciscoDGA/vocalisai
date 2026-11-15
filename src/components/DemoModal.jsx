@@ -66,7 +66,7 @@ export default function DemoModal({ isOpen, onClose }) {
       <div className="relative w-full max-w-lg rounded-3xl bg-[#12141f] border border-white/10 p-6 sm:p-8 shadow-2xl overflow-hidden font-sans">
         
         {/* Glow behind modal */}
-        <div className="absolute top-0 right-0 w-64 h-64 bg-[#C84B1F]/20 blur-[90px] pointer-events-none rounded-full"></div>
+        <div className="absolute top-0 right-0 w-64 h-64 bg-[#4F46E5]/20 blur-[90px] pointer-events-none rounded-full"></div>
 
         {/* Close Button */}
         <button
@@ -80,8 +80,8 @@ export default function DemoModal({ isOpen, onClose }) {
           <div>
             {/* Modal Header */}
             <div className="space-y-2 mb-6">
-              <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-[#C84B1F]/15 border border-[#C84B1F]/30 text-xs font-semibold text-[#FF9E7D]">
-                <Sparkles className="w-3.5 h-3.5 text-[#C84B1F]" />
+              <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-[#4F46E5]/15 border border-[#4F46E5]/30 text-xs font-semibold text-[#A5B4FC]">
+                <Sparkles className="w-3.5 h-3.5 text-[#4F46E5]" />
                 <span>Demonstração Interativa Sem Custo</span>
               </div>
               <h3 className="text-2xl font-bold text-white tracking-tight">
@@ -104,7 +104,7 @@ export default function DemoModal({ isOpen, onClose }) {
                     value={formData.name}
                     onChange={(e) => setFormData({ ...formData, name: e.target.value })}
                     placeholder="Ex: Dra. Mariana Costa"
-                    className="w-full bg-[#181b2a] text-sm text-white pl-10 pr-4 py-2.5 rounded-xl border border-white/10 focus:outline-none focus:border-[#C84B1F]"
+                    className="w-full bg-[#181b2a] text-sm text-white pl-10 pr-4 py-2.5 rounded-xl border border-white/10 focus:outline-none focus:border-[#4F46E5]"
                   />
                 </div>
               </div>
@@ -120,7 +120,7 @@ export default function DemoModal({ isOpen, onClose }) {
                       value={formData.phone}
                       onChange={(e) => setFormData({ ...formData, phone: formatPhoneMask(e.target.value) })}
                       placeholder="(11) 99999-9999"
-                      className="w-full bg-[#181b2a] text-sm text-white pl-10 pr-4 py-2.5 rounded-xl border border-white/10 focus:outline-none focus:border-[#C84B1F]"
+                      className="w-full bg-[#181b2a] text-sm text-white pl-10 pr-4 py-2.5 rounded-xl border border-white/10 focus:outline-none focus:border-[#4F46E5]"
                     />
                   </div>
                 </div>
@@ -135,7 +135,7 @@ export default function DemoModal({ isOpen, onClose }) {
                       value={formData.company}
                       onChange={(e) => setFormData({ ...formData, company: e.target.value })}
                       placeholder="Ex: Clínica Sanitas"
-                      className="w-full bg-[#181b2a] text-sm text-white pl-10 pr-4 py-2.5 rounded-xl border border-white/10 focus:outline-none focus:border-[#C84B1F]"
+                      className="w-full bg-[#181b2a] text-sm text-white pl-10 pr-4 py-2.5 rounded-xl border border-white/10 focus:outline-none focus:border-[#4F46E5]"
                     />
                   </div>
                 </div>
@@ -146,7 +146,7 @@ export default function DemoModal({ isOpen, onClose }) {
                 <select
                   value={formData.niche}
                   onChange={(e) => setFormData({ ...formData, niche: e.target.value })}
-                  className="w-full bg-[#181b2a] text-sm text-white px-4 py-2.5 rounded-xl border border-white/10 focus:outline-none focus:border-[#C84B1F] cursor-pointer"
+                  className="w-full bg-[#181b2a] text-sm text-white px-4 py-2.5 rounded-xl border border-white/10 focus:outline-none focus:border-[#4F46E5] cursor-pointer"
                 >
                   <option value="Clínica / Consultório Médico ou Odonto">Clínica / Consultório Médico ou Odonto</option>
                   <option value="Imobiliária / Corretores de Imóveis">Imobiliária / Corretores de Imóveis</option>
@@ -169,7 +169,7 @@ export default function DemoModal({ isOpen, onClose }) {
                     onClick={() => setFormData({ ...formData, testType: 'browser' })}
                     className={`p-3 rounded-xl border text-xs font-semibold flex items-center justify-center gap-2 transition-all cursor-pointer ${
                       formData.testType === 'browser'
-                        ? 'bg-[#C84B1F]/20 border-[#C84B1F] text-[#FF9E7D]'
+                        ? 'bg-[#4F46E5]/20 border-[#4F46E5] text-[#A5B4FC]'
                         : 'bg-[#181b2a] border-white/10 text-slate-400 hover:text-white'
                     }`}
                   >
@@ -182,7 +182,7 @@ export default function DemoModal({ isOpen, onClose }) {
                     onClick={() => setFormData({ ...formData, testType: 'phone' })}
                     className={`p-3 rounded-xl border text-xs font-semibold flex items-center justify-center gap-2 transition-all cursor-pointer ${
                       formData.testType === 'phone'
-                        ? 'bg-[#C84B1F]/20 border-[#C84B1F] text-[#FF9E7D]'
+                        ? 'bg-[#4F46E5]/20 border-[#4F46E5] text-[#A5B4FC]'
                         : 'bg-[#181b2a] border-white/10 text-slate-400 hover:text-white'
                     }`}
                   >
@@ -195,7 +195,7 @@ export default function DemoModal({ isOpen, onClose }) {
               <div className="pt-4">
                 <button
                   type="submit"
-                  className="w-full py-3.5 rounded-xl bg-gradient-to-r from-[#C84B1F] to-[#E06336] text-white font-bold text-sm shadow-xl shadow-[#C84B1F]/25 hover:brightness-110 active:scale-[0.98] transition-all flex items-center justify-center gap-2 cursor-pointer"
+                  className="w-full py-3.5 rounded-xl bg-gradient-to-r from-[#4F46E5] to-[#E06336] text-white font-bold text-sm shadow-xl shadow-[#4F46E5]/25 hover:brightness-110 active:scale-[0.98] transition-all flex items-center justify-center gap-2 cursor-pointer"
                 >
                   <Sparkles className="w-4 h-4" />
                   <span>Iniciar Demonstração ao Vivo</span>
@@ -224,9 +224,9 @@ export default function DemoModal({ isOpen, onClose }) {
             </div>
 
             {isCallingBrowser && (
-              <div className="p-4 rounded-2xl bg-[#C84B1F]/15 border border-[#C84B1F]/40 flex items-center justify-center gap-3">
-                <span className="w-2.5 h-2.5 rounded-full bg-[#C84B1F] animate-ping"></span>
-                <span className="text-xs font-semibold text-[#FF9E7D]">Reproduzindo voz neural da Vocalis...</span>
+              <div className="p-4 rounded-2xl bg-[#4F46E5]/15 border border-[#4F46E5]/40 flex items-center justify-center gap-3">
+                <span className="w-2.5 h-2.5 rounded-full bg-[#4F46E5] animate-ping"></span>
+                <span className="text-xs font-semibold text-[#A5B4FC]">Reproduzindo voz neural da Vocalis...</span>
               </div>
             )}
 

@@ -24,7 +24,7 @@ export default function WebinarsPage({ onOpenDemo, onOpenAuth, onNavigateHome })
          ======================================================== */}
       <section className="relative pt-16 pb-24 md:pt-20 md:pb-32 overflow-hidden">
         {/* Subtle Ambient Radial Glow */}
-        <div className="absolute top-0 left-1/2 -translate-x-1/2 w-full max-w-7xl h-96 bg-gradient-to-b from-[#FAF4EC]/80 via-[#FAF9F5]/40 to-transparent pointer-events-none -z-10" />
+        <div className="absolute top-0 left-1/2 -translate-x-1/2 w-full max-w-7xl h-96 bg-gradient-to-b from-[#F5F3FF]/80 via-[#FAF9F5]/40 to-transparent pointer-events-none -z-10" />
 
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
           
@@ -57,7 +57,7 @@ export default function WebinarsPage({ onOpenDemo, onOpenAuth, onNavigateHome })
                 <p className="text-xs text-[#8C8881] font-medium">
                   Deseja ser avisado assim que abrirmos a próxima turma ao vivo?
                 </p>
-                <div className="flex items-center bg-white rounded-full p-1 pl-4 border border-[#DCD8D0] shadow-sm focus-within:border-[#C84B1F] transition-all">
+                <div className="flex items-center bg-white rounded-full p-1 pl-4 border border-[#DCD8D0] shadow-sm focus-within:border-[#4F46E5] transition-all">
                   <input
                     type="email"
                     required
@@ -95,7 +95,7 @@ export default function WebinarsPage({ onOpenDemo, onOpenAuth, onNavigateHome })
             <div className="relative z-10 max-w-2xl mx-auto space-y-5">
               <h2 className="text-4xl sm:text-5xl font-normal tracking-tight text-white leading-tight">
                 Hoje alguém vai ligar.<br />
-                <span className="font-serif-title italic text-[#FF9E7D]">Deixe a Vocalis atender.</span>
+                <span className="font-serif-title italic text-[#A5B4FC]">Deixe a Vocalis atender.</span>
               </h2>
 
               <p className="text-sm text-stone-300 leading-relaxed max-w-xl mx-auto">

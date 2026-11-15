@@ -61,7 +61,7 @@ export default function CarreirasPage({ onOpenDemo, onOpenAuth, onNavigateHome }
       <section className="pt-16 pb-12 px-4 sm:px-6 lg:px-8 max-w-5xl mx-auto text-center">
         {/* Pill Badge */}
         <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-white border border-[#E7E4DC] text-xs font-medium text-[#5C5955] mb-6 shadow-2xs">
-          <span className="w-2 h-2 rounded-full bg-[#C84B1F] animate-pulse"></span>
+          <span className="w-2 h-2 rounded-full bg-[#4F46E5] animate-pulse"></span>
           <span>Carreiras na {BRAND.name}</span>
         </div>
 
@@ -180,7 +180,7 @@ export default function CarreirasPage({ onOpenDemo, onOpenAuth, onNavigateHome }
       <section className="px-4 sm:px-6 lg:px-8 max-w-5xl mx-auto pb-16">
         <div className="relative rounded-3xl bg-[#11100F] text-white p-8 sm:p-12 text-center overflow-hidden shadow-2xl">
           {/* Subtle golden ambient glow */}
-          <div className="absolute top-0 left-1/2 -translate-x-1/2 w-96 h-40 bg-[#C84B1F]/20 rounded-full blur-3xl pointer-events-none" />
+          <div className="absolute top-0 left-1/2 -translate-x-1/2 w-96 h-40 bg-[#4F46E5]/20 rounded-full blur-3xl pointer-events-none" />
 
           <div className="relative z-10 max-w-xl mx-auto">
             <h2 className="text-2xl sm:text-3xl font-bold tracking-tight mb-3">
@@ -218,7 +218,7 @@ export default function CarreirasPage({ onOpenDemo, onOpenAuth, onNavigateHome }
         <h2 className="text-3xl sm:text-4xl md:text-5xl font-extrabold text-[#1A1816] tracking-tight">
           Toda empresa tem uma voz.
         </h2>
-        <p className="text-2xl sm:text-3xl md:text-4xl font-serif italic text-[#C84B1F] tracking-tight mt-1">
+        <p className="text-2xl sm:text-3xl md:text-4xl font-serif italic text-[#4F46E5] tracking-tight mt-1">
           A sua nunca mais fica em silêncio.
         </p>
       </section>
@@ -237,10 +237,10 @@ export default function CarreirasPage({ onOpenDemo, onOpenAuth, onNavigateHome }
             {!submitted ? (
               <div>
                 <div className="flex items-center gap-2 mb-2">
-                  <div className="w-8 h-8 rounded-xl bg-[#FAF5EE] text-[#C84B1F] flex items-center justify-center">
+                  <div className="w-8 h-8 rounded-xl bg-[#EEF2FF] text-[#4F46E5] flex items-center justify-center">
                     <Briefcase className="w-4 h-4" />
                   </div>
-                  <span className="text-xs font-bold uppercase tracking-wider text-[#C84B1F]">
+                  <span className="text-xs font-bold uppercase tracking-wider text-[#4F46E5]">
                     Banco de Talentos Vocalis
                   </span>
                 </div>
@@ -263,7 +263,7 @@ export default function CarreirasPage({ onOpenDemo, onOpenAuth, onNavigateHome }
                       placeholder="Ex: Gabriel Souza"
                       value={formData.name}
                       onChange={(e) => setFormData({ ...formData, name: e.target.value })}
-                      className="w-full px-3.5 py-2.5 rounded-xl border border-[#D5D2C9] bg-white text-xs text-[#1A1816] placeholder:text-[#9A968E] outline-none focus:border-[#C84B1F]"
+                      className="w-full px-3.5 py-2.5 rounded-xl border border-[#D5D2C9] bg-white text-xs text-[#1A1816] placeholder:text-[#9A968E] outline-none focus:border-[#4F46E5]"
                     />
                   </div>
 
@@ -278,7 +278,7 @@ export default function CarreirasPage({ onOpenDemo, onOpenAuth, onNavigateHome }
                         placeholder="seu@email.com"
                         value={formData.email}
                         onChange={(e) => setFormData({ ...formData, email: e.target.value })}
-                        className="w-full px-3.5 py-2.5 rounded-xl border border-[#D5D2C9] bg-white text-xs text-[#1A1816] placeholder:text-[#9A968E] outline-none focus:border-[#C84B1F]"
+                        className="w-full px-3.5 py-2.5 rounded-xl border border-[#D5D2C9] bg-white text-xs text-[#1A1816] placeholder:text-[#9A968E] outline-none focus:border-[#4F46E5]"
                       />
                     </div>
                     <div>
@@ -290,7 +290,7 @@ export default function CarreirasPage({ onOpenDemo, onOpenAuth, onNavigateHome }
                         placeholder="(11) 99999-9999"
                         value={formData.phone}
                         onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
-                        className="w-full px-3.5 py-2.5 rounded-xl border border-[#D5D2C9] bg-white text-xs text-[#1A1816] placeholder:text-[#9A968E] outline-none focus:border-[#C84B1F]"
+                        className="w-full px-3.5 py-2.5 rounded-xl border border-[#D5D2C9] bg-white text-xs text-[#1A1816] placeholder:text-[#9A968E] outline-none focus:border-[#4F46E5]"
                       />
                     </div>
                   </div>
@@ -302,7 +302,7 @@ export default function CarreirasPage({ onOpenDemo, onOpenAuth, onNavigateHome }
                     <select
                       value={formData.roleArea}
                       onChange={(e) => setFormData({ ...formData, roleArea: e.target.value })}
-                      className="w-full px-3.5 py-2.5 rounded-xl border border-[#D5D2C9] bg-white text-xs text-[#1A1816] outline-none focus:border-[#C84B1F]"
+                      className="w-full px-3.5 py-2.5 rounded-xl border border-[#D5D2C9] bg-white text-xs text-[#1A1816] outline-none focus:border-[#4F46E5]"
                     >
                       <option value="Engenharia de Software & IA">Engenharia de Software & IA (Backend, LLMs, Áudio)</option>
                       <option value="Frontend & Design">Frontend (React, WebRTC, UX/UI)</option>
@@ -322,7 +322,7 @@ export default function CarreirasPage({ onOpenDemo, onOpenAuth, onNavigateHome }
                       placeholder="https://linkedin.com/in/seuperfil"
                       value={formData.linkedin}
                       onChange={(e) => setFormData({ ...formData, linkedin: e.target.value })}
-                      className="w-full px-3.5 py-2.5 rounded-xl border border-[#D5D2C9] bg-white text-xs text-[#1A1816] placeholder:text-[#9A968E] outline-none focus:border-[#C84B1F]"
+                      className="w-full px-3.5 py-2.5 rounded-xl border border-[#D5D2C9] bg-white text-xs text-[#1A1816] placeholder:text-[#9A968E] outline-none focus:border-[#4F46E5]"
                     />
                   </div>
 
@@ -335,7 +335,7 @@ export default function CarreirasPage({ onOpenDemo, onOpenAuth, onNavigateHome }
                       placeholder="Conte um pouco sobre suas experiências recentes..."
                       value={formData.message}
                       onChange={(e) => setFormData({ ...formData, message: e.target.value })}
-                      className="w-full px-3.5 py-2.5 rounded-xl border border-[#D5D2C9] bg-white text-xs text-[#1A1816] placeholder:text-[#9A968E] outline-none focus:border-[#C84B1F] resize-none"
+                      className="w-full px-3.5 py-2.5 rounded-xl border border-[#D5D2C9] bg-white text-xs text-[#1A1816] placeholder:text-[#9A968E] outline-none focus:border-[#4F46E5] resize-none"
                     />
                   </div>
 
@@ -350,7 +350,7 @@ export default function CarreirasPage({ onOpenDemo, onOpenAuth, onNavigateHome }
               </div>
             ) : (
               <div className="py-8 text-center space-y-4">
-                <div className="w-12 h-12 rounded-full bg-[#FAF5EE] text-[#C84B1F] flex items-center justify-center mx-auto">
+                <div className="w-12 h-12 rounded-full bg-[#EEF2FF] text-[#4F46E5] flex items-center justify-center mx-auto">
                   <CheckCircle2 className="w-6 h-6" />
                 </div>
                 <h3 className="text-lg font-bold text-[#1A1816]">

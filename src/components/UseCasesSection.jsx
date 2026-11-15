@@ -6,48 +6,48 @@ import {
 import { BRAND } from '../data/content';
 
 export default function UseCasesSection({ onOpenDemo, onOpenAuth, onNavigate }) {
-  const brandName = BRAND?.name || 'Kloel';
+  const brandName = 'Vocalis AI';
 
   const capabilities = [
     {
       id: 'recepcao',
-      title: 'Recepção',
-      desc: 'Atende, filtra e encaminha cada ligação para quem precisa recebê-la.',
+      title: 'Recepção Inteligente',
+      desc: 'Atende no primeiro toque, realiza triagem avançada e transfere ligações prioritárias para a pessoa certa.',
       icon: Headphones,
       page: 'recepcionista-virtual'
     },
     {
       id: 'agendamentos',
-      title: 'Agendamentos',
-      desc: 'Marca, remarca e confirma horários direto na sua agenda.',
+      title: 'Agendamentos em Tempo Real',
+      desc: 'Consulta horários vagos, marca, remarca e envia confirmações instantâneas pelo WhatsApp e agenda.',
       icon: Calendar,
       page: 'agendamentos'
     },
     {
       id: 'suporte',
-      title: 'Suporte ao cliente',
-      desc: 'Resolve as dúvidas de sempre e segue as suas regras nos casos especiais.',
+      title: 'Suporte & Resolução',
+      desc: 'Tira dúvidas frequentes, consulta status e segue as diretrizes da sua empresa com precisão.',
       icon: UserCheck,
       page: 'agente-suporte'
     },
     {
       id: 'pedidos',
-      title: 'Pedidos',
-      desc: 'Recebe pedidos e solicitações a qualquer hora, já no formato que a sua equipe usa.',
+      title: 'Captação & Pedidos',
+      desc: 'Recebe pedidos, qualifica o perfil do lead e salva tudo estruturado no formato que a sua equipe usa.',
       icon: ShoppingBag,
       page: 'atendedor-automatico'
     },
     {
       id: 'recados',
-      title: 'Recados e resumos',
-      desc: 'Quando você não pode atender, ela anota tudo e manda por e-mail.',
+      title: 'Recados & Resumos VIP',
+      desc: 'Grava, transcreve com IA e envia relatórios executivos no WhatsApp e e-mail da sua equipe na hora.',
       icon: FileText,
       page: 'equipe-externa'
     },
     {
       id: 'integracoes',
-      title: 'O que o seu negócio pedir',
-      desc: 'Fluxos sob medida, conectados às ferramentas que você já usa.',
+      title: 'WhatsApp & Integrações',
+      desc: 'Conexão direta com WhatsApp Web sem taxas por mensagem da Meta, além de mais de 100 CRMs.',
       icon: Sparkles,
       page: 'integracoes'
     }
@@ -69,10 +69,10 @@ export default function UseCasesSection({ onOpenDemo, onOpenAuth, onNavigate }) 
         <div className="flex flex-col md:flex-row md:items-end justify-between mb-12 sm:mb-16 gap-6">
           <div className="max-w-2xl">
             <h2 className="text-3xl sm:text-5xl font-normal text-[#1A1816] tracking-tight leading-[1.15]">
-              Feita para o <span className="font-serif-title italic text-[#C84B1F]">dia a dia</span> de quem atende.
+              Atendimento sob medida para a <span className="font-serif-title italic text-[#4F46E5]">velocidade</span> do seu mercado.
             </h2>
             <p className="mt-4 text-sm sm:text-base text-[#5C5955] leading-relaxed">
-              Do consultório à imobiliária, da oficina ao e-commerce: a {brandName} se encaixa na agenda, no CRM e no jeito de trabalhar que você já tem.
+              De clínicas e imobiliárias a escritórios e e-commerces: a Vocalis se conecta à sua agenda, alimenta seu CRM e atende 24 horas sem criar filas.
             </p>
           </div>
           
@@ -108,10 +108,10 @@ export default function UseCasesSection({ onOpenDemo, onOpenAuth, onNavigate }) 
               >
                 <div>
                   <div className="flex items-center gap-2 mb-3">
-                    <Icon className="w-4 h-4 text-[#C84B1F] shrink-0" />
-                    <h3 className="text-base sm:text-lg font-bold text-[#1A1816] flex items-center gap-1 group-hover:text-[#C84B1F] transition-colors">
+                    <Icon className="w-4 h-4 text-[#4F46E5] shrink-0" />
+                    <h3 className="text-base sm:text-lg font-bold text-[#1A1816] flex items-center gap-1 group-hover:text-[#4F46E5] transition-colors">
                       <span>{item.title}</span>
-                      <ArrowUpRight className="w-3.5 h-3.5 text-[#A6A29A] group-hover:text-[#C84B1F] group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-all" />
+                      <ArrowUpRight className="w-3.5 h-3.5 text-[#A6A29A] group-hover:text-[#4F46E5] group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-all" />
                     </h3>
                   </div>
 
@@ -121,7 +121,7 @@ export default function UseCasesSection({ onOpenDemo, onOpenAuth, onNavigate }) 
                 </div>
 
                 <div className="pt-6 mt-auto">
-                  <span className="text-[11px] font-semibold text-[#C84B1F] opacity-0 group-hover:opacity-100 transition-opacity inline-flex items-center gap-1">
+                  <span className="text-[11px] font-semibold text-[#4F46E5] opacity-0 group-hover:opacity-100 transition-opacity inline-flex items-center gap-1">
                     Ver página detalhada ➔
                   </span>
                 </div>

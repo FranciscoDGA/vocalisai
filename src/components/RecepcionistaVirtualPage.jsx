@@ -204,7 +204,7 @@ export default function RecepcionistaVirtualPage({ onOpenDemo, onOpenAuth, onNav
             <svg viewBox="0 0 240 65" className="w-full h-14 mb-1" fill="none">
               <path 
                 d="M 60 12 Q 120 18 120 55 Q 120 18 180 12" 
-                stroke="#C84B1F" 
+                stroke="#4F46E5" 
                 strokeWidth="1.5" 
                 strokeDasharray="3 3" 
                 opacity="0.45"
@@ -214,11 +214,11 @@ export default function RecepcionistaVirtualPage({ onOpenDemo, onOpenAuth, onNav
             {/* Top row pills */}
             <div className="flex items-center justify-between absolute top-0 inset-x-0">
               <div className="px-2.5 py-1 rounded-full bg-white border border-stone-200 shadow-xs text-[10px] font-semibold text-stone-700 flex items-center gap-1">
-                <Database className="w-3 h-3 text-[#C84B1F]" />
+                <Database className="w-3 h-3 text-[#4F46E5]" />
                 <span>Sistemas de CRM</span>
               </div>
               <div className="px-2.5 py-1 rounded-full bg-white border border-stone-200 shadow-xs text-[10px] font-semibold text-stone-700 flex items-center gap-1">
-                <BarChart2 className="w-3 h-3 text-[#C84B1F]" />
+                <BarChart2 className="w-3 h-3 text-[#4F46E5]" />
                 <span>Ferramentas de gestão</span>
               </div>
             </div>
@@ -226,7 +226,7 @@ export default function RecepcionistaVirtualPage({ onOpenDemo, onOpenAuth, onNav
             {/* Bottom center pill */}
             <div className="flex justify-center mt-2">
               <div className="px-3 py-1 rounded-full bg-white border border-stone-200 shadow-xs text-[10px] font-semibold text-stone-700 flex items-center gap-1">
-                <Calendar className="w-3 h-3 text-[#C84B1F]" />
+                <Calendar className="w-3 h-3 text-[#4F46E5]" />
                 <span>Agenda de compromissos</span>
               </div>
             </div>
@@ -259,7 +259,7 @@ export default function RecepcionistaVirtualPage({ onOpenDemo, onOpenAuth, onNav
          ======================================================== */}
       <section className="relative pt-12 pb-20 md:pt-16 md:pb-28 overflow-hidden">
         {/* Ambient Top Glow */}
-        <div className="absolute top-0 left-1/2 -translate-x-1/2 w-full max-w-7xl h-96 bg-gradient-to-b from-[#FAF4EC]/80 via-[#FAF9F5]/40 to-transparent pointer-events-none -z-10" />
+        <div className="absolute top-0 left-1/2 -translate-x-1/2 w-full max-w-7xl h-96 bg-gradient-to-b from-[#F5F3FF]/80 via-[#FAF9F5]/40 to-transparent pointer-events-none -z-10" />
 
         <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
           
@@ -284,7 +284,7 @@ export default function RecepcionistaVirtualPage({ onOpenDemo, onOpenAuth, onNav
 
           {/* Phone Input Box matching print */}
           <form onSubmit={handleTestCallSubmit} className="max-w-xl mx-auto mb-3">
-            <div className="flex items-center bg-white rounded-full p-1.5 pl-3 border border-[#DCD8D0] shadow-md focus-within:border-[#C84B1F] focus-within:ring-2 focus-within:ring-[#C84B1F]/15 transition-all relative">
+            <div className="flex items-center bg-white rounded-full p-1.5 pl-3 border border-[#DCD8D0] shadow-md focus-within:border-[#4F46E5] focus-within:ring-2 focus-within:ring-[#4F46E5]/15 transition-all relative">
               
               {/* Country Flag Selector (1:1 com o Kloel) */}
               <div className="relative">
@@ -358,15 +358,15 @@ export default function RecepcionistaVirtualPage({ onOpenDemo, onOpenAuth, onNav
           {/* Checklist */}
           <div className="flex flex-wrap items-center justify-center gap-6 md:gap-8 text-xs font-semibold text-[#5C5955]">
             <div className="flex items-center gap-1.5">
-              <Check className="w-4 h-4 text-[#C84B1F]" strokeWidth={2.5} />
+              <Check className="w-4 h-4 text-[#4F46E5]" strokeWidth={2.5} />
               <span>Garantia de 30 dias</span>
             </div>
             <div className="flex items-center gap-1.5">
-              <Check className="w-4 h-4 text-[#C84B1F]" strokeWidth={2.5} />
+              <Check className="w-4 h-4 text-[#4F46E5]" strokeWidth={2.5} />
               <span>Português do Brasil</span>
             </div>
             <div className="flex items-center gap-1.5">
-              <Check className="w-4 h-4 text-[#C84B1F]" strokeWidth={2.5} />
+              <Check className="w-4 h-4 text-[#4F46E5]" strokeWidth={2.5} />
               <span>No ar em minutos</span>
             </div>
           </div>
@@ -513,7 +513,7 @@ export default function RecepcionistaVirtualPage({ onOpenDemo, onOpenAuth, onNav
                   className="bg-white rounded-3xl p-7 sm:p-8 border border-[#E7E4DC] shadow-sm flex flex-col justify-between transition-all duration-300"
                 >
                   <div>
-                    <div className="w-8 h-8 rounded-full bg-[#FAF9F5] border border-[#EDE5D8] text-[#1A1816] flex items-center justify-center font-bold text-xs mb-4">
+                    <div className="w-8 h-8 rounded-full bg-[#FAF9F5] border border-[#E0E7FF] text-[#1A1816] flex items-center justify-center font-bold text-xs mb-4">
                       {c.num}
                     </div>
                     <h3 className="text-base sm:text-lg font-bold text-[#1A1816] mb-3 leading-snug">
@@ -554,7 +554,7 @@ export default function RecepcionistaVirtualPage({ onOpenDemo, onOpenAuth, onNav
             <div className="max-w-xl">
               <h2 className="text-3xl sm:text-4xl font-normal text-[#1A1816] tracking-tight leading-tight">
                 Vantagens da nossa<br />
-                <span className="font-serif-title italic text-[#C84B1F]">recepcionista virtual com IA</span>
+                <span className="font-serif-title italic text-[#4F46E5]">recepcionista virtual com IA</span>
               </h2>
             </div>
             <div className="max-w-md text-xs sm:text-sm text-[#5C5955] leading-relaxed">
@@ -654,7 +654,7 @@ export default function RecepcionistaVirtualPage({ onOpenDemo, onOpenAuth, onNav
                 >
                   <button
                     onClick={() => setFaqOpenIndex(isOpen ? -1 : i)}
-                    className="w-full flex items-center justify-between text-left py-2 font-bold text-base text-[#1A1816] hover:text-[#C84B1F] transition-colors cursor-pointer"
+                    className="w-full flex items-center justify-between text-left py-2 font-bold text-base text-[#1A1816] hover:text-[#4F46E5] transition-colors cursor-pointer"
                   >
                     <span>{item.title}</span>
                     <span className="text-stone-400 text-lg font-mono">
@@ -684,12 +684,12 @@ export default function RecepcionistaVirtualPage({ onOpenDemo, onOpenAuth, onNav
             
             <div className="relative z-10 max-w-2xl mx-auto space-y-5">
               <h2 className="text-4xl sm:text-5xl font-normal tracking-tight text-white leading-tight">
-                Hoje alguém vai ligar.<br />
-                <span className="font-serif-title italic text-[#FF9E7D]">Deixe a Vocalis atender.</span>
+                Nunca mais perca um cliente.<br />
+                <span className="font-serif-title italic text-[#A5B4FC]">A Vocalis atende no primeiro toque.</span>
               </h2>
 
               <p className="text-sm text-stone-300 leading-relaxed max-w-xl mx-auto">
-                Crie a sua assistente em poucos minutos e ouça como ela atende com calma, em português, a qualquer hora.
+                Ative a recepcionista inteligente da sua empresa em menos de 10 minutos e transforme cada ligação em agendamentos e faturamento 24/7.
               </p>
 
               <div className="pt-3">
@@ -697,7 +697,7 @@ export default function RecepcionistaVirtualPage({ onOpenDemo, onOpenAuth, onNav
                   onClick={onOpenAuth}
                   className="px-8 py-3.5 rounded-full bg-white text-[#141312] text-sm font-bold hover:bg-stone-100 transition-all shadow-xl hover:scale-105 cursor-pointer"
                 >
-                  Criar minha Vocalis
+                  Criar minha Vocalis AI
                 </button>
               </div>
             </div>

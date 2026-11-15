@@ -2,8 +2,8 @@
 
 @layer base {
   :root {
-    --font-serif: 'Newsreader', Georgia, serif;
-    --font-sans: 'Plus Jakarta Sans', 'Inter', system-ui, -apple-system, sans-serif;
+    --font-serif: 'Instrument Serif', Georgia, serif;
+    --font-sans: 'Plus Jakarta Sans', system-ui, -apple-system, sans-serif;
   }
 
   body {

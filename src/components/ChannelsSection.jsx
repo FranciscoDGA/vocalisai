@@ -16,12 +16,12 @@ export default function ChannelsSection({ onOpenDemo }) {
         
         {/* Section Header */}
         <div className="max-w-2xl mb-16">
-          <div className="inline-block text-xs font-semibold text-[#C84B1F] uppercase tracking-wider mb-3">
+          <div className="inline-block text-xs font-semibold text-[#4F46E5] uppercase tracking-wider mb-3">
             CANAIS
           </div>
           <h2 className="text-4xl sm:text-5xl font-normal text-[#1A1816] tracking-tight leading-[1.12]">
             Um atendimento.<br />
-            <span className="font-serif-title italic text-[#C84B1F]">Onde o cliente estiver.</span>
+            <span className="font-serif-title italic text-[#4F46E5]">Onde o cliente estiver.</span>
           </h2>
           <p className="mt-4 text-base sm:text-lg text-[#5C5955] leading-relaxed">
             As ligações e o WhatsApp são os canais de maior conversão da sua empresa. A Vocalis unifica o atendimento mantendo o tom da sua marca em todos eles.
@@ -40,7 +40,7 @@ export default function ChannelsSection({ onOpenDemo }) {
                 <div>
                   {/* Top card row: Icon + Badge + Arrow */}
                   <div className="flex items-center justify-between mb-6">
-                    <div className="w-12 h-12 rounded-2xl bg-[#FAF6F0] border border-[#EFE9DF] flex items-center justify-center text-[#C84B1F] group-hover:scale-105 transition-transform">
+                    <div className="w-12 h-12 rounded-2xl bg-[#FAF6F0] border border-[#EFE9DF] flex items-center justify-center text-[#4F46E5] group-hover:scale-105 transition-transform">
                       <Icon className="w-6 h-6 stroke-[1.75]" />
                     </div>
 
@@ -69,7 +69,7 @@ export default function ChannelsSection({ onOpenDemo }) {
 
                 {/* Footer detail */}
                 <div className="pt-4 border-t border-[#F0ECE3] text-xs font-medium text-[#7A756F] flex items-center gap-2">
-                  <span className="w-1.5 h-1.5 rounded-full bg-[#C84B1F]"></span>
+                  <span className="w-1.5 h-1.5 rounded-full bg-[#4F46E5]"></span>
                   <span>{channel.details}</span>
                 </div>
               </div>

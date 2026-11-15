@@ -112,7 +112,7 @@ export default function ImprensaPage({ onOpenDemo, onOpenAuth, onNavigateHome })
           Para solicitações de imprensa, entre em contato por e-mail em:{' '}
           <button
             onClick={handleCopyEmail}
-            className="font-semibold text-[#1A1816] hover:text-[#C84B1F] underline decoration-[#C84B1F]/30 hover:decoration-[#C84B1F] transition-colors inline-flex items-center gap-1 cursor-pointer"
+            className="font-semibold text-[#1A1816] hover:text-[#4F46E5] underline decoration-[#4F46E5]/30 hover:decoration-[#4F46E5] transition-colors inline-flex items-center gap-1 cursor-pointer"
             title="Clique para copiar e-mail"
           >
             <span>imprensa@vocalis.ai</span>
@@ -136,7 +136,7 @@ export default function ImprensaPage({ onOpenDemo, onOpenAuth, onNavigateHome })
             onClick={() => {
               if (onOpenDemo) onOpenDemo();
             }}
-            className="px-6 py-2.5 rounded-full bg-[#C84B1F] hover:bg-[#B04118] text-white text-xs font-semibold transition-all shadow-sm cursor-pointer"
+            className="px-6 py-2.5 rounded-full bg-[#4F46E5] hover:bg-[#B04118] text-white text-xs font-semibold transition-all shadow-sm cursor-pointer"
           >
             Solicitações de clientes
           </button>
@@ -175,14 +175,14 @@ export default function ImprensaPage({ onOpenDemo, onOpenAuth, onNavigateHome })
         <div className="flex items-center justify-center gap-3 mb-10">
           <button
             onClick={() => setIsMediaKitModalOpen(true)}
-            className="inline-flex items-center gap-1.5 px-4 py-1.5 rounded-full bg-white border border-[#E7E4DC] text-xs font-medium text-[#403E39] hover:bg-[#FAF9F5] hover:border-[#C84B1F]/40 transition-colors shadow-2xs cursor-pointer"
+            className="inline-flex items-center gap-1.5 px-4 py-1.5 rounded-full bg-white border border-[#E7E4DC] text-xs font-medium text-[#403E39] hover:bg-[#FAF9F5] hover:border-[#4F46E5]/40 transition-colors shadow-2xs cursor-pointer"
           >
             <span>Logos</span>
             <span className="text-[#8C8881]">↓</span>
           </button>
           <button
             onClick={() => setIsMediaKitModalOpen(true)}
-            className="inline-flex items-center gap-1.5 px-4 py-1.5 rounded-full bg-white border border-[#E7E4DC] text-xs font-medium text-[#403E39] hover:bg-[#FAF9F5] hover:border-[#C84B1F]/40 transition-colors shadow-2xs cursor-pointer"
+            className="inline-flex items-center gap-1.5 px-4 py-1.5 rounded-full bg-white border border-[#E7E4DC] text-xs font-medium text-[#403E39] hover:bg-[#FAF9F5] hover:border-[#4F46E5]/40 transition-colors shadow-2xs cursor-pointer"
           >
             <span>Fotos para imprensa</span>
             <span className="text-[#8C8881]">↓</span>
@@ -230,7 +230,7 @@ export default function ImprensaPage({ onOpenDemo, onOpenAuth, onNavigateHome })
               <div>
                 <button
                   onClick={() => setSelectedRelease(rel)}
-                  className="inline-flex items-center gap-1.5 text-xs font-bold text-[#1A1816] hover:text-[#C84B1F] transition-colors cursor-pointer group"
+                  className="inline-flex items-center gap-1.5 text-xs font-bold text-[#1A1816] hover:text-[#4F46E5] transition-colors cursor-pointer group"
                 >
                   <span>Ler artigo</span>
                   <ChevronRight className="w-3.5 h-3.5 group-hover:translate-x-0.5 transition-transform" />
@@ -245,7 +245,7 @@ export default function ImprensaPage({ onOpenDemo, onOpenAuth, onNavigateHome })
       <section className="px-4 sm:px-6 lg:px-8 max-w-5xl mx-auto pb-16">
         <div className="relative rounded-3xl bg-[#11100F] text-white p-8 sm:p-12 text-center overflow-hidden shadow-2xl">
           {/* Ambient Glow */}
-          <div className="absolute top-0 left-1/2 -translate-x-1/2 w-96 h-40 bg-[#C84B1F]/20 rounded-full blur-3xl pointer-events-none" />
+          <div className="absolute top-0 left-1/2 -translate-x-1/2 w-96 h-40 bg-[#4F46E5]/20 rounded-full blur-3xl pointer-events-none" />
 
           <div className="relative z-10 max-w-xl mx-auto">
             <h2 className="text-2xl sm:text-3xl font-bold tracking-tight mb-3">
@@ -288,7 +288,7 @@ export default function ImprensaPage({ onOpenDemo, onOpenAuth, onNavigateHome })
         <h2 className="text-3xl sm:text-4xl md:text-5xl font-extrabold text-[#1A1816] tracking-tight">
           Toda empresa tem uma voz.
         </h2>
-        <p className="text-2xl sm:text-3xl md:text-4xl font-serif italic text-[#C84B1F] tracking-tight mt-1">
+        <p className="text-2xl sm:text-3xl md:text-4xl font-serif italic text-[#4F46E5] tracking-tight mt-1">
           A sua nunca mais fica em silêncio.
         </p>
       </section>
@@ -307,10 +307,10 @@ export default function ImprensaPage({ onOpenDemo, onOpenAuth, onNavigateHome })
             {!pressSubmitted ? (
               <div>
                 <div className="flex items-center gap-2 mb-2">
-                  <div className="w-8 h-8 rounded-xl bg-[#FAF5EE] text-[#C84B1F] flex items-center justify-center">
+                  <div className="w-8 h-8 rounded-xl bg-[#EEF2FF] text-[#4F46E5] flex items-center justify-center">
                     <Megaphone className="w-4 h-4" />
                   </div>
-                  <span className="text-xs font-bold uppercase tracking-wider text-[#C84B1F]">
+                  <span className="text-xs font-bold uppercase tracking-wider text-[#4F46E5]">
                     Assessoria de Imprensa
                   </span>
                 </div>
@@ -333,7 +333,7 @@ export default function ImprensaPage({ onOpenDemo, onOpenAuth, onNavigateHome })
                       placeholder="Ex: Mariana Castro"
                       value={pressForm.name}
                       onChange={(e) => setPressForm({ ...pressForm, name: e.target.value })}
-                      className="w-full px-3.5 py-2.5 rounded-xl border border-[#D5D2C9] bg-white text-xs text-[#1A1816] placeholder:text-[#9A968E] outline-none focus:border-[#C84B1F]"
+                      className="w-full px-3.5 py-2.5 rounded-xl border border-[#D5D2C9] bg-white text-xs text-[#1A1816] placeholder:text-[#9A968E] outline-none focus:border-[#4F46E5]"
                     />
                   </div>
 
@@ -348,7 +348,7 @@ export default function ImprensaPage({ onOpenDemo, onOpenAuth, onNavigateHome })
                         placeholder="Ex: Exame, Valor, CNN, Podcast..."
                         value={pressForm.outlet}
                         onChange={(e) => setPressForm({ ...pressForm, outlet: e.target.value })}
-                        className="w-full px-3.5 py-2.5 rounded-xl border border-[#D5D2C9] bg-white text-xs text-[#1A1816] placeholder:text-[#9A968E] outline-none focus:border-[#C84B1F]"
+                        className="w-full px-3.5 py-2.5 rounded-xl border border-[#D5D2C9] bg-white text-xs text-[#1A1816] placeholder:text-[#9A968E] outline-none focus:border-[#4F46E5]"
                       />
                     </div>
                     <div>
@@ -361,7 +361,7 @@ export default function ImprensaPage({ onOpenDemo, onOpenAuth, onNavigateHome })
                         placeholder="jornalista@veiculo.com.br"
                         value={pressForm.email}
                         onChange={(e) => setPressForm({ ...pressForm, email: e.target.value })}
-                        className="w-full px-3.5 py-2.5 rounded-xl border border-[#D5D2C9] bg-white text-xs text-[#1A1816] placeholder:text-[#9A968E] outline-none focus:border-[#C84B1F]"
+                        className="w-full px-3.5 py-2.5 rounded-xl border border-[#D5D2C9] bg-white text-xs text-[#1A1816] placeholder:text-[#9A968E] outline-none focus:border-[#4F46E5]"
                       />
                     </div>
                   </div>
@@ -376,7 +376,7 @@ export default function ImprensaPage({ onOpenDemo, onOpenAuth, onNavigateHome })
                         placeholder="(11) 98888-8888"
                         value={pressForm.phone}
                         onChange={(e) => setPressForm({ ...pressForm, phone: e.target.value })}
-                        className="w-full px-3.5 py-2.5 rounded-xl border border-[#D5D2C9] bg-white text-xs text-[#1A1816] placeholder:text-[#9A968E] outline-none focus:border-[#C84B1F]"
+                        className="w-full px-3.5 py-2.5 rounded-xl border border-[#D5D2C9] bg-white text-xs text-[#1A1816] placeholder:text-[#9A968E] outline-none focus:border-[#4F46E5]"
                       />
                     </div>
                     <div>
@@ -388,7 +388,7 @@ export default function ImprensaPage({ onOpenDemo, onOpenAuth, onNavigateHome })
                         placeholder="Ex: Hoje até 18h, ou 2 dias"
                         value={pressForm.deadline}
                         onChange={(e) => setPressForm({ ...pressForm, deadline: e.target.value })}
-                        className="w-full px-3.5 py-2.5 rounded-xl border border-[#D5D2C9] bg-white text-xs text-[#1A1816] placeholder:text-[#9A968E] outline-none focus:border-[#C84B1F]"
+                        className="w-full px-3.5 py-2.5 rounded-xl border border-[#D5D2C9] bg-white text-xs text-[#1A1816] placeholder:text-[#9A968E] outline-none focus:border-[#4F46E5]"
                       />
                     </div>
                   </div>
@@ -403,7 +403,7 @@ export default function ImprensaPage({ onOpenDemo, onOpenAuth, onNavigateHome })
                       placeholder="Descreva o tema da reportagem, perguntas desejadas ou necessidade de entrevista..."
                       value={pressForm.topic}
                       onChange={(e) => setPressForm({ ...pressForm, topic: e.target.value })}
-                      className="w-full px-3.5 py-2.5 rounded-xl border border-[#D5D2C9] bg-white text-xs text-[#1A1816] placeholder:text-[#9A968E] outline-none focus:border-[#C84B1F] resize-none"
+                      className="w-full px-3.5 py-2.5 rounded-xl border border-[#D5D2C9] bg-white text-xs text-[#1A1816] placeholder:text-[#9A968E] outline-none focus:border-[#4F46E5] resize-none"
                     />
                   </div>
 
@@ -418,7 +418,7 @@ export default function ImprensaPage({ onOpenDemo, onOpenAuth, onNavigateHome })
               </div>
             ) : (
               <div className="py-8 text-center space-y-4">
-                <div className="w-12 h-12 rounded-full bg-[#FAF5EE] text-[#C84B1F] flex items-center justify-center mx-auto">
+                <div className="w-12 h-12 rounded-full bg-[#EEF2FF] text-[#4F46E5] flex items-center justify-center mx-auto">
                   <CheckCircle2 className="w-6 h-6" />
                 </div>
                 <h3 className="text-lg font-bold text-[#1A1816]">
@@ -451,10 +451,10 @@ export default function ImprensaPage({ onOpenDemo, onOpenAuth, onNavigateHome })
             </button>
 
             <div className="flex items-center gap-2 mb-2">
-              <div className="w-8 h-8 rounded-xl bg-[#FAF5EE] text-[#C84B1F] flex items-center justify-center">
+              <div className="w-8 h-8 rounded-xl bg-[#EEF2FF] text-[#4F46E5] flex items-center justify-center">
                 <ImageIcon className="w-4 h-4" />
               </div>
-              <span className="text-xs font-bold uppercase tracking-wider text-[#C84B1F]">
+              <span className="text-xs font-bold uppercase tracking-wider text-[#4F46E5]">
                 Kit de Marca & Mídia
               </span>
             </div>
@@ -470,7 +470,7 @@ export default function ImprensaPage({ onOpenDemo, onOpenAuth, onNavigateHome })
               {/* Asset 1: Vector Logos */}
               <div className="p-4 rounded-xl bg-[#FAF9F6] border border-[#E7E4DC] flex items-center justify-between">
                 <div className="flex items-center gap-3">
-                  <div className="w-10 h-10 rounded-lg bg-white border border-[#E7E4DC] flex items-center justify-center text-[#C84B1F] font-bold">
+                  <div className="w-10 h-10 rounded-lg bg-white border border-[#E7E4DC] flex items-center justify-center text-[#4F46E5] font-bold">
                     SVG
                   </div>
                   <div>
@@ -484,7 +484,7 @@ export default function ImprensaPage({ onOpenDemo, onOpenAuth, onNavigateHome })
                 </div>
                 <button
                   onClick={() => alert('Download do pacote de logos iniciado!')}
-                  className="px-3 py-1.5 rounded-lg bg-white border border-[#D5D2C9] text-xs font-semibold text-[#1A1816] hover:bg-[#FAF5EE] transition-colors cursor-pointer shadow-2xs"
+                  className="px-3 py-1.5 rounded-lg bg-white border border-[#D5D2C9] text-xs font-semibold text-[#1A1816] hover:bg-[#EEF2FF] transition-colors cursor-pointer shadow-2xs"
                 >
                   Baixar .ZIP
                 </button>
@@ -507,7 +507,7 @@ export default function ImprensaPage({ onOpenDemo, onOpenAuth, onNavigateHome })
                 </div>
                 <button
                   onClick={() => alert('Download do pacote de imagens iniciado!')}
-                  className="px-3 py-1.5 rounded-lg bg-white border border-[#D5D2C9] text-xs font-semibold text-[#1A1816] hover:bg-[#FAF5EE] transition-colors cursor-pointer shadow-2xs"
+                  className="px-3 py-1.5 rounded-lg bg-white border border-[#D5D2C9] text-xs font-semibold text-[#1A1816] hover:bg-[#EEF2FF] transition-colors cursor-pointer shadow-2xs"
                 >
                   Baixar .ZIP
                 </button>
@@ -515,14 +515,14 @@ export default function ImprensaPage({ onOpenDemo, onOpenAuth, onNavigateHome })
             </div>
 
             {/* Colors Guidelines */}
-            <div className="p-4 rounded-xl bg-[#FAF5EE] border border-[#E8D9C8]">
+            <div className="p-4 rounded-xl bg-[#EEF2FF] border border-[#E8D9C8]">
               <div className="text-xs font-bold text-[#1A1816] mb-2">
                 Paleta de Cores Primária
               </div>
               <div className="flex items-center gap-4 text-xs font-mono">
                 <div className="flex items-center gap-1.5">
-                  <span className="w-3.5 h-3.5 rounded-full bg-[#C84B1F] border border-black/10 inline-block" />
-                  <span>#C84B1F (Terracota)</span>
+                  <span className="w-3.5 h-3.5 rounded-full bg-[#4F46E5] border border-black/10 inline-block" />
+                  <span>#4F46E5 (Terracota)</span>
                 </div>
                 <div className="flex items-center gap-1.5">
                   <span className="w-3.5 h-3.5 rounded-full bg-[#1A1816] border border-black/10 inline-block" />
@@ -567,7 +567,7 @@ export default function ImprensaPage({ onOpenDemo, onOpenAuth, onNavigateHome })
               ))}
 
               {selectedRelease.content.quote && (
-                <blockquote className="p-4 rounded-xl bg-[#FAF5EE] border-l-4 border-[#C84B1F] text-xs sm:text-sm text-[#5C3A21] italic my-4">
+                <blockquote className="p-4 rounded-xl bg-[#EEF2FF] border-l-4 border-[#4F46E5] text-xs sm:text-sm text-[#5C3A21] italic my-4">
                   {selectedRelease.content.quote}
                   <footer className="text-[11px] font-semibold text-[#8C8881] not-italic mt-2">
                     — {selectedRelease.content.author}
@@ -583,7 +583,7 @@ export default function ImprensaPage({ onOpenDemo, onOpenAuth, onNavigateHome })
                   setSelectedRelease(null);
                   setIsPressModalOpen(true);
                 }}
-                className="font-bold text-[#C84B1F] hover:underline cursor-pointer"
+                className="font-bold text-[#4F46E5] hover:underline cursor-pointer"
               >
                 Solicitar entrevista com porta-voz &gt;
               </button>

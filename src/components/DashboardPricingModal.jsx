@@ -191,12 +191,12 @@ export default function DashboardPricingModal({ isOpen, onClose, onOpenDemo }) {
           {/* Logo */}
           <div className="flex items-center gap-2.5">
             <div className="flex items-center gap-[3px] h-5">
-              <span className="w-[3px] h-3.5 bg-[#C84B1F] rounded-full"></span>
-              <span className="w-[3px] h-5 bg-[#C84B1F] rounded-full"></span>
-              <span className="w-[3px] h-3 bg-[#C84B1F] rounded-full"></span>
+              <span className="w-[3px] h-3.5 bg-[#4F46E5] rounded-full"></span>
+              <span className="w-[3px] h-5 bg-[#4F46E5] rounded-full"></span>
+              <span className="w-[3px] h-3 bg-[#4F46E5] rounded-full"></span>
             </div>
             <span className="text-xl font-bold tracking-tight text-[#1A1816]">
-              Vocalis <span className="text-[#C84B1F]">AI</span>
+              Vocalis <span className="text-[#4F46E5]">AI</span>
             </span>
           </div>
 
@@ -263,7 +263,7 @@ export default function DashboardPricingModal({ isOpen, onClose, onOpenDemo }) {
               <p className="text-xs text-[#736F69] mt-1">{currentPlans.solo.tagline}</p>
 
               {/* 30% OFF Promo Badge */}
-              <div className="mt-6 flex items-center gap-1.5 text-[11px] font-bold text-[#C84B1F] uppercase tracking-wider">
+              <div className="mt-6 flex items-center gap-1.5 text-[11px] font-bold text-[#4F46E5] uppercase tracking-wider">
                 <Sparkles className="w-3.5 h-3.5" />
                 <span>30% A MENOS NOS 3 PRIMEIROS MESES</span>
               </div>
@@ -290,7 +290,7 @@ export default function DashboardPricingModal({ isOpen, onClose, onOpenDemo }) {
                   type="button"
                   onClick={() => setIsYearly(!isYearly)}
                   className={`w-9 h-5 rounded-full transition-colors relative p-0.5 cursor-pointer ${
-                    isYearly ? 'bg-[#C84B1F]' : 'bg-[#D0CBC0]'
+                    isYearly ? 'bg-[#4F46E5]' : 'bg-[#D0CBC0]'
                   }`}
                 >
                   <span 
@@ -340,9 +340,9 @@ export default function DashboardPricingModal({ isOpen, onClose, onOpenDemo }) {
           {/* ========================================================
               CARD 2: TEAM (Nossa Recomendação - Destaque Terracota)
              ======================================================== */}
-          <div className="bg-white rounded-2xl border-2 border-[#C84B1F] p-6 flex flex-col justify-between shadow-lg relative">
+          <div className="bg-white rounded-2xl border-2 border-[#4F46E5] p-6 flex flex-col justify-between shadow-lg relative">
             {/* Top Badge: Nossa recomendação */}
-            <div className="absolute -top-3.5 left-1/2 -translate-x-1/2 px-3.5 py-1 rounded-full bg-[#C84B1F] text-white text-[11px] font-bold shadow-sm whitespace-nowrap">
+            <div className="absolute -top-3.5 left-1/2 -translate-x-1/2 px-3.5 py-1 rounded-full bg-[#4F46E5] text-white text-[11px] font-bold shadow-sm whitespace-nowrap">
               ☆ Nossa recomendação
             </div>
 
@@ -351,7 +351,7 @@ export default function DashboardPricingModal({ isOpen, onClose, onOpenDemo }) {
               <p className="text-xs text-[#736F69] mt-1">{currentPlans.team.tagline}</p>
 
               {/* 30% OFF Promo Badge */}
-              <div className="mt-6 flex items-center gap-1.5 text-[11px] font-bold text-[#C84B1F] uppercase tracking-wider">
+              <div className="mt-6 flex items-center gap-1.5 text-[11px] font-bold text-[#4F46E5] uppercase tracking-wider">
                 <Sparkles className="w-3.5 h-3.5" />
                 <span>30% A MENOS NOS 3 PRIMEIROS MESES</span>
               </div>
@@ -378,7 +378,7 @@ export default function DashboardPricingModal({ isOpen, onClose, onOpenDemo }) {
                   type="button"
                   onClick={() => setIsYearly(!isYearly)}
                   className={`w-9 h-5 rounded-full transition-colors relative p-0.5 cursor-pointer ${
-                    isYearly ? 'bg-[#C84B1F]' : 'bg-[#D0CBC0]'
+                    isYearly ? 'bg-[#4F46E5]' : 'bg-[#D0CBC0]'
                   }`}
                 >
                   <span 
@@ -396,7 +396,7 @@ export default function DashboardPricingModal({ isOpen, onClose, onOpenDemo }) {
               {/* CTA Button */}
               <button
                 onClick={() => handleSelectPlan('Team')}
-                className="w-full mt-6 py-2.5 rounded-xl bg-[#C84B1F] hover:bg-[#B34018] text-xs font-bold text-white transition-colors shadow-md cursor-pointer"
+                className="w-full mt-6 py-2.5 rounded-xl bg-[#4F46E5] hover:bg-[#B34018] text-xs font-bold text-white transition-colors shadow-md cursor-pointer"
               >
                 Selecionar plano
               </button>
@@ -409,8 +409,8 @@ export default function DashboardPricingModal({ isOpen, onClose, onOpenDemo }) {
                 <ul className="space-y-2.5 text-xs text-[#5C5955]">
                   {currentPlans.team.features.map((f, i) => (
                     <li key={i} className="flex items-start gap-2">
-                      <div className="w-4 h-4 rounded-full border border-[#C84B1F] bg-[#C84B1F]/10 flex items-center justify-center shrink-0 mt-0.5">
-                        <Check className="w-2.5 h-2.5 text-[#C84B1F] stroke-[2.5]" />
+                      <div className="w-4 h-4 rounded-full border border-[#4F46E5] bg-[#4F46E5]/10 flex items-center justify-center shrink-0 mt-0.5">
+                        <Check className="w-2.5 h-2.5 text-[#4F46E5] stroke-[2.5]" />
                       </div>
                       <div className="leading-tight">
                         <span className="text-[#1A1816] font-medium">{f.text}</span>

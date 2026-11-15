@@ -9,12 +9,12 @@ export default function StepsSection({ onOpenDemo }) {
         
         {/* Section Header */}
         <div className="text-center max-w-2xl mx-auto mb-16">
-          <span className="inline-block text-xs font-semibold text-[#C84B1F] uppercase tracking-wider mb-3">
+          <span className="inline-block text-xs font-semibold text-[#4F46E5] uppercase tracking-wider mb-3">
             CONFIGURAÇÃO RÁPIDA
           </span>
           <h2 className="text-4xl sm:text-5xl font-normal text-[#1A1816] tracking-tight leading-[1.12]">
             Três passos.<br />
-            <span className="font-serif-title italic text-[#C84B1F]">Nenhuma linha de código.</span>
+            <span className="font-serif-title italic text-[#4F46E5]">Nenhuma linha de código.</span>
           </h2>
           <p className="mt-4 text-base sm:text-lg text-[#5C5955] leading-relaxed">
             Você não precisa de equipe de TI ou consultores caros. Em menos de 5 minutos, sua assistente está pronta para atender o primeiro cliente.
@@ -28,10 +28,10 @@ export default function StepsSection({ onOpenDemo }) {
           <div className="bg-white rounded-3xl p-8 border border-[#E7E4DC] shadow-clean shadow-card-hover flex flex-col justify-between">
             <div>
               <div className="flex items-center justify-between mb-6">
-                <span className="text-4xl font-serif-title italic font-normal text-[#C84B1F]">
+                <span className="text-4xl font-serif-title italic font-normal text-[#4F46E5]">
                   01
                 </span>
-                <span className="px-3 py-1 rounded-full text-xs font-semibold bg-[#FAF5EE] text-[#C84B1F] border border-[#EDE5D8]">
+                <span className="px-3 py-1 rounded-full text-xs font-semibold bg-[#EEF2FF] text-[#4F46E5] border border-[#E0E7FF]">
                   Personalidade
                 </span>
               </div>
@@ -47,7 +47,7 @@ export default function StepsSection({ onOpenDemo }) {
             <div className="bg-[#FAF9F5] rounded-2xl p-4 border border-[#EBE8E2] space-y-2">
               <div className="flex items-center justify-between p-2 rounded-xl bg-white border border-[#E7E4DC]">
                 <div className="flex items-center gap-2">
-                  <Mic className="w-4 h-4 text-[#C84B1F]" />
+                  <Mic className="w-4 h-4 text-[#4F46E5]" />
                   <span className="text-xs font-bold text-[#1A1816]">Clara (Acolhedora)</span>
                 </div>
                 <span className="w-2 h-2 rounded-full bg-emerald-500"></span>
@@ -65,10 +65,10 @@ export default function StepsSection({ onOpenDemo }) {
           <div className="bg-white rounded-3xl p-8 border border-[#E7E4DC] shadow-clean shadow-card-hover flex flex-col justify-between">
             <div>
               <div className="flex items-center justify-between mb-6">
-                <span className="text-4xl font-serif-title italic font-normal text-[#C84B1F]">
+                <span className="text-4xl font-serif-title italic font-normal text-[#4F46E5]">
                   02
                 </span>
-                <span className="px-3 py-1 rounded-full text-xs font-semibold bg-[#FAF5EE] text-[#C84B1F] border border-[#EDE5D8]">
+                <span className="px-3 py-1 rounded-full text-xs font-semibold bg-[#EEF2FF] text-[#4F46E5] border border-[#E0E7FF]">
                   Conhecimento
                 </span>
               </div>
@@ -83,7 +83,7 @@ export default function StepsSection({ onOpenDemo }) {
             {/* Visual Mini Mockup */}
             <div className="bg-[#FAF9F5] rounded-2xl p-4 border border-[#EBE8E2] space-y-2">
               <div className="flex items-center gap-2 text-xs font-medium text-[#1A1816] p-2 bg-white rounded-xl border border-[#E7E4DC]">
-                <Database className="w-4 h-4 text-[#C84B1F]" />
+                <Database className="w-4 h-4 text-[#4F46E5]" />
                 <span className="truncate">catalogo-servicos-2026.pdf</span>
               </div>
               <div className="flex items-center gap-2 text-xs font-medium text-[#1A1816] p-2 bg-white rounded-xl border border-[#E7E4DC]">
@@ -97,10 +97,10 @@ export default function StepsSection({ onOpenDemo }) {
           <div className="bg-white rounded-3xl p-8 border border-[#E7E4DC] shadow-clean shadow-card-hover flex flex-col justify-between">
             <div>
               <div className="flex items-center justify-between mb-6">
-                <span className="text-4xl font-serif-title italic font-normal text-[#C84B1F]">
+                <span className="text-4xl font-serif-title italic font-normal text-[#4F46E5]">
                   03
                 </span>
-                <span className="px-3 py-1 rounded-full text-xs font-semibold bg-[#FAF5EE] text-[#C84B1F] border border-[#EDE5D8]">
+                <span className="px-3 py-1 rounded-full text-xs font-semibold bg-[#EEF2FF] text-[#4F46E5] border border-[#E0E7FF]">
                   Ativação
                 </span>
               </div>
@@ -115,7 +115,7 @@ export default function StepsSection({ onOpenDemo }) {
             {/* Visual Mini Mockup */}
             <div className="bg-[#1A1816] text-white rounded-2xl p-4 shadow-md flex items-center justify-between">
               <div className="flex items-center gap-3">
-                <div className="w-8 h-8 rounded-full bg-[#C84B1F] flex items-center justify-center animate-pulse">
+                <div className="w-8 h-8 rounded-full bg-[#4F46E5] flex items-center justify-center animate-pulse">
                   <PhoneCall className="w-4 h-4 text-white" />
                 </div>
                 <div>

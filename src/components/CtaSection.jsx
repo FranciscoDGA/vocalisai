@@ -3,6 +3,7 @@ import { Phone, Sparkles, ArrowRight, ShieldCheck } from 'lucide-react';
 import { BRAND } from '../data/content';
 import TestCallModal from './TestCallModal';
 import AudioFrequencyWave from './AudioFrequencyWave';
+import BrazilFlag from './BrazilFlag';
 import { formatPhoneMask, cleanRawPhone } from '../utils/phoneUtils';
 
 export default function CtaSection({ onOpenDemo, onOpenAuth }) {
@@ -32,27 +33,27 @@ export default function CtaSection({ onOpenDemo, onOpenAuth }) {
         <div className="bg-[#141312] text-white rounded-[32px] p-8 sm:p-14 lg:p-16 relative overflow-hidden shadow-2xl border border-[#2D2A26] text-center">
           
           {/* Subtle Ambient Glow */}
-          <div className="absolute top-0 left-1/2 -translate-x-1/2 w-96 h-48 bg-[#C84B1F]/20 rounded-full blur-3xl pointer-events-none"></div>
+          <div className="absolute top-0 left-1/2 -translate-x-1/2 w-96 h-48 bg-[#4F46E5]/20 rounded-full blur-3xl pointer-events-none"></div>
 
           <div className="relative z-10 max-w-3xl mx-auto space-y-6">
-            <span className="inline-block text-xs font-bold tracking-widest text-[#FF7A59] uppercase">
+            <span className="inline-block text-xs font-bold tracking-widest text-[#A5B4FC] uppercase">
               COMECE EM MENOS DE 5 MINUTOS
             </span>
 
             <h2 className="text-4xl sm:text-6xl font-normal tracking-tight text-white leading-[1.1]">
               Seu próximo cliente vai ligar.<br />
-              <span className="font-serif-title italic text-[#FF9E7D]">Alguém vai atender.</span>
+              <span className="font-serif-title italic text-[#A5B4FC]">A Vocalis vai atender no 1º toque.</span>
             </h2>
 
             <p className="text-base sm:text-lg text-[#B5B0A8] max-w-2xl mx-auto leading-relaxed">
               Pare de perder clientes por demora no WhatsApp ou telefone ocupado. Coloque a inteligência da Vocalis para atender sua empresa 24 horas por dia com voz humana ultra-realista.
             </p>
 
-            {/* Quick Test Call Form (Pill matching Kloel) */}
+            {/* Quick Test Call Form */}
             <form onSubmit={handleTestCall} className="max-w-md mx-auto pt-4">
-              <div className="flex flex-col sm:flex-row items-stretch sm:items-center bg-[#1F1E1B] border border-[#383531] rounded-2xl sm:rounded-full p-1.5 sm:pl-4 focus-within:border-[#C84B1F] transition-all gap-2 sm:gap-0">
+              <div className="flex flex-col sm:flex-row items-stretch sm:items-center bg-[#1F1E1B] border border-[#383531] rounded-2xl sm:rounded-full p-1.5 sm:pl-4 focus-within:border-[#4F46E5] transition-all gap-2 sm:gap-0">
                 <div className="flex items-center flex-1 px-2 sm:px-0">
-                  <span className="text-base mr-2 shrink-0">🇧🇷</span>
+                  <BrazilFlag className="w-5 h-3.5 mr-2 shrink-0" />
                   <input
                     type="tel"
                     placeholder="Seu celular com DDD"
@@ -63,7 +64,7 @@ export default function CtaSection({ onOpenDemo, onOpenAuth }) {
                 </div>
                 <button
                   type="submit"
-                  className="w-full sm:w-auto px-6 py-3 rounded-xl sm:rounded-full bg-[#C84B1F] text-white text-xs sm:text-sm font-bold hover:bg-[#B34018] transition-all whitespace-nowrap flex items-center justify-center gap-2 shrink-0 shadow-md cursor-pointer"
+                  className="w-full sm:w-auto px-6 py-3 rounded-xl sm:rounded-full bg-[#4F46E5] text-white text-xs sm:text-sm font-bold hover:bg-[#B34018] transition-all whitespace-nowrap flex items-center justify-center gap-2 shrink-0 shadow-md cursor-pointer"
                 >
                   <Phone className="w-4 h-4" />
                   <span>Ouvir a Vocalis agora</span>

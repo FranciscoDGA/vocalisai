@@ -129,7 +129,7 @@ export default function AgencySubaccountsSection({ onSwitchWorkspace }) {
             <span className="px-2.5 py-0.5 rounded-full text-[10px] font-bold bg-[#1A1816] text-white uppercase tracking-wider">
               AI Agency OS Master
             </span>
-            <span className="text-[10px] text-[#C84B1F] bg-[#FAF5EE] px-2 py-0.5 rounded-full font-bold border border-[#F2E8DC]">
+            <span className="text-[10px] text-[#4F46E5] bg-[#EEF2FF] px-2 py-0.5 rounded-full font-bold border border-[#F2E8DC]">
               Multi-Tenant Subcontas
             </span>
           </div>
@@ -145,7 +145,7 @@ export default function AgencySubaccountsSection({ onSwitchWorkspace }) {
           onClick={() => setCreateModalOpen(true)}
           className="flex items-center gap-2 px-4 py-2.5 rounded-xl bg-[#1A1816] text-white text-xs font-bold hover:bg-black transition-colors shadow-sm self-start cursor-pointer"
         >
-          <Plus className="w-4 h-4 text-[#C84B1F]" />
+          <Plus className="w-4 h-4 text-[#4F46E5]" />
           <span>Cadastrar Nova Empresa</span>
         </button>
       </div>
@@ -155,7 +155,7 @@ export default function AgencySubaccountsSection({ onSwitchWorkspace }) {
         <div className="bg-white p-5 rounded-2xl border border-[#E7E4DC] shadow-xs">
           <div className="flex items-center justify-between text-[#736F69] mb-2">
             <span className="text-[11px] font-bold uppercase tracking-wider">Empresas Ativas</span>
-            <Building2 className="w-4 h-4 text-[#C84B1F]" />
+            <Building2 className="w-4 h-4 text-[#4F46E5]" />
           </div>
           <div className="text-2xl font-bold text-[#1A1816]">{subaccounts.length}</div>
           <div className="text-[11px] text-emerald-600 font-semibold mt-1">100% no ar e atendendo</div>
@@ -182,7 +182,7 @@ export default function AgencySubaccountsSection({ onSwitchWorkspace }) {
         <div className="bg-white p-5 rounded-2xl border border-[#E7E4DC] shadow-xs">
           <div className="flex items-center justify-between text-[#736F69] mb-2">
             <span className="text-[11px] font-bold uppercase tracking-wider">Assistentes Ativos</span>
-            <Layers className="w-4 h-4 text-[#C84B1F]" />
+            <Layers className="w-4 h-4 text-[#4F46E5]" />
           </div>
           <div className="text-2xl font-bold text-[#1A1816]">7 Robôs</div>
           <div className="text-[11px] text-[#736F69] mt-1">Voz + WhatsApp integrados</div>
@@ -200,7 +200,7 @@ export default function AgencySubaccountsSection({ onSwitchWorkspace }) {
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
               placeholder="Buscar por clínica, responsável ou nicho..."
-              className="w-full pl-9 pr-3 py-1.5 rounded-xl border border-[#D0CBC0] text-xs focus:outline-none focus:border-[#C84B1F]"
+              className="w-full pl-9 pr-3 py-1.5 rounded-xl border border-[#D0CBC0] text-xs focus:outline-none focus:border-[#4F46E5]"
             />
           </div>
 
@@ -240,7 +240,7 @@ export default function AgencySubaccountsSection({ onSwitchWorkspace }) {
             return (
               <div key={sub.id} className="p-4 sm:p-5 hover:bg-[#FAF9F5] transition-colors flex flex-col md:flex-row md:items-center justify-between gap-4">
                 <div className="flex items-start gap-3.5">
-                  <div className="w-10 h-10 rounded-xl bg-[#FAF5EE] border border-[#F2E8DC] text-[#C84B1F] flex items-center justify-center font-bold text-sm shrink-0">
+                  <div className="w-10 h-10 rounded-xl bg-[#EEF2FF] border border-[#F2E8DC] text-[#4F46E5] flex items-center justify-center font-bold text-sm shrink-0">
                     {sub.name.charAt(0)}
                   </div>
 
@@ -259,7 +259,7 @@ export default function AgencySubaccountsSection({ onSwitchWorkspace }) {
                     <div className="flex flex-wrap items-center gap-3 text-xs text-[#736F69] mt-1">
                       <span>{sub.responsible}</span>
                       <span>•</span>
-                      <span className="text-[#C84B1F] font-medium">{sub.segment}</span>
+                      <span className="text-[#4F46E5] font-medium">{sub.segment}</span>
                       <span>•</span>
                       <span className="font-mono text-[11px]">{sub.subdomain}</span>
                     </div>
@@ -325,7 +325,7 @@ export default function AgencySubaccountsSection({ onSwitchWorkspace }) {
             </button>
 
             <div className="mb-5">
-              <span className="text-[10px] font-bold text-[#C84B1F] uppercase tracking-wider bg-[#FAF5EE] px-2 py-0.5 rounded border border-[#F2E8DC]">
+              <span className="text-[10px] font-bold text-[#4F46E5] uppercase tracking-wider bg-[#EEF2FF] px-2 py-0.5 rounded border border-[#F2E8DC]">
                 Onboarding de Cliente
               </span>
               <h3 className="text-xl font-bold text-[#1A1816] mt-1">Nova Subconta para sua Agência</h3>
@@ -340,7 +340,7 @@ export default function AgencySubaccountsSection({ onSwitchWorkspace }) {
                   value={newClientName}
                   onChange={(e) => setNewClientName(e.target.value)}
                   placeholder="Ex: Clínica San Pietro"
-                  className="w-full px-3 py-2 rounded-xl border border-[#D0CBC0] text-xs focus:outline-none focus:border-[#C84B1F]"
+                  className="w-full px-3 py-2 rounded-xl border border-[#D0CBC0] text-xs focus:outline-none focus:border-[#4F46E5]"
                   required
                 />
               </div>
@@ -353,7 +353,7 @@ export default function AgencySubaccountsSection({ onSwitchWorkspace }) {
                     value={newResponsible}
                     onChange={(e) => setNewResponsible(e.target.value)}
                     placeholder="Ex: Dr. Roberto"
-                    className="w-full px-3 py-2 rounded-xl border border-[#D0CBC0] text-xs focus:outline-none focus:border-[#C84B1F]"
+                    className="w-full px-3 py-2 rounded-xl border border-[#D0CBC0] text-xs focus:outline-none focus:border-[#4F46E5]"
                   />
                 </div>
                 <div>
@@ -361,7 +361,7 @@ export default function AgencySubaccountsSection({ onSwitchWorkspace }) {
                   <select 
                     value={newSegment}
                     onChange={(e) => setNewSegment(e.target.value)}
-                    className="w-full px-3 py-2 rounded-xl border border-[#D0CBC0] text-xs bg-white focus:outline-none focus:border-[#C84B1F]"
+                    className="w-full px-3 py-2 rounded-xl border border-[#D0CBC0] text-xs bg-white focus:outline-none focus:border-[#4F46E5]"
                   >
                     <option value="Saúde & Odontologia">Saúde & Odontologia</option>
                     <option value="Imóveis & Locação">Imóveis & Locação</option>
@@ -379,7 +379,7 @@ export default function AgencySubaccountsSection({ onSwitchWorkspace }) {
                     value={newSubdomain}
                     onChange={(e) => setNewSubdomain(e.target.value)}
                     placeholder="clinica"
-                    className="w-full px-3 py-2 rounded-l-xl border border-[#D0CBC0] text-xs focus:outline-none focus:border-[#C84B1F]"
+                    className="w-full px-3 py-2 rounded-l-xl border border-[#D0CBC0] text-xs focus:outline-none focus:border-[#4F46E5]"
                   />
                   <span className="px-3 py-2 bg-[#FAF9F5] border border-l-0 border-[#D0CBC0] rounded-r-xl text-xs text-[#736F69] font-mono">
                     .suaagencia.com.br
@@ -392,7 +392,7 @@ export default function AgencySubaccountsSection({ onSwitchWorkspace }) {
                 <select 
                   value={newPlan}
                   onChange={(e) => setNewPlan(e.target.value)}
-                  className="w-full px-3 py-2 rounded-xl border border-[#D0CBC0] text-xs bg-white focus:outline-none focus:border-[#C84B1F]"
+                  className="w-full px-3 py-2 rounded-xl border border-[#D0CBC0] text-xs bg-white focus:outline-none focus:border-[#4F46E5]"
                 >
                   <option value="starter">Plano Starter (400 min - Margem sugerida: R$ 640/mês)</option>
                   <option value="pro">Plano Pro (800 min - Margem sugerida: R$ 980/mês)</option>
@@ -405,7 +405,7 @@ export default function AgencySubaccountsSection({ onSwitchWorkspace }) {
                   type="submit"
                   className="w-full py-3 rounded-xl bg-[#1A1816] hover:bg-black text-white text-xs font-bold transition-all shadow-md cursor-pointer flex items-center justify-center gap-2"
                 >
-                  <Sparkles className="w-4 h-4 text-[#C84B1F]" />
+                  <Sparkles className="w-4 h-4 text-[#4F46E5]" />
                   <span>Ativar Subconta Imediatamente</span>
                 </button>
               </div>
