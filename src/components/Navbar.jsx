@@ -7,6 +7,7 @@ import {
   Video, LayoutGrid, LifeBuoy, Megaphone, Check
 } from 'lucide-react';
 import { BRAND } from '../data/content';
+import BrazilFlag from './BrazilFlag';
 
 export default function Navbar({ onOpenDemo, onOpenAuth, onOpenLegal, onOpenDocs, currentPage = 'home', onNavigate, currentUser, onLogout, onOpenPresentation }) {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
@@ -434,7 +435,7 @@ export default function Navbar({ onOpenDemo, onOpenAuth, onOpenLegal, onOpenDocs
                 onClick={() => toggleDropdown('idioma')}
                 className="flex items-center gap-1.5 cursor-pointer hover:opacity-80 transition-opacity"
               >
-                <span className="text-base leading-none">🇧🇷</span>
+                <BrazilFlag className="w-5 h-3.5" />
                 <ChevronDown className="w-3 h-3 text-[#736F69]" />
               </button>
 
@@ -446,7 +447,7 @@ export default function Navbar({ onOpenDemo, onOpenAuth, onOpenLegal, onOpenDocs
                     className="w-full flex items-center justify-between px-3 py-2 rounded-xl text-xs font-medium text-[#1A1816] hover:bg-[#FAF9F5] transition-colors"
                   >
                     <span className="flex items-center gap-2.5">
-                      <span className="text-base leading-none">🇧🇷</span>
+                      <BrazilFlag className="w-4 h-3" />
                       <span>Português (BR)</span>
                     </span>
                     <Check className="w-4 h-4 text-[#C84B1F]" />

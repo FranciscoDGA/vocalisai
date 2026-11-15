@@ -5,6 +5,7 @@ import {
 import { BRAND } from '../data/content';
 import TestCallModal from './TestCallModal';
 import VoiceWaveformHeroCard from './VoiceWaveformHeroCard';
+import BrazilFlag from './BrazilFlag';
 import { formatPhoneMask, cleanRawPhone } from '../utils/phoneUtils';
 
 const ROTATING_PHRASES = [
@@ -141,18 +142,22 @@ export default function Hero({ onOpenDemo, onOpenAuth }) {
             
             {/* Input Row on mobile / inline on desktop */}
             <div className="flex items-center flex-1 px-2 sm:px-0">
-              {/* Country Flag Selector with Dropdown */}
+              {/* Country Flag Selector with Dropdown (1:1 Kloel) */}
               <div className="relative" ref={countryPickerRef}>
                 <button
                   type="button"
                   onClick={() => setCountryPickerOpen(!countryPickerOpen)}
-                  className="flex items-center gap-1 text-sm font-medium text-[#1A1816] pr-2.5 py-1 hover:opacity-80 transition-opacity shrink-0"
+                  className="flex items-center gap-1.5 text-sm font-medium text-[#1A1816] pl-1.5 pr-2 py-1 hover:opacity-80 transition-opacity shrink-0 cursor-pointer"
                 >
-                  <span className="text-base leading-none">{selectedCountry.flag}</span>
-                  <ChevronDown className="w-3.5 h-3.5 text-[#8C8881]" />
+                  {selectedCountry.code === '+55' ? (
+                    <BrazilFlag className="w-5 h-3.5" />
+                  ) : (
+                    <span className="text-base leading-none">{selectedCountry.flag}</span>
+                  )}
+                  <ChevronDown className="w-3 h-3 text-[#736F69]" />
                 </button>
 
-                {/* Country Picker Dropdown (Exact match to user's uploaded print) */}
+                {/* Country Picker Dropdown */}
                 {countryPickerOpen && (
                   <div className="absolute top-10 left-0 w-60 bg-white rounded-2xl border border-[#E7E4DC] shadow-2xl p-2 z-50 animate-fadeIn text-left space-y-0.5">
                     {countries.map((c) => (
@@ -166,7 +171,7 @@ export default function Hero({ onOpenDemo, onOpenAuth }) {
                         className="w-full flex items-center justify-between px-3 py-2 rounded-xl text-xs font-medium text-[#1A1816] hover:bg-[#FAF9F5] transition-colors"
                       >
                         <span className="flex items-center gap-2.5">
-                          <span className="text-base leading-none">{c.flag}</span>
+                          {c.code === '+55' ? <BrazilFlag className="w-4 h-3" /> : <span>{c.flag}</span>}
                           <span>{c.name}</span>
                         </span>
                         <span className="text-[11px] text-[#8C8881] font-mono">{c.code}</span>
@@ -175,8 +180,6 @@ export default function Hero({ onOpenDemo, onOpenAuth }) {
                   </div>
                 )}
               </div>
-
-              <div className="w-[1px] h-5 bg-[#EBE8E2] mx-1"></div>
 
               {/* Phone Number Input */}
               <input
