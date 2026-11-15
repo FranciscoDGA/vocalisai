@@ -18,6 +18,9 @@ import ComparisonMatrixSection from './components/ComparisonMatrixSection';
 import VoiceTestimonialsSection from './components/VoiceTestimonialsSection';
 import GuaranteeBadgeSection from './components/GuaranteeBadgeSection';
 import ExitIntentModal from './components/ExitIntentModal';
+import LivePhoneChallengeBanner from './components/LivePhoneChallengeBanner';
+import DoneForYouSection from './components/DoneForYouSection';
+import WhatsAppInstantAudioCard from './components/WhatsAppInstantAudioCard';
 import { supabase, getCurrentUser, signOutUser } from './utils/supabaseClient';
 
 // Lazy-loaded components for optimal bundle size and instant initial load
@@ -280,26 +283,34 @@ export default function App() {
               onOpenAuth={() => setAuthModalOpen(true)}
             />
 
-            {/* 2. Test Drive Auditivo em 1 Clique (3 Cenários Reais) */}
+            {/* 2. O Desafio do Telefone Aberto (Ligue agora do seu celular) */}
+            <LivePhoneChallengeBanner 
+              onOpenDemo={() => setDemoModalOpen(true)}
+            />
+
+            {/* 3. Test Drive Auditivo em 1 Clique (3 Cenários Reais) */}
             <AudioShowcaseSection 
               onOpenDemo={() => setDemoModalOpen(true)}
             />
 
-            {/* 3. Calculadora de Faturamento Perdido (Agitador de Dor) */}
+            {/* 4. Calculadora de Faturamento Perdido (Agitador de Dor) */}
             <LostRevenueCalculator 
               onOpenDemo={() => setDemoModalOpen(true)}
               onOpenAuth={() => setAuthModalOpen(true)}
             />
 
-            {/* 4. Omnichannel delivery (Telefone, WhatsApp, Webchat, E-mail IA) */}
+            {/* 5. Omnichannel delivery (Telefone, WhatsApp, Webchat, E-mail IA) */}
             <ChannelsSection 
               onOpenDemo={() => setDemoModalOpen(true)} 
             />
 
-            {/* 5. Real Call Flow Timeline (00:03 to 01:00) */}
+            {/* 6. WhatsApp com Áudio Imediato no seu celular em 3s */}
+            <WhatsAppInstantAudioCard />
+
+            {/* 7. Real Call Flow Timeline (00:03 to 01:00) */}
             <CallTimelineSection />
 
-            {/* 6. Inside the Platform (Dashboard preview com WhatsApp Web nativo) */}
+            {/* 8. Inside the Platform (Dashboard preview com WhatsApp Web nativo) */}
             <InsideDashboardSection 
               onOpenDemo={() => setDemoModalOpen(true)}
               onOpenLegal={handleOpenLegal}
@@ -307,45 +318,51 @@ export default function App() {
               onOpenDocs={handleOpenDocs}
             />
 
-            {/* 7. Tabela Comparativa Brutal: Atendente CLT vs URA vs Vocalis AI */}
+            {/* 9. Tabela Comparativa Brutal: Atendente CLT vs URA vs Vocalis AI */}
             <ComparisonMatrixSection 
               onOpenAuth={() => setAuthModalOpen(true)}
               onOpenDemo={() => setDemoModalOpen(true)}
             />
 
-            {/* 8. 3 Steps Setup (No code needed) */}
+            {/* 10. 3 Steps Setup (No code needed) */}
             <StepsSection 
               onOpenDemo={() => setDemoModalOpen(true)}
             />
 
-            {/* 9. Prova Social em Áudio Real (3 Depoimentos de Empresários em Voz) */}
+            {/* 11. Prova Social em Áudio Real (3 Depoimentos de Empresários em Voz) */}
             <VoiceTestimonialsSection />
 
-            {/* 10. Capabilities Use Cases Grid (Recepção, Agendamentos, Suporte, etc.) */}
+            {/* 12. Capabilities Use Cases Grid (Recepção, Agendamentos, Suporte, etc.) */}
             <UseCasesSection 
               onOpenDemo={() => setDemoModalOpen(true)}
               onOpenAuth={() => setAuthModalOpen(true)}
               onNavigate={handleNavigate}
             />
 
-            {/* 11. Comprehensive Integrations Grid */}
+            {/* 13. Oferta Feito Para Você em 24h (Done-For-You Onboarding) */}
+            <DoneForYouSection 
+              onOpenAuth={() => setAuthModalOpen(true)}
+              onOpenDemo={() => setDemoModalOpen(true)}
+            />
+
+            {/* 14. Comprehensive Integrations Grid */}
             <IntegrationsSection 
               onOpenDemo={() => setDemoModalOpen(true)}
             />
 
-            {/* 12. Garantia Blindada de 14 Dias (Risco Zero) */}
+            {/* 15. Garantia Blindada de 14 Dias (Risco Zero) */}
             <GuaranteeBadgeSection 
               onOpenAuth={() => setAuthModalOpen(true)}
               onOpenDemo={() => setDemoModalOpen(true)}
             />
 
-            {/* 13. Guarantees (30 Days, LGPD, You in control) */}
+            {/* 16. Guarantees (30 Days, LGPD, You in control) */}
             <GuaranteesSection />
 
-            {/* 14. FAQ Accordions */}
+            {/* 17. FAQ Accordions */}
             <FaqSection />
 
-            {/* 15. Final Conversion CTA Card & Big Quote */}
+            {/* 18. Final Conversion CTA Card & Big Quote */}
             <CtaSection 
               onOpenDemo={() => setDemoModalOpen(true)}
               onOpenAuth={() => setAuthModalOpen(true)}
