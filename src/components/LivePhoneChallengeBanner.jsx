@@ -1,16 +1,23 @@
 import React, { useState } from 'react';
-import { Phone, PhoneCall, Sparkles, ArrowRight, Radio, ShieldCheck, Zap } from 'lucide-react';
+import { PhoneCall, ShieldCheck, Zap, Sparkles, ArrowRight } from 'lucide-react';
 import { SPECIALIST_CONTACT } from '../data/content';
+import { formatPhoneMask, cleanRawPhone } from '../utils/phoneUtils';
+import BrazilFlag from './BrazilFlag';
+import TestCallModal from './TestCallModal';
 
-export default function LivePhoneChallengeBanner({ onOpenDemo }) {
-  const [copied, setCopied] = useState(false);
-  const phoneNumber = SPECIALIST_CONTACT.phoneDisplay || '(94) 98442-3948';
-  const phoneTel = `tel:+${SPECIALIST_CONTACT.phoneRaw || '5594984423948'}`;
+export default function LivePhoneChallengeBanner({ onOpenDemo, onOpenAuth }) {
+  const [phoneInput, setPhoneInput] = useState('');
+  const [testModalOpen, setTestModalOpen] = useState(false);
 
-  const handleCopy = () => {
-    navigator.clipboard?.writeText(SPECIALIST_CONTACT.phoneRaw || '5594984423948');
-    setCopied(true);
-    setTimeout(() => setCopied(false), 2000);
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    const digits = cleanRawPhone(phoneInput);
+    if (!digits || digits.length < 10) {
+      setPhoneInput('(11) 98765-4321');
+    } else {
+      setPhoneInput(formatPhoneMask(digits));
+    }
+    setTestModalOpen(true);
   };
 
   return (
@@ -27,7 +34,7 @@ export default function LivePhoneChallengeBanner({ onOpenDemo }) {
           <div className="relative z-10 flex flex-col lg:flex-row items-center justify-between gap-8 text-center lg:text-left">
             
             {/* Left Content */}
-            <div className="max-w-2xl space-y-4">
+            <div className="max-w-xl space-y-4">
               
               {/* Live Status Pill */}
               <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-emerald-500/15 border border-emerald-400/30 text-emerald-300 text-xs font-bold uppercase tracking-wider">
@@ -40,11 +47,11 @@ export default function LivePhoneChallengeBanner({ onOpenDemo }) {
 
               <h2 className="text-3xl sm:text-4xl lg:text-5xl font-normal text-white tracking-tight leading-tight">
                 Duvida que parece uma pessoa real?{' '}
-                <span className="font-serif-title italic text-[#A5B4FC]">Ligue agora do seu celular.</span>
+                <span className="font-serif-title italic text-[#A5B4FC]">Receba uma ligação agora.</span>
               </h2>
 
               <p className="text-sm sm:text-base text-stone-300 leading-relaxed">
-                Pegue seu celular neste exato momento e disque para a nossa linha direta. <strong>Interrompa no meio da frase, faça perguntas difíceis e tente pegar a Vocalis no pulo.</strong> Veja se você ou seus clientes conseguem notar que é uma inteligência artificial.
+                Digite seu celular ao lado e <strong>atenda nossa inteligência artificial em segundos</strong>. Interrompa no meio da frase, faça perguntas difíceis e tente pegar a Roberta no pulo. Veja você mesmo se seus clientes conseguiriam notar a diferença.
               </p>
 
               {/* Trust Badges */}
@@ -55,45 +62,76 @@ export default function LivePhoneChallengeBanner({ onOpenDemo }) {
                 </span>
                 <span className="flex items-center gap-1.5">
                   <ShieldCheck className="w-4 h-4 text-emerald-400" />
-                  <span>Chamada sem custo adicional</span>
+                  <span>Chamada 100% gratuita</span>
+                </span>
+                <span className="flex items-center gap-1.5">
+                  <Sparkles className="w-4 h-4 text-indigo-400" />
+                  <span>Sem cadastro prévio</span>
                 </span>
               </div>
 
             </div>
 
-            {/* Right Phone Action Card */}
-            <div className="bg-white/5 border border-white/10 rounded-3xl p-6 sm:p-8 backdrop-blur-md text-center shrink-0 w-full lg:w-auto max-w-md space-y-5">
+            {/* Right Action Card (Lead Capture Form - High Conversion) */}
+            <div className="bg-white/5 border border-white/10 rounded-3xl p-6 sm:p-8 backdrop-blur-md text-left shrink-0 w-full lg:w-[420px] space-y-4 shadow-2xl">
               
-              <span className="text-xs font-bold uppercase tracking-wider text-stone-400 block">
-                Disque agora mesmo para:
-              </span>
-
-              {/* Big Phone Number Display */}
-              <div className="text-3xl sm:text-4xl font-extrabold text-white font-mono tracking-tight bg-white/5 py-3 px-4 rounded-2xl border border-white/10 shadow-inner">
-                {phoneNumber}
+              <div className="flex items-center justify-between border-b border-white/10 pb-3">
+                <span className="text-xs font-bold uppercase tracking-wider text-emerald-400 flex items-center gap-1.5">
+                  <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
+                  Demonstração Imediata
+                </span>
+                <span className="text-[11px] text-stone-400 font-mono">Disponível 24/7</span>
               </div>
 
-              {/* Buttons Row */}
-              <div className="flex flex-col sm:flex-row gap-3">
-                <a
-                  href={phoneTel}
-                  className="flex-1 py-3.5 px-6 rounded-full bg-emerald-500 hover:bg-emerald-600 text-white font-bold text-sm shadow-lg shadow-emerald-500/30 transition-all hover:scale-105 flex items-center justify-center gap-2 cursor-pointer"
-                >
-                  <PhoneCall className="w-4 h-4 animate-bounce" />
-                  <span>Ligar do Celular Agora</span>
-                </a>
+              <div className="space-y-1">
+                <h3 className="text-base sm:text-lg font-semibold text-white">
+                  Coloque seu número e atenda em segundos:
+                </h3>
+                <p className="text-xs text-stone-300 leading-relaxed">
+                  A Roberta ligará agora para fazer uma demonstração personalizada e tirar todas as suas dúvidas.
+                </p>
+              </div>
+
+              {/* Form Input + Button */}
+              <form onSubmit={handleSubmit} className="space-y-3 pt-1">
+                <div className="flex items-center bg-white/10 rounded-2xl p-1.5 border border-white/15 focus-within:border-emerald-400 focus-within:ring-2 focus-within:ring-emerald-400/20 transition-all">
+                  <div className="flex items-center gap-1.5 px-3 py-1.5 text-xs font-medium text-white border-r border-white/10 shrink-0">
+                    <BrazilFlag className="w-4 h-3" />
+                    <span className="font-mono text-stone-200">+55</span>
+                  </div>
+                  <input
+                    type="tel"
+                    value={phoneInput}
+                    onChange={(e) => setPhoneInput(formatPhoneMask(e.target.value))}
+                    placeholder="(DDD) 99999-9999"
+                    className="flex-1 px-3 py-2 bg-transparent text-white placeholder-stone-400 text-sm focus:outline-none font-medium"
+                  />
+                </div>
 
                 <button
-                  onClick={handleCopy}
-                  className="py-3.5 px-5 rounded-full bg-white/10 hover:bg-white/20 text-white font-semibold text-xs transition-colors cursor-pointer border border-white/10"
+                  type="submit"
+                  className="w-full py-3.5 px-6 rounded-2xl bg-emerald-500 hover:bg-emerald-600 text-white font-bold text-sm shadow-lg shadow-emerald-500/25 transition-all hover:scale-[1.02] active:scale-[0.99] flex items-center justify-center gap-2 cursor-pointer"
                 >
-                  {copied ? 'Copiado!' : 'Copiar'}
+                  <PhoneCall className="w-4 h-4 animate-bounce" />
+                  <span>Receber Ligação de Teste Agora</span>
                 </button>
-              </div>
+              </form>
 
-              <span className="text-[11px] text-stone-400 block">
-                Disponível 24 horas por dia, 7 dias por semana.
-              </span>
+              {/* Subtext: Specialist WhatsApp Link for Closers */}
+              <div className="pt-3 border-t border-white/10 flex flex-col gap-1.5 text-left">
+                <span className="text-[11px] text-stone-400">
+                  ⚡ Já quer contratar ou prefere conversar com um humano?
+                </span>
+                <a
+                  href={SPECIALIST_CONTACT.getWhatsAppUrl('Olá Francisco! Vim pelo site da Vocalis AI e gostaria de agendar uma reunião sobre atendimento com inteligência artificial para minha empresa.')}
+                  target="_blank"
+                  rel="noreferrer"
+                  className="text-xs text-indigo-300 hover:text-white font-semibold inline-flex items-center gap-1.5 transition-colors group cursor-pointer"
+                >
+                  <span>Chamar Francisco no WhatsApp: {SPECIALIST_CONTACT.phoneDisplay}</span>
+                  <ArrowRight className="w-3.5 h-3.5 group-hover:translate-x-0.5 transition-transform" />
+                </a>
+              </div>
 
             </div>
 
@@ -102,6 +140,15 @@ export default function LivePhoneChallengeBanner({ onOpenDemo }) {
         </div>
 
       </div>
+
+      {/* Real-time Interactive Test Call Modal */}
+      <TestCallModal
+        isOpen={testModalOpen}
+        phoneNumber={phoneInput || '(11) 98765-4321'}
+        countryCode="+55"
+        onClose={() => setTestModalOpen(false)}
+        onOpenAuth={onOpenAuth}
+      />
     </section>
   );
 }

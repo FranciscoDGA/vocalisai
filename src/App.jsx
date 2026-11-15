@@ -18,7 +18,6 @@ import ComparisonMatrixSection from './components/ComparisonMatrixSection';
 import VoiceTestimonialsSection from './components/VoiceTestimonialsSection';
 import GuaranteeBadgeSection from './components/GuaranteeBadgeSection';
 import ExitIntentModal from './components/ExitIntentModal';
-import LivePhoneChallengeBanner from './components/LivePhoneChallengeBanner';
 import DoneForYouSection from './components/DoneForYouSection';
 import WhatsAppInstantAudioCard from './components/WhatsAppInstantAudioCard';
 import { supabase, getCurrentUser, signOutUser } from './utils/supabaseClient';
@@ -283,12 +282,7 @@ export default function App() {
               onOpenAuth={() => setAuthModalOpen(true)}
             />
 
-            {/* 2. O Desafio do Telefone Aberto (Ligue agora do seu celular) */}
-            <LivePhoneChallengeBanner 
-              onOpenDemo={() => setDemoModalOpen(true)}
-            />
-
-            {/* 3. Test Drive Auditivo em 1 Clique (3 Cenários Reais) */}
+            {/* 2. Test Drive Auditivo em 1 Clique (3 Cenários Reais) */}
             <AudioShowcaseSection 
               onOpenDemo={() => setDemoModalOpen(true)}
             />
