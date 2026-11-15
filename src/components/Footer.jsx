@@ -5,8 +5,8 @@ import VocalisLogo from './VocalisLogo';
 
 export default function Footer({ onOpenDocs, onOpenDemo, onNavigate }) {
   return (
-    <footer className="bg-white border-t border-[#EBE8E2] pt-16 pb-12 text-[#5C5955] text-xs font-sans">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <footer className="bg-white border-t border-[#EBE8E2] pt-16 pb-12 text-[#5C5955] text-xs font-sans overflow-hidden w-full max-w-full">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 w-full max-w-full min-w-0">
         
         {/* Top 4 Columns */}
         <div className="grid grid-cols-1 md:grid-cols-5 gap-10 pb-12 border-b border-[#EBE8E2]">

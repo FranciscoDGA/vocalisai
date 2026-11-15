@@ -4,8 +4,8 @@ import { THREE_STEPS } from '../data/content';
 
 export default function StepsSection({ onOpenDemo }) {
   return (
-    <section id="como-funciona" className="py-24 bg-[#FAF9F5] border-t border-[#EBE8E2]">
-      <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+    <section id="como-funciona" className="py-16 sm:py-24 bg-[#FAF9F5] border-t border-[#EBE8E2] overflow-hidden w-full max-w-full">
+      <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 w-full max-w-full min-w-0">
         
         {/* Section Header */}
         <div className="text-center max-w-2xl mx-auto mb-16">

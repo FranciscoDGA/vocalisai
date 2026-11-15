@@ -68,7 +68,7 @@ export default function NichesSection({ onOpenDemo }) {
   };
 
   return (
-    <section id="nichos" className="py-24 relative bg-[#090a10] border-t border-b border-white/5">
+    <section id="nichos" className="py-24 relative bg-[#090a10] border-t border-b border-white/5 overflow-hidden w-full max-w-full">
       
       {/* Background illumination */}
       <div className="absolute top-1/2 right-10 w-[500px] h-[500px] bg-orange-600/10 blur-[130px] pointer-events-none rounded-full"></div>

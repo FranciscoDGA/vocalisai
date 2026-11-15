@@ -26,11 +26,11 @@ export default function CtaSection({ onOpenDemo, onOpenAuth }) {
   };
 
   return (
-    <section className="py-24 bg-[#FAF9F5] border-t border-[#EBE8E2]">
-      <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+    <section className="py-16 sm:py-24 bg-[#FAF9F5] border-t border-[#EBE8E2] overflow-hidden w-full max-w-full">
+      <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 w-full max-w-full min-w-0">
         
         {/* Big Onyx Black Hero Card */}
-        <div className="bg-[#141312] text-white rounded-[32px] p-8 sm:p-14 lg:p-16 relative overflow-hidden shadow-2xl border border-[#2D2A26] text-center">
+        <div className="bg-[#141312] text-white rounded-[32px] p-6 sm:p-14 lg:p-16 relative overflow-hidden shadow-2xl border border-[#2D2A26] text-center w-full max-w-full">
           
           {/* Subtle Ambient Glow */}
           <div className="absolute top-0 left-1/2 -translate-x-1/2 w-96 h-48 bg-[#4F46E5]/20 rounded-full blur-3xl pointer-events-none"></div>
@@ -40,33 +40,33 @@ export default function CtaSection({ onOpenDemo, onOpenAuth }) {
               COMECE EM MENOS DE 5 MINUTOS
             </span>
 
-            <h2 className="text-4xl sm:text-6xl font-normal tracking-tight text-white leading-[1.1]">
+            <h2 className="text-3xl sm:text-6xl font-normal tracking-tight text-white leading-[1.1] break-words">
               Seu próximo cliente vai ligar.<br />
               <span className="font-serif-title italic text-[#A5B4FC]">A Vocalis vai atender no 1º toque.</span>
             </h2>
 
-            <p className="text-base sm:text-lg text-[#B5B0A8] max-w-2xl mx-auto leading-relaxed">
+            <p className="text-sm sm:text-lg text-[#B5B0A8] max-w-2xl mx-auto leading-relaxed">
               Pare de perder clientes por demora no WhatsApp ou telefone ocupado. Coloque a inteligência da Vocalis para atender sua empresa 24 horas por dia com voz humana ultra-realista.
             </p>
 
             {/* Quick Test Call Form */}
-            <form onSubmit={handleTestCall} className="max-w-md mx-auto pt-4">
-              <div className="flex flex-col sm:flex-row items-stretch sm:items-center bg-[#1F1E1B] border border-[#383531] rounded-2xl sm:rounded-full p-1.5 sm:pl-4 focus-within:border-[#4F46E5] transition-all gap-2 sm:gap-0">
-                <div className="flex items-center flex-1 px-2 sm:px-0">
+            <form onSubmit={handleTestCall} className="max-w-md mx-auto pt-4 w-full px-1 sm:px-0">
+              <div className="flex flex-col sm:flex-row items-stretch sm:items-center bg-[#1F1E1B] border border-[#383531] rounded-2xl sm:rounded-full p-1.5 sm:pl-4 focus-within:border-[#4F46E5] transition-all gap-2 sm:gap-0 w-full">
+                <div className="flex items-center flex-1 px-2 sm:px-0 min-w-0">
                   <BrazilFlag className="w-5 h-3.5 mr-2 shrink-0" />
                   <input
                     type="tel"
                     placeholder="Seu celular com DDD"
                     value={phoneNumber}
                     onChange={handlePhoneChange}
-                    className="w-full bg-transparent text-white text-sm placeholder-[#736F69] focus:outline-none py-1.5 sm:py-0"
+                    className="w-full min-w-0 bg-transparent text-white text-sm placeholder-[#736F69] focus:outline-none py-1.5 sm:py-0"
                   />
                 </div>
                 <button
                   type="submit"
-                  className="w-full sm:w-auto px-6 py-3 rounded-xl sm:rounded-full bg-[#4F46E5] text-white text-xs sm:text-sm font-bold hover:bg-[#B34018] transition-all whitespace-nowrap flex items-center justify-center gap-2 shrink-0 shadow-md cursor-pointer"
+                  className="w-full sm:w-auto px-6 py-3 rounded-xl sm:rounded-full bg-[#4F46E5] text-white text-xs sm:text-sm font-bold hover:bg-[#4338CA] transition-all whitespace-nowrap flex items-center justify-center gap-2 shrink-0 shadow-md cursor-pointer"
                 >
-                  <Phone className="w-4 h-4" />
+                  <Phone className="w-4 h-4 text-[#A5B4FC]" />
                   <span>Ouvir a Vocalis agora</span>
                 </button>
               </div>

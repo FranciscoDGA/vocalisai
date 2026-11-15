@@ -55,11 +55,11 @@ const COMPARISON_ROWS = [
 
 export default function ComparisonMatrixSection({ onOpenAuth, onOpenDemo }) {
   return (
-    <section className="py-24 bg-white border-y border-[#EBE8E2] font-sans">
-      <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+    <section className="py-16 sm:py-24 bg-white border-y border-[#EBE8E2] font-sans overflow-hidden w-full max-w-full">
+      <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 w-full max-w-full min-w-0">
         
         {/* Section Header */}
-        <div className="text-center max-w-3xl mx-auto mb-16">
+        <div className="text-center max-w-3xl mx-auto mb-12 sm:mb-16">
           <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-indigo-50 border border-indigo-200 text-[#4F46E5] text-xs font-semibold uppercase tracking-wider mb-4">
             <Sparkles className="w-3.5 h-3.5" />
             <span>COMPARAÇÃO DIRETA</span>
@@ -69,23 +69,29 @@ export default function ComparisonMatrixSection({ onOpenAuth, onOpenDemo }) {
             Por que contratar mais um atendente{' '}
             <span className="font-serif-title italic text-[#4F46E5]">é o jeito mais caro</span> de atender?
           </h2>
-          <p className="mt-4 text-base text-[#5C5955] max-w-2xl mx-auto">
+          <p className="mt-4 text-sm sm:text-base text-[#5C5955] max-w-2xl mx-auto">
             Veja a comparação real entre contratar uma equipe tradicional, usar robôs antiquados de URA ou colocar a inteligência da Vocalis AI para trabalhar.
           </p>
         </div>
 
+        {/* Mobile Swipe Hint */}
+        <p className="sm:hidden text-[11px] text-[#8C8881] text-center mb-3 flex items-center justify-center gap-1.5 font-medium">
+          <span>👉</span>
+          <span>Deslize a tabela para o lado para ver todos os critérios</span>
+        </p>
+
         {/* Table Container */}
-        <div className="overflow-x-auto rounded-3xl border border-[#E7E4DC] shadow-sm bg-[#FAF9F5]">
-          <table className="w-full text-left border-collapse min-w-[680px]">
+        <div className="w-full max-w-full overflow-x-auto rounded-3xl border border-[#E7E4DC] shadow-sm bg-[#FAF9F5]">
+          <table className="w-full text-left border-collapse min-w-[640px]">
             <thead>
               <tr className="border-b border-[#E7E4DC] bg-white">
-                <th className="p-5 sm:p-6 text-sm font-bold text-[#1A1816] w-1/4">Critério</th>
-                <th className="p-5 sm:p-6 text-sm font-semibold text-[#736F69] w-1/4">Atendente CLT</th>
-                <th className="p-5 sm:p-6 text-sm font-semibold text-[#736F69] w-1/4">URA Antiga ("Digite 1")</th>
-                <th className="p-5 sm:p-6 text-sm font-bold text-[#4F46E5] bg-indigo-50/70 border-x border-indigo-200 w-1/4 rounded-t-2xl">
+                <th className="p-4 sm:p-6 text-xs sm:text-sm font-bold text-[#1A1816] w-1/4">Critério</th>
+                <th className="p-4 sm:p-6 text-xs sm:text-sm font-semibold text-[#736F69] w-1/4">Atendente CLT</th>
+                <th className="p-4 sm:p-6 text-xs sm:text-sm font-semibold text-[#736F69] w-1/4">URA Antiga ("Digite 1")</th>
+                <th className="p-4 sm:p-6 text-xs sm:text-sm font-bold text-[#4F46E5] bg-indigo-50/70 border-x border-indigo-200 w-1/4 rounded-t-2xl">
                   <div className="flex items-center gap-1.5">
                     <span>Vocalis AI</span>
-                    <span className="px-2 py-0.5 rounded text-[10px] font-bold bg-[#4F46E5] text-white uppercase">Vencedor</span>
+                    <span className="px-1.5 sm:px-2 py-0.5 rounded text-[9px] sm:text-[10px] font-bold bg-[#4F46E5] text-white uppercase">Vencedor</span>
                   </div>
                 </th>
               </tr>
@@ -93,18 +99,18 @@ export default function ComparisonMatrixSection({ onOpenAuth, onOpenDemo }) {
             <tbody className="divide-y divide-[#E7E4DC] text-xs sm:text-sm">
               {COMPARISON_ROWS.map((row, idx) => (
                 <tr key={idx} className="hover:bg-white/80 transition-colors">
-                  <td className="p-4 sm:p-5 font-bold text-[#1A1816]">
+                  <td className="p-3.5 sm:p-5 font-bold text-[#1A1816]">
                     {row.feature}
                   </td>
-                  <td className="p-4 sm:p-5 text-[#736F69] flex-items-center">
+                  <td className="p-3.5 sm:p-5 text-[#736F69]">
                     <span className="inline-block mr-1.5 text-rose-500 font-bold">✕</span>
                     <span>{row.clt}</span>
                   </td>
-                  <td className="p-4 sm:p-5 text-[#736F69]">
+                  <td className="p-3.5 sm:p-5 text-[#736F69]">
                     <span className="inline-block mr-1.5 text-rose-500 font-bold">✕</span>
                     <span>{row.ura}</span>
                   </td>
-                  <td className="p-4 sm:p-5 font-semibold text-[#1A1816] bg-indigo-50/50 border-x border-indigo-200">
+                  <td className="p-3.5 sm:p-5 font-semibold text-[#1A1816] bg-indigo-50/50 border-x border-indigo-200">
                     <span className="inline-block mr-1.5 text-emerald-600 font-bold">✓</span>
                     <span>{row.vocalis}</span>
                   </td>

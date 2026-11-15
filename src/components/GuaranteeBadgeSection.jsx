@@ -3,8 +3,8 @@ import { ShieldCheck, ArrowRight, RotateCcw, Lock } from 'lucide-react';
 
 export default function GuaranteeBadgeSection({ onOpenAuth, onOpenDemo }) {
   return (
-    <section className="py-20 bg-white border-y border-[#EBE8E2] font-sans">
-      <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+    <section className="py-16 sm:py-20 bg-white border-y border-[#EBE8E2] font-sans overflow-hidden w-full max-w-full">
+      <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 w-full max-w-full min-w-0">
         <div className="bg-[#FAF9F5] rounded-3xl p-8 sm:p-12 border-2 border-indigo-200/90 shadow-clean flex flex-col md:flex-row items-center gap-8 text-center md:text-left">
           
           {/* Shield Badge Icon */}

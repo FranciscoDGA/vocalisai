@@ -30,8 +30,8 @@ export default function WhatsAppInstantAudioCard() {
   );
 
   return (
-    <section className="py-20 bg-white border-b border-[#EBE8E2] font-sans">
-      <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
+    <section className="py-16 sm:py-20 bg-white border-b border-[#EBE8E2] font-sans overflow-hidden w-full max-w-full">
+      <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 w-full max-w-full min-w-0">
         
         {/* WhatsApp Card Box */}
         <div className="bg-[#FAF9F5] rounded-3xl p-6 sm:p-12 border-2 border-emerald-500/30 shadow-lg flex flex-col lg:flex-row items-center justify-between gap-10">

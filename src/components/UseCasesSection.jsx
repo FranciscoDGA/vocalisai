@@ -62,8 +62,8 @@ export default function UseCasesSection({ onOpenDemo, onOpenAuth, onNavigate }) 
   };
 
   return (
-    <section id="casos-de-uso" className="py-20 sm:py-28 bg-[#FAF9F5] border-t border-[#EBE8E2]">
-      <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+    <section id="casos-de-uso" className="py-16 sm:py-28 bg-[#FAF9F5] border-t border-[#EBE8E2] overflow-hidden w-full max-w-full">
+      <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 w-full max-w-full min-w-0">
         
         {/* Section Header (1:1 com o Kloel) */}
         <div className="flex flex-col md:flex-row md:items-end justify-between mb-12 sm:mb-16 gap-6">

@@ -116,7 +116,7 @@ export default function App() {
   };
 
   return (
-    <div className="min-h-screen bg-[#FAF9F5] text-[#1A1816] flex flex-col font-sans selection:bg-[#4F46E5] selection:text-white">
+    <div className="min-h-screen bg-[#FAF9F5] text-[#1A1816] flex flex-col font-sans selection:bg-[#4F46E5] selection:text-white w-full max-w-full overflow-x-hidden">
       {/* Top Navbar (oculto no Dashboard e na Central de Ajuda para ser 1:1 com o Kloel) */}
       {currentPage !== 'central-ajuda' && currentPage !== 'dashboard' && (
         <Navbar 
@@ -135,7 +135,7 @@ export default function App() {
       {/* Main Page Stream with Suspense for lazy routes */}
       <Suspense fallback={<PageFallback />}>
         {currentPage === 'dashboard' ? (
-          <main className="flex-1 animate-fadeIn">
+          <main className="flex-1 w-full max-w-full overflow-x-hidden min-w-0 animate-fadeIn">
             <InsideDashboardSection 
               isStandalone={true}
               currentUser={currentUser}
@@ -148,7 +148,7 @@ export default function App() {
             />
           </main>
         ) : currentPage === 'parceiros' ? (
-          <main className="flex-1">
+          <main className="flex-1 w-full max-w-full overflow-x-hidden min-w-0">
             <ParceirosPage 
               onOpenDemo={() => setDemoModalOpen(true)}
               onOpenAuth={() => setAuthModalOpen(true)}
@@ -156,7 +156,7 @@ export default function App() {
             />
           </main>
         ) : currentPage === 'whatsapp' ? (
-          <main className="flex-1">
+          <main className="flex-1 w-full max-w-full overflow-x-hidden min-w-0">
             <WhatsAppPage 
               onOpenDemo={() => setDemoModalOpen(true)}
               onOpenAuth={() => setAuthModalOpen(true)}
@@ -164,7 +164,7 @@ export default function App() {
             />
           </main>
         ) : currentPage === 'webchat' ? (
-          <main className="flex-1">
+          <main className="flex-1 w-full max-w-full overflow-x-hidden min-w-0">
             <WebchatPage 
               onOpenDemo={() => setDemoModalOpen(true)}
               onOpenAuth={() => setAuthModalOpen(true)}
@@ -172,7 +172,7 @@ export default function App() {
             />
           </main>
         ) : currentPage === 'agente-suporte' ? (
-          <main className="flex-1">
+          <main className="flex-1 w-full max-w-full overflow-x-hidden min-w-0">
             <AgenteSuportePage 
               onOpenDemo={() => setDemoModalOpen(true)}
               onOpenAuth={() => setAuthModalOpen(true)}
@@ -180,7 +180,7 @@ export default function App() {
             />
           </main>
         ) : currentPage === 'agendamentos' ? (
-          <main className="flex-1">
+          <main className="flex-1 w-full max-w-full overflow-x-hidden min-w-0">
             <AgendamentosPage 
               onOpenDemo={() => setDemoModalOpen(true)}
               onOpenAuth={() => setAuthModalOpen(true)}
@@ -188,7 +188,7 @@ export default function App() {
             />
           </main>
         ) : currentPage === 'recepcionista-virtual' ? (
-          <main className="flex-1">
+          <main className="flex-1 w-full max-w-full overflow-x-hidden min-w-0">
             <RecepcionistaVirtualPage 
               onOpenDemo={() => setDemoModalOpen(true)}
               onOpenAuth={() => setAuthModalOpen(true)}
@@ -196,7 +196,7 @@ export default function App() {
             />
           </main>
         ) : currentPage === 'atendedor-automatico' ? (
-          <main className="flex-1">
+          <main className="flex-1 w-full max-w-full overflow-x-hidden min-w-0">
             <AtendedorAutomaticoPage 
               onOpenDemo={() => setDemoModalOpen(true)}
               onOpenAuth={() => setAuthModalOpen(true)}
@@ -204,7 +204,7 @@ export default function App() {
             />
           </main>
         ) : currentPage === 'equipe-externa' ? (
-          <main className="flex-1">
+          <main className="flex-1 w-full max-w-full overflow-x-hidden min-w-0">
             <EquipeExternaPage 
               onOpenDemo={() => setDemoModalOpen(true)}
               onOpenAuth={() => setAuthModalOpen(true)}
@@ -212,7 +212,7 @@ export default function App() {
             />
           </main>
         ) : currentPage === 'webinars' ? (
-          <main className="flex-1">
+          <main className="flex-1 w-full max-w-full overflow-x-hidden min-w-0">
             <WebinarsPage 
               onOpenDemo={() => setDemoModalOpen(true)}
               onOpenAuth={() => setAuthModalOpen(true)}
@@ -220,7 +220,7 @@ export default function App() {
             />
           </main>
         ) : currentPage === 'integracoes' ? (
-          <main className="flex-1">
+          <main className="flex-1 w-full max-w-full overflow-x-hidden min-w-0">
             <IntegracoesPage 
               onOpenDemo={() => setDemoModalOpen(true)}
               onOpenAuth={() => setAuthModalOpen(true)}
@@ -228,7 +228,7 @@ export default function App() {
             />
           </main>
         ) : currentPage === 'central-ajuda' ? (
-          <main className="flex-1">
+          <main className="flex-1 w-full max-w-full overflow-x-hidden min-w-0">
             <CentralAjudaPage 
               onOpenDemo={() => setDemoModalOpen(true)}
               onOpenAuth={() => setAuthModalOpen(true)}
@@ -238,7 +238,7 @@ export default function App() {
             />
           </main>
         ) : currentPage === 'carreiras' ? (
-          <main className="flex-1">
+          <main className="flex-1 w-full max-w-full overflow-x-hidden min-w-0">
             <CarreirasPage 
               onOpenDemo={() => setDemoModalOpen(true)}
               onOpenAuth={() => setAuthModalOpen(true)}
@@ -246,7 +246,7 @@ export default function App() {
             />
           </main>
         ) : currentPage === 'imprensa' ? (
-          <main className="flex-1">
+          <main className="flex-1 w-full max-w-full overflow-x-hidden min-w-0">
             <ImprensaPage 
               onOpenDemo={() => setDemoModalOpen(true)}
               onOpenAuth={() => setAuthModalOpen(true)}
@@ -254,7 +254,7 @@ export default function App() {
             />
           </main>
         ) : currentPage === 'contato' ? (
-          <main className="flex-1">
+          <main className="flex-1 w-full max-w-full overflow-x-hidden min-w-0">
             <ContatoPage 
               onOpenDemo={() => setDemoModalOpen(true)}
               onOpenAuth={() => setAuthModalOpen(true)}
@@ -262,7 +262,7 @@ export default function App() {
             />
           </main>
         ) : currentPage === 'sobre' ? (
-          <main className="flex-1">
+          <main className="flex-1 w-full max-w-full overflow-x-hidden min-w-0">
             <SobrePage 
               onOpenDemo={() => setDemoModalOpen(true)}
               onOpenAuth={() => setAuthModalOpen(true)}
@@ -270,7 +270,7 @@ export default function App() {
             />
           </main>
         ) : currentPage === 'precos' ? (
-          <main className="flex-1 animate-fadeIn">
+          <main className="flex-1 w-full max-w-full overflow-x-hidden min-w-0 animate-fadeIn">
             {/* Página Dedicada de Preços & Planos (Exclusiva) */}
             <PricingSection 
               onOpenAuth={() => setAuthModalOpen(true)}
@@ -284,7 +284,7 @@ export default function App() {
             />
           </main>
         ) : (
-          <main className="flex-1">
+          <main className="flex-1 w-full max-w-full overflow-x-hidden min-w-0">
             {/* 1. Hero with dark voice demo player & direct test */}
             <Hero 
               onOpenDemo={() => setDemoModalOpen(true)} 

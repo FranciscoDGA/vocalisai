@@ -21,8 +21,8 @@ const DFY_STEPS = [
 
 export default function DoneForYouSection({ onOpenAuth, onOpenDemo }) {
   return (
-    <section className="py-24 bg-[#FAF9F5] border-t border-[#EBE8E2] font-sans">
-      <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+    <section className="py-16 sm:py-24 bg-[#FAF9F5] border-t border-[#EBE8E2] font-sans overflow-hidden w-full max-w-full">
+      <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 w-full max-w-full min-w-0">
         
         {/* Header */}
         <div className="text-center max-w-3xl mx-auto mb-16">

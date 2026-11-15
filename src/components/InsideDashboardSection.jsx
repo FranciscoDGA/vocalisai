@@ -561,27 +561,27 @@ export default function InsideDashboardSection({ onOpenDemo, onOpenLegal, onOpen
   };
 
   return (
-    <div id="dashboard" className={isStandalone ? "w-full min-h-screen bg-white" : "py-24 bg-[#FAF9F5] border-t border-[#EBE8E2]"}>
-      <div className={isStandalone ? "w-full min-h-screen" : "max-w-6xl mx-auto px-4 sm:px-6 lg:px-8"}>
+    <div id="dashboard" className={isStandalone ? "w-full min-h-screen bg-white overflow-hidden" : "py-16 sm:py-24 bg-[#FAF9F5] border-t border-[#EBE8E2] overflow-hidden w-full max-w-full"}>
+      <div className={isStandalone ? "w-full min-h-screen" : "max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 w-full max-w-full min-w-0"}>
         
         {/* Section Header (Apenas na Landing Page) */}
         {!isStandalone && (
-          <div className="text-center max-w-2xl mx-auto mb-14">
+          <div className="text-center max-w-2xl mx-auto mb-12 sm:mb-14">
             <span className="inline-block text-xs font-semibold text-[#4F46E5] uppercase tracking-wider mb-3">
               SISTEMA OPERACIONAL VOCALIS
             </span>
-            <h2 className="text-4xl sm:text-5xl font-normal text-[#1A1816] tracking-tight leading-[1.12]">
+            <h2 className="text-3xl sm:text-5xl font-normal text-[#1A1816] tracking-tight leading-[1.12]">
               Tudo o que sua empresa precisa<br />
               <span className="font-serif-title italic text-[#4F46E5]">em um só lugar.</span>
             </h2>
-            <p className="mt-4 text-base sm:text-lg text-[#5C5955] leading-relaxed">
+            <p className="mt-4 text-sm sm:text-lg text-[#5C5955] leading-relaxed">
               Navegue pelo painel completo da Vocalis: crie assistentes, conecte números, configure o WhatsApp Business, gerencie membros e faturamento.
             </p>
           </div>
         )}
 
         {/* Dashboard Shell Frame */}
-        <div className={isStandalone ? "w-full min-h-screen flex flex-col md:flex-row bg-white relative" : "bg-white rounded-3xl border border-[#E7E4DC] shadow-2xl overflow-hidden flex flex-col md:flex-row min-h-[750px] relative"}>
+        <div className={isStandalone ? "w-full min-h-screen flex flex-col md:flex-row bg-white relative overflow-hidden" : "bg-white rounded-3xl border border-[#E7E4DC] shadow-2xl overflow-hidden flex flex-col md:flex-row min-h-[750px] relative w-full max-w-full"}>
           
           {/* Mobile Navigation Header (Visível apenas em telas menores que md) */}
           <div className="md:hidden bg-[#FAF9F5] border-b border-[#EBE8E2] p-3 space-y-2.5 shrink-0">
@@ -1686,7 +1686,7 @@ export default function InsideDashboardSection({ onOpenDemo, onOpenLegal, onOpen
                 </div>
 
                 {/* Table */}
-                <div className="rounded-2xl border border-[#E7E4DC] overflow-hidden">
+                <div className="w-full max-w-full overflow-x-auto rounded-2xl border border-[#E7E4DC]">
                   <table className="w-full text-left text-xs">
                     <thead>
                       <tr className="bg-[#FAF9F5] border-b border-[#E7E4DC] text-[#736F69]">
@@ -1781,8 +1781,8 @@ export default function InsideDashboardSection({ onOpenDemo, onOpenLegal, onOpen
                       </button>
                     </div>
 
-                    <div className="rounded-xl border border-[#E7E4DC] overflow-hidden">
-                      <table className="w-full text-left text-xs">
+                    <div className="w-full max-w-full overflow-x-auto rounded-xl border border-[#E7E4DC]">
+                      <table className="w-full text-left text-xs min-w-[500px]">
                         <thead>
                           <tr className="bg-[#FAF9F5] border-b border-[#E7E4DC] text-[#736F69]">
                             <th className="p-3 font-medium">Nome</th>
@@ -1838,8 +1838,8 @@ export default function InsideDashboardSection({ onOpenDemo, onOpenLegal, onOpen
                         Nenhum convite pendente no momento.
                       </div>
                     ) : (
-                      <div className="rounded-xl border border-[#E7E4DC] overflow-hidden">
-                        <table className="w-full text-left text-xs">
+                      <div className="w-full max-w-full overflow-x-auto rounded-xl border border-[#E7E4DC]">
+                        <table className="w-full text-left text-xs min-w-[500px]">
                           <thead>
                             <tr className="bg-[#FAF9F5] border-b border-[#E7E4DC] text-[#736F69]">
                               <th className="p-3 font-medium">E-mail</th>
@@ -2233,8 +2233,8 @@ export default function InsideDashboardSection({ onOpenDemo, onOpenLegal, onOpen
                 </div>
 
                 {/* Numbers Table */}
-                <div className="rounded-2xl border border-[#E7E4DC] overflow-hidden">
-                  <table className="w-full text-left text-xs">
+                <div className="w-full max-w-full overflow-x-auto rounded-2xl border border-[#E7E4DC]">
+                  <table className="w-full text-left text-xs min-w-[500px]">
                     <thead>
                       <tr className="bg-[#FAF9F5] border-b border-[#E7E4DC] text-[#736F69]">
                         <th className="p-3.5 font-medium">Nome</th>

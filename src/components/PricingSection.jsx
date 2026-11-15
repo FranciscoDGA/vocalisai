@@ -29,8 +29,8 @@ export default function PricingSection({ onOpenAuth, onOpenDemo }) {
   const currentChannelData = PRICING_CHANNELS[selectedChannel];
 
   return (
-    <section id="precos" className="py-24 bg-[#FAF9F5] border-t border-[#EBE8E2] font-sans selection:bg-[#4F46E5] selection:text-white">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <section id="precos" className="py-16 sm:py-24 bg-[#FAF9F5] border-t border-[#EBE8E2] font-sans selection:bg-[#4F46E5] selection:text-white overflow-hidden w-full max-w-full">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 w-full max-w-full min-w-0">
         
         {/* ========================================================
             1. SECTION HEADER (Exact replica of user screenshot 1)
@@ -276,8 +276,8 @@ export default function PricingSection({ onOpenAuth, onOpenDemo }) {
           </div>
 
           {/* Sticky Header Row */}
-          <div className="overflow-x-auto -mx-4 px-4 sm:mx-0 sm:px-0">
-            <div className="min-w-[650px]">
+          <div className="w-full max-w-full overflow-x-auto">
+            <div className="min-w-[640px]">
             <div className="grid grid-cols-4 pb-4 border-b border-[#EBE8E2] text-xs font-bold text-[#1A1816] sticky top-16 bg-white z-20">
               <div className="col-span-1 text-sm font-bold text-[#736F69]">Recursos</div>
               

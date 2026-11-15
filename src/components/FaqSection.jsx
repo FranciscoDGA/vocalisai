@@ -10,8 +10,8 @@ export default function FaqSection() {
   };
 
   return (
-    <section id="faq" className="py-24 bg-[#FAF9F5] border-t border-[#EBE8E2]">
-      <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+    <section id="faq" className="py-16 sm:py-24 bg-[#FAF9F5] border-t border-[#EBE8E2] overflow-hidden w-full max-w-full">
+      <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 w-full max-w-full min-w-0">
         
         {/* Section Header */}
         <div className="text-center mb-16">

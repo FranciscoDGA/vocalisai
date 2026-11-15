@@ -112,15 +112,15 @@ export default function Hero({ onOpenDemo, onOpenAuth }) {
       <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
         
         {/* Top category badge */}
-        <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-white border border-[#E7E4DC] text-[#1A1816] text-xs font-semibold uppercase tracking-wider mb-8 shadow-sm">
-          <span className="w-2 h-2 rounded-full bg-[#4F46E5] animate-pulse"></span>
-          <span>IA DE VOZ BRASILEIRA · SEM TAXAS META NO WHATSAPP</span>
+        <div className="inline-flex items-center gap-2 px-3 sm:px-3.5 py-1.5 rounded-full bg-white border border-[#E7E4DC] text-[#1A1816] text-[10px] sm:text-xs font-semibold uppercase tracking-wider mb-6 sm:mb-8 shadow-sm max-w-full">
+          <span className="w-2 h-2 rounded-full bg-[#4F46E5] shrink-0 animate-pulse"></span>
+          <span className="truncate sm:whitespace-normal">IA DE VOZ BRASILEIRA · SEM TAXAS META NO WHATSAPP</span>
         </div>
 
         {/* Headline with dynamic typewriter niche rotation */}
-        <h1 className="text-5xl sm:text-6xl md:text-7xl font-normal tracking-tight text-[#1A1816] max-w-4xl mx-auto leading-[1.08] mb-6">
+        <h1 className="text-3xl sm:text-5xl md:text-6xl lg:text-7xl font-normal tracking-tight text-[#1A1816] max-w-4xl mx-auto leading-[1.14] sm:leading-[1.08] mb-6 break-words">
           A voz inteligente{' '}
-          <span className="text-[#4F46E5] font-medium inline-block min-h-[1.12em]">
+          <span className="text-[#4F46E5] font-medium inline-block min-h-[1.12em] break-words">
             {displayedPhrase}
             <span className="inline-block w-[3px] h-[0.78em] bg-[#4F46E5] ml-1.5 align-baseline animate-pulse rounded-full" />
           </span>
@@ -131,20 +131,20 @@ export default function Hero({ onOpenDemo, onOpenAuth }) {
         </h1>
 
         {/* Subtitle */}
-        <p className="text-base sm:text-lg text-[#5C5955] max-w-2xl mx-auto font-normal leading-relaxed mb-8">
+        <p className="text-sm sm:text-base md:text-lg text-[#5C5955] max-w-2xl mx-auto font-normal leading-relaxed mb-8 px-2 sm:px-0">
           A Vocalis atende chamadas telefônicas, responde no WhatsApp e converte clientes no seu site com a calidez de uma pessoa real. Qualifica leads, agenda compromissos e transfere chamadas urgentes na hora.
         </p>
 
         {/* ========================================================
             PHONE TEST INPUT CONTAINER (Exact replica of Kloel print)
            ======================================================== */}
-        <form id="hero-test" onSubmit={handleTestCallSubmit} className="max-w-xl mx-auto mb-3">
-          <div className="flex flex-col sm:flex-row items-stretch sm:items-center bg-white rounded-2xl sm:rounded-full p-1.5 sm:pl-3 border border-[#DCD8D0] shadow-md focus-within:border-[#4F46E5] focus-within:ring-2 focus-within:ring-[#4F46E5]/20 transition-all relative gap-2 sm:gap-0">
+        <form id="hero-test" onSubmit={handleTestCallSubmit} className="max-w-xl mx-auto mb-3 w-full px-1 sm:px-0">
+          <div className="flex flex-col sm:flex-row items-stretch sm:items-center bg-white rounded-2xl sm:rounded-full p-1.5 sm:pl-3 border border-[#DCD8D0] shadow-md focus-within:border-[#4F46E5] focus-within:ring-2 focus-within:ring-[#4F46E5]/20 transition-all relative gap-2 sm:gap-0 w-full">
             
             {/* Input Row on mobile / inline on desktop */}
-            <div className="flex items-center flex-1 px-2 sm:px-0">
+            <div className="flex items-center flex-1 px-2 sm:px-0 min-w-0">
               {/* Country Flag Selector with Dropdown (1:1 Kloel) */}
-              <div className="relative" ref={countryPickerRef}>
+              <div className="relative shrink-0" ref={countryPickerRef}>
                 <button
                   type="button"
                   onClick={() => setCountryPickerOpen(!countryPickerOpen)}
@@ -191,7 +191,7 @@ export default function Hero({ onOpenDemo, onOpenAuth }) {
                 value={phoneInput}
                 onChange={handlePhoneChange}
                 placeholder="Seu celular com DDD"
-                className="flex-1 px-3 py-2.5 bg-transparent text-[#1A1816] placeholder-[#9E9B95] text-sm focus:outline-none"
+                className="flex-1 min-w-0 px-3 py-2.5 bg-transparent text-[#1A1816] placeholder-[#9E9B95] text-sm focus:outline-none"
               />
             </div>
 
