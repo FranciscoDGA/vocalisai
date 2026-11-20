@@ -2,11 +2,14 @@
 <html lang="pt-BR" class="scroll-smooth">
   <head>
     <meta charset="UTF-8" />
+    <link rel="icon" type="image/png" sizes="96x96" href="/favicon-96.png" />
+    <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png" />
     <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><defs><linearGradient id='g' x1='0%' y1='0%' x2='100%' y2='100%'><stop offset='0%' stop-color='%234F46E5'/><stop offset='100%' stop-color='%237C3AED'/></linearGradient></defs><rect width='100' height='100' rx='24' fill='url(%23g)'/><rect x='16' y='32' width='10' height='36' rx='5' fill='%23FFFFFF'/><rect x='34' y='18' width='10' height='64' rx='5' fill='%23FFFFFF'/><rect x='52' y='42' width='10' height='16' rx='5' fill='%23FFFFFF'/><rect x='70' y='24' width='10' height='52' rx='5' fill='%23FFFFFF'/></svg>" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, viewport-fit=cover" />
     <title>Vocalis AI — A voz inteligente da sua empresa, a qualquer hora</title>
     <meta name="description" content="Vocalis AI: Atendimento humanizado por voz e WhatsApp que nunca dorme e nunca perde uma venda. Triagem, agendamentos e pós-venda 24/7." />
-    
+    <link rel="canonical" href="https://vocalisai-phi.vercel.app/" />
+
     <!-- PWA & Mobile Web App Meta -->
     <link rel="manifest" href="/manifest.json" />
     <meta name="theme-color" content="#4F46E5" />
@@ -19,6 +22,7 @@
     <meta property="og:url" content="https://vocalisai-phi.vercel.app/" />
     <meta property="og:title" content="Vocalis AI — A voz inteligente da sua empresa, a qualquer hora" />
     <meta property="og:description" content="Atendimento humanizado por voz e WhatsApp 24/7. Agende consultas, qualifique leads e atenda sem filas." />
+    <meta property="og:image" content="https://vocalisai-phi.vercel.app/capas-kiwify/04-omnichannel-total.png" />
     <meta property="og:site_name" content="Vocalis AI" />
     <meta property="og:locale" content="pt_BR" />
 
@@ -26,12 +30,19 @@
     <meta name="twitter:card" content="summary_large_image" />
     <meta name="twitter:title" content="Vocalis AI — A voz inteligente da sua empresa" />
     <meta name="twitter:description" content="Atendimento humanizado por voz e WhatsApp que nunca dorme e nunca perde uma venda." />
+    <meta name="twitter:image" content="https://vocalisai-phi.vercel.app/capas-kiwify/04-omnichannel-total.png" />
 
     <!-- Schema.org JSON-LD Structured Data for Google -->
     <script type="application/ld+json">
     {
       "@context": "https://schema.org",
       "@graph": [
+        {
+          "@type": "WebSite",
+          "name": "Vocalis AI",
+          "url": "https://vocalisai-phi.vercel.app/",
+          "inLanguage": "pt-BR"
+        },
         {
           "@type": "SoftwareApplication",
           "name": "Vocalis AI",
@@ -53,7 +64,7 @@
           "@type": "Organization",
           "name": "Vocalis AI",
           "url": "https://vocalisai-phi.vercel.app/",
-          "logo": "https://vocalisai-phi.vercel.app/favicon.svg",
+          "logo": "https://vocalisai-phi.vercel.app/apple-touch-icon.png",
           "contactPoint": {
             "@type": "ContactPoint",
             "contactType": "Customer Support",
@@ -64,14 +75,60 @@
       ]
     }
     </script>
-    
+
     <!-- Google Fonts: Instrument Serif (Editorial Luxury) + Plus Jakarta Sans & Inter -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
   </head>
   <body class="bg-[#FAF9F5] text-[#1A1816] antialiased selection:bg-[#4F46E5] selection:text-white">
-    <div id="root"></div>
+    <div id="root">
+      <header>
+        <nav aria-label="Navegação principal">
+          <a href="/">Vocalis AI</a>
+          <a href="/#canais">Canais</a>
+          <a href="/#planos">Planos</a>
+          <a href="/#faq">Perguntas Frequentes</a>
+          <a href="/#contato">Contato</a>
+        </nav>
+      </header>
+      <main>
+        <section>
+          <h1>Vocalis AI — Atendimento inteligente por voz e WhatsApp 24h</h1>
+          <p>IA que atende telefone e WhatsApp na voz e no tom da sua marca. Nunca mais perca um cliente que ligou fora de hora, demorou para ser atendido ou caiu numa fila.</p>
+          <a href="/#planos">Criar assistente</a>
+        </section>
+        <section id="canais">
+          <h2>Canais de Atendimento Omnichannel com Voz Neural</h2>
+          <ul>
+            <li><strong>Telefone (Voz Neural):</strong> Atendimento no primeiro toque em português brasileiro com latência abaixo de 450ms e integração com 0800, DDD local e PABX SIP.</li>
+            <li><strong>WhatsApp Web &amp; Cloud API:</strong> Respostas instantâneas em áudio e texto para qualificação de leads e agendamentos 24/7.</li>
+            <li><strong>Webchat &amp; E-mail IA:</strong> Widget inteligente no seu site com contexto unificado, triagem de mensagens e atualização automática de CRM.</li>
+            <li><strong>Subcontas para Agências:</strong> Estrutura multiempresa para agências implantarem assistentes de voz e WhatsApp para clientes.</li>
+          </ul>
+        </section>
+        <section id="faq">
+          <h2>Perguntas Frequentes</h2>
+          <details>
+            <summary>Como funciona o agente de voz da Vocalis AI?</summary>
+            <p>O assistente atende ligações telefônicas e mensagens no WhatsApp em tempo real, compreende a solicitação do cliente, consulta sua agenda ou CRM e realiza o agendamento ou transbordo humano.</p>
+          </details>
+          <details>
+            <summary>A Vocalis AI atende fora do horário comercial e em clínicas?</summary>
+            <p>Sim. A operação funciona 24 horas por dia, 7 dias por semana, ideal para clínicas médicas, escritórios, imobiliárias e empresas de serviços.</p>
+          </details>
+        </section>
+      </main>
+      <footer id="contato">
+        <p>Vocalis AI — A voz da sua empresa, a qualquer hora. Contato: <a href="mailto:contato@vocalis.ai">contato@vocalis.ai</a></p>
+        <nav aria-label="Links institucionais">
+          <a href="/sobre">Sobre</a>
+          <a href="/contato">Contato</a>
+          <a href="/privacidade">Política de Privacidade</a>
+          <a href="/termos">Termos de Uso</a>
+        </nav>
+      </footer>
+    </div>
     <script type="module" src="/src/main.jsx"></script>
   </body>
 </html>

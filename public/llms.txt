@@ -1,0 +1,20 @@
+# Vocalis AI
+
+> Atendimento inteligente por voz com IA e automação de WhatsApp 24h para empresas e clínicas.
+
+Plataforma brasileira de agentes de voz e atendimento automatizado via telefone, WhatsApp e webchat com inteligência artificial em português brasileiro, agendamento integrado, CRM e subcontas para agências. Domínio canônico: https://vocalisai-phi.vercel.app.
+
+## Páginas Principais
+
+- [Vocalis AI — Página Principal](https://vocalisai-phi.vercel.app/): Agentes de voz com latência abaixo de 450ms, automação no WhatsApp Web/Cloud API, recepcionista virtual, calculadora de ROI e planos comerciais.
+
+## Canais e Recursos
+
+- **Telefone (Voz Neural):** Atendimento no primeiro toque em português brasileiro com integração 0800, DDDs locais e PABX SIP.
+- **WhatsApp Web & Cloud API:** Respostas instantâneas em áudio e texto com qualificação de leads e agendamentos 24/7.
+- **Webchat & E-mail IA:** Widget inteligente com transbordo humano imediato e sincronização com CRM.
+- **Subcontas para Agências:** Painel white-label e gestão multiempresa para agências de automação.
+
+## Contato
+
+- E-mail: contato@vocalis.ai
