@@ -21,6 +21,10 @@ const ARTICLE_META = {
   description:
     'Descubra qual é a melhor IA para atendimento no WhatsApp em 2026. Compare chatbots de fluxo fixo vs. agentes de IA conversacionais com áudio, API Oficial, CRM, transbordo humano e LGPD.',
   canonical: 'https://vocalisai-phi.vercel.app/blog/melhor-ia-para-atendimento-whatsapp',
+  image: 'https://vocalisai-phi.vercel.app/images/blog/melhor-ia-para-atendimento-whatsapp.jpg',
+  imagePath: '/images/blog/melhor-ia-para-atendimento-whatsapp.jpg',
+  imageAlt:
+    'Equipe de atendimento digital analisando conversas de clientes, smartphone e painel de CRM em notebook em escritório moderno',
   publishedAt: '2026-11-21',
   readingTime: '9 min de leitura',
 };
@@ -113,6 +117,26 @@ export default function MelhorIaWhatsAppArticlePage({
     }
     canonicalLink.setAttribute('href', ARTICLE_META.canonical);
 
+    let ogImageMeta = document.querySelector('meta[property="og:image"]');
+    const prevOgImage = ogImageMeta?.getAttribute('content') || '';
+    const createdOgImage = !ogImageMeta;
+    if (!ogImageMeta) {
+      ogImageMeta = document.createElement('meta');
+      ogImageMeta.setAttribute('property', 'og:image');
+      document.head.appendChild(ogImageMeta);
+    }
+    ogImageMeta.setAttribute('content', ARTICLE_META.image);
+
+    let twitterImageMeta = document.querySelector('meta[name="twitter:image"]');
+    const prevTwitterImage = twitterImageMeta?.getAttribute('content') || '';
+    const createdTwitterImage = !twitterImageMeta;
+    if (!twitterImageMeta) {
+      twitterImageMeta = document.createElement('meta');
+      twitterImageMeta.setAttribute('name', 'twitter:image');
+      document.head.appendChild(twitterImageMeta);
+    }
+    twitterImageMeta.setAttribute('content', ARTICLE_META.image);
+
     const jsonLd = {
       '@context': 'https://schema.org',
       '@graph': [
@@ -121,6 +145,7 @@ export default function MelhorIaWhatsAppArticlePage({
           headline:
             'Melhor IA para Atendimento no WhatsApp (2026): Como Escolher, Recursos Essenciais e Comparativo',
           description: ARTICLE_META.description,
+          image: [ARTICLE_META.image],
           inLanguage: 'pt-BR',
           datePublished: ARTICLE_META.publishedAt,
           dateModified: ARTICLE_META.publishedAt,
@@ -163,6 +188,14 @@ export default function MelhorIaWhatsAppArticlePage({
       document.title = prevTitle;
       if (metaDesc && prevDesc) metaDesc.setAttribute('content', prevDesc);
       if (canonicalLink && prevCanonical) canonicalLink.setAttribute('href', prevCanonical);
+      if (ogImageMeta) {
+        if (prevOgImage) ogImageMeta.setAttribute('content', prevOgImage);
+        else if (createdOgImage) ogImageMeta.remove();
+      }
+      if (twitterImageMeta) {
+        if (prevTwitterImage) twitterImageMeta.setAttribute('content', prevTwitterImage);
+        else if (createdTwitterImage) twitterImageMeta.remove();
+      }
       const existingScript = document.getElementById('article-melhor-ia-whatsapp-jsonld');
       if (existingScript) existingScript.remove();
     };
@@ -199,7 +232,7 @@ export default function MelhorIaWhatsAppArticlePage({
         </nav>
 
         {/* Header */}
-        <header className="mb-10">
+        <header className="mb-8">
           <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-[#4F46E5]/10 text-[#4F46E5] text-xs font-semibold mb-4">
             <BookOpen className="w-3.5 h-3.5" />
             <span>Guia Completo 2026 · Atendimento com IA</span>
@@ -213,6 +246,25 @@ export default function MelhorIaWhatsAppArticlePage({
             importante para escalar vendas e suporte com qualidade.
           </p>
         </header>
+
+        {/* Featured Hero Image */}
+        <figure className="mb-10">
+          <div className="overflow-hidden rounded-2xl border border-[#EBE8E2] bg-white shadow-sm">
+            <img
+              src={ARTICLE_META.imagePath}
+              alt={ARTICLE_META.imageAlt}
+              width={1400}
+              height={933}
+              loading="eager"
+              fetchPriority="high"
+              className="w-full h-64 sm:h-80 md:h-[420px] object-cover"
+            />
+          </div>
+          <figcaption className="mt-2.5 text-xs text-[#736F69] text-center">
+            Atendimento digital integrado: agentes de IA no WhatsApp conectam mensagens, áudio, agenda e CRM com
+            transbordo inteligente para a equipe humana.
+          </figcaption>
+        </figure>
 
         {/* GEO / Featured Snippet Direct Answer Box */}
         <section
