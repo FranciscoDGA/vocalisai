@@ -26,8 +26,8 @@ export default function VoiceCloningStudio({ isOpen, onClose, onSaveVoice }) {
   const scriptTemplates = {
     medico: "Olá! Aqui é da nossa clínica médica e odontológica. Estou entrando em contato para confirmar sua consulta agendada para amanhã às quatorze horas com o especialista. Você confirma sua presença ou gostaria de verificar outros horários disponíveis nesta semana? Qualquer dúvida, basta me responder aqui.",
     advogado: "Olá, boa tarde! Aqui é do nosso escritório de advocacia e consultoria jurídica. Recebemos a sua solicitação a respeito da análise documental e gostaria de agendar uma chamada de quinze minutos com o nosso advogado responsável pelo caso. Qual o melhor período para você?",
-    comercial: "Oi, tudo bem? Estou ligando porque você demonstrou interesse em nossas soluções e gostaria de apresentar uma condição especial com trinta por cento de desconto válida exclusivamente para o dia de hoje. Se quiser que eu te envie o resumo pelo WhatsApp agora, é só me confirmar!",
-    personalizado: "Olá! Este é um teste oficial de calibração fonética para clonagem neural de voz em alta definição. Estamos mapeando a frequência da minha voz, entonação, pausas respiratórias e velocidade da fala para criar um assistente ultra-realista com latência inferior a quatrocentos e cinquenta milissegundos."
+    comercial: "Oi, tudo bem? Estou ligando porque você demonstrou interesse em nossas soluções e gostaria de apresentar nossa proposta comercial e agendar uma conversa com nossa equipe. Se quiser que eu te envie o resumo pelo WhatsApp, é só me confirmar!",
+    personalizado: "Olá! Este é um texto ilustrativo para gravação de amostra de voz no navegador, avaliando clareza, entonação e pausas naturais da fala."
   };
 
   useEffect(() => {
@@ -151,8 +151,7 @@ export default function VoiceCloningStudio({ isOpen, onClose, onSaveVoice }) {
           name: voiceName,
           category: profileType,
           createdAt: new Date().toISOString(),
-          latency: '390ms',
-          similarity: '98.7%'
+          mode: 'Simulação ilustrativa'
         });
       }
     }, 2800);
@@ -164,7 +163,7 @@ export default function VoiceCloningStudio({ isOpen, onClose, onSaveVoice }) {
       setTestSamplePlaying(false);
     } else {
       setTestSamplePlaying(true);
-      speakText(`Olá! Sou a voz neural calibrada de ${voiceName}. Já estou pronta para atender as ligações da sua empresa com latência ultra-baixa de 390 milissegundos.`, () => {
+      speakText(`Olá! Esta é uma simulação ilustrativa da voz ${voiceName} reproduzida no navegador.`, () => {
         setTestSamplePlaying(false);
       });
     }
@@ -195,8 +194,8 @@ export default function VoiceCloningStudio({ isOpen, onClose, onSaveVoice }) {
               <Sparkles className="w-3 h-3 text-[#4F46E5]" />
               Clonagem de Voz em 1 Minuto
             </span>
-            <span className="text-[10px] text-emerald-700 bg-emerald-50 px-2 py-0.5 rounded-full font-bold">
-              Neural 2.0 • Latência &lt;420ms
+            <span className="text-[10px] text-indigo-700 bg-indigo-50 px-2 py-0.5 rounded-full font-bold">
+              Simulação ilustrativa no navegador
             </span>
           </div>
           <h3 className="text-xl sm:text-2xl font-bold text-[#1A1816]">
@@ -343,7 +342,7 @@ export default function VoiceCloningStudio({ isOpen, onClose, onSaveVoice }) {
             <div className="flex items-center justify-between">
               <div className="flex items-center gap-2">
                 <CheckCircle2 className="w-5 h-5 text-emerald-600" />
-                <span className="text-xs font-bold">Voz Neural Calibrada & Homologada!</span>
+                <span className="text-xs font-bold">Prévia ilustrativa de voz gerada</span>
               </div>
               <span className="text-[10px] font-mono text-emerald-700 bg-white px-2 py-0.5 rounded border border-emerald-300">
                 {clonedVoiceId}
@@ -351,7 +350,7 @@ export default function VoiceCloningStudio({ isOpen, onClose, onSaveVoice }) {
             </div>
 
             <p className="text-xs text-emerald-800 leading-relaxed">
-              O modelo acústico de <strong>{voiceName}</strong> foi gerado com fidelidade de 98.7% e latência de 390ms. Já está vinculado aos seus assistentes para chamadas ativas e receptivas.
+              Esta é uma prévia ilustrativa para o perfil <strong>{voiceName}</strong> no navegador. A disponibilidade e o comportamento da clonagem de voz em produção dependem do plano contratado.
             </p>
 
             <div className="pt-1 flex flex-wrap items-center gap-2">
@@ -360,7 +359,7 @@ export default function VoiceCloningStudio({ isOpen, onClose, onSaveVoice }) {
                 className="px-3.5 py-1.5 rounded-lg bg-emerald-700 hover:bg-emerald-800 text-white text-xs font-bold flex items-center gap-1.5 transition-colors cursor-pointer"
               >
                 {testSamplePlaying ? <Pause className="w-3.5 h-3.5" /> : <Volume2 className="w-3.5 h-3.5" />}
-                <span>{testSamplePlaying ? 'Pausar Teste' : 'Testar Voz da IA ao Vivo'}</span>
+                <span>{testSamplePlaying ? 'Pausar Teste' : 'Ouvir Simulação Ilustrativa'}</span>
               </button>
               
               <button 
@@ -380,7 +379,7 @@ export default function VoiceCloningStudio({ isOpen, onClose, onSaveVoice }) {
         <div className="mt-6 pt-4 border-t border-[#E7E4DC] flex items-center justify-between text-[11px] text-[#736F69]">
           <span className="flex items-center gap-1">
             <ShieldCheck className="w-3.5 h-3.5 text-emerald-600" />
-            Conforme com a LGPD e biometria de voz segura
+            Simulação ilustrativa no navegador — recursos reais sujeitos a validação técnica e jurídica
           </span>
           <span>Compatível com Vapi, Deepgram & WebRTC</span>
         </div>

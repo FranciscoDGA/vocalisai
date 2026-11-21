@@ -62,8 +62,8 @@ export default function Navbar({ onOpenDemo, onOpenAuth, onOpenLegal, onOpenDocs
               <VocalisLogo size="md" />
             </button>
 
-            {/* Desktop Navigation Links (Exact replica of user's uploaded print) */}
-            <nav className="hidden md:flex items-center gap-6 lg:gap-7">
+            {/* Desktop Navigation Links */}
+            <nav className="hidden xl:flex items-center gap-6 lg:gap-7">
               
               {/* 1. DROPDOWN: PRODUTOS */}
               <div className="relative">
@@ -451,7 +451,7 @@ export default function Navbar({ onOpenDemo, onOpenAuth, onOpenLegal, onOpenDocs
           </div>
 
           {/* Right Action Items (Exact match to print: 🇧🇷 ⌄ · Falar com a gente · Criar minha Vocalis ➔) */}
-          <div className="hidden md:flex items-center gap-5 lg:gap-6 shrink-0">
+          <div className="hidden xl:flex items-center gap-5 lg:gap-6 shrink-0">
             
             {/* Country / Lang selector */}
             <div className="relative shrink-0">
@@ -555,7 +555,7 @@ export default function Navbar({ onOpenDemo, onOpenAuth, onOpenLegal, onOpenDocs
           </div>
 
           {/* Mobile menu trigger */}
-          <div className="flex md:hidden items-center gap-2">
+          <div className="flex xl:hidden items-center gap-2">
             {currentUser ? (
               <button
                 onClick={() => { if (onNavigate) onNavigate('dashboard'); }}
@@ -584,7 +584,7 @@ export default function Navbar({ onOpenDemo, onOpenAuth, onOpenLegal, onOpenDocs
 
       {/* Mobile Menu Dropdown */}
       {mobileMenuOpen && (
-        <div className="md:hidden bg-white border-b border-[#EBE8E2] px-6 py-6 space-y-4 shadow-xl text-sm">
+        <div className="xl:hidden bg-white border-b border-[#EBE8E2] px-6 py-6 space-y-4 shadow-xl text-sm">
           <div className="font-bold text-xs uppercase tracking-wider text-[#8C8881]">Produtos</div>
           <a href="#canais" onClick={() => handleNavClick('canais')} className="block py-1 text-[#1A1816]">Assistente telefônico IA</a>
           <button 

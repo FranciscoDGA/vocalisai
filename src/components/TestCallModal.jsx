@@ -5,11 +5,10 @@ import {
   MessageSquare, QrCode, Copy, ExternalLink, ShieldCheck, Zap, Send, Loader2
 } from 'lucide-react';
 import { BRAND } from '../data/content';
-import { formatPhoneMask, formatPhoneForVoice, cleanRawPhone } from '../utils/phoneUtils';
+import { formatPhoneMask, formatPhoneForVoice } from '../utils/phoneUtils';
 import { speakRobertaVoice as speakFemalePt, stopRobertaVoice as stopSpeech } from '../utils/geminiAudioService';
-import { saveLead, updateLead } from '../utils/supabaseClient';
-import { sendWhatsAppMessage } from '../utils/uazapiClient';
 import { askRobertaAI } from '../utils/aiService';
+import { getCommercialActivationOptionLabel } from '../utils/commercialCatalogUtils';
 
 export default function TestCallModal({ isOpen, phoneNumber, countryCode = '+55', onClose, onOpenAuth }) {
   const [callState, setCallState] = useState('calling'); // 'calling' | 'connected' | 'ended'
@@ -27,7 +26,6 @@ export default function TestCallModal({ isOpen, phoneNumber, countryCode = '+55'
   const [isListeningMic, setIsListeningMic] = useState(false);
   const [interimSpeech, setInterimSpeech] = useState('');
   const [customInputText, setCustomInputText] = useState('');
-  const [leadId, setLeadId] = useState(null);
 
   const timerRef = useRef(null);
   const recognitionRef = useRef(null);
@@ -54,13 +52,13 @@ export default function TestCallModal({ isOpen, phoneNumber, countryCode = '+55'
     }
   }, [callLog, interimSpeech]);
 
-  // Roteiro estruturado de Diagnóstico Empresarial ao Vivo (Executivo, Breve e Natural)
+  // Roteiro estruturado de Simulação Ilustrativa de Diagnóstico
   const conversationScript = [
     {
       step: 0,
       speaker: 'Roberta · Vocalis',
-      spokenText: `Olá! Aqui é a Roberta, da Vocalis. Estou ligando para um diagnóstico rápido do seu atendimento. Qual é o ramo da sua empresa?`,
-      displayText: `Olá! Aqui é a Roberta, da Vocalis. Estou ligando para o seu número ${countryCode} ${formattedDisplayPhone} para um diagnóstico rápido do seu atendimento. Qual é o ramo da sua empresa hoje?`,
+      spokenText: `Olá! Aqui é a Roberta, da Vocalis. Esta é uma simulação ilustrativa no navegador para demonstrar um diagnóstico de atendimento. Qual é o ramo da sua empresa?`,
+      displayText: `Olá! Aqui é a Roberta, da Vocalis. Esta é uma simulação ilustrativa no navegador referente ao número ${countryCode} ${formattedDisplayPhone} para demonstrar um diagnóstico de atendimento. Qual é o ramo da sua empresa hoje?`,
       promptHint: 'Fale no microfone, digite abaixo ou escolha seu segmento:',
       options: [
         { label: '🏥 Clínica Odontológica / Consultório Médico', niche: 'Clínica Odontológica' },
@@ -86,24 +84,24 @@ export default function TestCallModal({ isOpen, phoneNumber, countryCode = '+55'
     {
       step: 2,
       speaker: 'Roberta · Vocalis',
-      spokenText: (niche, pain) => `Entendi! Com a Vocalis, sua assistente atende no primeiro toque e resolve na hora. E acabei de mandar o resumo no seu WhatsApp com um Pix de teste de um real! Dá uma olhada na tela.`,
-      displayText: (niche, pain) => `Entendi! Com a Vocalis, sua assistente atende no primeiro toque e resolve na hora. E acabei de mandar o resumo no seu WhatsApp com um Pix de teste de R$ 1,00! Dá uma olhada na tela.`,
-      promptHint: 'Ação executada em tempo real na ligação!',
+      spokenText: (niche, pain) => `Entendi! Com a Vocalis, você pode estruturar fluxos automatizados de atendimento. Veja na tela uma simulação ilustrativa de resumo de atendimento e exemplo de cobrança Pix, sem envio ou cobrança real.`,
+      displayText: (niche, pain) => `Entendi! Com a Vocalis, você pode estruturar fluxos automatizados de atendimento. Veja na tela uma simulação ilustrativa de resumo de atendimento e exemplo de cobrança Pix (sem envio ou cobrança real).`,
+      promptHint: 'Simulação ilustrativa exibida na tela:',
       triggerAction: true,
       options: [
-        { label: '💬 Ver mensagem do WhatsApp que acabou de chegar', action: 'open_whatsapp' },
-        { label: '💳 Ver a cobrança Pix gerada na chamada', action: 'show_pix' },
-        { label: '🚀 Impressionante! Como eu ativo na minha empresa?', action: 'activate' }
+        { label: '💬 Ver prévia ilustrativa de WhatsApp na tela', action: 'open_whatsapp' },
+        { label: '💳 Ver exemplo ilustrativo de Pix (sem cobrança real)', action: 'show_pix' },
+        { label: '🚀 Como funciona a contratação na minha empresa?', action: 'activate' }
       ]
     },
     {
       step: 3,
       speaker: 'Roberta · Vocalis',
-      spokenText: () => `Essa é a força de uma inteligência executora real. Quer agendar uma demonstração rápida de 15 minutos com nossa equipe para ver rodando na sua empresa?`,
-      displayText: () => `Essa é a força de uma inteligência executora real. Quer agendar uma demonstração de 15 minutos para ver rodando na sua empresa?`,
-      promptHint: 'Ativação imediata da plataforma:',
+      spokenText: () => `Essa é uma simulação ilustrativa de fluxo conversacional. Quer agendar uma demonstração guiada com nossa equipe para ver rodando na sua empresa?`,
+      displayText: () => `Essa é uma simulação ilustrativa de fluxo conversacional. Quer agendar uma demonstração guiada com nossa equipe?`,
+      promptHint: 'Próximos passos com nossa equipe:',
       options: [
-        { label: '🚀 Sim! Quero ativar minha assistente agora com 30% OFF', action: 'signup' },
+        { label: `🚀 ${getCommercialActivationOptionLabel()}`, action: 'signup' },
         { label: '📅 Quero agendar uma demonstração guiada para minha equipe', action: 'demo' }
       ]
     }
@@ -430,25 +428,15 @@ export default function TestCallModal({ isOpen, phoneNumber, countryCode = '+55'
       return;
     }
 
-    // Toca efeito de discagem por 1.8s e conecta
+    // Toca efeito de discagem por 1.8s e conecta na simulação ilustrativa (sem gravação de lead ou disparo real)
     const connectTimer = setTimeout(() => {
       setCallState('connected');
-      
-      // Salva o lead no Supabase imediatamente
-      saveLead({
-        phone: `${countryCode} ${formattedDisplayPhone}`,
-        notes: 'Origem: Demonstração ao vivo no site Vocalis AI'
-      }).then(res => {
-        if (res?.data?.id) {
-          setLeadId(res.data.id);
-        }
-      });
       
       timerRef.current = setInterval(() => {
         setCallDuration(prev => prev + 1);
       }, 1000);
 
-      // Inicia a primeira fala com voz feminina neural
+      // Inicia a primeira fala com voz feminina no navegador
       const firstStep = conversationScript[0];
       setCallLog([{ 
         speaker: 'Roberta · Vocalis', 
@@ -485,32 +473,11 @@ export default function TestCallModal({ isOpen, phoneNumber, countryCode = '+55'
         ? nextScriptItem.displayText(chosenNiche, chosenPain) 
         : nextScriptItem.displayText;
 
-      // Dispara o WhatsApp e o Pix simultâneo
+      // Exibe apenas a prévia ilustrativa em tela (sem envio real de WhatsApp ou cobrança)
       if (nextScriptItem.triggerAction || nextStep >= 2) {
         setTimeout(() => {
           setWhatsappToastOpen(true);
         }, 1200);
-
-        // Disparo via UazAPI
-        const whatsappMsg = `👋 Olá! Aqui é a Roberta da *Vocalis AI*.\n\nAcabei de falar com você na demonstração ao vivo e organizei o seu diagnóstico:\n🏢 *Segmento:* ${chosenNiche || 'Empresa & Serviços'}\n🎯 *Gargalo:* ${chosenPain || 'Atendimento fora do horário'}\n⚡ *Solução:* Atendimento com voz neural em 380ms, agendamento de consultas e geração de Pix em tempo real.\n\n💬 Caso queira ativar essa IA na sua empresa ou agendar uma reunião guiada, basta responder esta mensagem!`;
-
-        sendWhatsAppMessage({
-          phone: phoneNumber,
-          message: whatsappMsg
-        }).then(res => {
-          if (res?.success && leadId) {
-            updateLead(leadId, { whatsapp_sent: true });
-          }
-        });
-      }
-
-      // Atualiza o diagnóstico do lead no Supabase
-      if (leadId) {
-        updateLead(leadId, {
-          niche: chosenNiche,
-          pain: chosenPain,
-          status: 'diagnostico_em_andamento'
-        });
       }
 
       setTimeout(() => {
@@ -561,13 +528,6 @@ export default function TestCallModal({ isOpen, phoneNumber, countryCode = '+55'
     setIsSpeaking(false);
     setIsListeningMic(false);
     setCallState('ended');
-
-    if (leadId) {
-      updateLead(leadId, {
-        call_duration: callDuration,
-        status: 'diagnostico_concluido'
-      });
-    }
   };
 
   const handleRestartCall = () => {
@@ -624,11 +584,11 @@ export default function TestCallModal({ isOpen, phoneNumber, countryCode = '+55'
           </div>
           <div className="text-left text-xs pr-2">
             <div className="font-bold flex items-center gap-1.5">
-              <span>WhatsApp de Roberta (Vocalis)</span>
-              <span className="text-[10px] bg-white/20 px-1.5 py-0.2 rounded font-mono">agora</span>
+              <span>Simulação ilustrativa · Exemplo de WhatsApp</span>
+              <span className="text-[10px] bg-white/20 px-1.5 py-0.2 rounded font-mono">exemplo</span>
             </div>
             <p className="text-emerald-100 text-[11px] truncate max-w-xs sm:max-w-sm">
-              💬 "Olá! Segue o diagnóstico da sua empresa + seu Pix de validação de R$ 1,00..."
+              💬 Prévia ilustrativa de resumo + Pix simbólico (sem cobrança real)...
             </p>
           </div>
           <span className="text-[10px] bg-white text-[#128C7E] font-bold px-2 py-1 rounded-full shrink-0">
@@ -643,27 +603,20 @@ export default function TestCallModal({ isOpen, phoneNumber, countryCode = '+55'
         onClick={(e) => e.stopPropagation()}
       >
         
-        {/* Top Bar with Live Indicator */}
+        {/* Top Bar with Illustrative Simulation Indicator */}
         <div className="px-5 sm:px-6 py-3.5 bg-stone-900/80 border-b border-stone-800/80 flex items-center justify-between">
           <div className="flex items-center gap-2.5">
-            <span className="relative flex h-2.5 w-2.5">
-              <span className={`animate-ping absolute inline-flex h-full w-full rounded-full opacity-75 ${
-                callState === 'connected' ? 'bg-emerald-400' : 'bg-amber-400'
-              }`}></span>
-              <span className={`relative inline-flex rounded-full h-2.5 w-2.5 ${
-                callState === 'connected' ? 'bg-emerald-500' : 'bg-amber-500'
-              }`}></span>
-            </span>
+            <span className="inline-flex rounded-full h-2.5 w-2.5 bg-indigo-400"></span>
             <span className="text-xs font-semibold text-stone-300 flex items-center gap-2">
-              {callState === 'calling' && 'Discando para seu celular em tempo real...'}
+              {callState === 'calling' && 'Iniciando simulação ilustrativa no navegador...'}
               {callState === 'connected' && (
                 <>
-                  <span>Diagnóstico ao Vivo com Roberta</span>
+                  <span>Simulação Ilustrativa · Roberta</span>
                   <span className="text-stone-500">•</span>
                   <span className="text-emerald-400 font-mono font-bold">{formatDuration(callDuration)}</span>
                 </>
               )}
-              {callState === 'ended' && 'Chamada finalizada'}
+              {callState === 'ended' && 'Simulação finalizada'}
             </span>
           </div>
 
@@ -724,9 +677,9 @@ export default function TestCallModal({ isOpen, phoneNumber, countryCode = '+55'
               <div className="flex items-center justify-between mb-2">
                 <span className="text-[11px] font-bold uppercase tracking-wider text-stone-400 flex items-center gap-1.5">
                   <Zap className="w-3.5 h-3.5 text-amber-400" />
-                  <span>Ações Executadas em Tempo Real na Chamada:</span>
+                  <span>Exemplo Ilustrativo de Fluxo:</span>
                 </span>
-                <span className="text-[10px] text-emerald-400 font-mono font-bold">100% Automatizado</span>
+                <span className="text-[10px] text-emerald-400 font-mono font-bold">Simulação ilustrativa</span>
               </div>
               <div className="grid grid-cols-2 gap-2 text-xs">
                 <button 
@@ -735,8 +688,8 @@ export default function TestCallModal({ isOpen, phoneNumber, countryCode = '+55'
                 >
                   <MessageSquare className="w-4 h-4 text-emerald-400 shrink-0" />
                   <div>
-                    <div className="font-bold text-white text-[11px]">WhatsApp Enviado</div>
-                    <div className="text-[10px] text-stone-400">Diagnóstico + Áudio</div>
+                    <div className="font-bold text-white text-[11px]">Prévia de WhatsApp (Simulação)</div>
+                    <div className="text-[10px] text-stone-400">Exemplo ilustrativo na tela</div>
                   </div>
                 </button>
 
@@ -746,8 +699,8 @@ export default function TestCallModal({ isOpen, phoneNumber, countryCode = '+55'
                 >
                   <QrCode className="w-4 h-4 text-[#4F46E5] shrink-0" />
                   <div>
-                    <div className="font-bold text-white text-[11px]">Pix Gerado na Ligação</div>
-                    <div className="text-[10px] text-stone-400">R$ 1,00 Demonstrativo</div>
+                    <div className="font-bold text-white text-[11px]">Prévia de Pix (Ilustrativo)</div>
+                    <div className="text-[10px] text-stone-400">Sem cobrança real</div>
                   </div>
                 </button>
               </div>
@@ -847,6 +800,12 @@ export default function TestCallModal({ isOpen, phoneNumber, countryCode = '+55'
                 </div>
               </div>
 
+              <div className="text-[10px] text-stone-400">
+                Simulação ilustrativa (não informe dados pessoais reais; fluxos reais dependem da base de conhecimento e regras definidas pelo cliente).
+              </div>
+              <p className="text-[10px] text-stone-400">
+                Setores como clínica, odontologia, advocacia e finanças exigem validação pelo profissional responsável e não oferecem conformidade automática.
+              </p>
               {/* Botões de Opção Rápida */}
               <div className="text-left">
                 <p className="text-[10px] text-stone-400 font-medium mb-1">
@@ -874,10 +833,10 @@ export default function TestCallModal({ isOpen, phoneNumber, countryCode = '+55'
             <div className="w-full mt-3 p-4 rounded-2xl bg-stone-900 border border-stone-800 space-y-3">
               <div className="flex items-center justify-center gap-2 text-emerald-400 text-xs font-bold">
                 <CheckCircle2 className="w-4 h-4" />
-                <span>Diagnóstico Empresarial Concluído!</span>
+                <span>Simulação Ilustrativa Concluída</span>
               </div>
               <p className="text-xs text-stone-300">
-                Você presenciou a inteligência de voz mais rápida do Brasil, com disparo de WhatsApp e cobrança Pix na chamada.
+                Esta demonstração ilustrou um fluxo configurável no navegador, sem chamada telefônica, envio real de WhatsApp, gravação de lead ou cobrança. Em uso real, as respostas dependem da base de conhecimento e das regras definidas pelo cliente; fluxos em saúde, odontologia, advocacia e finanças exigem aprovação do profissional responsável e não oferecem conformidade clínica ou jurídica automática.
               </p>
               <div className="flex items-center gap-2">
                 <button
@@ -916,8 +875,8 @@ export default function TestCallModal({ isOpen, phoneNumber, countryCode = '+55'
         {/* Bottom Control Bar */}
         <div className="px-5 sm:px-6 py-3 bg-stone-900 border-t border-stone-800 flex items-center justify-between">
           <div className="flex items-center gap-2">
-            <span className="w-2 h-2 rounded-full bg-emerald-500"></span>
-            <span className="text-[11px] text-stone-400">Latência Neural: 380ms · Sem Delay</span>
+            <span className="w-2 h-2 rounded-full bg-indigo-400"></span>
+            <span className="text-[11px] text-stone-400">Simulação ilustrativa no navegador</span>
           </div>
 
           <div className="flex items-center gap-2">
@@ -958,7 +917,7 @@ export default function TestCallModal({ isOpen, phoneNumber, countryCode = '+55'
                     <span>Roberta · Vocalis AI</span>
                     <span className="text-[10px] text-emerald-400 font-normal">● Online</span>
                   </div>
-                  <div className="text-[10px] text-stone-400">Conta Oficial Verificada</div>
+                  <div className="text-[10px] text-stone-400">Prévia ilustrativa de interface</div>
                 </div>
               </div>
               <button 
@@ -975,23 +934,23 @@ export default function TestCallModal({ isOpen, phoneNumber, countryCode = '+55'
               {/* Balão 1: Resumo do Diagnóstico */}
               <div className="bg-[#202C33] p-3 rounded-2xl rounded-tl-sm border border-stone-800 max-w-[90%] text-xs space-y-2">
                 <p className="text-stone-200 leading-relaxed">
-                  👋 Olá! Aqui é a <strong>Roberta da Vocalis</strong>. Acabei de falar com você no telefone e organizei seu diagnóstico:
+                  👋 Olá! Aqui é a <strong>Roberta da Vocalis</strong> (simulação ilustrativa de resumo pós-atendimento):
                 </p>
                 <div className="p-2 rounded-xl bg-[#111B21] text-[11px] space-y-1 border border-stone-800">
                   <div>🏢 <strong>Segmento:</strong> {userNiche || 'Empresa & Serviços'}</div>
-                  <div>🎯 <strong>Gargalo Resolvido:</strong> {userPain || 'Atendimento fora do horário'}</div>
-                  <div>⚡ <strong>Solução:</strong> IA com atendimento em 380ms e agendamento instantâneo.</div>
+                  <div>🎯 <strong>Gargalo informado:</strong> {userPain || 'Atendimento fora do horário'}</div>
+                  <div>⚡ <strong>Solução:</strong> Fluxo configurável de atendimento e agendamento (exemplo ilustrativo).</div>
                 </div>
               </div>
 
-              {/* Balão 2: Cobrança Pix Gerada em Tempo Real */}
+              {/* Balão 2: Cobrança Pix Ilustrativa */}
               <div className="bg-[#202C33] p-3 rounded-2xl rounded-tl-sm border border-stone-800 max-w-[90%] text-xs space-y-2.5">
                 <div className="flex items-center gap-2 text-emerald-400 font-bold text-xs">
                   <QrCode className="w-4 h-4" />
-                  <span>Cobrança Pix de Demonstração</span>
+                  <span>Exemplo Ilustrativo de Pix (sem cobrança real)</span>
                 </div>
                 <p className="text-[11px] text-stone-300">
-                  Este é o Pix simbólico de <strong>R$ 1,00</strong> que a IA gerou durante a nossa chamada:
+                  Este é apenas um modelo ilustrativo de cobrança Pix de <strong>R$ 1,00</strong> exibido na simulação:
                 </p>
                 <div className="p-2.5 rounded-xl bg-[#111B21] border border-stone-700/80 space-y-2 text-center">
                   <div className="text-lg font-mono font-bold text-emerald-400">R$ 1,00</div>

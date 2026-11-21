@@ -4,17 +4,23 @@ import {
   Play, CheckCircle2, ShieldCheck, DollarSign, Cloud, Laptop, Layers, 
   ArrowRight, Maximize2, Minimize2, Star, Zap, Users, Building2
 } from 'lucide-react';
+import {
+  getAgencyProgramSummary,
+  getProviderCostSummary,
+} from '../utils/commercialCatalogUtils';
 
 export default function PlatformPresentationSlider({ isOpen, onClose }) {
   const [currentSlide, setCurrentSlide] = useState(0);
   const [isFullscreen, setIsFullscreen] = useState(false);
+  const agencySummary = getAgencyProgramSummary();
+  const providerCostText = getProviderCostSummary('telefone');
 
   const slides = [
     {
       id: 'intro',
       badge: 'VISÃO GERAL DO ECOSSISTEMA',
-      title: 'Vocalis AI: A Revolução do Atendimento com Voz Humana',
-      subtitle: 'Como a sua plataforma transforma telefonia e WhatsApp em máquinas de vendas 24 horas por dia.',
+      title: 'Vocalis AI: Automação de Atendimento por Voz, WhatsApp e Webchat',
+      subtitle: 'Como a plataforma organiza telefonia, WhatsApp e webchat em canais estruturados de atendimento automatizado.',
       theme: 'dark',
       content: (
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mt-6">
@@ -22,9 +28,9 @@ export default function PlatformPresentationSlider({ isOpen, onClose }) {
             <div className="w-10 h-10 rounded-xl bg-[#4F46E5]/20 text-[#4F46E5] flex items-center justify-center font-bold mb-3">
               <Phone className="w-5 h-5" />
             </div>
-            <h4 className="font-bold text-sm mb-1">Voz Neural Brasileira</h4>
+            <h4 className="font-bold text-sm mb-1">Voz em Português Brasileiro</h4>
             <p className="text-xs text-stone-300 leading-relaxed">
-              Latência ultra-baixa (&lt;450ms). Sotaques regionais naturais, sem pausas robóticas e com escuta ativa de interrupções.
+              Voz configurável em português do Brasil para atendimento telefônico conforme o fluxo e o plano contratado.
             </p>
           </div>
 
@@ -32,9 +38,9 @@ export default function PlatformPresentationSlider({ isOpen, onClose }) {
             <div className="w-10 h-10 rounded-xl bg-emerald-500/20 text-emerald-400 flex items-center justify-center font-bold mb-3">
               <MessageSquare className="w-5 h-5" />
             </div>
-            <h4 className="font-bold text-sm mb-1">WhatsApp Voice-to-Voice</h4>
+            <h4 className="font-bold text-sm mb-1">WhatsApp em Texto e Áudio</h4>
             <p className="text-xs text-stone-300 leading-relaxed">
-              O cliente envia áudios no WhatsApp e a IA transcreve (STT), raciocina e devolve notas de áudio com a voz humana da empresa.
+              Fluxos configuráveis para receber e responder mensagens em texto e áudio conforme a modalidade contratada.
             </p>
           </div>
 
@@ -42,9 +48,9 @@ export default function PlatformPresentationSlider({ isOpen, onClose }) {
             <div className="w-10 h-10 rounded-xl bg-indigo-500/20 text-indigo-400 flex items-center justify-center font-bold mb-3">
               <Layers className="w-5 h-5" />
             </div>
-            <h4 className="font-bold text-sm mb-1">Ações em Tempo Real</h4>
+            <h4 className="font-bold text-sm mb-1">Integrações Configuráveis</h4>
             <p className="text-xs text-stone-300 leading-relaxed">
-              Durante a chamada, a IA agenda consultas no Google Calendar, gera chave Pix com desconto e manda comprovantes no WhatsApp.
+              Possibilidade de integrar agenda, geração de Pix e envios no WhatsApp conforme as integrações habilitadas no plano.
             </p>
           </div>
         </div>
@@ -104,7 +110,7 @@ export default function PlatformPresentationSlider({ isOpen, onClose }) {
               <div>
                 <h5 className="font-bold text-xs text-[#1A1816]">Simulação Completa no Navegador</h5>
                 <p className="text-[11px] text-[#736F69] mt-0.5">
-                  O modal de ligação ao vivo funciona direto no browser usando o microfone do seu computador e sintetizador de voz nativo do sistema operacional.
+                  O modal de simulação ilustrativa funciona no navegador usando microfone e sintetizador de voz do sistema operacional.
                 </p>
               </div>
             </div>
@@ -144,18 +150,18 @@ export default function PlatformPresentationSlider({ isOpen, onClose }) {
     },
     {
       id: 'meeting-script',
-      badge: 'ROTEIRO DE VENDAS DE ALTO TICKET',
+      badge: 'ROTEIRO COMERCIAL B2B',
       title: 'A Reunião Perfeita de 20 Minutos com o Cliente',
-      subtitle: 'O passo a passo exato para fechar contratos de R$ 2.500 de Setup + R$ 1.290/mês.',
+      subtitle: 'Passo a passo consultivo com condições definidas conforme o catálogo oficial.',
       theme: 'dark',
       content: (
         <div className="space-y-3 mt-6">
           <div className="p-4 rounded-xl bg-white/5 border border-white/10 flex items-start gap-3 text-white">
             <span className="px-2 py-0.5 rounded bg-[#4F46E5] text-[10px] font-bold shrink-0 mt-0.5">00-05 min</span>
             <div>
-              <h5 className="text-xs font-bold text-white">Diagnóstico do Gargalo Financeiro</h5>
+              <h5 className="text-xs font-bold text-white">Diagnóstico do Gargalo de Atendimento</h5>
               <p className="text-[11px] text-stone-300 mt-0.5">
-                Pergunte o que acontece quando o paciente liga às 12h30 no almoço ou às 20h. Mostre que perder apenas 3 consultas por semana custa mais de R$ 4.200/mês para a clínica.
+                Pergunte o que acontece quando o paciente ou cliente entra em contato no horário de almoço ou após as 18h e estime o impacto no negócio dele.
               </p>
             </div>
           </div>
@@ -163,9 +169,9 @@ export default function PlatformPresentationSlider({ isOpen, onClose }) {
           <div className="p-4 rounded-xl bg-white/5 border border-white/10 flex items-start gap-3 text-white">
             <span className="px-2 py-0.5 rounded bg-emerald-600 text-[10px] font-bold shrink-0 mt-0.5">06-12 min</span>
             <div>
-              <h5 className="text-xs font-bold text-white">A Demonstração Mágica ao Vivo</h5>
+              <h5 className="text-xs font-bold text-white">Demonstração Interativa</h5>
               <p className="text-[11px] text-stone-300 mt-0.5">
-                Digite o celular dele na Landing Page e faça a Roberta ligar para ele na hora. O telefone dele toca, ele conversa com a IA e recebe a mensagem no WhatsApp. A venda se fecha aqui.
+                Apresente a simulação ilustrativa no navegador para validar fluxo, voz e exemplo de resumo antes da contratação.
               </p>
             </div>
           </div>
@@ -175,7 +181,7 @@ export default function PlatformPresentationSlider({ isOpen, onClose }) {
             <div>
               <h5 className="text-xs font-bold text-white">Apresentação do Painel & Proposta Comercial</h5>
               <p className="text-[11px] text-stone-300 mt-0.5">
-                Mostre as gravações de áudio no painel e apresente a Opção Chave na Mão: R$ 2.500 de Setup para calibrar as regras + R$ 1.290/mês de gestão e suporte contínuo.
+                Mostre o painel de atendimentos e apresente setup ({agencySummary.setupFee.text}) e gestão recorrente ({agencySummary.monthlyManagementFee.text}) conforme condições oficiais.
               </p>
             </div>
           </div>
@@ -184,31 +190,31 @@ export default function PlatformPresentationSlider({ isOpen, onClose }) {
     },
     {
       id: 'architecture',
-      badge: 'ARQUITETURA & HOSPEDAGEM 24/7',
-      title: 'Onde o OpenBot Entra e Como Ele Roda 24/7 na Nuvem',
-      subtitle: 'Seu computador pessoal é o laboratório; o servidor na nuvem garante que o sistema nunca durma.',
+      badge: 'ARQUITETURA & HOSPEDAGEM',
+      title: 'Como Funciona a Arquitetura na Nuvem',
+      subtitle: 'Ambiente local de configuração e infraestrutura na nuvem conforme operação contratada.',
       theme: 'light',
       content: (
         <div className="grid grid-cols-1 md:grid-cols-2 gap-5 mt-6">
           <div className="p-5 rounded-2xl bg-white border border-[#E7E4DC] shadow-xs">
             <div className="flex items-center gap-2 mb-2 text-[#1A1816]">
               <Laptop className="w-5 h-5 text-[#736F69]" />
-              <h4 className="font-bold text-sm">OpenBot no seu Computador</h4>
+              <h4 className="font-bold text-sm">Ambiente Local de Testes</h4>
             </div>
-            <div className="text-[11px] font-mono text-stone-500 mb-2">C:\Users\User\OpenBot</div>
+            <div className="text-[11px] font-mono text-stone-500 mb-2">Laboratório local</div>
             <p className="text-xs text-[#5C5955] leading-relaxed">
-              Usado para você criar novos fluxos visuais, testar automações e desenhar regras sem custo de servidor. É o seu <strong>laboratório de engenharia interno</strong>.
+              Usado para você criar novos fluxos visuais, testar automações e desenhar regras em ambiente controlado.
             </p>
           </div>
 
           <div className="p-5 rounded-2xl bg-[#EEF2FF] border border-[#F2E8DC] shadow-xs">
             <div className="flex items-center gap-2 mb-2 text-[#4F46E5]">
               <Cloud className="w-5 h-5" />
-              <h4 className="font-bold text-sm">OpenBot 24/7 na Nuvem (Railway / Render)</h4>
+              <h4 className="font-bold text-sm">Servidor na Nuvem</h4>
             </div>
-            <div className="text-[11px] font-mono text-[#4F46E5] mb-2">https://seu-openbot.up.railway.app</div>
+            <div className="text-[11px] font-mono text-[#4F46E5] mb-2">Infraestrutura gerenciada</div>
             <p className="text-xs text-[#5C5955] leading-relaxed">
-              Hospedado por ~R$ 35/mês para atender dezenas de clientes da sua agência simultaneamente, mesmo quando seu computador estiver desligado ou sem internet.
+              Hospedagem dedicada para atender empresas clientes simultaneamente (custos de servidor e fornecedores sob consulta conforme operação).
             </p>
           </div>
         </div>
@@ -216,33 +222,33 @@ export default function PlatformPresentationSlider({ isOpen, onClose }) {
     },
     {
       id: 'pricing-model',
-      badge: 'MODELO DE LUCRO DA AGÊNCIA',
-      title: 'Como Faturar R$ 10.000 a R$ 25.000/Mês com sua Plataforma',
-      subtitle: 'Unit economics limpos: o cliente paga a infraestrutura e você fica com o lucro recorrente.',
+      badge: 'MODELO COMERCIAL WHITE-LABEL',
+      title: 'Estrutura de Receita para Agências',
+      subtitle: 'Valores oficiais de implantação, mensalidade e custos por minuto seguem a fonte única comercial.',
       theme: 'dark',
       content: (
         <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 mt-6">
           <div className="p-5 rounded-2xl bg-white/5 border border-white/10 text-white">
             <div className="text-[10px] uppercase font-bold text-[#4F46E5] mb-1">Passo 1: Setup</div>
-            <div className="text-2xl font-bold text-white mb-2">R$ 2.500</div>
+            <div className="text-lg font-bold text-white mb-2">{agencySummary.setupFee.text}</div>
             <p className="text-xs text-stone-300">
-              Cobrado à vista de cada nova clínica médica, imobiliária ou advogado para cadastrar os serviços e calibrar o prompt.
+              Implantação inicial para cadastrar serviços, regras e fluxos do cliente.
             </p>
           </div>
 
           <div className="p-5 rounded-2xl bg-white/5 border border-white/10 text-white">
             <div className="text-[10px] uppercase font-bold text-emerald-400 mb-1">Passo 2: Mensalidade</div>
-            <div className="text-2xl font-bold text-emerald-400 mb-2">R$ 1.290<span className="text-xs font-normal text-stone-300">/mês</span></div>
+            <div className="text-lg font-bold text-emerald-400 mb-2">{agencySummary.monthlyManagementFee.text}</div>
             <p className="text-xs text-stone-300">
-              Receita recorrente contratual por cliente para suporte, atualizações de catálogo e monitoramento do assistente.
+              Receita recorrente contratual por cliente para suporte e acompanhamento do assistente.
             </p>
           </div>
 
           <div className="p-5 rounded-2xl bg-white/5 border border-white/10 text-white">
-            <div className="text-[10px] uppercase font-bold text-indigo-400 mb-1">Passo 3: Margem Minuto</div>
-            <div className="text-2xl font-bold text-indigo-400 mb-2">+ 2.5x <span className="text-xs font-normal text-stone-300">lucro</span></div>
+            <div className="text-[10px] uppercase font-bold text-indigo-400 mb-1">Passo 3: Custos e Repasse</div>
+            <div className="text-lg font-bold text-indigo-400 mb-2">{agencySummary.resaleMinutePrice.text}</div>
             <p className="text-xs text-stone-300">
-              O minuto custa ~R$ 0,39 na operadora e você repassa a R$ 0,97/min para clientes que consomem grandes volumes de chamadas.
+              {providerCostText}
             </p>
           </div>
         </div>

@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { Play, Pause, Sparkles, Volume2, ArrowRight, Check, Mic, Sliders, Globe } from 'lucide-react';
 import { speakPersonaPt, stopSpeech } from '../utils/voiceUtils';
+import { getVoiceCloningAvailabilityLabel } from '../utils/commercialCatalogUtils';
 
 const VOICE_PERSONAS = [
   {
@@ -17,24 +18,24 @@ const VOICE_PERSONAS = [
   {
     id: 'camila',
     name: 'Camila',
-    role: 'Saúde & Atendimento Humanizado',
+    role: 'Saúde & Atendimento Administrativo (Ilustrativo)',
     badge: 'Setor de Saúde',
     badgeColor: 'bg-emerald-50 text-emerald-700 border-emerald-200',
-    tone: 'Serena, paciente e empática',
-    idealFor: 'Consultórios Médicos, Odontologia e Estética',
+    tone: 'Serena, cordial e dentro das regras da clínica',
+    idealFor: 'Agendamentos de rotina após validação do responsável técnico (sem diagnóstico ou triagem de urgência por IA)',
     gender: 'Feminina',
-    sampleText: 'Olá, bom dia! Aqui é a Camila do consultório. Entendo a urgência do seu agendamento. Temos horário amanhã às nove e quinze ou quinta às catorze horas. Qual prefere?'
+    sampleText: 'Olá, bom dia! Aqui é a Camila, assistente virtual do consultório em simulação ilustrativa. Para sua avaliação periódica de rotina, temos horário disponível na quinta às catorze horas ou na sexta às dez horas, conforme a agenda configurada pela clínica. Qual prefere?'
   },
   {
     id: 'marcus',
     name: 'Marcus',
-    role: 'Executivo & Autoridade Institucional',
+    role: 'Recepção Administrativa & Triagem Inicial',
     badge: 'Corporativo & Jurídico',
     badgeColor: 'bg-stone-100 text-stone-800 border-stone-300',
-    tone: 'Firme, institucional e seguro',
-    idealFor: 'Advocacia, Finanças e Imóveis de Alto Padrão',
+    tone: 'Firme, claro e restrito às regras do cliente',
+    idealFor: 'Recepção administrativa para Advocacia, Finanças e Imóveis (sem parecer jurídico ou promessa de resultados)',
     gender: 'Masculino',
-    sampleText: 'Boa tarde. Sou o Marcus da assessoria jurídica. Identifiquei o protocolo da sua solicitação e posso atualizar o andamento do seu caso imediatamente.'
+    sampleText: 'Boa tarde. Sou o Marcus, assistente virtual do escritório em simulação ilustrativa. Posso registrar seu pedido de agendamento administrativo conforme as regras do escritório para análise e retorno pelo advogado responsável.'
   },
   {
     id: 'leticia',
@@ -97,7 +98,7 @@ export default function VoiceStudioPlayground({ onOpenDemo, onOpenAuth }) {
         <div className="text-center max-w-3xl mx-auto mb-14">
           <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-indigo-50 border border-indigo-200 text-[#4F46E5] text-xs font-semibold uppercase tracking-wider mb-4">
             <Mic className="w-3.5 h-3.5" />
-            <span>ESTÚDIO DE VOZES NEURAIS BRASILEIRAS</span>
+            <span>SIMULAÇÃO ILUSTRATIVA DE VOZES (NAVEGADOR)</span>
           </div>
 
           <h2 className="text-3xl sm:text-5xl font-normal text-[#1A1816] tracking-tight leading-tight">
@@ -105,7 +106,7 @@ export default function VoiceStudioPlayground({ onOpenDemo, onOpenAuth }) {
             <span className="font-serif-title italic text-[#4F46E5]">falar pela sua marca.</span>
           </h2>
           <p className="mt-4 text-sm sm:text-base text-[#5C5955] max-w-2xl mx-auto leading-relaxed">
-            Nada de vozes robotizadas ou traduzidas do inglês. Nossos modelos foram calibrados com sotaques, pontuação e respiração natural para o ouvido brasileiro.
+            Teste roteiros em uma simulação ilustrativa reproduzida pelo sintetizador do navegador com dados fictícios. Em operação real, as respostas e limites de atuação dependem da base de conhecimento e das regras definidas pelo cliente — em setores sensíveis (saúde, odontologia, advocacia e finanças), exigem aprovação do profissional responsável e não oferecem conformidade clínica ou jurídica automática.
           </p>
         </div>
 
@@ -182,7 +183,7 @@ export default function VoiceStudioPlayground({ onOpenDemo, onOpenAuth }) {
                   </span>
                 </div>
                 <p className="text-xs text-stone-400 mt-0.5">
-                  {isPlaying ? '⚡ Falando ao vivo agora no seu navegador...' : 'Clique no play para ouvir a cadência humana real'}
+                  {isPlaying ? 'Reproduzindo simulação ilustrativa no navegador...' : 'Clique no play para ouvir uma simulação ilustrativa no navegador'}
                 </p>
               </div>
             </div>
@@ -260,7 +261,7 @@ export default function VoiceStudioPlayground({ onOpenDemo, onOpenAuth }) {
           {/* Action CTAs */}
           <div className="mt-6 flex flex-col sm:flex-row items-center justify-between gap-4 pt-4 border-t border-[#2D2A26]">
             <p className="text-xs text-stone-400 text-left">
-              Quer uma voz personalizada clonada do dono da empresa? <strong>Temos clonagem em 30 segundos no plano Pro.</strong>
+              Quer uma voz personalizada para sua empresa? <strong>{getVoiceCloningAvailabilityLabel()}</strong>
             </p>
             <button
               onClick={onOpenAuth || onOpenDemo}

@@ -63,13 +63,13 @@ export default function OutboundCampaignsSection() {
   // Mock template upload
   const handleLoadSampleCSV = () => {
     const sample = [
-      { nome: 'Carlos Eduardo', telefone: '(11) 98765-4321', horario: '14:30', status: 'Fila' },
-      { nome: 'Ana Paula Souza', telefone: '(21) 99876-1122', horario: '15:00', status: 'Fila' },
-      { nome: 'Marcos Vinicius', telefone: '(31) 98844-3322', horario: '15:30', status: 'Fila' },
-      { nome: 'Juliana Paes', telefone: '(41) 99122-3344', horario: '16:00', status: 'Fila' },
-      { nome: 'Fernando Ribeiro', telefone: '(71) 98233-4455', horario: '16:30', status: 'Fila' }
+      { nome: 'Contato Fictício 01 (Demo)', telefone: '(00) 00000-0001', horario: '14:30', status: 'Simulação' },
+      { nome: 'Contato Fictício 02 (Demo)', telefone: '(00) 00000-0002', horario: '15:00', status: 'Simulação' },
+      { nome: 'Contato Fictício 03 (Demo)', telefone: '(00) 00000-0003', horario: '15:30', status: 'Simulação' },
+      { nome: 'Contato Fictício 04 (Demo)', telefone: '(00) 00000-0004', horario: '16:00', status: 'Simulação' },
+      { nome: 'Contato Fictício 05 (Demo)', telefone: '(00) 00000-0005', horario: '16:30', status: 'Simulação' }
     ];
-    setUploadedFile({ name: 'pacientes_confirmacao_amanha.csv', size: '14.2 KB' });
+    setUploadedFile({ name: 'exemplo_ficticio_confirmacao_rotina.csv', size: '14.2 KB' });
     setParsedContacts(sample);
   };
 
@@ -151,29 +151,29 @@ export default function OutboundCampaignsSection() {
 
         <div className="bg-white p-5 rounded-2xl border border-[#E7E4DC] shadow-xs">
           <div className="flex items-center justify-between text-[#736F69] mb-2">
-            <span className="text-[11px] font-bold uppercase tracking-wider">Taxa de Atendimento</span>
+            <span className="text-[11px] font-bold uppercase tracking-wider">Taxa de Atendimento (Exemplo)</span>
             <PhoneForwarded className="w-4 h-4 text-emerald-600" />
           </div>
           <div className="text-2xl font-bold text-emerald-600">82.5%</div>
-          <div className="text-[11px] text-[#736F69] mt-1">246 chamadas atendidas</div>
+          <div className="text-[11px] text-[#736F69] mt-1">Dados fictícios (simulação ilustrativa)</div>
         </div>
 
         <div className="bg-white p-5 rounded-2xl border border-[#E7E4DC] shadow-xs">
           <div className="flex items-center justify-between text-[#736F69] mb-2">
-            <span className="text-[11px] font-bold uppercase tracking-wider">Confirmações / Conversão</span>
+            <span className="text-[11px] font-bold uppercase tracking-wider">Confirmações (Exemplo)</span>
             <CheckCircle2 className="w-4 h-4 text-emerald-600" />
           </div>
           <div className="text-2xl font-bold text-[#1A1816]">130</div>
-          <div className="text-[11px] text-emerald-600 font-semibold mt-1">52.8% de conversão final</div>
+          <div className="text-[11px] text-[#5C5955] font-medium mt-1">Dados fictícios (simulação ilustrativa)</div>
         </div>
 
         <div className="bg-white p-5 rounded-2xl border border-[#E7E4DC] shadow-xs">
           <div className="flex items-center justify-between text-[#736F69] mb-2">
-            <span className="text-[11px] font-bold uppercase tracking-wider">Custo Médio por Lead</span>
+            <span className="text-[11px] font-bold uppercase tracking-wider">Referência Ilustrativa</span>
             <Sparkles className="w-4 h-4 text-indigo-600" />
           </div>
-          <div className="text-2xl font-bold text-[#1A1816]">R$ 0,42</div>
-          <div className="text-[11px] text-[#736F69] mt-1">10x mais barato que call center</div>
+          <div className="text-2xl font-bold text-[#1A1816]">Exemplo</div>
+          <div className="text-[11px] text-[#736F69] mt-1">Dados fictícios (simulação ilustrativa)</div>
         </div>
       </div>
 

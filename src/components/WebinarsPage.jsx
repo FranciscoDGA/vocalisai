@@ -99,7 +99,7 @@ export default function WebinarsPage({ onOpenDemo, onOpenAuth, onNavigateHome })
               </h2>
 
               <p className="text-sm text-stone-300 leading-relaxed max-w-xl mx-auto">
-                Crie a sua assistente em poucos minutos e ouça como ela atende os seus clientes: por telefone, no WhatsApp e no chat do site.
+                Configure sua assistente conforme o plano escolhido e conheça os fluxos por telefone, WhatsApp e chat do site.
               </p>
 
               <div className="pt-3">
@@ -117,7 +117,7 @@ export default function WebinarsPage({ onOpenDemo, onOpenAuth, onNavigateHome })
               <AudioFrequencyWave 
                 variant="full" 
                 showLatencyBadge={true}
-                latencyText="Latência 380ms • Frequência Vocal em Tempo Real"
+                latencyText="Visualização ilustrativa • Voz em português brasileiro"
               />
             </div>
 

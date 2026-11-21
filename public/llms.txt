@@ -1,19 +1,19 @@
 # Vocalis AI
 
-> Atendimento inteligente por voz com IA e automação de WhatsApp 24h para empresas e clínicas.
+> Plataforma de atendimento automatizado por voz, WhatsApp e webchat para empresas.
 
-Plataforma brasileira de agentes de voz e atendimento automatizado via telefone, WhatsApp e webchat com inteligência artificial em português brasileiro, agendamento integrado, CRM e subcontas para agências. Domínio canônico: https://vocalisai-phi.vercel.app.
+Plataforma de assistentes de atendimento configuráveis via telefone, WhatsApp e webchat com foco em português brasileiro, triagem, agendamentos e encaminhamento para equipe humana conforme o plano contratado. Domínio canônico: https://vocalisai-phi.vercel.app.
 
 ## Páginas Principais
 
-- [Vocalis AI — Página Principal](https://vocalisai-phi.vercel.app/): Agentes de voz com latência abaixo de 450ms, automação no WhatsApp Web/Cloud API, recepcionista virtual, calculadora de ROI e planos comerciais.
+- [Vocalis AI — Página Principal](https://vocalisai-phi.vercel.app/): Apresentação dos canais Telefone, WhatsApp e Webchat, simulações ilustrativas e catálogo comercial sujeito a confirmação por plano.
 
 ## Canais e Recursos
 
-- **Telefone (Voz Neural):** Atendimento no primeiro toque em português brasileiro com integração 0800, DDDs locais e PABX SIP.
-- **WhatsApp Web & Cloud API:** Respostas instantâneas em áudio e texto com qualificação de leads e agendamentos 24/7.
-- **Webchat & E-mail IA:** Widget inteligente com transbordo humano imediato e sincronização com CRM.
-- **Subcontas para Agências:** Painel white-label e gestão multiempresa para agências de automação.
+- **Telefone (Voz):** Atendimento telefônico automatizado em português brasileiro, configurável para triagem, agendamentos e encaminhamento humano, conforme disponibilidade e plano contratado.
+- **WhatsApp:** Atendimento automatizado em texto e áudio para triagem e agendamentos; modalidade de conexão e eventuais custos de provedor ou da Meta dependem do plano confirmado.
+- **Webchat:** Widget configurável para o site com encaminhamento humano e integrações avaliadas conforme o plano contratado.
+- **Condições Comerciais:** Preços, limites, integrações técnicas e prazos de implantação variam conforme o plano e são confirmados na proposta oficial.
 
 ## Contato
 

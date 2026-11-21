@@ -86,9 +86,9 @@ export default function EquipeExternaPage({ onOpenDemo, onOpenAuth, onNavigateHo
     },
     {
       num: 4,
-      title: 'Sincronização com CRM e fechamento',
-      shortDesc: 'Antes de você chegar ao próximo cliente, o debriefing da última reunião já está documentado no HubSpot...',
-      fullDesc: 'Antes de você chegar ao próximo cliente, o debriefing da última reunião já está documentado no HubSpot, Salesforce ou Pipedrive sem digitação manual.'
+      title: 'Registro estruturado para CRM',
+      shortDesc: 'Exemplo ilustrativo de registro estruturado que pode ser enviado ao CRM conforme integrações habilitadas...',
+      fullDesc: 'Exemplo ilustrativo de registro estruturado que pode ser enviado ao CRM conforme integrações habilitadas no plano.'
     }
   ];
 
@@ -117,7 +117,7 @@ export default function EquipeExternaPage({ onOpenDemo, onOpenAuth, onNavigateHo
 
           {/* Subtitle */}
           <p className="text-base sm:text-lg text-[#5C5955] max-w-2xl mx-auto font-normal leading-relaxed mb-10">
-            Realize um breve debriefing por telefone e registre imediatamente no CRM.
+            Realize um debriefing por telefone com organização de resumo; a integração com CRM depende de configuração via webhook ou conector confirmado no plano.
           </p>
 
           {/* Audio Wave Visualizer Circle with Loop */}
@@ -176,7 +176,7 @@ export default function EquipeExternaPage({ onOpenDemo, onOpenAuth, onNavigateHo
                 type="tel"
                 value={phoneNumber}
                 onChange={handlePhoneChange}
-                placeholder="Seu celular com DDD"
+                placeholder="Seu celular com DDD (opcional)"
                 className="flex-1 px-3 py-2.5 bg-transparent text-[#1A1816] placeholder-[#9E9B95] text-sm focus:outline-none"
               />
 
@@ -186,11 +186,15 @@ export default function EquipeExternaPage({ onOpenDemo, onOpenAuth, onNavigateHo
                 className="shrink-0 px-6 py-3 rounded-full bg-[#11100F] text-white text-xs sm:text-sm font-semibold hover:bg-black transition-all flex items-center gap-2 shadow-sm cursor-pointer"
               >
                 <Phone className="w-4 h-4 text-white" />
-                <span>Ouvir a Vocalis agora</span>
+                <span>Abrir simulação ilustrativa</span>
               </button>
 
             </div>
           </form>
+
+          <p className="text-[11px] text-[#736F69] max-w-2xl mx-auto mb-3 leading-relaxed">
+            Simulação ilustrativa no navegador (Web Speech / TTS): não realiza chamada telefônica real e não armazena seu número. Em operação real, telefonia, números/SIP, transferência, gravação, limites de minutos, chamadas simultâneas e regras de excedente dependem de provedores terceiros (como Vapi e operadora SIP) e de confirmação no catálogo oficial.
+          </p>
 
           {/* Secondary Link: Agendar demo */}
           <div className="mb-8">
@@ -202,11 +206,11 @@ export default function EquipeExternaPage({ onOpenDemo, onOpenAuth, onNavigateHo
             </button>
           </div>
 
-          {/* Checklist */}
+          {/* Checklist prudente */}
           <div className="flex flex-wrap items-center justify-center gap-6 md:gap-8 text-xs font-semibold text-[#5C5955]">
             <div className="flex items-center gap-1.5">
               <Check className="w-4 h-4 text-[#4F46E5]" strokeWidth={2.5} />
-              <span>Garantia de 30 dias</span>
+              <span>Condições comerciais sob consulta</span>
             </div>
             <div className="flex items-center gap-1.5">
               <Check className="w-4 h-4 text-[#4F46E5]" strokeWidth={2.5} />
@@ -214,7 +218,7 @@ export default function EquipeExternaPage({ onOpenDemo, onOpenAuth, onNavigateHo
             </div>
             <div className="flex items-center gap-1.5">
               <Check className="w-4 h-4 text-[#4F46E5]" strokeWidth={2.5} />
-              <span>No ar em minutos</span>
+              <span>Configuração guiada</span>
             </div>
           </div>
 
@@ -234,7 +238,7 @@ export default function EquipeExternaPage({ onOpenDemo, onOpenAuth, onNavigateHo
                 24/7
               </span>
               <p className="text-xs sm:text-sm text-[#5C5955] leading-relaxed">
-                Atendimento, inclusive fora do expediente.
+                Atendimento configurável, inclusive fora do expediente.
               </p>
             </div>
 
@@ -248,23 +252,23 @@ export default function EquipeExternaPage({ onOpenDemo, onOpenAuth, onNavigateHo
               </p>
             </div>
 
-            {/* Card 3: 100+ */}
+            {/* Card 3: API & Webhooks */}
             <div className="bg-[#FAF9F5] rounded-3xl p-8 border border-[#E7E4DC] shadow-sm text-left">
-              <span className="text-4xl sm:text-5xl font-serif-title font-normal text-[#1A1816] block mb-3">
-                100+
+              <span className="text-3xl sm:text-4xl font-serif-title font-normal text-[#1A1816] block mb-3">
+                API &amp; Webhooks
               </span>
               <p className="text-xs sm:text-sm text-[#5C5955] leading-relaxed">
-                Integrações.
+                Integrações sob consulta conforme o plano.
               </p>
             </div>
 
-            {/* Card 4: 30 dias */}
+            {/* Card 4: PT-BR */}
             <div className="bg-[#FAF9F5] rounded-3xl p-8 border border-[#E7E4DC] shadow-sm text-left">
               <span className="text-4xl sm:text-5xl font-serif-title font-normal text-[#1A1816] block mb-3">
-                30 dias
+                PT-BR
               </span>
               <p className="text-xs sm:text-sm text-[#5C5955] leading-relaxed">
-                Para decidir, ou seu dinheiro de volta.
+                Foco em atendimento em português brasileiro.
               </p>
             </div>
 
@@ -334,7 +338,7 @@ export default function EquipeExternaPage({ onOpenDemo, onOpenAuth, onNavigateHo
               </h2>
 
               <p className="text-sm text-stone-300 leading-relaxed max-w-xl mx-auto">
-                Crie a sua assistente em poucos minutos e ouça como ela atende com calma, em português, a qualquer hora.
+                Configure sua assistente em português conforme o plano escolhido e conheça os fluxos disponíveis.
               </p>
 
               <div className="pt-3">
@@ -352,7 +356,7 @@ export default function EquipeExternaPage({ onOpenDemo, onOpenAuth, onNavigateHo
               <AudioFrequencyWave 
                 variant="full" 
                 showLatencyBadge={true}
-                latencyText="Latência 380ms • Frequência Vocal em Tempo Real"
+                latencyText="Visualização ilustrativa • Voz em português brasileiro"
               />
             </div>
 

@@ -6,7 +6,7 @@ import { speakFemalePt } from '../utils/voiceUtils';
 export default function WhatsAppInstantAudioCard() {
   const [isPlayingAudio, setIsPlayingAudio] = useState(false);
 
-  const audioMessageText = "Olá! Aqui é a assistente de inteligência artificial da Vocalis. Acabei de receber sua mensagem pelo site. Nosso sistema envia respostas em áudio natural como este aqui direto no seu WhatsApp em menos de três segundos. Como posso ajudar a sua empresa hoje?";
+  const audioMessageText = "Olá! Esta é uma simulação ilustrativa de resposta em áudio da Vocalis para demonstrar como um atendimento automatizado pode interagir no WhatsApp.";
 
   const handlePlaySample = () => {
     if (isPlayingAudio) {
@@ -26,7 +26,7 @@ export default function WhatsAppInstantAudioCard() {
   };
 
   const whatsappUrl = SPECIALIST_CONTACT.getWhatsAppUrl(
-    'Olá! Estou no site da Vocalis AI e quero receber um áudio de demonstração no meu WhatsApp agora.'
+    'Olá! Estou no site da Vocalis AI e gostaria de conversar sobre atendimento automatizado no WhatsApp.'
   );
 
   return (
@@ -39,17 +39,17 @@ export default function WhatsAppInstantAudioCard() {
           {/* Left Info */}
           <div className="max-w-xl space-y-4 text-center lg:text-left">
             <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-emerald-50 border border-emerald-200 text-emerald-800 text-xs font-bold uppercase tracking-wider">
-              <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
-              <span>EXPERIÊNCIA AO VIVO NO SEU WHATSAPP</span>
+              <span className="w-2 h-2 rounded-full bg-emerald-500" />
+              <span>SIMULAÇÃO ILUSTRATIVA DE ÁUDIO NO WHATSAPP</span>
             </div>
 
             <h2 className="text-3xl sm:text-4xl font-normal text-[#1A1816] tracking-tight leading-tight">
-              Mande um "Oi" no WhatsApp e receba um{' '}
-              <span className="font-serif-title italic text-emerald-700">áudio humano em 3 segundos.</span>
+              Veja um exemplo ilustrativo de resposta em áudio{' '}
+              <span className="font-serif-title italic text-emerald-700">para atendimento no WhatsApp.</span>
             </h2>
 
             <p className="text-sm text-[#5C5955] leading-relaxed">
-              Veja a mágica acontecer no seu próprio aparelho. Ao clicar no botão abaixo, nosso bot inteligente no WhatsApp responderá com uma <strong>nota de voz personalizada</strong> com fala acolhedora, sem taxa por mensagem da Meta.
+              Aperte o play ao lado para ouvir uma simulação ilustrativa no navegador ou fale com nossa equipe no WhatsApp. Modalidade de conexão e eventuais custos de provedor ou da Meta dependem do plano confirmado.
             </p>
 
             <div className="pt-2">
@@ -60,10 +60,10 @@ export default function WhatsAppInstantAudioCard() {
                 className="inline-flex items-center gap-2.5 px-7 py-3.5 rounded-full bg-[#16A34A] hover:bg-[#15803D] text-white font-bold text-sm shadow-lg shadow-emerald-600/25 transition-all hover:scale-105 cursor-pointer"
               >
                 <Send className="w-4 h-4" />
-                <span>Testar Áudio no Meu WhatsApp Agora</span>
+                <span>Falar com Nossa Equipe no WhatsApp</span>
               </a>
               <span className="text-[11px] text-[#8C8881] block mt-2">
-                Conexão direta com número real da nossa empresa.
+                Abre conversa com o atendimento comercial da equipe.
               </span>
             </div>
           </div>
@@ -76,7 +76,7 @@ export default function WhatsAppInstantAudioCard() {
                 <span className="w-2 h-2 rounded-full bg-emerald-500" />
                 <span>Vocalis AI • WhatsApp</span>
               </span>
-              <span className="text-[10px] text-stone-400">Agora mesmo</span>
+              <span className="text-[10px] text-stone-400">Simulação ilustrativa</span>
             </div>
 
             {/* Audio Bubble Message */}
@@ -120,7 +120,7 @@ export default function WhatsAppInstantAudioCard() {
             </div>
 
             <p className="text-[11px] text-stone-500 italic text-center">
-              "Clique no play acima para pré-visualizar o áudio que o seu cliente receberá."
+              "Simulação ilustrativa reproduzida no navegador para demonstrar um exemplo de mensagem de áudio."
             </p>
 
           </div>

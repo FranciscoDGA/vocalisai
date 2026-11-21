@@ -2,6 +2,11 @@ import React from 'react';
 import { X, Printer, Download, ShieldCheck, CheckCircle2, TrendingUp, Building2, Phone, MessageSquare, Clock } from 'lucide-react';
 import VocalisLogo from './VocalisLogo';
 import { BRAND } from '../data/content';
+import {
+  getCommercialEntryLabel,
+  getLowestConfirmedEntryPrice,
+  getSimultaneousCallsSummary,
+} from '../utils/commercialCatalogUtils';
 
 export default function ExecutiveDossierModal({ isOpen, onClose, onOpenDemo }) {
   if (!isOpen) return null;
@@ -73,59 +78,63 @@ export default function ExecutiveDossierModal({ isOpen, onClose, onOpenDemo }) {
               </p>
             </div>
             <div className="text-left sm:text-right text-xs text-[#8C8881]">
-              <p>Confidencial · Apresentação à Diretoria</p>
-              <p className="font-mono mt-0.5">SLA Contratual: 99.9% · LGPD Blindada</p>
+              <p>Apresentação Comercial · Vocalis AI</p>
+              <p className="font-mono mt-0.5">Material ilustrativo · SLA e termos conforme contrato</p>
             </div>
           </div>
 
           {/* Title */}
           <div>
             <h1 className="text-2xl sm:text-3xl font-extrabold text-[#1A1816] tracking-tight leading-tight">
-              Dossiê de Viabilidade & Retorno sobre Investimento (ROI)
+              Material Executivo Ilustrativo (Análise de Cenário)
             </h1>
             <p className="text-sm text-[#5C5955] mt-2 leading-relaxed">
-              Substituição de custos fixos de recepção tradicional por agentes neurais autônomos de alta performance com atendimento telefônico, WhatsApp e agendamentos ininterruptos.
+              Visão geral ilustrativa para comparar custos referenciais de atendimento tradicional e automação com a Vocalis AI. Condições, integrações e níveis de serviço são confirmados formalmente na proposta comercial.
             </p>
           </div>
 
           {/* 1. Comparison ROI Table */}
           <div className="rounded-2xl border border-[#E7E4DC] overflow-hidden">
             <div className="p-4 bg-[#FAF9F5] border-b border-[#E7E4DC] font-bold text-xs uppercase tracking-wider text-[#1A1816]">
-              1. Comparativo Econômico: Equipe Tradicional CLT vs Vocalis AI
+              1. Comparativo Ilustrativo: Atendimento Tradicional vs Vocalis AI
             </div>
             <table className="w-full text-xs text-left">
               <thead>
                 <tr className="border-b border-[#E7E4DC] bg-white text-[#736F69]">
                   <th className="p-3.5 font-bold">Indicador de Custo</th>
-                  <th className="p-3.5">Atendente CLT (1 Posição)</th>
-                  <th className="p-3.5 font-bold text-[#4F46E5] bg-indigo-50/50">Vocalis AI (Escala 100+ Linhas)</th>
+                  <th className="p-3.5">Referência CLT (1 Posição)</th>
+                  <th className="p-3.5 font-bold text-[#4F46E5] bg-indigo-50/50">Vocalis AI (Conforme Plano)</th>
                 </tr>
               </thead>
               <tbody className="divide-y divide-[#E7E4DC]">
                 <tr>
                   <td className="p-3.5 font-semibold text-[#1A1816]">Custo Mensal Direto</td>
-                  <td className="p-3.5 text-[#5C5955]">R$ 1.800 a R$ 2.400 (Salário Base)</td>
-                  <td className="p-3.5 font-bold text-emerald-700 bg-indigo-50/30">A partir de R$ 503 / mês</td>
+                  <td className="p-3.5 text-[#5C5955]">R$ 1.800 a R$ 2.400 (referência ilustrativa de salário base)</td>
+                  <td className="p-3.5 font-bold text-emerald-700 bg-indigo-50/30">{getCommercialEntryLabel('telefone')}</td>
                 </tr>
                 <tr>
-                  <td className="p-3.5 font-semibold text-[#1A1816]">Encargos (INSS, FGTS, 13º, Férias)</td>
-                  <td className="p-3.5 text-rose-600 font-medium">+ 68% a 102% sobre o salário</td>
-                  <td className="p-3.5 font-bold text-emerald-700 bg-indigo-50/30">R$ 0,00 (Zero passivo trabalhista)</td>
+                  <td className="p-3.5 font-semibold text-[#1A1816]">Encargos e Benefícios Trabalhistas</td>
+                  <td className="p-3.5 text-rose-600 font-medium">Encargos incidentes conforme legislação trabalhista</td>
+                  <td className="p-3.5 font-bold text-emerald-700 bg-indigo-50/30">Assinatura de software e uso (sem vínculo empregatício)</td>
                 </tr>
                 <tr>
                   <td className="p-3.5 font-semibold text-[#1A1816]">Horário de Cobertura</td>
                   <td className="p-3.5 text-[#5C5955]">44h semanais (apenas horário comercial)</td>
-                  <td className="p-3.5 font-bold text-emerald-700 bg-indigo-50/30">168h semanais (24h/dia, 365 dias/ano)</td>
+                  <td className="p-3.5 font-bold text-emerald-700 bg-indigo-50/30">Horário configurável, inclusive fora do expediente</td>
                 </tr>
                 <tr>
                   <td className="p-3.5 font-semibold text-[#1A1816]">Capacidade Simultânea</td>
                   <td className="p-3.5 text-[#5C5955]">1 chamada por vez (demais dão ocupado)</td>
-                  <td className="p-3.5 font-bold text-emerald-700 bg-indigo-50/30">100+ ligações simultâneas sem espera</td>
+                  <td className="p-3.5 font-bold text-emerald-700 bg-indigo-50/30">{getSimultaneousCallsSummary('telefone')}</td>
                 </tr>
                 <tr className="bg-[#FAF9F5] font-bold">
-                  <td className="p-3.5 text-[#1A1816]">Economia Anual Estimada</td>
-                  <td className="p-3.5 text-rose-600">Custo Total: ~R$ 45.600/ano</td>
-                  <td className="p-3.5 text-emerald-700 bg-indigo-50/50">Economia média de R$ 39.500/ano por posição</td>
+                  <td className="p-3.5 text-[#1A1816]">Diferença Ilustrativa (Referência CLT)</td>
+                  <td className="p-3.5 text-rose-600">Referência ilustrativa: ~R$ 45.600/ano</td>
+                  <td className="p-3.5 text-emerald-700 bg-indigo-50/50">
+                    {typeof getLowestConfirmedEntryPrice('telefone') === 'number'
+                      ? `Diferença ilustrativa de R$ ${(45600 - getLowestConfirmedEntryPrice('telefone') * 12).toLocaleString('pt-BR')}/ano vs. piso confirmado (sem garantia de economia)`
+                      : 'Calculada na proposta conforme plano confirmado (valores CLT são referências ilustrativas)'}
+                  </td>
                 </tr>
               </tbody>
             </table>
@@ -137,9 +146,9 @@ export default function ExecutiveDossierModal({ isOpen, onClose, onOpenDemo }) {
               <div className="w-8 h-8 rounded-xl bg-indigo-100 text-[#4F46E5] flex items-center justify-center mb-2">
                 <Clock className="w-4 h-4" />
               </div>
-              <h4 className="font-bold text-xs text-[#1A1816]">Atendimento Imediato (0s)</h4>
+              <h4 className="font-bold text-xs text-[#1A1816]">Atendimento fora do expediente</h4>
               <p className="text-[11px] text-[#5C5955] mt-1 leading-relaxed">
-                35% dos clientes ligam à noite ou no almoço. A Vocalis qualifica o lead no primeiro toque e agenda na hora.
+                Permite configurar triagem e agendamentos também fora do horário comercial, conforme as regras do plano.
               </p>
             </div>
 
@@ -147,9 +156,9 @@ export default function ExecutiveDossierModal({ isOpen, onClose, onOpenDemo }) {
               <div className="w-8 h-8 rounded-xl bg-emerald-100 text-emerald-700 flex items-center justify-center mb-2">
                 <MessageSquare className="w-4 h-4" />
               </div>
-              <h4 className="font-bold text-xs text-[#1A1816]">WhatsApp Web Sem Taxas</h4>
+              <h4 className="font-bold text-xs text-[#1A1816]">Atendimento via WhatsApp</h4>
               <p className="text-[11px] text-[#5C5955] mt-1 leading-relaxed">
-                Conexão direta Baileys sem as tarifas de cobrança por mensagem da Meta Cloud API oficial. Economia de milhares de reais.
+                Automação em texto e áudio. A modalidade de conexão e eventuais custos de provedor ou da Meta são confirmados na proposta.
               </p>
             </div>
 
@@ -157,24 +166,24 @@ export default function ExecutiveDossierModal({ isOpen, onClose, onOpenDemo }) {
               <div className="w-8 h-8 rounded-xl bg-amber-100 text-amber-800 flex items-center justify-center mb-2">
                 <ShieldCheck className="w-4 h-4" />
               </div>
-              <h4 className="font-bold text-xs text-[#1A1816]">Conformidade LGPD Total</h4>
+              <h4 className="font-bold text-xs text-[#1A1816]">Privacidade e LGPD</h4>
               <p className="text-[11px] text-[#5C5955] mt-1 leading-relaxed">
-                Gravações criptografadas ponta a ponta, dados armazenados no Brasil e termo de responsabilidade de dados auditável.
+                Diretrizes de proteção de dados descritas na Política de Privacidade e nos termos contratuais aplicáveis.
               </p>
             </div>
           </div>
 
-          {/* 3. Onboarding 24h & Implementation Plan */}
+          {/* 3. Implantação Assistida */}
           <div className="p-5 rounded-2xl border border-[#E7E4DC] bg-white text-xs space-y-2">
             <div className="font-bold text-sm text-[#1A1816] flex items-center gap-2">
               <CheckCircle2 className="w-4 h-4 text-emerald-600" />
-              <span>Cronograma de Implantação Chave na Mão (24 Horas)</span>
+              <span>Implantação Assistida (Escopo e Prazo Sob Consulta)</span>
             </div>
             <p className="text-[#5C5955] leading-relaxed">
-              A equipe da Vocalis AI realiza toda a engenharia de prompts, calibração do tom de voz neural e integração com CRM e WhatsApp da sua empresa. Você não precisa alocar desenvolvedores internos.
+              A equipe da Vocalis AI alinha a configuração de roteiros, voz e possíveis integrações de acordo com a necessidade da empresa e os recursos do plano escolhido.
             </p>
             <div className="pt-2 text-[11px] text-[#8C8881] font-mono">
-              Suporte com gerente de contas dedicado, número 0800 ou DDD local e garantia incondicional de 14 dias de satisfação.
+              O escopo de implantação, integrações, canais de suporte e condições de cancelamento ou reembolso são confirmados formalmente na proposta comercial.
             </div>
           </div>
 

@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React from 'react';
 
 // Perfil padrão de harmônicos vocais (36 barras) usado nos banners escuros de CTA
 const DEFAULT_HEIGHTS = [
@@ -12,8 +12,7 @@ const PALETTES = {
 };
 
 /**
- * Onda sonora animada (frequência em movimento) + indicador de latência ao vivo.
- * Animação 100% CSS via transform (GPU), sem custo de re-render nas barras.
+ * Onda sonora animada com legenda ilustrativa estática (sem simulação aleatória de latência).
  */
 export default function LiveSoundwaveBars({
   heights = DEFAULT_HEIGHTS,
@@ -21,22 +20,11 @@ export default function LiveSoundwaveBars({
   className = 'mt-12',
   heightClass = 'h-14',
   showLatency = true,
-  latencyLabel = 'Latência',
-  latencySuffix = 'Voz neural brasileira ao vivo',
-  minLatency = 310,
-  maxLatency = 420
+  caption = 'Visualização ilustrativa de áudio · Português brasileiro',
+  latencySuffix,
 }) {
-  const [latency, setLatency] = useState(Math.round((minLatency + maxLatency) / 2));
-
-  useEffect(() => {
-    if (!showLatency) return undefined;
-    const timer = setInterval(() => {
-      setLatency(Math.round(minLatency + Math.random() * (maxLatency - minLatency)));
-    }, 1400);
-    return () => clearInterval(timer);
-  }, [showLatency, minLatency, maxLatency]);
-
   const barColor = PALETTES[palette] || PALETTES.ember;
+  const displayCaption = caption || (latencySuffix ? `Visualização ilustrativa · ${latencySuffix}` : 'Visualização ilustrativa de áudio · Português brasileiro');
 
   return (
     <div className={`relative z-10 flex flex-col items-center ${className}`}>
@@ -52,15 +40,8 @@ export default function LiveSoundwaveBars({
 
       {showLatency && (
         <div className="flex items-center gap-2 text-[10px] sm:text-[11px] font-mono text-[#A8A49C] mt-4">
-          <span className="relative flex h-2 w-2">
-            <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75" />
-            <span className="relative inline-flex rounded-full h-2 w-2 bg-emerald-500" />
-          </span>
-          <span>
-            {latencyLabel}{' '}
-            <span className="text-emerald-400 font-semibold tabular-nums transition-colors">{latency}ms</span>
-            <span className="hidden sm:inline"> · {latencySuffix}</span>
-          </span>
+          <span className="inline-flex rounded-full h-2 w-2 bg-[#6366F1]" aria-hidden="true" />
+          <span>{displayCaption}</span>
         </div>
       )}
     </div>

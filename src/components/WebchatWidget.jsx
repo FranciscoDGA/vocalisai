@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { MessageSquare, X, Send, Bot, Phone, MessageCircle, Sparkles, CheckCheck } from 'lucide-react';
 import { BRAND } from '../data/content';
+import { buildBeatrizCommercialReply } from '../utils/commercialCatalogUtils';
 
 export default function WebchatWidget({ onOpenDemo, onOpenAuth }) {
   const [isOpen, setIsOpen] = useState(false);
@@ -10,7 +11,8 @@ export default function WebchatWidget({ onOpenDemo, onOpenAuth }) {
     {
       id: 1,
       sender: 'beatriz',
-      text: 'Olá! 👋 Eu sou a Beatriz, assistente virtual da Vocalis AI. Como posso te ajudar hoje?',
+      text: 'Olá! 👋 Eu sou a Beatriz, assistente virtual de Inteligência Artificial (IA) da Vocalis AI. Esta conversa é automatizada e ilustrativa; se preferir atendimento humano, clique abaixo para falar com nossa equipe.',
+      showDemoCta: true,
       time: 'Agora'
     }
   ]);
@@ -43,17 +45,46 @@ export default function WebchatWidget({ onOpenDemo, onOpenAuth }) {
     setIsTyping(true);
 
     setTimeout(() => {
-      let reply = `Com certeza! A Vocalis foi feita para automatizar seu atendimento em múltiplos canais com 3 assistentes especializadas: a Roberta (SDR e primeiros atendimentos no telefone), a Camila (atendimento e vendas no WhatsApp) e eu, Beatriz, no webchat do site!`;
-      
+      let reply = `Sou uma assistente de IA (simulação interativa). Entendi sua dúvida sobre "${text}". Posso responder informações comerciais do catálogo oficial ou abrir o formulário de solicitação para você conversar com nossa equipe humana.`;
+      let isCommercial = false;
+      let showDemoCta = false;
+
       const lower = text.toLowerCase();
-      if (lower.includes('roberta') || lower.includes('telefone') || lower.includes('fone') || lower.includes('ligação') || lower.includes('sdr')) {
-        reply = `A Roberta é nossa SDR e especialista em atendimento telefônico! Ela atende chamadas com voz neural em 380ms, faz triagem humanizada, agenda consultas e transfere para sua equipe quando necessário. Você pode testar uma ligação com ela no topo da página!`;
+      if (
+        lower.includes('preço') ||
+        lower.includes('preco') ||
+        lower.includes('plano') ||
+        lower.includes('valor') ||
+        lower.includes('quanto custa') ||
+        lower.includes('promoc') ||
+        lower.includes('promoç') ||
+        lower.includes('anual') ||
+        lower.includes('excedent') ||
+        lower.includes('limite') ||
+        lower.includes('minuto') ||
+        lower.includes('conversa')
+      ) {
+        reply = buildBeatrizCommercialReply(text);
+        isCommercial = true;
+        showDemoCta = true;
+      } else if (
+        lower.includes('humano') ||
+        lower.includes('atendente') ||
+        lower.includes('pessoa') ||
+        lower.includes('suporte') ||
+        lower.includes('especialista')
+      ) {
+        reply = `Este widget executa apenas um atendimento automatizado por IA no navegador e não transfere automaticamente para atendente humano ao vivo dentro desta janela. Use o botão abaixo para enviar sua solicitação à nossa equipe humana.`;
+        showDemoCta = true;
+      } else if (lower.includes('roberta') || lower.includes('telefone') || lower.includes('fone') || lower.includes('ligação') || lower.includes('sdr')) {
+        reply = `A Roberta é nossa demonstração conceitual para atendimento telefônico por IA. O simulador no topo da página roda no navegador de forma ilustrativa; a operação telefônica real depende de provedores terceiros e condições do plano contratado.`;
+        showDemoCta = true;
       } else if (lower.includes('camila') || lower.includes('whatsapp') || lower.includes('zap')) {
-        reply = `A Camila é nossa especialista em WhatsApp Business! Ela atende seus clientes 24/7 no WhatsApp, envia propostas, tira dúvidas de catálogos e gera Pix copia-e-cola na hora para fechar vendas.`;
-      } else if (lower.includes('preço') || lower.includes('plano') || lower.includes('valor') || lower.includes('quanto custa')) {
-        reply = `Temos planos a partir de R$ 209/mês para WhatsApp e Webchat, e planos completos com voz neural telefônica a partir de R$ 503/mês. E você pode estender em dias de pico por R$ 70/h!`;
+        reply = `A Camila ilustra o atendimento automatizado de IA no WhatsApp. As modalidades oficiais (Meta Cloud API) e custos aplicáveis variam conforme o plano confirmado.`;
+        showDemoCta = true;
       } else if (lower.includes('olá') || lower.includes('oi') || lower.includes('bom dia') || lower.includes('boa tarde')) {
-        reply = `Olá! Tudo bem? Estou pronta para te ajudar a entender como ter funcionários virtuais atendendo sua empresa 24 horas por dia!`;
+        reply = `Olá! Sou uma assistente automatizada de Inteligência Artificial (IA). Posso consultar o catálogo comercial oficial ou encaminhar você para o formulário da nossa equipe humana.`;
+        showDemoCta = true;
       }
 
       setMessages(prev => [
@@ -62,6 +93,8 @@ export default function WebchatWidget({ onOpenDemo, onOpenAuth }) {
           id: Date.now() + 1,
           sender: 'beatriz',
           text: reply,
+          isCommercial,
+          showDemoCta,
           time: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
         }
       ]);
@@ -80,13 +113,13 @@ export default function WebchatWidget({ onOpenDemo, onOpenAuth }) {
         >
           <div className="relative">
             <div className="w-8 h-8 rounded-full bg-[#EEF2FF] text-[#4F46E5] flex items-center justify-center font-bold text-xs border border-[#F2E8DC]">
-              👩🏼
+              <Bot className="w-4 h-4" />
             </div>
-            <span className="absolute -bottom-0.5 -right-0.5 w-2.5 h-2.5 bg-emerald-500 rounded-full border-2 border-[#11100F]"></span>
+            <span className="absolute -bottom-0.5 -right-0.5 w-2.5 h-2.5 bg-indigo-400 rounded-full border-2 border-[#11100F]"></span>
           </div>
           <div className="text-left pr-1">
-            <div className="text-xs font-bold leading-none text-white">Beatriz</div>
-            <div className="text-[10px] text-emerald-400 font-medium">Webchat Online</div>
+            <div className="text-xs font-bold leading-none text-white">Beatriz · Assistente de IA</div>
+            <div className="text-[10px] text-[#A5B4FC] font-medium">Chat Automatizado por IA</div>
           </div>
           <MessageSquare className="w-4 h-4 text-[#A5B4FC] ml-1 group-hover:rotate-12 transition-transform" />
         </button>
@@ -101,18 +134,18 @@ export default function WebchatWidget({ onOpenDemo, onOpenAuth }) {
             <div className="flex items-center gap-3">
               <div className="relative">
                 <div className="w-10 h-10 rounded-full bg-[#EEF2FF] text-[#4F46E5] flex items-center justify-center text-lg border border-[#F2E8DC]">
-                  👩🏼
+                  <Bot className="w-5 h-5" />
                 </div>
-                <span className="absolute bottom-0 right-0 w-3 h-3 bg-emerald-500 rounded-full border-2 border-[#11100F]"></span>
+                <span className="absolute bottom-0 right-0 w-3 h-3 bg-indigo-400 rounded-full border-2 border-[#11100F]"></span>
               </div>
               <div>
                 <div className="text-sm font-bold flex items-center gap-1.5">
-                  <span>Beatriz</span>
-                  <span className="text-[9px] px-1.5 py-0.2 rounded-full bg-emerald-950 text-emerald-400 border border-emerald-800">
-                    Online
+                  <span>Beatriz · Assistente de IA</span>
+                  <span className="text-[9px] px-1.5 py-0.2 rounded-full bg-indigo-950 text-[#A5B4FC] border border-indigo-700">
+                    IA Automatizada
                   </span>
                 </div>
-                <div className="text-[11px] text-[#A6A29A]">Webchat Oficial · {BRAND.name}</div>
+                <div className="text-[11px] text-[#A6A29A]">Atendimento Automatizado por IA · {BRAND.name}</div>
               </div>
             </div>
 
@@ -125,12 +158,12 @@ export default function WebchatWidget({ onOpenDemo, onOpenAuth }) {
           </div>
 
           {/* Quick Info Ribbon */}
-          <div className="bg-[#FAF9F5] px-3.5 py-2 border-b border-[#EBE8E2] text-[11px] text-[#5C5955] flex items-center justify-between">
-            <span className="flex items-center gap-1">
-              <Sparkles className="w-3 h-3 text-[#4F46E5]" />
-              <span>Respondendo via IA e Base RAG</span>
+          <div className="bg-[#FAF9F5] px-3.5 py-2 border-b border-[#EBE8E2] text-[11px] text-[#5C5955] flex items-center justify-between gap-2">
+            <span className="flex items-center gap-1 font-medium text-[#1A1816]">
+              <Bot className="w-3.5 h-3.5 text-[#4F46E5] shrink-0" />
+              <span>Você está falando com uma IA</span>
             </span>
-            <span className="text-[10px] text-[#8C8881]">Tempo médio: 1s</span>
+            <span className="text-[10px] text-[#736F69] shrink-0">Catálogo oficial · Simulação</span>
           </div>
 
           {/* Message List */}
@@ -148,6 +181,15 @@ export default function WebchatWidget({ onOpenDemo, onOpenAuth }) {
                   }`}
                 >
                   {msg.text}
+                  {(msg.showDemoCta || msg.isCommercial) && onOpenDemo && (
+                    <button
+                      type="button"
+                      onClick={onOpenDemo}
+                      className="mt-2 block text-[11px] font-bold text-[#4F46E5] hover:underline cursor-pointer"
+                    >
+                      Falar com a equipe humana / Solicitar contato ➔
+                    </button>
+                  )}
                 </div>
                 <span className="text-[9px] text-[#A6A29A] mt-1 px-1">{msg.time}</span>
               </div>

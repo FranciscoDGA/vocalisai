@@ -77,40 +77,40 @@ export default function AgenteSuportePage({ onOpenDemo, onOpenAuth, onNavigateHo
       num: 2,
       title: 'Fornecer informações para a IA',
       text: 'Insira as perguntas frequentes da sua empresa e informações detalhadas sobre seus produtos, políticas e regras.',
-      detail: 'Basta colar o link do seu site ou subir documentos em PDF. A IA absorve o conhecimento em segundos sem alucinar.'
+      detail: 'Adicione textos, links ou documentos em PDF como base de referência para orientar as respostas do assistente.'
     },
     {
       num: 3,
       title: 'Configurar conexões telefônicas',
-      text: 'Adquira um número dedicado para seu assistente de IA ou integre na sua linha fixa/0800 existente via siga-me.',
-      detail: 'Configure ramais, regras de encaminhamento e horário de transbordo para sua equipe humana com facilidade.'
+      text: 'Escolha a opção de número ou ramal prevista no seu plano e defina o encaminhamento de chamadas.',
+      detail: 'Configure ramais, regras de encaminhamento e horário de transbordo para sua equipe humana conforme o ambiente.'
     },
     {
       num: 4,
       title: 'Conectar ferramentas como agenda e CRM',
-      text: 'Sincronize sua agenda, CRM ou outros sistemas para que a IA agende compromissos e atualize cadastros em tempo real.',
-      detail: 'Integrações nativas com Google Calendar, HubSpot, RD Station, Pipedrive e Webhooks customizados.'
+      text: 'Avalie integrações com agenda, CRM ou webhooks conforme o escopo do plano contratado.',
+      detail: 'Possibilidades de conexão via webhook, API ou conectores habilitados mediante validação técnica.'
     },
     {
       num: 5,
       title: 'Configurar processamento automatizado',
       text: 'Defina quando e como transferências e transbordo devem ser iniciadas para os atendentes humanos.',
-      detail: 'A IA reconhece a complexidade do chamado e transfere imediatamente com o resumo prévio da conversa.'
+      detail: 'A IA identifica os critérios configurados e encaminha a solicitação com resumo da conversa para a equipe.'
     }
   ];
 
   const accordionFaqs = [
     {
-      title: 'Integração profunda e configuração simples',
-      content: 'A Vocalis conecta diretamente na sua linha telefônica, WhatsApp Business e chat do site em minutos. Não requer conhecimentos avançados de programação nem servidores caros.'
+      title: 'Configuração estruturada e guiada',
+      content: 'Estruture roteiros de atendimento para Telefone, WhatsApp e Webchat em um único painel, conforme as condições do plano contratado.'
     },
     {
       title: 'Condução inteligente de conversas',
-      content: 'Nossos modelos neurais compreendem pausas, interrupções, sotaques brasileiros e gírias regionais. Se o cliente falar rápido ou mudar de assunto, a IA acompanha com naturalidade humana.'
+      content: 'Roteiros configuráveis em português brasileiro para compreender solicitações frequentes e encaminhar dúvidas complexas à equipe.'
     },
     {
-      title: 'Sempre disponível',
-      content: '100% de disponibilidade, 24 horas por dia, 365 dias por ano. Atenda centenas de pessoas simultaneamente nos picos de demanda ou na madrugada sem perder nenhum lead.'
+      title: 'Atendimento estendido',
+      content: 'Configure o atendimento automatizado para apoiar picos de demanda e horários fora do expediente, dentro dos limites e da capacidade simultânea do plano contratado.'
     }
   ];
 
@@ -133,7 +133,7 @@ export default function AgenteSuportePage({ onOpenDemo, onOpenAuth, onNavigateHo
 
           {/* Subtitle */}
           <p className="text-base sm:text-lg text-[#5C5955] max-w-xl mx-auto font-normal leading-relaxed mb-10">
-            Seu agente de suporte com IA, sempre disponível.
+            Assistente configurável para apoiar a triagem de suporte por telefone, conforme limites e disponibilidade técnica do plano.
           </p>
 
           {/* Audio Wave Visualizer Circle with Loop */}
@@ -146,7 +146,7 @@ export default function AgenteSuportePage({ onOpenDemo, onOpenAuth, onNavigateHo
           </div>
 
           {/* Phone Input Box matching print */}
-          <form onSubmit={handleTestCallSubmit} className="max-w-xl mx-auto mb-3">
+          <form onSubmit={handleTestCallSubmit} className="max-w-xl mx-auto mb-2">
             <div className="flex items-center bg-white rounded-full p-1.5 pl-3 border border-[#DCD8D0] shadow-md focus-within:border-[#4F46E5] focus-within:ring-2 focus-within:ring-[#4F46E5]/15 transition-all relative">
               
               {/* Country Flag Selector (1:1 com o Kloel) */}
@@ -192,7 +192,7 @@ export default function AgenteSuportePage({ onOpenDemo, onOpenAuth, onNavigateHo
                 type="tel"
                 value={phoneNumber}
                 onChange={handlePhoneChange}
-                placeholder="Seu celular com DDD"
+                placeholder="Seu celular com DDD (opcional)"
                 className="flex-1 px-3 py-2.5 bg-transparent text-[#1A1816] placeholder-[#9E9B95] text-sm focus:outline-none"
               />
 
@@ -202,11 +202,15 @@ export default function AgenteSuportePage({ onOpenDemo, onOpenAuth, onNavigateHo
                 className="shrink-0 px-6 py-3 rounded-full bg-[#11100F] text-white text-xs sm:text-sm font-semibold hover:bg-black transition-all flex items-center gap-2 shadow-sm cursor-pointer"
               >
                 <Phone className="w-4 h-4 text-white" />
-                <span>Ouvir a Vocalis agora</span>
+                <span>Abrir simulação ilustrativa</span>
               </button>
 
             </div>
           </form>
+
+          <p className="text-[11px] text-[#736F69] max-w-2xl mx-auto mb-3 leading-relaxed">
+            Simulação ilustrativa no navegador (Web Speech / TTS): não realiza chamada telefônica real e não armazena seu número. Em operação real, telefonia, números/SIP, transferência, gravação, limites de minutos, chamadas simultâneas e regras de excedente dependem de provedores terceiros (como Vapi e operadora SIP) e de confirmação no catálogo oficial.
+          </p>
 
           {/* Secondary Link: Agendar demo */}
           <div className="mb-8">
@@ -218,11 +222,11 @@ export default function AgenteSuportePage({ onOpenDemo, onOpenAuth, onNavigateHo
             </button>
           </div>
 
-          {/* Checklist */}
+          {/* Checklist prudente */}
           <div className="flex flex-wrap items-center justify-center gap-6 md:gap-8 text-xs font-semibold text-[#5C5955]">
             <div className="flex items-center gap-1.5">
               <Check className="w-4 h-4 text-[#4F46E5]" strokeWidth={2.5} />
-              <span>Garantia de 30 dias</span>
+              <span>Condições comerciais sob consulta</span>
             </div>
             <div className="flex items-center gap-1.5">
               <Check className="w-4 h-4 text-[#4F46E5]" strokeWidth={2.5} />
@@ -230,7 +234,7 @@ export default function AgenteSuportePage({ onOpenDemo, onOpenAuth, onNavigateHo
             </div>
             <div className="flex items-center gap-1.5">
               <Check className="w-4 h-4 text-[#4F46E5]" strokeWidth={2.5} />
-              <span>No ar em minutos</span>
+              <span>Configuração guiada</span>
             </div>
           </div>
 
@@ -250,7 +254,7 @@ export default function AgenteSuportePage({ onOpenDemo, onOpenAuth, onNavigateHo
                 24/7
               </span>
               <p className="text-xs sm:text-sm text-[#5C5955] leading-relaxed">
-                Atendimento, inclusive fora do expediente.
+                Atendimento configurável, inclusive fora do expediente.
               </p>
             </div>
 
@@ -264,23 +268,23 @@ export default function AgenteSuportePage({ onOpenDemo, onOpenAuth, onNavigateHo
               </p>
             </div>
 
-            {/* Card 3: 100+ */}
+            {/* Card 3: API & Webhooks */}
             <div className="bg-[#FAF9F5] rounded-3xl p-8 border border-[#E7E4DC] shadow-sm text-left">
-              <span className="text-4xl sm:text-5xl font-serif-title font-normal text-[#1A1816] block mb-3">
-                100+
+              <span className="text-3xl sm:text-4xl font-serif-title font-normal text-[#1A1816] block mb-3">
+                API &amp; Webhooks
               </span>
               <p className="text-xs sm:text-sm text-[#5C5955] leading-relaxed">
-                Integrações.
+                Integrações sob consulta conforme o plano.
               </p>
             </div>
 
-            {/* Card 4: 30 dias */}
+            {/* Card 4: PT-BR */}
             <div className="bg-[#FAF9F5] rounded-3xl p-8 border border-[#E7E4DC] shadow-sm text-left">
               <span className="text-4xl sm:text-5xl font-serif-title font-normal text-[#1A1816] block mb-3">
-                30 dias
+                PT-BR
               </span>
               <p className="text-xs sm:text-sm text-[#5C5955] leading-relaxed">
-                Para decidir, ou seu dinheiro de volta.
+                Foco em atendimento em português brasileiro.
               </p>
             </div>
 
@@ -444,7 +448,7 @@ export default function AgenteSuportePage({ onOpenDemo, onOpenAuth, onNavigateHo
               </h2>
 
               <p className="text-sm text-stone-300 leading-relaxed max-w-xl mx-auto">
-                Crie a sua assistente em poucos minutos e ouça como ela atende com calma, em português, a qualquer hora.
+                Configure sua assistente conforme o plano escolhido e conheça como ela atende em português, seguindo as regras do seu negócio.
               </p>
 
               <div className="pt-3">
@@ -462,7 +466,7 @@ export default function AgenteSuportePage({ onOpenDemo, onOpenAuth, onNavigateHo
               <AudioFrequencyWave 
                 variant="full" 
                 showLatencyBadge={true}
-                latencyText="Latência 380ms • Frequência Vocal em Tempo Real"
+                latencyText="Visualização ilustrativa • Voz em português brasileiro"
               />
             </div>
 

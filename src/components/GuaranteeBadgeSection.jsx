@@ -14,7 +14,7 @@ export default function GuaranteeBadgeSection({ onOpenAuth, onOpenDemo }) {
             </div>
             <div className="absolute -bottom-2 inset-x-0 flex justify-center">
               <span className="px-3 py-0.5 rounded-full bg-amber-400 text-[#1A1816] font-black text-[10px] uppercase tracking-wider shadow-sm">
-                14 DIAS
+                TRANSPARÊNCIA
               </span>
             </div>
           </div>
@@ -23,21 +23,21 @@ export default function GuaranteeBadgeSection({ onOpenAuth, onOpenDemo }) {
           <div className="flex-1 space-y-3">
             <div className="flex flex-wrap items-center justify-center md:justify-start gap-2">
               <span className="text-xs font-bold uppercase tracking-wider text-[#4F46E5]">
-                GARANTIA BLINDADA DE RISCO ZERO
+                CONDIÇÕES COMERCIAIS CLARAS
               </span>
               <span className="text-xs text-stone-400">•</span>
               <span className="text-xs text-emerald-700 font-semibold flex items-center gap-1">
                 <Lock className="w-3 h-3 text-emerald-600" />
-                Devolução 100% Descomplicada
+                Sem promessas irreais
               </span>
             </div>
 
             <h3 className="text-2xl sm:text-3xl font-normal text-[#1A1816] tracking-tight">
-              Gere resultados reais em 14 dias ou receba seu dinheiro de volta.
+              Conheça a plataforma e as condições vigentes antes de contratar.
             </h3>
 
             <p className="text-xs sm:text-sm text-[#5C5955] leading-relaxed">
-              Ative a Vocalis na sua empresa hoje. Se nos primeiros 14 dias de teste você não notar aumento nos agendamentos recuperados e elogios dos seus clientes, devolvemos 100% do valor pago com apenas um e-mail. Sem letras miúdas e sem ressentimentos. O risco é todo nosso.
+              Apresentamos uma demonstração do produto, o escopo técnico e os termos comerciais antes da contratação. Regras de avaliação, cancelamento e eventual reembolso seguem o contrato confirmado e a legislação aplicável.
             </p>
 
             <div className="pt-2">
@@ -45,7 +45,7 @@ export default function GuaranteeBadgeSection({ onOpenAuth, onOpenDemo }) {
                 onClick={onOpenAuth || onOpenDemo}
                 className="inline-flex items-center gap-2 px-6 py-3 rounded-full bg-[#11100F] hover:bg-black text-white text-xs sm:text-sm font-semibold shadow-md transition-all hover:scale-105 cursor-pointer"
               >
-                <span>Experimentar por 14 Dias Sem Risco</span>
+                <span>Solicitar Demonstração e Condições</span>
                 <ArrowRight className="w-4 h-4 text-white/80" />
               </button>
             </div>

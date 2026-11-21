@@ -12,42 +12,42 @@ export default function UseCasesSection({ onOpenDemo, onOpenAuth, onNavigate }) 
     {
       id: 'recepcao',
       title: 'Recepção Inteligente',
-      desc: 'Atende no primeiro toque, realiza triagem avançada e transfere ligações prioritárias para a pessoa certa.',
+      desc: 'Realiza a recepção inicial, organiza a triagem e pode transferir ligações prioritárias conforme a configuração.',
       icon: Headphones,
       page: 'recepcionista-virtual'
     },
     {
       id: 'agendamentos',
-      title: 'Agendamentos em Tempo Real',
-      desc: 'Consulta horários vagos, marca, remarca e envia confirmações instantâneas pelo WhatsApp e agenda.',
+      title: 'Apoio a Agendamentos',
+      desc: 'Apoia a consulta de horários, marcação, remarcação e envio de confirmações conforme as integrações habilitadas.',
       icon: Calendar,
       page: 'agendamentos'
     },
     {
       id: 'suporte',
       title: 'Suporte & Resolução',
-      desc: 'Tira dúvidas frequentes, consulta status e segue as diretrizes da sua empresa com precisão.',
+      desc: 'Tira dúvidas frequentes, consulta informações cadastradas e segue as diretrizes definidas pela sua empresa.',
       icon: UserCheck,
       page: 'agente-suporte'
     },
     {
       id: 'pedidos',
       title: 'Captação & Pedidos',
-      desc: 'Recebe pedidos, qualifica o perfil do lead e salva tudo estruturado no formato que a sua equipe usa.',
+      desc: 'Recebe solicitações, organiza o perfil do lead e registra os dados no formato configurado.',
       icon: ShoppingBag,
       page: 'atendedor-automatico'
     },
     {
       id: 'recados',
-      title: 'Recados & Resumos VIP',
-      desc: 'Grava, transcreve com IA e envia relatórios executivos no WhatsApp e e-mail da sua equipe na hora.',
+      title: 'Recados & Resumos',
+      desc: 'Registra transcrições e resumos estruturados para acompanhamento da equipe.',
       icon: FileText,
       page: 'equipe-externa'
     },
     {
       id: 'integracoes',
       title: 'WhatsApp & Integrações',
-      desc: 'Conexão direta com WhatsApp Web sem taxas por mensagem da Meta, além de mais de 100 CRMs.',
+      desc: 'Automação no WhatsApp e possibilidades de integração com ferramentas externas sob consulta conforme o plano.',
       icon: Sparkles,
       page: 'integracoes'
     }
@@ -69,10 +69,10 @@ export default function UseCasesSection({ onOpenDemo, onOpenAuth, onNavigate }) 
         <div className="flex flex-col md:flex-row md:items-end justify-between mb-12 sm:mb-16 gap-6">
           <div className="max-w-2xl">
             <h2 className="text-3xl sm:text-5xl font-normal text-[#1A1816] tracking-tight leading-[1.15]">
-              Atendimento sob medida para a <span className="font-serif-title italic text-[#4F46E5]">velocidade</span> do seu mercado.
+              Atendimento sob medida para a <span className="font-serif-title italic text-[#4F46E5]">rotina</span> do seu mercado.
             </h2>
             <p className="mt-4 text-sm sm:text-base text-[#5C5955] leading-relaxed">
-              De clínicas e imobiliárias a escritórios e e-commerces: a Vocalis se conecta à sua agenda, alimenta seu CRM e atende 24 horas sem criar filas.
+              Estruture fluxos de atendimento por telefone, WhatsApp e webchat adaptados à rotina da sua empresa.
             </p>
           </div>
           

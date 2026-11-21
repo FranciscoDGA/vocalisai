@@ -52,55 +52,49 @@ const DIALOGUE_STEPS = [
   {
     id: 1,
     speaker: 'vocalis',
-    speakerName: 'VOCALIS (ROBERTA)',
-    text: 'Boa noite! Consultório Vila Verde, aqui é a Roberta. Como posso ajudar?',
+    speakerName: 'VOCALIS (SIMULAÇÃO ILUSTRATIVA)',
+    text: 'Boa noite! Clínica Modelo (simulação ilustrativa), aqui é a assistente virtual Roberta. Como posso ajudar com sua consulta de rotina?',
     durationMs: 4500,
-    latency: '340ms',
     actions: []
   },
   {
     id: 2,
     speaker: 'cliente',
-    speakerName: 'CLIENTE',
-    text: 'Oi, Roberta. Queria marcar uma limpeza ou consulta ainda esta semana.',
+    speakerName: 'CONTATO FICTÍCIO',
+    text: 'Oi, Roberta. Queria agendar uma limpeza e avaliação periódica de rotina, sem sintomas urgentes.',
     durationMs: 4200,
-    latency: null,
     actions: []
   },
   {
     id: 3,
     speaker: 'vocalis',
-    speakerName: 'VOCALIS (ROBERTA)',
-    text: 'Claro! Tenho quinta às 14h ou sexta às 9h30. Qual fica melhor para você?',
+    speakerName: 'VOCALIS (SIMULAÇÃO ILUSTRATIVA)',
+    text: 'Claro! Conforme a agenda e a base de conhecimento configuradas pela clínica, há horários na quinta às 14h ou sexta às 9h30. Qual prefere?',
     durationMs: 4800,
-    latency: '380ms',
     actions: ['agenda']
   },
   {
     id: 4,
     speaker: 'cliente',
-    speakerName: 'CLIENTE',
+    speakerName: 'CONTATO FICTÍCIO',
     text: 'Quinta às 14h, por favor.',
     durationMs: 3200,
-    latency: null,
     actions: ['agenda']
   },
   {
     id: 5,
     speaker: 'vocalis',
-    speakerName: 'VOCALIS (ROBERTA)',
-    text: 'Pronto: quinta, 14h, com a Dra. Marina. Mandei a confirmação no seu WhatsApp.',
+    speakerName: 'VOCALIS (SIMULAÇÃO ILUSTRATIVA)',
+    text: 'Solicitação registrada para quinta às 14h, sujeita às regras e confirmação da recepção da clínica.',
     durationMs: 5000,
-    latency: '360ms',
     actions: ['agenda', 'agendado', 'whatsapp']
   },
   {
     id: 6,
     speaker: 'cliente',
-    speakerName: 'CLIENTE',
+    speakerName: 'CONTATO FICTÍCIO',
     text: 'Perfeito. Muito obrigada!',
     durationMs: 3000,
-    latency: null,
     actions: ['agenda', 'agendado', 'whatsapp']
   }
 ];
@@ -157,7 +151,7 @@ export default function VoiceWaveformHeroCard({ onTestCall, onOpenAuth }) {
         setTimeout(() => {
           setIsTransitioningLatency(false);
           setCurrentStepIndex(nextIndex);
-        }, 380); // Ultra-low 380ms latency simulation
+        }, 380); // Turn transition delay
       } else {
         setCurrentStepIndex(nextIndex);
       }
@@ -248,31 +242,25 @@ export default function VoiceWaveformHeroCard({ onTestCall, onOpenAuth }) {
           </div>
           <div>
             <p className="font-bold text-stone-100 flex items-center gap-2">
-              <span>Ligação recebida · 23:12</span>
+              <span>Exemplo ilustrativo de chamada · agendamento de rotina</span>
             </p>
             <p className="text-[11px] text-stone-400 font-mono">
-              Fora do horário comercial · +55 11 9••••-4821
+              Dados fictícios · +55 00 00000-0000 · Fluxo conforme base e regras do cliente
             </p>
           </div>
         </div>
 
         <div className="flex items-center gap-2.5">
-          {/* Latency feedback badge */}
-          <div className={`px-2.5 py-1 rounded-full border text-[11px] font-mono transition-all duration-300 flex items-center gap-1.5 ${
-            isTransitioningLatency 
-              ? 'bg-orange-500/20 border-orange-500 text-orange-300 scale-105' 
-              : 'bg-stone-800/80 border-stone-700/60 text-stone-300'
-          }`}>
-            <Zap className={`w-3 h-3 ${isTransitioningLatency ? 'text-orange-400 animate-spin' : 'text-amber-400'}`} />
-            <span>
-              {isTransitioningLatency ? '⚡ Latência: 340ms' : currentStep.latency ? `⚡ Latência: ${currentStep.latency}` : '⚡ Latência: ultrabaixa'}
-            </span>
+          {/* Illustrative simulation badge */}
+          <div className="px-2.5 py-1 rounded-full border text-[11px] font-mono bg-stone-800/80 border-stone-700/60 text-stone-300 flex items-center gap-1.5">
+            <Zap className="w-3 h-3 text-amber-400" />
+            <span>Simulação ilustrativa</span>
           </div>
 
-          {/* Live indicator badge */}
+          {/* Elapsed simulation clock */}
           <span className="flex items-center gap-1.5 px-3 py-1 rounded-full bg-stone-800/80 border border-stone-700 text-[11px] text-stone-200 font-mono shadow-sm">
-            <span className="w-2 h-2 rounded-full bg-red-500 animate-pulse"></span>
-            <span>Ao vivo · 00:{String(callSeconds).padStart(2, '0')}</span>
+            <span className="w-2 h-2 rounded-full bg-indigo-400"></span>
+            <span>Simulação · 00:{String(callSeconds).padStart(2, '0')}</span>
           </span>
         </div>
       </div>
@@ -452,9 +440,9 @@ export default function VoiceWaveformHeroCard({ onTestCall, onOpenAuth }) {
             <div className="flex items-center justify-between text-[10px] font-bold uppercase tracking-wider text-stone-400 mb-3 px-1">
               <span className="flex items-center gap-1.5">
                 <span className="w-1.5 h-1.5 rounded-full bg-orange-500"></span>
-                <span>TRANSCRIÇÃO AO VIVO</span>
+                <span>TRANSCRIÇÃO SIMULADA</span>
               </span>
-              <span>Conversa ilustrativa</span>
+              <span>Simulação ilustrativa</span>
             </div>
 
             {/* Chat Messages Scroll Container */}
@@ -502,7 +490,7 @@ export default function VoiceWaveformHeroCard({ onTestCall, onOpenAuth }) {
           {/* Right Column Footer Subtext */}
           <div className="pt-3 border-t border-stone-800/60 mt-3">
             <p className="text-[11px] text-stone-400 text-right">
-              Resumo e gravação disponíveis assim que a ligação termina
+              Simulação ilustrativa (rotina) — respostas dependem da base de conhecimento e regras do cliente
             </p>
           </div>
 
@@ -577,12 +565,12 @@ export default function VoiceWaveformHeroCard({ onTestCall, onOpenAuth }) {
 
         </div>
 
-        {/* CTA Button to test directly */}
+        {/* CTA Button to open interactive simulation */}
         <button
           onClick={onTestCall}
           className="w-full sm:w-auto px-5 py-2.5 rounded-full bg-gradient-to-r from-orange-600 to-[#4F46E5] hover:from-orange-500 hover:to-orange-600 text-xs font-bold text-white transition-all flex items-center justify-center gap-2 shadow-lg shadow-orange-950/40 cursor-pointer border border-orange-500/30"
         >
-          <span>Testar com a inteligência da minha empresa</span>
+          <span>Abrir simulação interativa</span>
           <ArrowRight className="w-3.5 h-3.5" />
         </button>
 

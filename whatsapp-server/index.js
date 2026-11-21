@@ -139,8 +139,8 @@ const renderHTML = () => `
     </div>
     
     <div>
-      <h1 class="text-2xl font-bold text-white">Conectar WhatsApp Web</h1>
-      <p class="text-xs text-[#A8A29A] mt-1.5">Conexão 100% gratuita sem taxas por mensagem da Meta</p>
+      <h1 class="text-2xl font-bold text-white">Conectar WhatsApp Web (Protótipo Local)</h1>
+      <p class="text-xs text-[#A8A29A] mt-1.5">Protótipo experimental local via Baileys (não oficial — uso restrito a testes locais de desenvolvimento)</p>
     </div>
 
     <!-- Container do QR Code ou Sucesso -->

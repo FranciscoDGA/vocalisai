@@ -6,17 +6,19 @@ import {
   MessageSquare, Phone, Building, CheckCircle2, Copy
 } from 'lucide-react';
 import { BRAND } from '../data/content';
+import { getPartnerProgramSummary } from '../utils/commercialCatalogUtils';
 
 export default function ParceirosPage({ onOpenDemo, onOpenAuth, onNavigateHome }) {
   const [partnerType, setPartnerType] = useState('indicar'); // 'indicar' | 'revender'
   const [faqCategory, setFaqCategory] = useState('tudo');
   const [openFaq, setOpenFaq] = useState(0); // first faq open by default
+  const partnerSummary = getPartnerProgramSummary();
 
   const faqList = [
     {
       q: 'Indicar e revender — qual é a diferença?',
       cat: 'indicar',
-      a: 'No modelo Indicar, você apenas apresenta o cliente à Vocalis através do seu link exclusivo ou cadastro direto. Nós cuidamos de toda a demonstração, cobrança, suporte técnico e atendimento. Você recebe de 15% a 35% de comissão recorrente todos os meses enquanto o cliente permanecer ativo. No modelo Revender, você mesmo comercializa o serviço, embute sua própria margem de lucro e presta o primeiro nível de atendimento.'
+      a: `No modelo Indicar, você apresenta o cliente à Vocalis através do seu link exclusivo ou cadastro direto. Nós cuidamos da demonstração, cobrança, suporte técnico e atendimento. As condições de comissão recorrente (${partnerSummary.commissionSummary.text}) são formalizadas na adesão ao programa. No modelo Revender, você comercializa o serviço com margem própria e presta o primeiro nível de atendimento.`
     },
     {
       q: 'E se minha indicação cancelar?',
@@ -67,8 +69,8 @@ export default function ParceirosPage({ onOpenDemo, onOpenAuth, onNavigateHome }
 
           {/* Big Title */}
           <h1 className="text-4xl sm:text-6xl font-normal text-[#1A1816] tracking-tight leading-[1.1]">
-            Receba até 35% de<br />
-            <span className="font-serif-title italic text-[#4F46E5]">comissão sobre as vendas</span>
+            Programa de parceria e<br />
+            <span className="font-serif-title italic text-[#4F46E5]">comissionamento recorrente</span>
           </h1>
 
           {/* Subtitle */}
@@ -116,11 +118,11 @@ export default function ParceirosPage({ onOpenDemo, onOpenAuth, onNavigateHome }
           {/* 5 Feature Cards */}
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-3 mb-10">
             {[
-              'Receba até 35% de comissão sobre as vendas',
-              'Renda recorrente previsível todo mês',
-              'Você indica, a Vocalis faz o resto',
-              'Co-branding disponível (powered by Vocalis)',
-              'Minutos grátis de demonstração para seus clientes'
+              `Participação recorrente: ${partnerSummary.commissionSummary.text}`,
+              'Regras de comissionamento confirmadas no programa',
+              'Você indica e a equipe comercial conduz a apresentação',
+              'Opções de co-branding avaliadas sob consulta',
+              'Apoio para demonstrações comerciais sob consulta'
             ].map((text, i) => (
               <div key={i} className="p-4 rounded-2xl border border-[#E7E4DC] bg-[#FAF9F5] flex flex-col justify-between space-y-3">
                 <div className="w-6 h-6 rounded-full bg-[#EEF2FF] border border-[#F2E8DC] text-[#4F46E5] flex items-center justify-center">
@@ -160,34 +162,34 @@ export default function ParceirosPage({ onOpenDemo, onOpenAuth, onNavigateHome }
               <div className="bg-white rounded-2xl border border-[#E7E4DC] p-6 text-[#1A1816] shadow-2xl space-y-4">
                 <div className="flex items-center justify-between border-b border-[#EBE8E2] pb-3">
                   <span className="text-xs font-bold uppercase tracking-wider text-[#8C8881]">
-                    Painel do parceiro
+                    Simulação ilustrativa · Painel do parceiro
                   </span>
                   <span className="px-2 py-0.5 rounded-full text-[10px] font-bold bg-[#EEF2FF] text-[#4F46E5] border border-[#F2E8DC]">
-                    Nível Diamond
+                    Exemplo ilustrativo
                   </span>
                 </div>
 
                 <div className="grid grid-cols-2 gap-4">
                   <div className="p-3 rounded-xl bg-[#FAF9F5] border border-[#EBE8E2]">
-                    <div className="text-[11px] text-[#736F69]">Comissão este mês</div>
-                    <div className="text-xl sm:text-2xl font-bold text-[#1A1816] mt-0.5">R$ 21.450</div>
-                    <div className="text-[10px] text-emerald-600 font-semibold mt-0.5">+18% vs mês anterior</div>
+                    <div className="text-[11px] text-[#736F69]">Comissão estimada</div>
+                    <div className="text-base sm:text-lg font-bold text-[#1A1816] mt-0.5">{partnerSummary.sampleRevenue.text}</div>
+                    <div className="text-[10px] text-[#736F69] font-semibold mt-0.5">Extrato demonstrativo</div>
                   </div>
                   <div className="p-3 rounded-xl bg-[#FAF9F5] border border-[#EBE8E2]">
-                    <div className="text-[11px] text-[#736F69]">Participação do faturamento</div>
-                    <div className="text-xl sm:text-2xl font-bold text-[#4F46E5] mt-0.5">35%</div>
-                    <div className="text-[10px] text-[#8C8881] mt-0.5">Comissão recorrente</div>
+                    <div className="text-[11px] text-[#736F69]">Participação</div>
+                    <div className="text-base sm:text-lg font-bold text-[#4F46E5] mt-0.5">{partnerSummary.commissionSummary.text}</div>
+                    <div className="text-[10px] text-[#8C8881] mt-0.5">Conforme regras do programa</div>
                   </div>
                 </div>
 
                 <div className="text-[11px] text-[#736F69] space-y-1 pt-1">
                   <div className="flex justify-between py-1 border-b border-[#F0EDE8]">
-                    <span>Clientes ativos indicados</span>
-                    <strong className="text-[#1A1816]">42 empresas</strong>
+                    <span>Contas indicadas (exemplo)</span>
+                    <strong className="text-[#1A1816]">Exemplo ilustrativo</strong>
                   </div>
                   <div className="flex justify-between py-1 border-b border-[#F0EDE8]">
-                    <span>Próximo pagamento</span>
-                    <strong className="text-[#1A1816]">10 de Dezembro via PIX</strong>
+                    <span>Ciclo de repasse</span>
+                    <strong className="text-[#1A1816]">Conforme regras do programa</strong>
                   </div>
                 </div>
               </div>
@@ -258,7 +260,7 @@ export default function ParceirosPage({ onOpenDemo, onOpenAuth, onNavigateHome }
                   <span className="text-[10px] font-bold text-[#8C8881] border border-[#E0DCD4] rounded-md px-1.5 py-0.5">
                     02
                   </span>
-                  <span className="text-xs font-bold text-[#4F46E5]">15% a 35% comissão</span>
+                  <span className="text-xs font-bold text-[#4F46E5]">{partnerSummary.commissionSummary.text}</span>
                 </div>
                 <h4 className="text-base font-bold text-[#1A1816]">Indicar</h4>
                 <p className="text-xs text-[#5C5955] leading-relaxed">
@@ -297,9 +299,9 @@ export default function ParceirosPage({ onOpenDemo, onOpenAuth, onNavigateHome }
               {/* Mockup cards */}
               <div className="space-y-2 py-4">
                 {[
-                  { name: 'Clínica OdontoMais', valor: 'R$ 690/mês', status: 'Ativo' },
-                  { name: 'Imobiliária Prime SP', valor: 'R$ 1.800/mês', status: 'Ativo' },
-                  { name: 'Advocacia Freitas', valor: 'R$ 690/mês', status: 'Ativo' }
+                  { name: 'Clínica OdontoMais', valor: 'Plano em confirmação', status: 'Ativo' },
+                  { name: 'Imobiliária Prime SP', valor: 'Plano em confirmação', status: 'Ativo' },
+                  { name: 'Advocacia Freitas', valor: 'Plano em confirmação', status: 'Ativo' }
                 ].map((c, i) => (
                   <div key={i} className="p-3 rounded-xl border border-[#E7E4DC] bg-[#FAF9F5] flex items-center justify-between text-xs">
                     <div>
@@ -376,63 +378,22 @@ export default function ParceirosPage({ onOpenDemo, onOpenAuth, onNavigateHome }
                 </tr>
               </thead>
               <tbody className="divide-y divide-[#EBE8E2]">
-                <tr className="hover:bg-[#FAF9F5]">
-                  <td className="p-4 sm:p-5">
-                    <div className="font-bold text-[#1A1816]">Bronze</div>
-                    <div className="text-xs text-[#8C8881]">Faturamento mensal até R$ 5.000</div>
-                  </td>
-                  <td className="p-4 sm:p-5 text-right">
-                    <span className="text-base sm:text-lg font-bold text-[#1A1816]">15%</span>
-                    <span className="text-xs text-[#8C8881] block">~ R$ 750/mês</span>
-                  </td>
-                </tr>
-
-                <tr className="hover:bg-[#FAF9F5]">
-                  <td className="p-4 sm:p-5">
-                    <div className="font-bold text-[#1A1816]">Silver</div>
-                    <div className="text-xs text-[#8C8881]">Faturamento mensal até R$ 20.000</div>
-                  </td>
-                  <td className="p-4 sm:p-5 text-right">
-                    <span className="text-base sm:text-lg font-bold text-[#1A1816]">20%</span>
-                    <span className="text-xs text-[#8C8881] block">~ R$ 4.000/mês</span>
-                  </td>
-                </tr>
-
-                <tr className="hover:bg-[#FAF9F5]">
-                  <td className="p-4 sm:p-5">
-                    <div className="font-bold text-[#1A1816]">Gold</div>
-                    <div className="text-xs text-[#8C8881]">Faturamento mensal até R$ 50.000</div>
-                  </td>
-                  <td className="p-4 sm:p-5 text-right">
-                    <span className="text-base sm:text-lg font-bold text-[#1A1816]">25%</span>
-                    <span className="text-xs text-[#8C8881] block">~ R$ 12.500/mês</span>
-                  </td>
-                </tr>
-
-                <tr className="hover:bg-[#FAF9F5]">
-                  <td className="p-4 sm:p-5">
-                    <div className="font-bold text-[#1A1816]">Platinum</div>
-                    <div className="text-xs text-[#8C8881]">Faturamento mensal até R$ 100.000</div>
-                  </td>
-                  <td className="p-4 sm:p-5 text-right">
-                    <span className="text-base sm:text-lg font-bold text-[#1A1816]">30%</span>
-                    <span className="text-xs text-[#8C8881] block">~ R$ 30.000/mês</span>
-                  </td>
-                </tr>
-
-                <tr className="bg-[#EEF2FF]/50 hover:bg-[#EEF2FF]">
-                  <td className="p-4 sm:p-5">
-                    <div className="font-bold text-[#4F46E5] flex items-center gap-1.5">
-                      <span>Diamond</span>
-                      <Award className="w-4 h-4" />
-                    </div>
-                    <div className="text-xs text-[#8C8881]">Faturamento mensal acima de R$ 100.000</div>
-                  </td>
-                  <td className="p-4 sm:p-5 text-right">
-                    <span className="text-base sm:text-lg font-bold text-[#4F46E5]">35%</span>
-                    <span className="text-xs text-[#8C8881] block">~ R$ 35.000+/mês</span>
-                  </td>
-                </tr>
+                {partnerSummary.tiers.map((tier) => (
+                  <tr key={tier.id} className={tier.id === 'diamond' ? 'bg-[#EEF2FF]/50 hover:bg-[#EEF2FF]' : 'hover:bg-[#FAF9F5]'}>
+                    <td className="p-4 sm:p-5">
+                      <div className={`font-bold flex items-center gap-1.5 ${tier.id === 'diamond' ? 'text-[#4F46E5]' : 'text-[#1A1816]'}`}>
+                        <span>{tier.name}</span>
+                        {tier.id === 'diamond' && <Award className="w-4 h-4" />}
+                      </div>
+                      <div className="text-xs text-[#8C8881]">{tier.threshold.text}</div>
+                    </td>
+                    <td className="p-4 sm:p-5 text-right">
+                      <span className={`text-sm font-bold ${tier.id === 'diamond' ? 'text-[#4F46E5]' : 'text-[#1A1816]'}`}>
+                        {tier.commission.text}
+                      </span>
+                    </td>
+                  </tr>
+                ))}
               </tbody>
             </table>
           </div>
@@ -458,21 +419,21 @@ export default function ParceirosPage({ onOpenDemo, onOpenAuth, onNavigateHome }
             <span className="font-serif-title italic text-[#4F46E5]">você pode se apoiar.</span>
           </h2>
           <p className="mt-3 text-sm sm:text-base text-[#5C5955] max-w-2xl mx-auto leading-relaxed">
-            A Vocalis integra-se com mais de 2.000+ ferramentas disponíveis no mercado. Seus clientes vão poder usar a Vocalis com seus sistemas atuais.
+            Avalie possibilidades de integração com as ferramentas dos seus clientes via conectores disponíveis, webhooks e API conforme o escopo contratado.
           </p>
 
           <div className="mt-8 flex flex-wrap items-center justify-center gap-3 sm:gap-6 text-xs sm:text-sm font-semibold text-[#1A1816]">
             <div className="flex items-center gap-2 bg-white px-4 py-2 rounded-full border border-[#E7E4DC] shadow-sm">
               <span className="w-2 h-2 rounded-full bg-[#4F46E5]"></span>
-              <span>Mais de 100 conectores nativos de CRM</span>
+              <span>Integrações com CRMs sob consulta</span>
             </div>
             <div className="flex items-center gap-2 bg-white px-4 py-2 rounded-full border border-[#E7E4DC] shadow-sm">
               <span className="w-2 h-2 rounded-full bg-[#4F46E5]"></span>
-              <span>Webhooks em tempo real</span>
+              <span>Webhooks configuráveis</span>
             </div>
             <div className="flex items-center gap-2 bg-white px-4 py-2 rounded-full border border-[#E7E4DC] shadow-sm">
               <span className="w-2 h-2 rounded-full bg-[#4F46E5]"></span>
-              <span>Documentação com API pública</span>
+              <span>API conforme escopo técnico</span>
             </div>
           </div>
         </div>
@@ -585,7 +546,7 @@ export default function ParceirosPage({ onOpenDemo, onOpenAuth, onNavigateHome }
         <div className="max-w-4xl mx-auto px-4">
           <h2 className="text-4xl sm:text-6xl font-normal text-[#1A1816] tracking-tight leading-[1.12]">
             Toda empresa tem uma voz.<br />
-            <span className="font-serif-title italic text-[#4F46E5]">A sua nunca mais fica em silêncio.</span>
+            <span className="font-serif-title italic text-[#4F46E5]">Mais agilidade para atender seus clientes.</span>
           </h2>
         </div>
       </section>

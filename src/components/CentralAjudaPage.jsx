@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
+import { getOverageOrUnitCostHint } from '../utils/commercialCatalogUtils';
 import {
   Search,
   Sparkles,
@@ -82,11 +83,11 @@ export default function CentralAjudaPage({
         id: 'primeiros-passos',
         title: 'Primeiros passos',
         icon: Zap,
-        summary: 'Crie seu primeiro agente de voz funcional em menos de 5 minutos.',
+        summary: 'Guia introdutório para configurar seu primeiro assistente de voz.',
         content: {
           badge: 'Guia Rápido',
           lastUpdated: 'Atualizado em Novembro de 2026',
-          intro: 'Bem-vindo à Vocalis. Este guia conduz você passo a passo na criação e configuração do seu primeiro assistente telefônico inteligente com voz humana em português do Brasil.',
+          intro: 'Bem-vindo à Vocalis. Este guia apresenta as etapas gerais para configurar um assistente de voz em português do Brasil conforme os recursos do seu plano.',
           steps: [
             {
               step: '1. Crie seu assistente no painel',
@@ -94,44 +95,44 @@ export default function CentralAjudaPage({
             },
             {
               step: '2. Escolha a voz e a personalidade',
-              desc: 'Selecione a voz de alta fidelidade (como Francisca ou Maria para tom calmo e natural). Defina o tom de fala: caloroso, executivo ou descontraído.'
+              desc: 'Selecione o estilo de fala disponível no seu plano e defina o tom desejado para o atendimento.'
             },
             {
               step: '3. Redija o prompt inicial e FAQs',
               desc: 'Explique qual é a empresa, o que o agente deve responder e quais são as restrições (ex.: "Nunca prometa prazos sem antes consultar o sistema").'
             },
             {
-              step: '4. Faça uma chamada de teste imediata',
-              desc: 'Digite seu próprio número de celular no simulador de testes. O telefone tocará em menos de 10 segundos para você conversar com a IA.'
+              step: '4. Valide o fluxo nos recursos de teste',
+              desc: 'Utilize os recursos de simulação e teste disponíveis para validar o roteiro antes de publicar o atendimento.'
             }
           ],
-          tip: 'Dica de ouro: Inicie com um prompt simples e teste chamadas simuladas antes de adicionar integrações complexas.'
+          tip: 'Dica: Inicie com um prompt simples e teste os fluxos antes de adicionar integrações avançadas.'
         }
       },
       {
         id: 'numeros-de-telefone',
         title: 'Números de telefone',
         icon: Phone,
-        summary: 'Como adquirir novos números nacionais (0800, 4003, DDD local) ou fazer portabilidade.',
+        summary: 'Como funcionam novos números nacionais (0800, 4003, DDD local) ou portabilidade.',
         content: {
           badge: 'Telefonia & SIP',
           lastUpdated: 'Atualizado em Novembro de 2026',
-          intro: 'A Vocalis fornece conectividade com todas as operadoras brasileiras homologadas pela Anatel (Claro, Vivo, TIM, Embratel), garantindo entrega de áudio HD sem ruído.',
+          intro: 'As opções de telefonia, portabilidade e tronco SIP dependem de viabilidade técnica e do plano contratado.',
           steps: [
             {
               step: 'Números locais com DDD',
-              desc: 'Disponibilizamos números de fixo virtual em todos os DDDs do Brasil (11, 21, 31, 41, 47, 51, 61, 71, 81, 94, etc.). A ativação é instantânea após validação cadastral.'
+              desc: 'A disponibilidade de DDDs e os prazos de ativação dependem de validação cadastral e da operadora parceira.'
             },
             {
               step: 'Números 0800 e 4003/4004',
-              desc: 'Perfeito para empresas com atuação nacional que buscam passar máxima credibilidade e ligação gratuita para o cliente.'
+              desc: 'Modalidades especiais avaliadas sob consulta conforme o plano contratado e regras da operadora.'
             },
             {
               step: 'Portabilidade e Tronco SIP próprio',
-              desc: 'Se sua empresa já possui números em outra operadora ou PABX na nuvem (Asterisk, FreePBX, Twilio, Zenvia), conecte via SIP Trunking com autenticação IP segura.'
+              desc: 'Possibilidades de integração via SIP Trunking são analisadas tecnicamente com nossa equipe conforme o ambiente do cliente.'
             }
           ],
-          tip: 'Você também pode configurar transbordo: se o cliente pedir falar com um atendente humano, a chamada é transferida em tempo real via SIP.'
+          tip: 'Também é possível configurar encaminhamento para atendimento humano conforme a estrutura telefônica contratada.'
         }
       },
       {
@@ -149,18 +150,17 @@ export default function CentralAjudaPage({
               desc: 'Evite monólogos longos. Peça para a IA falar no máximo 2 frases por turno e devolver uma pergunta para manter o diálogo vivo.'
             },
             {
-              step: 'Regra 2: Instruções de pausas e números',
-              desc: 'Para números de telefone ou CPF, oriente a IA a falar pausadamente dígito a dígito (ex.: "DDD 11, 9, 8 4 4 2, 3 9 4 8") evitando ler números de bilhões.'
+              step: 'Regra 2: Instruções de pausas e números fictícios em testes',
+              desc: 'Para números de protocolo ou telefone fictício (ex.: "código 1 2 3 4"), oriente a IA a ler pausadamente dígito a dígito. Evite coletar CPF ou dados pessoais sensíveis em demonstrações públicas.'
             },
             {
               step: 'Regra 3: Delimite o que NÃO fazer',
-              desc: 'Defina explicitamente: "Se o cliente perguntar algo fora do escopo, peça desculpas gentilmente e ofereça transferir para o time de suporte".'
+              desc: 'Defina explicitamente: "Se o cliente perguntar algo fora da base de conhecimento ou relatar situação sensível, não improvise e encaminhe conforme o protocolo aprovado para atendimento humano".'
             }
           ],
-          examplePrompt: `Você é a Clara, recepcionista virtual inteligente da Clínica Alvorada.
-Seu objetivo é acolher os pacientes, tirar dúvidas sobre convênios e agendar consultas.
-Fale com tom caloroso, empático e calmo.
-Nunca dê diagnósticos médicos. Se o paciente relatar emergência grave, oriente-o imediatamente a procurar o pronto-socorro mais próximo.`,
+          examplePrompt: `Você é a Clara, assistente virtual administrativa da Clínica Modelo (exemplo ilustrativo dependente da base de conhecimento e regras aprovadas pelo responsável técnico).
+Seu objetivo é apoiar agendamentos de rotina (sem sintomas urgentes) e tirar dúvidas apenas com base nas informações cadastradas pela clínica.
+Nunca dê diagnósticos médicos, não avalie gravidade clínica nem recomende aguardar. Em caso de dor ou emergência, aplique exclusivamente o protocolo aprovado pelo responsável técnico para encaminhamento humano ou orientação ao pronto-socorro indicado.`,
           tip: 'Use a aba de Simulação no painel para ouvir como a entonação da voz soa com o seu prompt em tempo real.'
         }
       },
@@ -168,142 +168,137 @@ Nunca dê diagnósticos médicos. Se o paciente relatar emergência grave, orien
         id: 'base-de-conhecimento',
         title: 'Base de conhecimento',
         icon: BookOpen,
-        summary: 'Alimente o agente com documentos, manuais, tabelas de preços e FAQs em PDF.',
+        summary: 'Organize textos, perguntas frequentes e instruções de referência para o assistente.',
         content: {
-          badge: 'RAG & Documentos',
+          badge: 'Base de Referência',
           lastUpdated: 'Atualizado em Novembro de 2026',
-          intro: 'Você não precisa reescrever todo o manual da sua empresa no prompt. Faça upload dos seus arquivos e a Vocalis busca a informação exata em milissegundos enquanto o cliente fala.',
+          intro: 'Você pode cadastrar textos, perguntas frequentes e instruções de atendimento no painel. Recursos avançados de ingestão automática de documentos ou URLs dependem do escopo implantado.',
           steps: [
             {
-              step: 'Formatos suportados',
-              desc: 'PDF, DOCX, planilhas CSV, tabelas Excel e páginas públicas do seu site via URL crawler.'
+              step: 'Conteúdo e instruções cadastráveis',
+              desc: 'Cadastre textos de produtos, políticas e dúvidas frequentes no painel do assistente (ingestão externa de PDFs/URLs sob consulta).'
             },
             {
-              step: 'Indexação semântica inteligente',
-              desc: 'A Vocalis segmenta seu conteúdo em blocos semânticos de alta precisão, permitindo que a IA cite dados exatos de garantias, preços e regras de devolução.'
+              step: 'Organização de conteúdo',
+              desc: 'A Vocalis permite organizar referências de atendimento para orientar as respostas do assistente conforme as regras cadastradas pela empresa.'
             },
             {
-              step: 'Atualização em tempo real',
-              desc: 'Alterou o preço ou adicionou um novo produto? Basta subir a nova versão do arquivo e todos os seus agentes passam a usar a versão atualizada imediatamente.'
+              step: 'Atualização de materiais',
+              desc: 'Quando houver mudança de regras ou valores, atualize as instruções na aba de conhecimento do painel.'
             }
           ],
-          tip: 'Para melhores resultados, utilize documentos bem formatados com títulos claros e perguntas frequentes organizadas.'
+          tip: 'Para melhores resultados, organize perguntas frequentes de forma clara e objetiva.'
         }
       },
       {
         id: 'idiomas-e-multilinguismo',
         title: 'Idiomas e multilinguismo',
         icon: Globe,
-        summary: 'Configurações de sotaque em português do Brasil e atendimento multilíngue instantâneo.',
+        summary: 'Configurações de idioma e ajustes para português do Brasil.',
         content: {
           badge: 'Voz & Idiomas',
           lastUpdated: 'Atualizado em Novembro de 2026',
-          intro: 'A Vocalis é nativamente treinada no português do Brasil, compreendendo regionalismos, gírias comuns e pronúncias de nomes próprios brasileiros.',
+          intro: 'Configurações orientadas ao português do Brasil, além de opções adicionais de idioma quando habilitadas no plano.',
           steps: [
             {
-              step: 'Português do Brasil Natural',
-              desc: 'Modelos acústicos calibrados para cadência brasileira, pausas naturais de respiração e inflexões de pergunta.'
+              step: 'Português do Brasil',
+              desc: 'Configuração de voz e vocabulário voltada para atendimento em português brasileiro.'
             },
             {
-              step: 'Detecção automática de idioma',
-              desc: 'Se um turista ou cliente estrangeiro iniciar a conversa em inglês ou espanhol, o agente detecta e responde no mesmo idioma sem quebrar a linha.'
+              step: 'Atendimento em outros idiomas',
+              desc: 'Suporte a idiomas adicionais varia conforme o modelo e as regras configuradas para o assistente.'
             },
             {
-              step: 'Mais de 30 idiomas suportados',
-              desc: 'Inglês (US, UK), Espanhol (América Latina e Espanha), Francês, Alemão, Italiano, Japonês e Mandarim.'
+              step: 'Idiomas sob consulta',
+              desc: 'Idiomas além do português do Brasil podem ser avaliados conforme o plano e a configuração do agente.'
             }
           ],
-          tip: 'Se sua empresa atende apenas no Brasil, você pode travar o idioma exclusivamente em Português-BR para evitar trocas acidentais.'
+          tip: 'Se sua empresa atende apenas no Brasil, você pode manter o idioma fixado em Português-BR.'
         }
       },
       {
         id: 'configuracoes-tecnicas',
         title: 'Configurações técnicas',
         icon: Sliders,
-        summary: 'Latência ultrabaixa, codecs de áudio (Opus/PCMU), Webhooks e fallbacks.',
+        summary: 'Orientações sobre webhooks, provedores terceiros e parametrização de chamadas.',
         content: {
-          badge: 'Desenvolvedores & DevOps',
+          badge: 'Integrações & Parâmetros',
           lastUpdated: 'Atualizado em Novembro de 2026',
-          intro: 'Arquitetura técnica projetada para latência ponta a ponta inferior a 500ms, proporcionando a sensação exata de uma conversa humana sem atrasos incômodos.',
+          intro: 'Orientações técnicas gerais sobre webhooks, provedores de telefonia/voz terceiros (como Vapi) e estabilidade operacional, sujeitas à configuração do plano contratado.',
           steps: [
             {
-              step: 'Codecs de áudio de alta fidelidade',
-              desc: 'Suporte a Opus (48kHz fullband) para WebRTC e Webchat, e G.711 PCMU/PCMA (8kHz) para troncos telefônicos tradicionais.'
+              step: 'Transporte de áudio por provedores',
+              desc: 'A qualidade e os codecs utilizados na telefonia e no áudio dependem do provedor de voz/SIP e da qualidade da rede de cada chamada.'
             },
             {
-              step: 'Webhooks de evento de chamada',
-              desc: 'Receba notificações HTTP POST no seu servidor para: call.started, call.ended, call.transcribed, call.qualification, call.appointment_booked.'
+              step: 'Webhooks sob configuração',
+              desc: 'Eventos HTTP POST para notificar sistemas externos podem ser configurados conforme o escopo técnico e plano contratado.'
             },
             {
-              step: 'Mecanismo de Fallback e Resiliência',
-              desc: 'Se o LLM principal tiver latência anormal, o sistema comuta em milissegundos para nós redundantes sem interromper a chamada.'
+              step: 'Contingência e limites técnicos',
+              desc: 'Disponibilidade, redundância de provedores de IA/voz e rotas de fallback dependem da arquitetura contratada — sem garantia de comutação instantânea.'
             }
           ],
           codeSnippet: `{
   "event": "call.completed",
-  "call_id": "voc_984423948_br",
+  "call_id": "exemplo_ilustrativo_01",
   "direction": "inbound",
-  "caller": "+5511984423948",
-  "duration_seconds": 142,
-  "sentiment": "positive",
-  "appointment": {
-    "date": "2026-11-15T14:30:00-03:00",
-    "doctor": "Dra. Camila Rocha"
-  }
+  "caller": "+5511999999999",
+  "duration_seconds": 142
 }`,
-          tip: 'Você pode testar seus Webhooks diretamente pelo painel usando nossa ferramenta de simulação de payloads com assinatura HMAC.'
+          tip: 'Alinhe com nossa equipe técnica os requisitos de webhook e segurança antes da implantação.'
         }
       },
       {
         id: 'contatos',
-        title: 'Contatos',
+        title: 'Contatos e registros',
         icon: MessageSquare,
-        summary: 'Gerencie listas de clientes, histórico de conversas, tags e dados enriquecidos.',
+        summary: 'Organização de registros de leads capturados em formulários e fluxos habilitados.',
         content: {
-          badge: 'Gestão de Leads',
+          badge: 'Registros por Canal',
           lastUpdated: 'Atualizado em Novembro de 2026',
-          intro: 'Centralize todos os contatos que já interagiram com seus agentes de voz, WhatsApp ou Webchat.',
+          intro: 'Veja como os contatos de formulários e solicitações podem ser acompanhados no painel. Não há unificação automática de histórico entre telefone, WhatsApp e webchat sem integração específica por projeto.',
           steps: [
             {
-              step: 'Histórico unificado de conversas',
-              desc: 'Veja cada transcrição completa, áudio gravado e resumo das chamadas associadas ao número de telefone do cliente.'
+              step: 'Registros conforme o canal habilitado',
+              desc: 'Cada canal (telefone, WhatsApp ou webchat) possui escopo e provedores distintos; o histórico consolidado entre canais depende de integração adicional via webhook ou CRM.'
             },
             {
-              step: 'Tags e segmentação automática',
-              desc: 'A IA classifica o lead automaticamente: "Cliente Vip", "Reclamação", "Agendamento Confirmado", "Follow-up necessário".'
+              step: 'Classificação e campos',
+              desc: 'Resumos, tags e etapas de qualificação variam conforme as integrações habilitadas no plano (exemplos do painel de prévia são ilustrativos).'
             },
             {
-              step: 'Exportação e Sincronização',
-              desc: 'Exporte listas em CSV ou sincronize automaticamente com seu CRM favorito via integração nativa.'
+              step: 'Exportação e integrações externas',
+              desc: 'Avalie com a equipe comercial as opções de envio para planilhas ou CRM via webhook ou conectores previstos no plano.'
             }
           ],
-          tip: 'Quando um cliente recorrente liga, o agente reconhece pelo número e pode cumprimentá-lo pelo nome!'
+          tip: 'Confirme no momento da contratação quais canais e relatórios fazem parte do escopo do seu plano.'
         }
       },
       {
         id: 'analises',
-        title: 'Análises',
+        title: 'Análises e indicadores',
         icon: BarChart3,
-        summary: 'Painéis com TMA, taxa de conversão, custos e sentimento dos clientes.',
+        summary: 'Visão geral de métricas operacionais disponíveis conforme o escopo contratado.',
         content: {
-          badge: 'Métricas & ROI',
+          badge: 'Métricas Operacionais',
           lastUpdated: 'Atualizado em Novembro de 2026',
-          intro: 'Visualize gráficos em tempo real sobre o desempenho da sua central de voz e o nível de satisfação dos usuários.',
+          intro: 'Os painéis exibidos na página inicial trazem simulações ilustrativas de relatórios. Os indicadores disponíveis em produção dependem dos provedores e do plano contratado.',
           steps: [
             {
-              step: 'FCR (First Call Resolution)',
-              desc: 'Acompanhe a porcentagem de chamadas que foram completamente resolvidas pela IA sem precisar de intervenção humana.'
+              step: 'Volume de atendimentos e duração',
+              desc: 'Acompanhamento de minutos falados, conversas ou mensagens conforme as regras medidas no seu canal.'
             },
             {
-              step: 'Análise de Sentimento com IA',
-              desc: 'Cada ligação recebe uma nota de sentimento (Positivo, Neutro ou Frustrado) com destaques dos momentos mais críticos.'
+              step: 'Indicadores avançados sob consulta',
+              desc: 'Análise de sentimento, classificação automática e painéis personalizados dependem da configuração contratada.'
             },
             {
-              step: 'Custo por minuto e economia',
-              desc: 'Compare o custo operacional da Vocalis (a partir de R$ 0,25/min) contra o custo médio de um atendente humano tradicional.'
+              step: 'Custos e excedentes',
+              desc: getOverageOrUnitCostHint('telefone')
             }
           ],
-          tip: 'Filtre relatórios por atendente virtual, canal de entrada ou intervalo de datas.'
+          tip: 'Solicite uma demonstração guiada para conhecer quais relatórios estarão ativos para a sua operação.'
         }
       },
       {
@@ -329,7 +324,7 @@ Nunca dê diagnósticos médicos. Se o paciente relatar emergência grave, orien
               desc: 'Certifique-se de que o número de destino está no formato E.164 (+55 DDD NÚMERO) e que a linha de destino não está ocupada.'
             }
           ],
-          tip: 'Nosso time de suporte está disponível 24 horas por dia através do botão "Mandar e-mail ao time" ou pelo WhatsApp de suporte.'
+          tip: 'Entre em contato pelos canais oficiais de suporte informados no painel.'
         }
       }
     ],
@@ -338,136 +333,136 @@ Nunca dê diagnósticos médicos. Se o paciente relatar emergência grave, orien
         id: 'agente-voz',
         title: 'Agente de Voz Telefônico',
         icon: Phone,
-        summary: 'Atendimento telefônico inteligente com números nacionais e voz ultra-realista.',
+        summary: 'Atendimento telefônico configurável em português brasileiro.',
         content: {
           badge: 'Módulo Principal',
           lastUpdated: 'Atualizado em Novembro de 2026',
-          intro: 'O Agente de Voz Vocalis atende e realiza chamadas telefônicas de forma 100% autônoma, compreendendo interrupções e negociando horários com fala natural.',
+          intro: 'O Agente de Voz Vocalis apoia o atendimento de chamadas telefônicas conforme as regras configuradas pela empresa e dentro dos limites do plano.',
           steps: [
             {
               step: 'Atendimento Receptivo',
-              desc: 'Substitui URAs confusas ("disque 1 para vendas, disque 2..."). O cliente simplesmente fala o que precisa e a IA resolve.'
+              desc: 'Substitui menus numéricos rígidos por roteiros conversacionais configuráveis para triagem e dúvidas.'
             },
             {
               step: 'Chamadas Ativas',
-              desc: 'Confirmação de consultas, cobrança amigável, pesquisa de NPS e qualificação de leads frios.'
+              desc: 'Fluxos configuráveis para confirmação de horários, lembretes e acompanhamento conforme o plano contratado.'
             }
           ],
-          tip: 'Experimente nosso teste de chamada gratuito no topo da página para ver em ação no seu celular!'
+          tip: 'Use os simuladores ilustrativos do site para visualizar um exemplo de atendimento no navegador.'
         }
       },
       {
         id: 'whatsapp-ia',
         title: 'IA de WhatsApp',
         icon: MessageSquare,
-        summary: 'Atendimento com áudios humanos e textos simultâneos no canal favorito dos brasileiros.',
+        summary: 'Atendimento com áudio e texto no WhatsApp conforme configuração do plano.',
         content: {
-          badge: 'WhatsApp Business API',
+          badge: 'Canal WhatsApp',
           lastUpdated: 'Atualizado em Novembro de 2026',
-          intro: 'Conecte seu número de WhatsApp oficial e permita que sua empresa envie e escute áudios com a mesma voz do telefone.',
+          intro: 'Conecte o canal WhatsApp de acordo com a modalidade disponível no seu plano para responder clientes em texto ou áudio.',
           steps: [
             {
-              step: 'Áudios falados gerados na hora',
-              desc: 'A IA responde mensagens de voz do cliente com outro áudio natural, criando altíssima proximidade e taxa de conversão.'
+              step: 'Respostas em texto e áudio',
+              desc: 'A IA responde mensagens recebidas em texto ou áudio natural, permitindo interações em áudio e texto conforme configurado.'
             },
             {
               step: 'Transcrições e Resumos',
-              desc: 'Todo áudio recebido é transcrito para texto para facilitar o monitoramento da sua equipe.'
+              desc: 'Os registros de conversa auxiliam o acompanhamento pela sua equipe.'
             }
           ],
-          tip: 'Totalmente homologado na Cloud API oficial da Meta, sem risco de banimento de número.'
+          tip: 'A conexão com o WhatsApp deve observar as políticas aplicáveis da Meta; não há garantia de risco zero contra restrições de terceiros.'
         }
       },
       {
         id: 'webchat-ia',
         title: 'Webchat de IA',
         icon: Zap,
-        summary: 'Widget interativo para seu site com voz e texto em 1 linha de código.',
+        summary: 'Widget de atendimento por IA configurável para sites (implantação sob consulta).',
         content: {
-          badge: 'Conversão no Site',
+          badge: 'Canal Webchat',
           lastUpdated: 'Atualizado em Novembro de 2026',
-          intro: 'Transforme visitantes anônimos em reuniões agendadas com um assistente flutuante de voz direto no navegador.',
+          intro: 'O widget exibido neste site (Beatriz) funciona como atendimento automatizado por IA para dúvidas e informações comerciais do catálogo. A instalação em sites externos de clientes depende de provisionamento técnico.',
           steps: [
             {
-              step: 'Instalação simples',
-              desc: 'Basta colar uma tag <script> antes de fechar o </body> da sua landing page ou loja virtual.'
+              step: 'Identificação clara como IA',
+              desc: 'O visitante é informado de que conversa com uma assistente automatizada de IA, com opção de encaminhar solicitação para a equipe humana via formulário.'
             },
             {
-              step: 'Chamada de voz direto pelo navegador',
-              desc: 'O visitante pode clicar no microfone e conversar por voz sem precisar discar nenhum número.'
+              step: 'Implantação em site externo',
+              desc: 'O script incorporável ilustrado na página de Webchat representa o formato previsto do widget; a ativação em domínios próprios é avaliada sob consulta.'
             }
           ],
-          tip: 'Disponível com tema escuro e claro que se adapta às cores da sua marca.'
+          tip: 'Verifique com nossa equipe comercial o escopo e os limites aplicáveis ao canal Webchat.'
         }
       }
     ],
     integracoes: [
       {
         id: 'integracao-calendarios',
-        title: 'Google Agenda & Calendly',
+        title: 'Agendas (Google Agenda & Calendly — Sob Consulta)',
         icon: Calendar,
-        summary: 'Agendamentos automáticos respeitando fusos horários e disponibilidade real.',
+        summary: 'Possibilidades de integração de agenda avaliadas conforme o plano e escopo.',
         content: {
-          badge: 'Sincronização de Agenda',
+          badge: 'Integrações Sob Consulta',
           lastUpdated: 'Atualizado em Novembro de 2026',
-          intro: 'Permita que o agente de voz consulte sua disponibilidade e marque reuniões ou consultas na hora da conversa.',
+          intro: 'A conexão automatizada com Google Agenda, Calendly ou agendas clínicas não está habilitada em modo self-service neste site e é avaliada por projeto via webhook ou API.',
           steps: [
             {
-              step: 'Conexão em 1 clique',
-              desc: 'Autorize sua conta Google Workspace ou Outlook 365 com protocolo OAuth2 seguro.'
+              step: 'Viabilidade por plano',
+              desc: 'Antes da contratação, validamos quais agendas e fluxos de confirmação fazem parte do escopo selecionado.'
             },
             {
-              step: 'Regras de intervalo e antecedência',
-              desc: 'Defina tempo de respiro entre atendimentos (ex.: 15 minutos) e limites de dias no futuro.'
+              step: 'Regras operacionais',
+              desc: 'Horários de atendimento, janelas e antecedência mínima são parametrizados durante a implantação assistida.'
             }
           ],
-          tip: 'O cliente recebe convite no Google Meet ou WhatsApp de confirmação automaticamente.'
+          tip: 'Consulte a equipe comercial para confirmar se a integração desejada está disponível no seu plano.'
         }
       },
       {
         id: 'integracao-crms',
-        title: 'CRMs (HubSpot, RD Station, Pipedrive)',
+        title: 'CRMs e Webhooks (Sob Consulta)',
         icon: Layers,
-        summary: 'Atualização de negócios e notas de chamadas sem trabalho manual.',
+        summary: 'Envio estruturado de informações avaliado conforme viabilidade técnica do plano.',
         content: {
-          badge: 'Automação Comercial',
+          badge: 'Integrações Sob Consulta',
           lastUpdated: 'Atualizado em Novembro de 2026',
-          intro: 'Acabe com o tempo gasto pelos vendedores preenchendo relatórios após reuniões e chamadas.',
+          intro: 'Integrações com CRMs de mercado (como HubSpot, RD Station e Pipedrive) não possuem conectores plug-and-play ativos no front-end atual; podem ser avaliadas via webhooks ou projeto conforme o plano.',
           steps: [
             {
-              step: 'Criação automática de Leads e Negócios',
-              desc: 'Quando a IA qualifica um prospecto, ela cria o lead e move para a etapa correta do funil.'
+              step: 'Envio de registros e resumos',
+              desc: 'Quando contratado e configurado em projeto, dados coletados podem ser encaminhados ao sistema do cliente.'
             },
             {
-              step: 'Gravação e transcrição anexadas',
-              desc: 'O link do áudio e o resumo dos pontos acordados são inseridos diretamente na linha do tempo do CRM.'
+              step: 'Alinhamento técnico prévio',
+              desc: 'Campos, credenciais e formato do payload são definidos com a sua equipe durante a implantação.'
             }
           ],
-          tip: 'Suportamos também Webhooks genéricos para integrar com qualquer CRM proprietário.'
+          tip: 'Não prometemos sincronização universal entre todos os canais sem projeto de integração confirmado.'
         }
       }
     ],
     parceiros: [
       {
         id: 'programa-white-label',
-        title: 'Programa White-label',
+        title: 'Programa para Parceiros e Agências',
         icon: Sparkles,
-        summary: 'Revenda agentes de voz com a sua marca, seu domínio e margem de até 50%.',
+        summary: 'Condições comerciais e modelos de parceria sob consulta.',
         content: {
           badge: 'Parcerias & Agências',
           lastUpdated: 'Atualizado em Novembro de 2026',
-          intro: 'Ideal para agências de marketing, integradores de telecom e consultorias que querem oferecer IA de voz aos seus clientes.',
+          intro: 'As regras comerciais, eventuais percentuais de repasse e recursos multi-conta do programa de parceiros estão pendentes de confirmação e são apresentados diretamente em proposta comercial.',
           steps: [
             {
-              step: 'Painel com sua identidade visual',
-              desc: 'Seu logotipo, suas cores e seu domínio personalizado (ex.: app.suaagencia.com.br).'
+              step: 'Avaliação comercial dedicada',
+              desc: 'Alinhe com nossa equipe os requisitos técnicos e modelo de atuação (indicação ou revenda).'
             },
             {
-              step: 'Gestão multi-tenant de clientes',
-              desc: 'Crie subcontas para cada cliente da sua carteira e defina limites de uso e preços personalizados.'
+              step: 'Escopo e implantação',
+              desc: 'Funcionalidades de marca própria, subcontas e limites são confirmados em contrato.'
             }
           ],
-          tip: 'Converse com nosso time comercial no menu "Parceiros" para conhecer os planos para agências.'
+          tip: 'Acesse a página Parceiros ou agende uma conversa para receber as condições vigentes.'
         }
       }
     ]
@@ -496,17 +491,17 @@ Nunca dê diagnósticos médicos. Se o paciente relatar emergência grave, orien
       const qLower = query.toLowerCase();
 
       if (qLower.includes('número') || qLower.includes('telefone') || qLower.includes('ddd') || qLower.includes('0800')) {
-        matchedText = `Na Vocalis você pode ativar números locais com DDD de qualquer estado do Brasil, linhas 0800 nacionais ou 4003. Também é possível conectar seu próprio tronco SIP/PABX existente sem precisar mudar de operadora. A ativação no painel leva menos de 2 minutos.`;
+        matchedText = `As opções de números locais com DDD, 0800 ou conexão via tronco SIP/PABX variam conforme a viabilidade técnica e o plano contratado. Os prazos de ativação são alinhados após validação cadastral.`;
       } else if (qLower.includes('prompt') || qLower.includes('natural') || qLower.includes('escrever') || qLower.includes('falar')) {
-        matchedText = `Para que a IA soe como uma pessoa real no telefone, recomendamos: 1) Usar frases curtas de até 2 sentenças; 2) Fazer uma pergunta no final para guiar o diálogo; 3) Escrever instruções de pausas para números (ex: "DDD 11, 9..."). Você pode testar e afinar o tom na aba de Simulação em tempo real.`;
+        matchedText = `Para que o roteiro soe natural no telefone, recomendamos: 1) Usar frases curtas; 2) Finalizar com uma pergunta objetiva; 3) Orientar pausas ao ler números. Você pode validar o roteiro nas ferramentas de simulação do painel.`;
       } else if (qLower.includes('agenda') || qLower.includes('google') || qLower.includes('calendly') || qLower.includes('marcar')) {
-        matchedText = `A sincronização com o Google Agenda e Calendly é nativa! Conecte sua conta em 'Integrações', selecione o calendário desejado e o agente irá verificar horários livres em tempo real e criar o evento durante a própria chamada com o cliente.`;
+        matchedText = `As integrações com ferramentas de agenda e calendários são avaliadas conforme o plano contratado e a viabilidade técnica da operação.`;
       } else if (qLower.includes('whatsapp') || qLower.includes('zap') || qLower.includes('áudio')) {
-        matchedText = `Sim! A Vocalis integra com a Cloud API oficial da Meta. O agente pode ouvir os áudios que seus clientes mandam no WhatsApp e responder com áudio falado natural na mesma voz humanizada, além de texto.`;
+        matchedText = `O canal WhatsApp suporta fluxos configuráveis em texto e áudio conforme os recursos do plano contratado. A modalidade de conexão e eventuais custos de provedor ou da Meta são informados antes da contratação.`;
       } else if (qLower.includes('latência') || qLower.includes('tempo') || qLower.includes('atraso') || qLower.includes('rapidez')) {
-        matchedText = `A latência ponta a ponta da Vocalis é inferior a 500 milissegundos. Isso elimina aquele silêncio constrangedor típico de robôs antigos e garante uma conversa fluida com interrupções naturais.`;
+        matchedText = `A fluidez das respostas varia conforme o canal, a qualidade da conexão telefônica ou de dados e o fluxo configurado no plano.`;
       } else {
-        matchedText = `Com a Vocalis você cria agentes de voz com inteligência artificial para atender e fazer ligações telefônicas, WhatsApp e Webchat. Nossa central de ajuda possui guias detalhados sobre números de telefone, engenharia de prompt, bases de conhecimento em PDF e integrações via Webhook e CRM.`;
+        matchedText = `Com a Vocalis você configura assistentes de IA para Telefone, WhatsApp e Webchat. Consulte nossa equipe para validar escopo, integrações e condições comerciais vigentes.`;
       }
 
       setAiResponse({
@@ -723,7 +718,7 @@ Nunca dê diagnósticos médicos. Se o paciente relatar emergência grave, orien
                 <span>Precisa de ajuda humana?</span>
               </div>
               <p className="text-[11px] leading-relaxed">
-                Nossos especialistas em IA de voz respondem em menos de 15 minutos em dias úteis.
+                Nossa equipe atende solicitações de suporte pelos canais informados no painel.
               </p>
               <button
                 onClick={() => onOpenDemo && onOpenDemo()}

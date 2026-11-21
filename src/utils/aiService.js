@@ -3,7 +3,10 @@
  * Otimizado para respostas telefônicas breves, executivas e ultra-diretas (Roberta · SDR)
  */
 
+import { buildRobertaCommercialReply } from './commercialCatalogUtils';
+
 const GEMINI_API_KEY = import.meta.env.VITE_GEMINI_API_KEY;
+const ROBERTA_COMMERCIAL_REPLY = buildRobertaCommercialReply();
 
 const SYSTEM_PROMPT = `Você é Roberta, SDR e consultora executiva da Vocalis falando ao telefone com empresários.
 Sua missão é responder com extrema brevidade, objetividade e elegância. Empresários e médicos não têm tempo a perder ao telefone.
@@ -14,14 +17,15 @@ DIRETRIZES OBRIGATÓRIAS DE RESPOSTA TELEFÔNICA:
 3. SEMPRE finalize convidando diretamente para uma reunião rápida de 15 minutos ou para ver a demonstração na tela.
 4. NUNCA use formatação Markdown, negrito, asteriscos, tópicos ou emojis.
 5. Fale sempre "Vocalis". NUNCA use siglas em inglês como "AI Agency OS".
+6. SETORES SENSÍVEIS: Nunca faça diagnóstico médico/odontológico, não avalie gravidade nem recomende aguardar em casos de dor ou urgência; protocolos de saúde e urgência exigem aprovação do profissional responsável e encaminhamento humano imediato. Em advocacia e finanças, não emita parecer jurídico, valor de causa nem garanta conformidade automática; respostas em operação dependem da base de conhecimento e regras do cliente.
 
 EXEMPLOS DE ESTILO ESPERADO:
 - Cliente: "O que a Vocalis faz por uma clínica odontológica?"
-  Roberta: "Automatizamos o agendamento de consultas e o atendimento 24 horas no WhatsApp, zerando faltas. Quer ver uma demonstração de 15 minutos com nossa equipe?"
+  Roberta: "Apoiamos agendamentos de rotina e lembretes conforme a base da clínica, sem diagnóstico nem orientação de urgência sem protocolo aprovado pelo responsável técnico. Quer ver uma demonstração?"
 - Cliente: "Quanto custa?"
-  Roberta: "Nossos planos começam em duzentos e noventa e sete reais por mês com trinta por cento de desconto de lançamento. Quer ativar seu teste agora?"
+  Roberta: "${ROBERTA_COMMERCIAL_REPLY}"
 - Cliente: "Você integra com meu sistema?"
-  Roberta: "Sim, integramos com WhatsApp, Google Agenda e os principais sistemas do mercado em poucos minutos. Quer que eu te mande o material completo?"`;
+  Roberta: "Integrações com WhatsApp, agendas e sistemas externos são alinhadas conforme o plano. Quer agendar uma demonstração?"`;
 
 /**
  * Envia uma mensagem para o Gemini com suporte a histórico multi-turn
@@ -111,12 +115,14 @@ export async function askRobertaAI(userMessage, context = {}, history = []) {
 
   // Fallback breve e executivo
   const lowerMsg = userMessage.toLowerCase();
-  let fallbackReply = "Com a Vocalis, sua empresa atende em menos de meio segundo e agenda clientes 24 horas por dia. Quer agendar uma reuniao rapida de 15 minutos?";
+  let fallbackReply = "Com a Vocalis, sua empresa pode automatizar atendimentos e agendamentos conforme a configuração do plano. Quer agendar uma reuniao rapida de 15 minutos?";
 
   if (lowerMsg.includes('odonto') || lowerMsg.includes('dentist') || lowerMsg.includes('clínica') || lowerMsg.includes('clinica')) {
-    fallbackReply = "Para sua clinica, a Vocalis atende chamadas na hora, agenda avaliacoes e zera as faltas de pacientes. Quer ver uma demonstracao de 15 minutos?";
+    fallbackReply = "Para clínicas, esta é uma simulação ilustrativa de agendamento de rotina conforme as regras aprovadas pelo responsável técnico, sem diagnóstico por IA. Quer ver uma demonstração com nossa equipe?";
+  } else if (lowerMsg.includes('advoca') || lowerMsg.includes('juríd') || lowerMsg.includes('jurid')) {
+    fallbackReply = "Para escritórios, apoiamos apenas recepção administrativa conforme regras do cliente, sem parecer jurídico ou valor de causa. Quer ver uma demonstração?";
   } else if (lowerMsg.includes('preço') || lowerMsg.includes('valor') || lowerMsg.includes('quanto custa')) {
-    fallbackReply = "Temos planos a partir de duzentos e noventa e sete reais por mes com trinta por cento de desconto de lancamento. Quer liberar seu acesso agora?";
+    fallbackReply = buildRobertaCommercialReply();
   } else if (lowerMsg.includes('ouvin') || lowerMsg.includes('escut') || lowerMsg.includes('ola') || lowerMsg.includes('olá')) {
     fallbackReply = "Estou te ouvindo perfeitamente, Francisco! Qual e o ramo da sua empresa para fazermos um diagnostico rapido?";
   }

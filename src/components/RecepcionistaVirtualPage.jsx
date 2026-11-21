@@ -98,9 +98,9 @@ export default function RecepcionistaVirtualPage({ onOpenDemo, onOpenAuth, onNav
     },
     {
       num: 3,
-      title: 'Nenhuma ligação é perdida',
-      shortDesc: 'Se o colaborador não atender, a recepcionista virtual com IA informa ao cliente e diz que enviará um e-mail com a solicitação...',
-      fullDesc: 'Se o colaborador não atender, a recepcionista virtual com IA informa ao cliente e diz que enviará um e-mail com a solicitação ao responsável, garantindo o retorno sem que ninguém precise anotar recados.'
+      title: 'Registro estruturado de recados',
+      shortDesc: 'Se o colaborador não atender, a recepcionista virtual registra a solicitação para envio ou consulta pela equipe...',
+      fullDesc: 'Se o colaborador não atender, a recepcionista virtual registra a solicitação do cliente para envio ou acompanhamento pela equipe responsável, conforme as regras configuradas.'
     },
     {
       num: 4,
@@ -242,12 +242,12 @@ export default function RecepcionistaVirtualPage({ onOpenDemo, onOpenAuth, onNav
       content: 'Desde consultórios individuais e escritórios de advocacia até redes de clínicas e empresas com múltiplos ramais e filiais. A IA adapta o atendimento ao volume exato do seu negócio.'
     },
     {
-      title: 'Configurada em minutos',
-      content: 'Não é preciso instalar nenhum aparelho físico no seu escritório nem contratar novos planos de telefonia caros. A ativação é feita 100% em nuvem em menos de 10 minutos.'
+      title: 'Ativação em nuvem',
+      content: 'Não é preciso instalar aparelhos físicos no escritório. A implantação e o prazo de ativação são definidos com nossa equipe conforme o ambiente telefônico.'
     },
     {
-      title: 'Fim de ligações em fila',
-      content: 'Esqueça aquela música irritante de espera ou ligações caindo na caixa postal. A recepcionista atende centenas de clientes ao mesmo tempo, sem ocupar a linha.'
+      title: 'Atendimento simultâneo conforme o plano',
+      content: 'Capacidade de atendimentos simultâneos dimensionada de acordo com as condições do plano contratado.'
     }
   ];
 
@@ -270,7 +270,7 @@ export default function RecepcionistaVirtualPage({ onOpenDemo, onOpenAuth, onNav
 
           {/* Subtitle */}
           <p className="text-base sm:text-lg text-[#5C5955] max-w-2xl mx-auto font-normal leading-relaxed mb-10">
-            Reduza o tempo de espera e nunca perca uma ligação de um cliente. Uma recepcionista virtual com Inteligência Artificial possibilita um serviço de telefonia profissional para sua empresa.
+            Apoie a triagem de chamadas e organize o atendimento telefônico conforme a capacidade e as regras do plano contratado.
           </p>
 
           {/* Audio Wave Visualizer Circle with Loop */}
@@ -283,7 +283,7 @@ export default function RecepcionistaVirtualPage({ onOpenDemo, onOpenAuth, onNav
           </div>
 
           {/* Phone Input Box matching print */}
-          <form onSubmit={handleTestCallSubmit} className="max-w-xl mx-auto mb-3">
+          <form onSubmit={handleTestCallSubmit} className="max-w-xl mx-auto mb-2">
             <div className="flex items-center bg-white rounded-full p-1.5 pl-3 border border-[#DCD8D0] shadow-md focus-within:border-[#4F46E5] focus-within:ring-2 focus-within:ring-[#4F46E5]/15 transition-all relative">
               
               {/* Country Flag Selector (1:1 com o Kloel) */}
@@ -329,7 +329,7 @@ export default function RecepcionistaVirtualPage({ onOpenDemo, onOpenAuth, onNav
                 type="tel"
                 value={phoneNumber}
                 onChange={handlePhoneChange}
-                placeholder="Seu celular com DDD"
+                placeholder="Seu celular com DDD (opcional)"
                 className="flex-1 px-3 py-2.5 bg-transparent text-[#1A1816] placeholder-[#9E9B95] text-sm focus:outline-none"
               />
 
@@ -339,11 +339,15 @@ export default function RecepcionistaVirtualPage({ onOpenDemo, onOpenAuth, onNav
                 className="shrink-0 px-6 py-3 rounded-full bg-[#11100F] text-white text-xs sm:text-sm font-semibold hover:bg-black transition-all flex items-center gap-2 shadow-sm cursor-pointer"
               >
                 <Phone className="w-4 h-4 text-white" />
-                <span>Ouvir a Vocalis agora</span>
+                <span>Abrir simulação ilustrativa</span>
               </button>
 
             </div>
           </form>
+
+          <p className="text-[11px] text-[#736F69] max-w-2xl mx-auto mb-3 leading-relaxed">
+            Simulação ilustrativa no navegador (Web Speech / TTS): não realiza chamada telefônica real e não armazena seu número. Em operação real, telefonia, números/SIP, transferência, gravação, limites de minutos, chamadas simultâneas e regras de excedente dependem de provedores terceiros (como Vapi e operadora SIP) e de confirmação no catálogo oficial.
+          </p>
 
           {/* Secondary Link: Agendar demo */}
           <div className="mb-8">
@@ -355,11 +359,11 @@ export default function RecepcionistaVirtualPage({ onOpenDemo, onOpenAuth, onNav
             </button>
           </div>
 
-          {/* Checklist */}
+          {/* Checklist prudente */}
           <div className="flex flex-wrap items-center justify-center gap-6 md:gap-8 text-xs font-semibold text-[#5C5955]">
             <div className="flex items-center gap-1.5">
               <Check className="w-4 h-4 text-[#4F46E5]" strokeWidth={2.5} />
-              <span>Garantia de 30 dias</span>
+              <span>Condições comerciais sob consulta</span>
             </div>
             <div className="flex items-center gap-1.5">
               <Check className="w-4 h-4 text-[#4F46E5]" strokeWidth={2.5} />
@@ -367,7 +371,7 @@ export default function RecepcionistaVirtualPage({ onOpenDemo, onOpenAuth, onNav
             </div>
             <div className="flex items-center gap-1.5">
               <Check className="w-4 h-4 text-[#4F46E5]" strokeWidth={2.5} />
-              <span>No ar em minutos</span>
+              <span>Configuração guiada</span>
             </div>
           </div>
 
@@ -387,7 +391,7 @@ export default function RecepcionistaVirtualPage({ onOpenDemo, onOpenAuth, onNav
                 24/7
               </span>
               <p className="text-xs sm:text-sm text-[#5C5955] leading-relaxed">
-                Atendimento, inclusive fora do expediente.
+                Atendimento configurável, inclusive fora do expediente.
               </p>
             </div>
 
@@ -401,23 +405,23 @@ export default function RecepcionistaVirtualPage({ onOpenDemo, onOpenAuth, onNav
               </p>
             </div>
 
-            {/* Card 3: 100+ */}
+            {/* Card 3: API & Webhooks */}
             <div className="bg-[#FAF9F5] rounded-3xl p-8 border border-[#E7E4DC] shadow-sm text-left">
-              <span className="text-4xl sm:text-5xl font-serif-title font-normal text-[#1A1816] block mb-3">
-                100+
+              <span className="text-3xl sm:text-4xl font-serif-title font-normal text-[#1A1816] block mb-3">
+                API &amp; Webhooks
               </span>
               <p className="text-xs sm:text-sm text-[#5C5955] leading-relaxed">
-                Integrações.
+                Integrações sob consulta conforme o plano.
               </p>
             </div>
 
-            {/* Card 4: 30 dias */}
+            {/* Card 4: PT-BR */}
             <div className="bg-[#FAF9F5] rounded-3xl p-8 border border-[#E7E4DC] shadow-sm text-left">
               <span className="text-4xl sm:text-5xl font-serif-title font-normal text-[#1A1816] block mb-3">
-                30 dias
+                PT-BR
               </span>
               <p className="text-xs sm:text-sm text-[#5C5955] leading-relaxed">
-                Para decidir, ou seu dinheiro de volta.
+                Foco em atendimento em português brasileiro.
               </p>
             </div>
 
@@ -560,11 +564,11 @@ export default function RecepcionistaVirtualPage({ onOpenDemo, onOpenAuth, onNav
             <div className="max-w-md text-xs sm:text-sm text-[#5C5955] leading-relaxed">
               {expandedTopAdvantage ? (
                 <span>
-                  As principais vantagens da nossa recepcionista virtual com IA são a disponibilidade 24 horas por dia, o aumento da capacidade de atendimento simultâneo sem filas de espera, e a redução drástica nos custos operacionais com total precisão no registro de dados.
+                  A recepcionista virtual com IA ajuda a organizar o atendimento fora do expediente, estruturar a triagem de solicitações e registrar informações conforme as regras configuradas no plano.
                 </span>
               ) : (
                 <span>
-                  As principais vantagens da nossa recepcionista virtual com IA são a disponibilidade 24 horas por dia, o aumento da...
+                  A recepcionista virtual com IA ajuda a organizar o atendimento fora do expediente, estruturar a triagem...
                 </span>
               )}
               <button 
@@ -684,12 +688,12 @@ export default function RecepcionistaVirtualPage({ onOpenDemo, onOpenAuth, onNav
             
             <div className="relative z-10 max-w-2xl mx-auto space-y-5">
               <h2 className="text-4xl sm:text-5xl font-normal tracking-tight text-white leading-tight">
-                Nunca mais perca um cliente.<br />
-                <span className="font-serif-title italic text-[#A5B4FC]">A Vocalis atende no primeiro toque.</span>
+                Organize cada contato.<br />
+                <span className="font-serif-title italic text-[#A5B4FC]">Estruture o atendimento da sua empresa.</span>
               </h2>
 
               <p className="text-sm text-stone-300 leading-relaxed max-w-xl mx-auto">
-                Ative a recepcionista inteligente da sua empresa em menos de 10 minutos e transforme cada ligação em agendamentos e faturamento 24/7.
+                Configure a recepcionista virtual conforme o plano contratado e apresente um fluxo claro de triagem e encaminhamento.
               </p>
 
               <div className="pt-3">
@@ -707,7 +711,7 @@ export default function RecepcionistaVirtualPage({ onOpenDemo, onOpenAuth, onNav
               <AudioFrequencyWave 
                 variant="full" 
                 showLatencyBadge={true}
-                latencyText="Latência 380ms • Frequência Vocal em Tempo Real"
+                latencyText="Visualização ilustrativa • Voz em português brasileiro"
               />
             </div>
 

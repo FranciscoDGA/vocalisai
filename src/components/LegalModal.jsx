@@ -73,7 +73,7 @@ export default function LegalModal({ isOpen, initialTab = 'privacidade', onClose
                   {PRIVACY_POLICY.subtitle}
                 </p>
                 <div className="mt-4 p-4 rounded-xl bg-[#FAF9F5] border border-[#EBE8E2] text-xs text-[#736F69]">
-                  Esta Política estabelece como a <strong>VOCALIS TECNOLOGIA LTDA</strong> trata dados pessoais na qualidade de operadora para seus clientes e controladora de seus próprios dados cadastrais, em estrita observância à Lei Geral de Proteção de Dados (Lei nº 13.709/2018 - LGPD).
+                  Esta Política apresenta diretrizes voltadas ao atendimento da Lei Geral de Proteção de Dados (Lei nº 13.709/2018 - LGPD), contendo pontos operacionais, cadastrais e contratuais marcados como <strong>PENDENTE DE CONFIRMAÇÃO</strong> pelo proprietário e assessoria jurídica.
                 </div>
               </div>
 
@@ -148,14 +148,16 @@ export default function LegalModal({ isOpen, initialTab = 'privacidade', onClose
 
                   {/* DPO box */}
                   {sec.dpoEmail && (
-                    <div className="p-4 rounded-xl bg-[#EEF2FF] border border-[#E0E7FF] flex items-center justify-between">
+                    <div className="p-4 rounded-xl bg-[#EEF2FF] border border-[#E0E7FF] flex flex-col sm:flex-row sm:items-center justify-between gap-2">
                       <div>
                         <div className="text-xs font-bold text-[#4F46E5]">Encarregado de Proteção de Dados (DPO)</div>
-                        <div className="text-xs text-[#5C5955]">Canal oficial de atendimento aos titulares</div>
+                        <div className="text-xs text-[#5C5955]">
+                          {sec.dpoStatus || 'Canal informado para atendimento aos titulares (pendente de confirmação)'}
+                        </div>
                       </div>
                       <a 
                         href={`mailto:${sec.dpoEmail}`}
-                        className="px-3 py-1.5 rounded-lg bg-white border border-[#E7E4DC] font-mono text-xs font-bold text-[#4F46E5] hover:bg-[#FAF9F5]"
+                        className="px-3 py-1.5 rounded-lg bg-white border border-[#E7E4DC] font-mono text-xs font-bold text-[#4F46E5] hover:bg-[#FAF9F5] self-start sm:self-auto"
                       >
                         {sec.dpoEmail}
                       </a>
@@ -205,7 +207,7 @@ export default function LegalModal({ isOpen, initialTab = 'privacidade', onClose
         {/* Footer Bar */}
         <div className="bg-[#FAF9F5] px-6 py-4 border-t border-[#EBE8E2] flex items-center justify-between shrink-0">
           <span className="text-xs text-[#736F69]">
-            Vocalis • Segurança e Privacidade Garantidas
+            Vocalis • Documentação sujeita a confirmação contratual e jurídica
           </span>
           <button
             onClick={onClose}

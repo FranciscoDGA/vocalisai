@@ -1,24 +1,27 @@
 import React, { useState } from 'react';
 import { Calculator, TrendingUp, DollarSign, Clock, Users, ArrowRight, Sparkles } from 'lucide-react';
+import { getCommercialEntryLabel, getLowestConfirmedEntryPrice } from '../utils/commercialCatalogUtils';
 
 export default function RoiCalculator({ onOpenDemo }) {
   const [contactsPerMonth, setContactsPerMonth] = useState(1800);
   const [humanAgentsNeeded, setHumanAgentsNeeded] = useState(3);
 
-  // Estimativa de custo por atendente CLT incluindo encargos, benefícios e escala 24/7 (média Brasil: R$ 3.800/mês total)
+  // Valor ilustrativo editável de custo trabalhista por atendente (apenas referência ilustrativa)
   const costPerHumanAgent = 3800;
   const totalHumanCostMonthly = humanAgentsNeeded * costPerHumanAgent;
   const totalHumanCostAnnual = totalHumanCostMonthly * 12;
 
-  // Custo estimado do Vocalis AI (Plano Pro ou Business conforme volume)
-  const vocalisCostMonthly = contactsPerMonth > 5000 ? 1490 : (contactsPerMonth > 1000 ? 697 : 297);
-  const vocalisCostAnnual = vocalisCostMonthly * 12;
+  // Referência comercial obtida exclusivamente da fonte única
+  const confirmedFloorMonthly = getLowestConfirmedEntryPrice();
+  const hasConfirmedFloor = typeof confirmedFloorMonthly === 'number';
+  const vocalisCostMonthly = hasConfirmedFloor ? confirmedFloorMonthly : null;
+  const vocalisCostAnnual = hasConfirmedFloor ? vocalisCostMonthly * 12 : null;
 
-  // Economia
-  const monthlySavings = totalHumanCostMonthly - vocalisCostMonthly;
-  const annualSavings = totalHumanCostAnnual - vocalisCostAnnual;
+  // Economia (calculada apenas quando há preço confirmado)
+  const monthlySavings = hasConfirmedFloor ? totalHumanCostMonthly - vocalisCostMonthly : null;
+  const annualSavings = hasConfirmedFloor ? totalHumanCostAnnual - vocalisCostAnnual : null;
 
-  // Leads recuperados estimados (média de 32% dos contatos chegam fora do horário comercial)
+  // Premissa hipotética ilustrativa para demonstração
   const afterHoursLeads = Math.round(contactsPerMonth * 0.35);
 
   return (
@@ -29,13 +32,13 @@ export default function RoiCalculator({ onOpenDemo }) {
         <div className="text-center max-w-3xl mx-auto mb-16 space-y-4">
           <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-emerald-500/10 border border-emerald-500/20 text-xs font-semibold text-emerald-400">
             <TrendingUp className="w-3.5 h-3.5" />
-            <span>Retorno Sobre o Investimento</span>
+            <span>Simulador Ilustrativo de Custos</span>
           </div>
           <h2 className="text-3xl sm:text-5xl font-extrabold tracking-tight text-white">
-            Calcule Sua Economia Real com a Vocalis
+            Compare Cenários Ilustrativos de Atendimento
           </h2>
           <p className="text-slate-400 text-base sm:text-lg">
-            Compare o custo de manter uma equipe humana para cobrir ligações e WhatsApp 24/7 com o investimento na Vocalis.
+            Compare referências ilustrativas de custo operacional tradicional com o investimento por plano da Vocalis.
           </p>
         </div>
 
@@ -103,10 +106,10 @@ export default function RoiCalculator({ onOpenDemo }) {
               <div className="p-4 rounded-2xl bg-black/40 border border-white/5 space-y-2 text-xs text-slate-300">
                 <div className="flex items-center gap-2 text-amber-400 font-semibold">
                   <Sparkles className="w-4 h-4" />
-                  <span>Oportunidade oculta:</span>
+                  <span>Premissa ilustrativa:</span>
                 </div>
                 <p>
-                  Aproximadamente <strong className="text-white font-bold">{afterHoursLeads} contatos</strong> chegam à sua empresa após as 18h ou nos finais de semana. Sem IA, a maioria desses leads desiste e busca concorrentes.
+                  Premissa ilustrativa (35% fora do horário: cerca de <strong className="text-white font-bold">{afterHoursLeads} contatos</strong>/mês) — esta simulação não representa garantia de economia ou retorno financeiro.
                 </p>
               </div>
 
@@ -117,13 +120,17 @@ export default function RoiCalculator({ onOpenDemo }) {
               
               <div className="space-y-1">
                 <span className="text-xs uppercase font-bold tracking-wider text-slate-400">
-                  Economia Anual Estimada
+                  Diferença Estimada (Simulação Ilustrativa)
                 </span>
                 <div className="text-3xl sm:text-4xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-emerald-400 to-teal-300">
-                  R$ {annualSavings.toLocaleString('pt-BR')},00
+                  {hasConfirmedFloor
+                    ? `R$ ${annualSavings.toLocaleString('pt-BR')},00`
+                    : 'Sob consulta'}
                 </div>
                 <p className="text-xs text-emerald-400 font-medium">
-                  R$ {monthlySavings.toLocaleString('pt-BR')}/mês economizados
+                  {hasConfirmedFloor
+                    ? `R$ ${monthlySavings.toLocaleString('pt-BR')}/mês economizados`
+                    : 'Comparação financeira calculada após confirmação dos valores do plano'}
                 </p>
               </div>
 
@@ -138,14 +145,16 @@ export default function RoiCalculator({ onOpenDemo }) {
                 <div className="flex justify-between text-slate-300 font-medium">
                   <span>Investimento Vocalis AI:</span>
                   <span className="text-emerald-400 font-bold">
-                    R$ {vocalisCostMonthly.toLocaleString('pt-BR')}/mês
+                    {hasConfirmedFloor
+                      ? `R$ ${vocalisCostMonthly.toLocaleString('pt-BR')}/mês`
+                      : getCommercialEntryLabel()}
                   </span>
                 </div>
 
                 <div className="flex justify-between text-slate-400">
                   <span>Disponibilidade:</span>
                   <span className="text-white font-semibold">
-                    100% dos dias, 24h ininterruptas
+                    Configurável fora do horário comercial
                   </span>
                 </div>
               </div>
@@ -154,7 +163,7 @@ export default function RoiCalculator({ onOpenDemo }) {
                 onClick={onOpenDemo}
                 className="w-full py-3.5 rounded-xl bg-orange-500 hover:bg-orange-600 text-white font-bold text-sm shadow-lg shadow-orange-500/30 transition-all flex items-center justify-center gap-2"
               >
-                <span>Garantir Essa Economia Agora</span>
+                <span>Solicitar Demonstração</span>
                 <ArrowRight className="w-4 h-4" />
               </button>
 

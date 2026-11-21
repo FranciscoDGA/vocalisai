@@ -37,32 +37,29 @@ export default function LivePhoneChallengeBanner({ onOpenDemo, onOpenAuth }) {
             <div className="max-w-xl space-y-4">
               
               {/* Live Status Pill */}
-              <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-emerald-500/15 border border-emerald-400/30 text-emerald-300 text-xs font-bold uppercase tracking-wider">
-                <span className="relative flex h-2 w-2">
-                  <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
-                  <span className="relative inline-flex rounded-full h-2 w-2 bg-emerald-400"></span>
-                </span>
-                <span>DESAFIO DO TESTE AO VIVO • LINHA ABERTA AGORA</span>
+              <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-indigo-500/15 border border-indigo-400/30 text-indigo-300 text-xs font-bold uppercase tracking-wider">
+                <span className="inline-flex rounded-full h-2 w-2 bg-indigo-400"></span>
+                <span>SIMULAÇÃO ILUSTRATIVA INTERATIVA</span>
               </div>
 
               <h2 className="text-3xl sm:text-4xl lg:text-5xl font-normal text-white tracking-tight leading-tight">
-                Duvida que parece uma pessoa real?{' '}
-                <span className="font-serif-title italic text-[#A5B4FC]">Receba uma ligação agora.</span>
+                Quer conhecer a experiência na prática?{' '}
+                <span className="font-serif-title italic text-[#A5B4FC]">Teste o fluxo conversacional no navegador.</span>
               </h2>
 
               <p className="text-sm sm:text-base text-stone-300 leading-relaxed">
-                Digite seu celular ao lado e <strong>atenda nossa inteligência artificial em segundos</strong>. Interrompa no meio da frase, faça perguntas difíceis e tente pegar a Roberta no pulo. Veja você mesmo se seus clientes conseguiriam notar a diferença.
+                Informe um telefone de referência ao lado para abrir nossa <strong>simulação ilustrativa no navegador</strong> e visualizar como a Roberta conduz uma triagem e organiza um resumo de atendimento.
               </p>
 
               {/* Trust Badges */}
               <div className="flex flex-wrap items-center justify-center lg:justify-start gap-4 pt-2 text-xs text-stone-400">
                 <span className="flex items-center gap-1.5">
                   <Zap className="w-4 h-4 text-amber-400" />
-                  <span>Latência 380ms sem pausas</span>
+                  <span>Simulação ilustrativa no navegador</span>
                 </span>
                 <span className="flex items-center gap-1.5">
                   <ShieldCheck className="w-4 h-4 text-emerald-400" />
-                  <span>Chamada 100% gratuita</span>
+                  <span>Não realiza chamada telefônica real</span>
                 </span>
                 <span className="flex items-center gap-1.5">
                   <Sparkles className="w-4 h-4 text-indigo-400" />
@@ -72,23 +69,23 @@ export default function LivePhoneChallengeBanner({ onOpenDemo, onOpenAuth }) {
 
             </div>
 
-            {/* Right Action Card (Lead Capture Form - High Conversion) */}
+            {/* Right Action Card (Simulation Launcher) */}
             <div className="bg-white/5 border border-white/10 rounded-3xl p-6 sm:p-8 backdrop-blur-md text-left shrink-0 w-full lg:w-[420px] space-y-4 shadow-2xl">
               
               <div className="flex items-center justify-between border-b border-white/10 pb-3">
-                <span className="text-xs font-bold uppercase tracking-wider text-emerald-400 flex items-center gap-1.5">
-                  <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
-                  Demonstração Imediata
+                <span className="text-xs font-bold uppercase tracking-wider text-indigo-300 flex items-center gap-1.5">
+                  <span className="w-2 h-2 rounded-full bg-indigo-400" />
+                  Simulação Ilustrativa
                 </span>
-                <span className="text-[11px] text-stone-400 font-mono">Disponível 24/7</span>
+                <span className="text-[11px] text-stone-400 font-mono">No navegador</span>
               </div>
 
               <div className="space-y-1">
                 <h3 className="text-base sm:text-lg font-semibold text-white">
-                  Coloque seu número e atenda em segundos:
+                  Experimente o roteiro ilustrativo na tela:
                 </h3>
                 <p className="text-xs text-stone-300 leading-relaxed">
-                  A Roberta ligará agora para fazer uma demonstração personalizada e tirar todas as suas dúvidas.
+                  A demonstração simula etapas de diagnóstico e prévia de resumo diretamente no seu navegador.
                 </p>
               </div>
 
@@ -103,17 +100,22 @@ export default function LivePhoneChallengeBanner({ onOpenDemo, onOpenAuth }) {
                     type="tel"
                     value={phoneInput}
                     onChange={(e) => setPhoneInput(formatPhoneMask(e.target.value))}
-                    placeholder="(DDD) 99999-9999"
+                    placeholder="(DDD) 99999-9999 (opcional)"
+                    aria-label="Número de referência opcional para simulação ilustrativa"
                     className="flex-1 px-3 py-2 bg-transparent text-white placeholder-stone-400 text-sm focus:outline-none font-medium"
                   />
                 </div>
+
+                <p className="text-[11px] text-stone-400 leading-relaxed">
+                  Uso ilustrativo apenas na tela do navegador, sem armazenamento automático nem disparo real de ligação ou WhatsApp.
+                </p>
 
                 <button
                   type="submit"
                   className="w-full py-3.5 px-6 rounded-2xl bg-emerald-500 hover:bg-emerald-600 text-white font-bold text-sm shadow-lg shadow-emerald-500/25 transition-all hover:scale-[1.02] active:scale-[0.99] flex items-center justify-center gap-2 cursor-pointer"
                 >
-                  <PhoneCall className="w-4 h-4 animate-bounce" />
-                  <span>Receber Ligação de Teste Agora</span>
+                  <PhoneCall className="w-4 h-4" />
+                  <span>Abrir Simulação Ilustrativa</span>
                 </button>
               </form>
 

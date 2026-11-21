@@ -18,8 +18,8 @@ export default function WhatsAppVoiceToVoice() {
   const [isPlayingReply, setIsPlayingReply] = useState(false);
   const [simulationStatus, setSimulationStatus] = useState('idle'); // idle | transcribing | generating | ready
 
-  const sampleIncomingText = "Oi, boa tarde! Gostaria de saber se vocês têm horário disponível para consulta de avaliação nesta quinta-feira à tarde e qual o valor da consulta?";
-  const sampleReplyText = "Olá! Perfeito! Temos sim um horário na quinta-feira às quinze horas e trinta minutos com a nossa especialista. A consulta de avaliação inclui todo o planejamento do tratamento. Posso reservar esse horário para você agora?";
+  const sampleIncomingText = "Oi, boa tarde! (Simulação ilustrativa) Gostaria de verificar horários disponíveis para uma avaliação de rotina nesta quinta-feira à tarde e saber como a clínica informa valores.";
+  const sampleReplyText = "Olá! Aqui é a assistente virtual (simulação ilustrativa). Conforme a agenda e as regras configuradas pela clínica na base de conhecimento, há horário de rotina na quinta-feira às quinze horas e trinta minutos, sujeito à confirmação da recepção. Posso registrar sua preferência?";
 
   useEffect(() => {
     return () => {

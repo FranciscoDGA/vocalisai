@@ -1,107 +1,35 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState } from 'react';
 import { 
-  Phone, ChevronDown, Check, ArrowRight, ExternalLink 
+  Play, MessageCircle, Mail, Check, ExternalLink 
 } from 'lucide-react';
 import { BRAND } from '../data/content';
 import TestCallModal from './TestCallModal';
 import VoiceWaveformHeroCard from './VoiceWaveformHeroCard';
-import BrazilFlag from './BrazilFlag';
-import { FlagBR, FlagPT, FlagUS, FlagAR, FlagMX, FlagES, FlagDE, FlagUK } from './CountryFlags';
-import { formatPhoneMask, cleanRawPhone } from '../utils/phoneUtils';
 
-const ROTATING_PHRASES = [
-  'da sua empresa,',
-  'da sua clínica,',
-  'da sua imobiliária,',
-  'da sua advocacia,',
-  'do seu consultório,',
-  'do seu negócio,'
-];
+const HUMAN_WHATSAPP_MESSAGE =
+  'Olá! Vim pelo site da Vocalis AI e gostaria de conversar com uma pessoa sobre o atendimento com IA.';
 
-const COUNTRIES = [
-  { name: 'Brasil', code: '+55', Flag: FlagBR },
-  { name: 'Portugal', code: '+351', Flag: FlagPT },
-  { name: 'Estados Unidos', code: '+1', Flag: FlagUS },
-  { name: 'Argentina', code: '+54', Flag: FlagAR },
-  { name: 'México', code: '+52', Flag: FlagMX },
-  { name: 'Espanha', code: '+34', Flag: FlagES },
-  { name: 'Alemanha', code: '+49', Flag: FlagDE },
-  { name: 'Reino Unido', code: '+44', Flag: FlagUK }
-];
-
-export default function Hero({ onOpenDemo, onOpenAuth }) {
-  const [phoneInput, setPhoneInput] = useState('');
-  const [selectedCountry, setSelectedCountry] = useState(COUNTRIES[0]);
-  const [countryPickerOpen, setCountryPickerOpen] = useState(false);
+export default function Hero({ onOpenDemo, onOpenAuth, onNavigate }) {
   const [testCallModalOpen, setTestCallModalOpen] = useState(false);
+  const [contactChoiceOpen, setContactChoiceOpen] = useState(false);
 
-  // Typewriter effect state for dynamic niche rotation
-  const [phraseIndex, setPhraseIndex] = useState(0);
-  const [displayedPhrase, setDisplayedPhrase] = useState(ROTATING_PHRASES[0]);
-  const [isDeleting, setIsDeleting] = useState(false);
-  const [typingSpeed, setTypingSpeed] = useState(75);
-
-  const countryPickerRef = useRef(null);
-
-  // Typewriter effect controller
-  useEffect(() => {
-    const currentFullPhrase = ROTATING_PHRASES[phraseIndex];
-
-    const timer = setTimeout(() => {
-      if (!isDeleting) {
-        if (displayedPhrase.length < currentFullPhrase.length) {
-          setDisplayedPhrase(currentFullPhrase.slice(0, displayedPhrase.length + 1));
-          setTypingSpeed(60 + Math.random() * 25);
-        } else {
-          // Pause when word is completely typed
-          setTypingSpeed(2200);
-          setIsDeleting(true);
-        }
-      } else {
-        if (displayedPhrase.length > 0) {
-          setDisplayedPhrase(currentFullPhrase.slice(0, displayedPhrase.length - 1));
-          setTypingSpeed(30);
-        } else {
-          // Finished deleting, proceed to next niche phrase
-          setIsDeleting(false);
-          setPhraseIndex((prev) => (prev + 1) % ROTATING_PHRASES.length);
-          setTypingSpeed(300);
-        }
-      }
-    }, typingSpeed);
-
-    return () => clearTimeout(timer);
-  }, [displayedPhrase, isDeleting, phraseIndex, typingSpeed]);
-
-  // Close country picker on outside click
-  useEffect(() => {
-    function handleClickOutside(event) {
-      if (countryPickerRef.current && !countryPickerRef.current.contains(event.target)) {
-        setCountryPickerOpen(false);
-      }
+  const handleListenDemo = () => {
+    const demoEl = document.getElementById('audio-showcase') || document.getElementById('demo-ilustrativa');
+    if (demoEl) {
+      demoEl.scrollIntoView({ behavior: 'smooth' });
+    } else if (onOpenDemo) {
+      onOpenDemo();
     }
-    document.addEventListener('mousedown', handleClickOutside);
-    return () => document.removeEventListener('mousedown', handleClickOutside);
-  }, []);
-
-  // Formatter for phone numbers with intelligent Brazilian mask & 55-prefix stripping
-  const handlePhoneChange = (e) => {
-    const formatted = formatPhoneMask(e.target.value);
-    setPhoneInput(formatted);
   };
 
-  const handleTestCallSubmit = (e) => {
-    e.preventDefault();
-    const digits = cleanRawPhone(phoneInput);
-    if (!digits || digits.length < 10) {
-      setPhoneInput('(11) 98765-4321');
-    } else {
-      setPhoneInput(formatPhoneMask(digits));
+  const handleOpenContactPage = () => {
+    setContactChoiceOpen(false);
+    if (onNavigate) {
+      onNavigate('contato');
     }
-    setTestCallModalOpen(true);
   };
 
-
+  const whatsappHref = BRAND.whatsappUrl(HUMAN_WHATSAPP_MESSAGE);
 
   return (
     <section className="relative pt-12 pb-24 md:pt-16 md:pb-32 overflow-hidden bg-[#FAF9F5] font-sans">
@@ -113,122 +41,87 @@ export default function Hero({ onOpenDemo, onOpenAuth }) {
         
         {/* Top category badge */}
         <div className="inline-flex items-center gap-2 px-3 sm:px-3.5 py-1.5 rounded-full bg-white border border-[#E7E4DC] text-[#1A1816] text-[10px] sm:text-xs font-semibold uppercase tracking-wider mb-6 sm:mb-8 shadow-sm max-w-full">
-          <span className="w-2 h-2 rounded-full bg-[#4F46E5] shrink-0 animate-pulse"></span>
-          <span className="truncate sm:whitespace-normal">IA DE VOZ BRASILEIRA · SEM TAXAS META NO WHATSAPP</span>
+          <span className="w-2 h-2 rounded-full bg-[#4F46E5] shrink-0"></span>
+          <span className="truncate sm:whitespace-normal">ATENDIMENTO COM IA EM PORTUGUÊS · CONFORME PLANO CONTRATADO</span>
         </div>
 
-        {/* Headline with dynamic typewriter niche rotation */}
-        <h1 className="text-3xl sm:text-5xl md:text-6xl lg:text-7xl font-normal tracking-tight text-[#1A1816] max-w-4xl mx-auto leading-[1.14] sm:leading-[1.08] mb-6 break-words">
-          A voz inteligente{' '}
-          <span className="text-[#4F46E5] font-medium inline-block min-h-[1.12em] break-words">
-            {displayedPhrase}
-            <span className="inline-block w-[3px] h-[0.78em] bg-[#4F46E5] ml-1.5 align-baseline animate-pulse rounded-full" />
-          </span>
-          <br />
-          <span className="font-serif-title italic font-normal text-[#1A1816]">
-            que nunca perde uma venda.
+        {/* Headline */}
+        <h1 className="text-3xl sm:text-5xl md:text-6xl font-normal tracking-tight text-[#1A1816] max-w-4xl mx-auto leading-[1.14] sm:leading-[1.08] mb-6 break-words">
+          Atenda seus clientes com IA,{' '}
+          <span className="font-serif-title italic font-normal text-[#4F46E5]">
+            inclusive fora do horário.
           </span>
         </h1>
 
         {/* Subtitle */}
-        <p className="text-sm sm:text-base md:text-lg text-[#5C5955] max-w-2xl mx-auto font-normal leading-relaxed mb-8 px-2 sm:px-0">
-          A Vocalis atende chamadas telefônicas, responde no WhatsApp e converte clientes no seu site com a calidez de uma pessoa real. Qualifica leads, agenda compromissos e transfere chamadas urgentes na hora.
+        <p className="text-sm sm:text-base md:text-lg text-[#4A4743] max-w-2xl mx-auto font-normal leading-relaxed mb-8 px-2 sm:px-0">
+          Uma assistente para responder dúvidas, registrar contatos e encaminhar solicitações à sua equipe nos canais que estiverem realmente disponíveis no seu plano.
         </p>
 
-        {/* ========================================================
-            PHONE TEST INPUT CONTAINER (Exact replica of Kloel print)
-           ======================================================== */}
-        <form id="hero-test" onSubmit={handleTestCallSubmit} className="max-w-xl mx-auto mb-3 w-full px-1 sm:px-0">
-          <div className="flex flex-col sm:flex-row items-stretch sm:items-center bg-white rounded-2xl sm:rounded-full p-1.5 sm:pl-3 border border-[#DCD8D0] shadow-md focus-within:border-[#4F46E5] focus-within:ring-2 focus-within:ring-[#4F46E5]/20 transition-all relative gap-2 sm:gap-0 w-full">
-            
-            {/* Input Row on mobile / inline on desktop */}
-            <div className="flex items-center flex-1 px-2 sm:px-0 min-w-0">
-              {/* Country Flag Selector with Dropdown (1:1 Kloel) */}
-              <div className="relative shrink-0" ref={countryPickerRef}>
-                <button
-                  type="button"
-                  onClick={() => setCountryPickerOpen(!countryPickerOpen)}
-                  className="flex items-center gap-1.5 text-sm font-medium text-[#1A1816] pl-1.5 pr-2 py-1 hover:opacity-80 transition-opacity shrink-0 cursor-pointer"
-                >
-                  {selectedCountry.Flag ? (
-                    <selectedCountry.Flag className="w-5 h-3.5 rounded-[2px] shadow-2xs border border-stone-200/50" />
-                  ) : (
-                    <BrazilFlag className="w-5 h-3.5" />
-                  )}
-                  <ChevronDown className="w-3 h-3 text-[#736F69]" />
-                </button>
-
-                {/* Country Picker Dropdown */}
-                {countryPickerOpen && (
-                  <div className="absolute top-10 left-0 w-60 bg-white rounded-2xl border border-[#E7E4DC] shadow-2xl p-2 z-50 animate-fadeIn text-left space-y-0.5">
-                    {COUNTRIES.map((c) => {
-                      const FlagComponent = c.Flag;
-                      return (
-                        <button
-                          key={c.code}
-                          type="button"
-                          onClick={() => {
-                            setSelectedCountry(c);
-                            setCountryPickerOpen(false);
-                          }}
-                          className="w-full flex items-center justify-between px-3 py-2 rounded-xl text-xs font-medium text-[#1A1816] hover:bg-[#FAF9F5] transition-colors cursor-pointer"
-                        >
-                          <span className="flex items-center gap-2.5">
-                            <FlagComponent className="w-4 h-3 rounded-[2px] shadow-2xs border border-stone-200/50" />
-                            <span>{c.name}</span>
-                          </span>
-                          <span className="text-[11px] text-[#8C8881] font-mono">{c.code}</span>
-                        </button>
-                      );
-                    })}
-                  </div>
-                )}
-              </div>
-
-              {/* Phone Number Input */}
-              <input
-                type="tel"
-                value={phoneInput}
-                onChange={handlePhoneChange}
-                placeholder="Seu celular com DDD"
-                className="flex-1 min-w-0 px-3 py-2.5 bg-transparent text-[#1A1816] placeholder-[#9E9B95] text-sm focus:outline-none"
-              />
-            </div>
-
-            {/* CTA Button: Receber ligação da Roberta agora */}
-            <button
-              type="submit"
-              className="w-full sm:w-auto shrink-0 px-6 py-3 rounded-xl sm:rounded-full bg-[#11100F] text-white text-xs sm:text-sm font-semibold hover:bg-black transition-all flex items-center justify-center gap-2 shadow-sm cursor-pointer hover:scale-[1.01]"
-            >
-              <Phone className="w-4 h-4 text-[#6366F1]" />
-              <span>Receber ligação da Roberta</span>
-            </button>
-
-          </div>
-        </form>
-
-        <p className="text-[11px] text-[#8C8881] font-medium mb-4">
-          ⚡ A Roberta ligará para seu número para diagnosticar sua empresa e enviar uma demonstração no WhatsApp.
-        </p>
-
-        {/* Link: Prefiro conversar com uma pessoa */}
-        <div className="mb-6">
-          <a
-            href="https://wa.me/5594984423948?text=Ol%C3%A1%20Francisco!%20Vim%20pelo%20site%20da%20Vocalis%20AI%20e%20prefiro%20conversar%20diretamente%20com%20um%20especialista."
-            target="_blank"
-            rel="noreferrer"
-            className="text-xs text-[#5C5955] hover:text-[#1A1816] underline underline-offset-2 font-medium transition-colors inline-flex items-center gap-1 cursor-pointer"
+        {/* Primary & Secondary CTAs (No phone input field) */}
+        <div className="flex flex-col sm:flex-row items-center justify-center gap-3.5 max-w-xl mx-auto mb-4 px-2 sm:px-0">
+          <button
+            type="button"
+            onClick={handleListenDemo}
+            className="w-full sm:w-auto px-7 py-3.5 rounded-full bg-[#11100F] text-white text-sm font-semibold hover:bg-black transition-all flex items-center justify-center gap-2.5 shadow-md cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#4F46E5] focus-visible:ring-offset-2"
           >
-            <span>Prefiro conversar com uma pessoa no WhatsApp</span>
-            <span className="text-[10px]">↗</span>
-          </a>
+            <Play className="w-4 h-4 text-[#818CF8] fill-current" />
+            <span>Ouvir demonstração</span>
+          </button>
+
+          <button
+            type="button"
+            onClick={() => setContactChoiceOpen((prev) => !prev)}
+            aria-expanded={contactChoiceOpen}
+            className="w-full sm:w-auto px-7 py-3.5 rounded-full bg-white text-[#1A1816] border border-[#D4CFC7] text-sm font-semibold hover:border-[#4F46E5] hover:text-[#4F46E5] transition-all flex items-center justify-center gap-2 shadow-sm cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#4F46E5] focus-visible:ring-offset-2"
+          >
+            <MessageCircle className="w-4 h-4 text-[#4F46E5]" />
+            <span>Falar com uma pessoa</span>
+          </button>
         </div>
 
-        {/* Social Proof Checklist (Exact replica of user's uploaded print) */}
-        <div className="flex flex-wrap items-center justify-center gap-6 md:gap-8 text-xs font-semibold text-[#5C5955] mb-14">
+        {/* Inline Choice Panel: WhatsApp Comercial OR Página de Contato */}
+        {contactChoiceOpen && (
+          <div
+            role="region"
+            aria-label="Opções para falar com uma pessoa"
+            className="max-w-lg mx-auto mb-5 p-4 rounded-2xl bg-white border border-[#E7E4DC] shadow-lg text-left"
+          >
+            <p className="text-xs font-semibold text-[#1A1816] mb-3 text-center">
+              Escolha como prefere falar com nossa equipe:
+            </p>
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
+              <a
+                href={whatsappHref}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl bg-[#16A34A] text-white text-xs font-semibold hover:bg-[#15803D] transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#16A34A] focus-visible:ring-offset-2"
+              >
+                <MessageCircle className="w-4 h-4 shrink-0" />
+                <span>WhatsApp comercial</span>
+                <ExternalLink className="w-3.5 h-3.5 shrink-0" />
+              </a>
+              <button
+                type="button"
+                onClick={handleOpenContactPage}
+                className="flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl bg-[#FAF9F5] text-[#1A1816] border border-[#DCD8D0] text-xs font-semibold hover:border-[#4F46E5] hover:text-[#4F46E5] transition-colors cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#4F46E5] focus-visible:ring-offset-2"
+              >
+                <Mail className="w-4 h-4 shrink-0 text-[#4F46E5]" />
+                <span>Página de Contato</span>
+              </button>
+            </div>
+          </div>
+        )}
+
+        <p className="text-xs text-[#5C5955] font-medium mb-6 max-w-xl mx-auto">
+          A demonstração abaixo é <strong>ilustrativa</strong> no navegador e não realiza ligação real em produção.
+        </p>
+
+        {/* Checklist prudente */}
+        <div className="flex flex-wrap items-center justify-center gap-6 md:gap-8 text-xs font-semibold text-[#4A4743] mb-14">
           <div className="flex items-center gap-1.5">
             <Check className="w-4 h-4 text-[#4F46E5]" strokeWidth={2.5} />
-            <span>Garantia de 30 dias</span>
+            <span>Condições comerciais sob consulta</span>
           </div>
           <div className="flex items-center gap-1.5">
             <Check className="w-4 h-4 text-[#4F46E5]" strokeWidth={2.5} />
@@ -236,30 +129,28 @@ export default function Hero({ onOpenDemo, onOpenAuth }) {
           </div>
           <div className="flex items-center gap-1.5">
             <Check className="w-4 h-4 text-[#4F46E5]" strokeWidth={2.5} />
-            <span>No ar em minutos</span>
+            <span>Configuração guiada</span>
           </div>
         </div>
 
         {/* ========================================================
             THE ICONIC DARK HERO AUDIO / TRANSCRIPT CARD
-            Live Voice Frequency Waveform (Orange Vocalis / White Cliente)
-            + Sub-400ms Latency Simulation & Real-time Action Badges
+            Illustrative Waveform & Interactive Simulation Card
            ======================================================== */}
-        <VoiceWaveformHeroCard 
-          onTestCall={() => {
-            setPhoneInput('(11) 98765-4321');
-            setTestCallModalOpen(true);
-          }}
-          onOpenAuth={onOpenAuth}
-        />
+        <div id="demo-ilustrativa">
+          <VoiceWaveformHeroCard 
+            onTestCall={() => setTestCallModalOpen(true)}
+            onOpenAuth={onOpenAuth}
+          />
+        </div>
 
       </div>
 
-      {/* Real-time Interactive Test Call Modal (AI Agency OS) */}
+      {/* Interactive Illustrative Simulation Modal */}
       <TestCallModal
         isOpen={testCallModalOpen}
-        phoneNumber={phoneInput}
-        countryCode={selectedCountry.code}
+        phoneNumber="(11) 90000-0000 (exemplo fictício)"
+        countryCode="+55"
         onClose={() => setTestCallModalOpen(false)}
         onOpenAuth={onOpenAuth}
       />

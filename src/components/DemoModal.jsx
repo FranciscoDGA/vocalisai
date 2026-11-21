@@ -82,13 +82,13 @@ export default function DemoModal({ isOpen, onClose }) {
             <div className="space-y-2 mb-6">
               <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-[#4F46E5]/15 border border-[#4F46E5]/30 text-xs font-semibold text-[#A5B4FC]">
                 <Sparkles className="w-3.5 h-3.5 text-[#4F46E5]" />
-                <span>Demonstração Interativa Sem Custo</span>
+                <span>Demonstração Interativa · Simulação Ilustrativa</span>
               </div>
               <h3 className="text-2xl font-bold text-white tracking-tight">
                 Teste a Vocalis na Sua Empresa
               </h3>
               <p className="text-xs sm:text-sm text-slate-400">
-                Experimente a voz com inteligência artificial configurada para o seu setor em poucos segundos.
+                Preencha seus dados para ouvir uma simulação ilustrativa no navegador ou solicitar contato da nossa equipe.
               </p>
             </div>
 
@@ -174,7 +174,7 @@ export default function DemoModal({ isOpen, onClose }) {
                     }`}
                   >
                     <Volume2 className="w-4 h-4" />
-                    <span>Neste Navegador</span>
+                    <span>Simulação no Navegador</span>
                   </button>
 
                   <button
@@ -187,7 +187,7 @@ export default function DemoModal({ isOpen, onClose }) {
                     }`}
                   >
                     <PhoneCall className="w-4 h-4" />
-                    <span>No Meu WhatsApp</span>
+                    <span>Contato pela Equipe</span>
                   </button>
                 </div>
               </div>
@@ -198,12 +198,12 @@ export default function DemoModal({ isOpen, onClose }) {
                   className="w-full py-3.5 rounded-xl bg-gradient-to-r from-[#4F46E5] to-[#E06336] text-white font-bold text-sm shadow-xl shadow-[#4F46E5]/25 hover:brightness-110 active:scale-[0.98] transition-all flex items-center justify-center gap-2 cursor-pointer"
                 >
                   <Sparkles className="w-4 h-4" />
-                  <span>Iniciar Demonstração ao Vivo</span>
+                  <span>Enviar e Iniciar Simulação</span>
                 </button>
               </div>
 
-              <p className="text-[10px] text-center text-slate-500">
-                Seus dados estão protegidos pela LGPD. Não enviamos spam.
+              <p className="text-[11px] text-center text-slate-400 leading-relaxed">
+                Ao enviar, seus dados (incluindo nome, telefone/WhatsApp, e-mail e empresa) são registrados para que nossa equipe retorne sobre a demonstração solicitada, conforme a Política de Privacidade. Não enviamos spam.
               </p>
             </form>
           </div>
@@ -218,15 +218,15 @@ export default function DemoModal({ isOpen, onClose }) {
               <h3 className="text-2xl font-bold text-white">Solicitação Concluída!</h3>
               <p className="text-sm text-slate-300 max-w-sm mx-auto">
                 {formData.testType === 'browser'
-                  ? 'Aguarde a IA da Vocalis falar a introdução personalizada com a sua empresa...'
-                  : `A inteligência da Vocalis entrará em contato pelo telefone ${formData.phone} em instantes com a simulação para ${formData.niche}.`}
+                  ? 'Reproduzindo simulação ilustrativa no navegador para o segmento selecionado...'
+                  : `Seus dados foram registrados. Nossa equipe poderá entrar em contato pelo número ${formData.phone} para agendar uma demonstração para ${formData.niche}.`}
               </p>
             </div>
 
             {isCallingBrowser && (
               <div className="p-4 rounded-2xl bg-[#4F46E5]/15 border border-[#4F46E5]/40 flex items-center justify-center gap-3">
-                <span className="w-2.5 h-2.5 rounded-full bg-[#4F46E5] animate-ping"></span>
-                <span className="text-xs font-semibold text-[#A5B4FC]">Reproduzindo voz neural da Vocalis...</span>
+                <span className="w-2.5 h-2.5 rounded-full bg-[#4F46E5]"></span>
+                <span className="text-xs font-semibold text-[#A5B4FC]">Reproduzindo simulação ilustrativa no navegador...</span>
               </div>
             )}
 

@@ -65,12 +65,12 @@ export default function ExitIntentModal({ onTriggerCall }) {
           </span>
 
           <h3 className="text-2xl sm:text-3xl font-normal text-white tracking-tight">
-            Veja a Vocalis ligando para o seu celular{' '}
-            <span className="font-serif-title italic text-[#A5B4FC]">em 30 segundos.</span>
+            Quer conhecer uma demonstração guiada{' '}
+            <span className="font-serif-title italic text-[#A5B4FC]">da Vocalis para sua empresa?</span>
           </h3>
 
           <p className="text-xs sm:text-sm text-stone-300 leading-relaxed max-w-md mx-auto">
-            Sem vendedores e sem compromisso. Digite seu número abaixo e teste ao vivo como a inteligência artificial conversa com naturalidade humana brasileira.
+            Informe seu número abaixo para abrir o formulário de solicitação de demonstração com nossa equipe — sem compromisso.
           </p>
 
           {!submitted ? (
@@ -89,9 +89,13 @@ export default function ExitIntentModal({ onTriggerCall }) {
                   type="submit"
                   className="px-5 py-2.5 rounded-full bg-[#4F46E5] hover:bg-[#4338CA] text-white text-xs font-bold transition-all shrink-0 cursor-pointer"
                 >
-                  Receber Ligação
+                  Solicitar Demonstração
                 </button>
               </div>
+
+              <p className="text-[11px] text-stone-400 leading-relaxed">
+                Ao avançar, abriremos o formulário completo de demonstração; os dados são registrados apenas ao enviar sua solicitação para contato da equipe.
+              </p>
 
               <div className="pt-2">
                 <a
@@ -107,8 +111,8 @@ export default function ExitIntentModal({ onTriggerCall }) {
             </form>
           ) : (
             <div className="p-6 rounded-2xl bg-emerald-500/10 border border-emerald-500/20 text-emerald-400 text-xs sm:text-sm">
-              <p className="font-bold mb-1">Ligação iniciada!</p>
-              <p className="text-stone-300 text-xs">Fique atento ao seu celular nos próximos 30 segundos. A Vocalis está chamando você.</p>
+              <p className="font-bold mb-1">Solicitação encaminhada!</p>
+              <p className="text-stone-300 text-xs">Continue no formulário de demonstração ou aguarde o contato da nossa equipe conforme disponibilidade.</p>
             </div>
           )}
 

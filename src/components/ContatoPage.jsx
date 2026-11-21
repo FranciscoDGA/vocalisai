@@ -67,24 +67,24 @@ export default function ContatoPage({ onOpenDemo, onOpenAuth, onNavigate }) {
 
   const faqs = [
     {
-      q: 'Por que escolher a Vocalis como assistente de voz com IA?',
-      a: 'A Vocalis é pioneira no Brasil em modelos acústicos calibrados especificamente para a prosódia, cadência e sotaques regionais do português brasileiro. Nossa latência ponta a ponta é inferior a 500ms, proporcionando conversas ultra-realistas com compreensão de interrupções naturais, sem parecer robótica. Além disso, unificamos telefone, WhatsApp e Webchat em um único painel inteligente com suporte a agendamento automático e CRM.'
+      q: 'Por que escolher a Vocalis como assistente de atendimento com IA?',
+      a: 'A Vocalis foi pensada para atendimento em português brasileiro pelos canais Telefone, WhatsApp e Webchat em um único painel, com roteiros e encaminhamento humano configuráveis conforme o plano contratado.'
     },
     {
       q: 'Onde os dados são armazenados?',
-      a: 'Todos os dados de chamadas, áudios e transcrições são armazenados em data centers de nível militar no Brasil (São Paulo - região South America East da AWS e GCP), em estrita conformidade com a Lei Geral de Proteção de Dados (LGPD - Lei 13.709/2018). As gravações contam com criptografia AES-256 em repouso e TLS 1.3 em trânsito.'
+      a: 'O tratamento e o armazenamento de dados seguem a nossa Política de Privacidade e dependem da arquitetura e dos provedores configurados para cada operação. Solicite os detalhes técnicos à nossa equipe.'
     },
     {
-      q: 'Onde e como a Vocalis é desenvolvida?',
-      a: 'A Vocalis é 100% desenvolvida no Brasil por uma equipe sênior de engenheiros de inteligência artificial, especialistas em processamento de sinais de áudio (DSP), telecomunicações VoIP e segurança da informação, com sede em São Paulo (SP).'
+      q: 'Para quem a Vocalis é desenvolvida?',
+      a: 'A Vocalis é desenvolvida com foco no mercado brasileiro de atendimento automatizado por voz, WhatsApp e webchat para clínicas, escritórios e empresas de serviços.'
     },
     {
-      q: 'Em quanto tempo posso ter o assistente telefônico pronto para uso?',
-      a: 'Em menos de 10 minutos! O painel da Vocalis é totalmente intuitivo e no-code: basta escolher a voz, definir as instruções do prompt ou subir os documentos da sua empresa em PDF. Você já pode testar ligando para o assistente imediatamente ou apontar seu número atual para a plataforma.'
+      q: 'Em quanto tempo posso ter o assistente pronto para uso?',
+      a: 'O tempo de configuração varia conforme o canal, o fluxo desejado e eventuais integrações. Alinhamos o cronograma com sua equipe antes da implantação.'
     },
     {
       q: 'E se a IA cometer erros?',
-      a: 'A Vocalis possui guardrails avançados para impedir alucinações. Você delimita exatamente o que o assistente pode ou não responder. Caso surja uma pergunta fora do escopo ou uma situação complexa imprevista, a IA oferece transferir a chamada em tempo real para um ramal humano ou registrar o recado estruturado para retorno imediato.'
+      a: 'É possível configurar diretrizes de escopo e regras de encaminhamento para atendimento humano quando surgirem dúvidas fora do previsto ou solicitações mais complexas.'
     }
   ];
 
@@ -292,7 +292,7 @@ export default function ContatoPage({ onOpenDemo, onOpenAuth, onNavigate }) {
               </span>
             </h2>
             <p className="text-xs sm:text-sm text-[#A8A49C] leading-relaxed mb-8">
-              Crie a sua assistente em poucos minutos e ouça como ela atende os seus clientes: por telefone, no WhatsApp e no chat do site.
+              Configure sua assistente conforme o plano escolhido e conheça os fluxos de atendimento por telefone, WhatsApp e chat do site.
             </p>
             <button
               onClick={() => {
@@ -304,7 +304,7 @@ export default function ContatoPage({ onOpenDemo, onOpenAuth, onNavigate }) {
             </button>
           </div>
 
-          {/* Soundwave animada com frequência e latência ao vivo */}
+          {/* Soundwave animada */}
           <LiveSoundwaveBars />
         </div>
       </section>
@@ -315,7 +315,7 @@ export default function ContatoPage({ onOpenDemo, onOpenAuth, onNavigate }) {
           Toda empresa tem uma voz.
         </h2>
         <p className="text-2xl sm:text-3xl md:text-4xl font-serif italic text-[#4F46E5] tracking-tight mt-1">
-          A sua nunca mais fica em silêncio.
+          Mais agilidade para atender seus clientes.
         </p>
       </section>
 
@@ -345,7 +345,7 @@ export default function ContatoPage({ onOpenDemo, onOpenAuth, onNavigate }) {
                   {contactType === 'cliente' ? 'Quero ser cliente' : 'Quero ser parceiro'}
                 </h3>
                 <p className="text-xs text-[#736F69] leading-relaxed mb-6">
-                  Preencha seus dados para receber uma demonstração personalizada no seu próprio telefone em menos de 10 minutos.
+                  Preencha seus dados para agendar uma demonstração personalizada com nossa equipe.
                 </p>
 
                 <form onSubmit={handleSubmitForm} className="space-y-4 text-left">
@@ -418,6 +418,10 @@ export default function ContatoPage({ onOpenDemo, onOpenAuth, onNavigate }) {
                     />
                   </div>
 
+                  <p className="text-[11px] text-[#736F69] leading-relaxed">
+                    Ao enviar, os dados informados (nome, e-mail, telefone/WhatsApp e mensagem) serão utilizados para retorno da equipe comercial ou de parcerias sobre sua solicitação, conforme a Política de Privacidade.
+                  </p>
+
                   <button
                     type="submit"
                     className="w-full py-3 rounded-full bg-[#1A1816] hover:bg-[#302D2A] text-white text-xs font-bold transition-all shadow-md cursor-pointer flex items-center justify-center gap-2 mt-4"
@@ -436,7 +440,7 @@ export default function ContatoPage({ onOpenDemo, onOpenAuth, onNavigate }) {
                   Mensagem recebida com sucesso!
                 </h3>
                 <p className="text-xs text-[#736F69] max-w-sm mx-auto leading-relaxed">
-                  Obrigado, <strong className="text-[#1A1816]">{formData.name}</strong>. Nosso especialista entrará em contato pelo telefone <strong>{formData.phone}</strong> para demonstrar a IA da Vocalis ao vivo.
+                  Obrigado, <strong className="text-[#1A1816]">{formData.name}</strong>. Nosso especialista entrará em contato pelo telefone <strong>{formData.phone}</strong> para combinar uma demonstração da Vocalis AI.
                 </p>
                 <button
                   onClick={handleResetForm}

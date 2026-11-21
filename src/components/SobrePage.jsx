@@ -9,56 +9,56 @@ import VocalisLogo from './VocalisLogo';
 
 export default function SobrePage({ onOpenDemo, onOpenAuth, onNavigate }) {
   const milestones = [
-    { number: '<380ms', label: 'Latência de Conversação', desc: 'Respostas quase instantâneas que eliminam silêncios e pausas mecânicas.' },
-    { number: '+150.000', label: 'Chamadas Processadas', desc: 'Minutos de conversas reais gerenciados com precisão e empatia no Brasil.' },
-    { number: '99.8%', label: 'Taxa de Disponibilidade', desc: 'Infraestrutura redundante com comutação de alta disponibilidade 24/7/365.' },
-    { number: 'Zero', label: 'Perda de Vendas Fora do Horário', desc: 'Atendimento e agendamento contínuos em noites, fins de semana e feriados.' }
+    { number: '3 Canais', label: 'Canais Configuráveis', desc: 'Opções para Telefone, WhatsApp e Webchat, cada qual com escopo e integrações próprias por plano.' },
+    { number: 'PT-BR', label: 'Foco em Português Brasileiro', desc: 'Fluxos conversacionais pensados para a comunicação cotidiana no Brasil.' },
+    { number: 'Configurável', label: 'Fluxos Adaptados à Operação', desc: 'Regras de triagem, horários e transbordo humano conforme o negócio.' },
+    { number: 'Transparência', label: 'Escopo Confirmado na Proposta', desc: 'Condições comerciais, limites e integrações alinhados antes da contratação.' }
   ];
 
   const pillars = [
     {
       icon: Zap,
-      title: 'Action-First AI (Ações em Tempo Real)',
-      desc: 'Nossa inteligência não se limita a anotar recados ou responder dúvidas básicas. Durante a chamada telefônica ou conversa de WhatsApp, a Vocalis emite cobranças Pix com desconto, sincroniza horários no Google Agenda e transfere clientes quentes para o especialista humano.'
+      title: 'Fluxos Orientados a Ações',
+      desc: 'Estruture atendimentos com coleta de informações, apoio a agendamentos, envio de resumos e possibilidades de integração via webhook conforme o plano contratado.'
     },
     {
       icon: Headphones,
-      title: 'Voz Neural Brasileira com Sotaque Nativo',
-      desc: 'Adeus às URAs robóticas de "digite 1 para falar com financeiro". A Vocalis foi calibrada para a cadência, respiração e modulação fonética autêntica do português brasileiro, entendendo interrupções naturais e expressões regionais.'
+      title: 'Voz e Texto em Português Brasileiro',
+      desc: 'Alternativa conversacional aos menus numéricos tradicionais ("digite 1 para..."), configurável para diferentes perfis de empresa.'
     },
     {
       icon: ShieldCheck,
-      title: 'Segurança Institucional & Blindagem LGPD',
-      desc: 'Em total conformidade com a Lei Geral de Proteção de Dados (Lei nº 13.709/2018). Dados criptografados de ponta a ponta, armazenamento seguro em solo brasileiro e garantia absoluta de que seus dados e de seus clientes jamais serão compartilhados ou usados para treinar IAs públicas.'
+      title: 'Privacidade e Boas Práticas LGPD',
+      desc: 'Tratamento de dados orientado pela Lei Geral de Proteção de Dados (Lei nº 13.709/2018), conforme descrito em nossa Política de Privacidade e nos termos contratuais aplicáveis.'
     },
     {
       icon: HeartHandshake,
-      title: 'Modelo White-Label para Agências & Negócios',
-      desc: 'Criada para empoderar tanto o empresário final quanto donos de agência de inteligência artificial. Permite personalização de marca, implantação ágil em menos de 24 horas e suporte prioritário de engenharia.'
+      title: 'Atendimento para Empresas e Agências',
+      desc: 'Estruturas configuráveis tanto para operação direta de empresas quanto para agências, com escopo e prazos definidos na proposta.'
     }
   ];
 
   const teamAgents = [
     {
       name: 'Roberta',
-      role: 'SDR & Consultora Comercial de Voz',
-      channel: 'Telefonia VoIP & Chamadas Outbound',
-      desc: 'Atende clientes no primeiro toque, realiza diagnóstico rápido de negócios, tira dúvidas em tempo real e encaminha oportunidades prontas para a mesa de fechamento.',
-      badge: 'Linha de Frente Telefônica'
+      role: 'Perfil ilustrativo · Atendimento por Voz',
+      channel: 'Telefonia',
+      desc: 'Exemplo de assistente configurável para recepção inicial, triagem e encaminhamento para a equipe responsável.',
+      badge: 'Telefonia'
     },
     {
       name: 'Camila',
-      role: 'Especialista em WhatsApp Business',
-      channel: 'WhatsApp Omnichannel 24/7',
-      desc: 'Conversa no WhatsApp com notas de voz humanizadas, envia propostas comerciais em PDF, gera Pix copia-e-cola e recupera clientes inativos de forma automática.',
-      badge: 'Fechamento & Conversão'
+      role: 'Perfil ilustrativo · WhatsApp',
+      channel: 'WhatsApp',
+      desc: 'Exemplo de assistente configurável para responder mensagens em texto ou áudio e organizar solicitações de clientes.',
+      badge: 'WhatsApp'
     },
     {
       name: 'Beatriz',
-      role: 'Atendente de Webchat Interativo',
+      role: 'Perfil ilustrativo · Webchat',
       channel: 'Widget Web no Site',
-      desc: 'Engaja visitantes assim que eles entram no site, reduzindo a taxa de rejeição e capturando números de telefone qualificados para a equipe comercial.',
-      badge: 'Engajamento no Site'
+      desc: 'Exemplo de assistente configurável para orientar visitantes no site e encaminhar demandas ao time comercial.',
+      badge: 'Webchat'
     }
   ];
 
@@ -150,13 +150,13 @@ export default function SobrePage({ onOpenDemo, onOpenAuth, onNavigate }) {
 
           <div className="space-y-4 text-sm sm:text-base text-[#5C5955] leading-relaxed">
             <p>
-              No Brasil, mais de <strong>60% das oportunidades de vendas e agendamentos médicos são perdidas</strong> simplesmente porque o cliente liga ou manda mensagem fora do horário comercial, no intervalo de almoço ou nos finais de semana — exatamente nos momentos em que ele tem tempo livre para pesquisar e contratar.
+              Muitas empresas perdem oportunidades de atendimento quando clientes tentam contato fora do horário comercial, no intervalo de almoço ou em horários de pico — exatamente quando o cliente tem tempo disponível para pesquisar.
             </p>
             <p>
-              As soluções tradicionais do mercado ou são caras demais para o pequeno e médio empresário (contratar turnos inteiros de atendentes CLT) ou geram uma péssima experiência para quem liga (URAs mecânicas e robôs que não entendem sotaques e irritam quem está com pressa).
+              As soluções tradicionais do mercado podem exigir equipes extensas para cobertura estendida ou depender de menus numéricos rígidos que geram atrito no atendimento.
             </p>
             <p>
-              A <strong>Vocalis AI</strong> nasceu para quebrar esse paradigma. Construímos uma plataforma onde qualquer consultório, imobiliária, escritório ou empresa comercial possa ter uma equipe de atendimento com voz neural humana operando 24 horas por dia, 7 dias por semana, com custo acessível e retorno financeiro imediato.
+              A <strong>Vocalis AI</strong> surgiu para ajudar consultórios, imobiliárias, escritórios e empresas de serviços a estruturarem atendimentos automatizados em português brasileiro com foco em ampliar a cobertura de atendimento e organizar a triagem inicial.
             </p>
           </div>
         </div>
@@ -201,14 +201,14 @@ export default function SobrePage({ onOpenDemo, onOpenAuth, onNavigate }) {
         <div className="text-center max-w-3xl mx-auto mb-14">
           <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-white border border-[#E7E4DC] text-xs font-semibold text-[#4F46E5] mb-3">
             <Users className="w-3.5 h-3.5" />
-            <span>Nossos Agentes Neurais</span>
+            <span>Perfis Ilustrativos de Assistentes</span>
           </div>
           <h2 className="text-3xl sm:text-4xl font-normal text-[#1A1816] tracking-tight">
-            Conheça os funcionários virtuais da{' '}
+            Conheça exemplos de perfis configuráveis para a{' '}
             <span className="font-serif-title italic text-[#4F46E5]">sua empresa.</span>
           </h2>
           <p className="text-sm text-[#5C5955] mt-3">
-            Especialistas desenhados para cada etapa da jornada do cliente.
+            Modelos ilustrativos que podem ser adaptados ao tom de voz e às regras de cada empresa.
           </p>
         </div>
 
@@ -220,7 +220,7 @@ export default function SobrePage({ onOpenDemo, onOpenAuth, onNavigate }) {
                   <span className="text-[10px] font-bold uppercase tracking-wider px-2.5 py-1 rounded-full bg-[#EEF2FF] text-[#4F46E5] border border-[#E0E7FF]">
                     {agent.badge}
                   </span>
-                  <span className="text-[11px] font-mono text-emerald-600 font-bold">● Ativa 24/7</span>
+                  <span className="text-[11px] font-mono text-[#736F69] font-semibold">● Exemplo de perfil</span>
                 </div>
 
                 <h3 className="text-2xl font-serif-title font-normal text-[#1A1816] mb-1">
@@ -269,7 +269,7 @@ export default function SobrePage({ onOpenDemo, onOpenAuth, onNavigate }) {
               <span className="font-serif-title italic text-[#E89574]">sua empresa hoje?</span>
             </h2>
             <p className="text-sm text-[#A8A49C] max-w-xl mx-auto mb-8">
-              Nossos engenheiros entregam sua assistente configurada, integrada à sua agenda e com garantia incondicional de 14 dias.
+              Nossa equipe apresenta a demonstração, o escopo de implantação e as condições comerciais vigentes antes da contratação.
             </p>
 
             <div className="flex flex-col sm:flex-row items-center justify-center gap-3">

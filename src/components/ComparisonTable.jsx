@@ -1,5 +1,9 @@
 import React from 'react';
 import { Check, X, Sparkles, AlertCircle } from 'lucide-react';
+import {
+  getCommercialEntryLabel,
+  getSimultaneousCallsSummary,
+} from '../utils/commercialCatalogUtils';
 
 export default function ComparisonTable() {
   const comparisons = [
@@ -11,46 +15,46 @@ export default function ComparisonTable() {
       note: 'Vocalis fala naturalmente sem pausas mecânicas'
     },
     {
-      feature: 'Atendimento simultâneo de centenas de ligações',
+      feature: 'Capacidade de chamadas simultâneas',
       vocalis: true,
       chatbot: false,
       human: false,
-      note: 'Humano atende 1 por vez; linhas ficam ocupadas'
+      note: `Humano atende 1 por vez · Vocalis: ${getSimultaneousCallsSummary('telefone')}`
     },
     {
-      feature: 'Disponibilidade 24 horas por dia, 365 dias/ano',
+      feature: 'Operação configurável fora do horário comercial',
       vocalis: true,
       chatbot: true,
       human: false,
-      note: 'Cobrir noite e fins de semana com CLT custa 3x mais'
+      note: 'Cobrir noites e fins de semana com equipe dedicada eleva o custo operacional'
     },
     {
-      feature: 'Latência de resposta ultrarrápida (< 450ms)',
+      feature: 'Conversação fluida em português brasileiro',
       vocalis: true,
       chatbot: false,
       human: true,
-      note: 'Respostas quase instantâneas sem silêncio incômodo'
+      note: 'Fluxo de voz projetado para substituir menus numéricos tradicionais'
     },
     {
       feature: 'Entende sotaques, gírias e interrupções na fala',
       vocalis: true,
       chatbot: false,
       human: true,
-      note: 'Chatbots travam se o cliente não digitar o número do menu'
+      note: 'Menus antigos travam quando o cliente sai das opções numéricas'
     },
     {
-      feature: 'Agendamento direto na agenda sem conflitos',
+      feature: 'Apoio a agendamentos e registro de atendimentos',
       vocalis: true,
       chatbot: false,
       human: true,
-      note: 'Integrado em tempo real com Google Agenda, Feegow, etc.'
+      note: 'Integração com agendas e CRMs disponível sob consulta conforme o plano'
     },
     {
-      feature: 'Custo por minuto até 80% mais econômico',
+      feature: 'Referência de investimento comercial',
       vocalis: true,
       chatbot: true,
       human: false,
-      note: 'Economia direta em folha de pagamento e encargos'
+      note: getCommercialEntryLabel()
     },
     {
       feature: 'Transbordo humanizado quando solicitado',

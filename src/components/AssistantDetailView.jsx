@@ -9,6 +9,7 @@ import {
   ChevronsLeft, ChevronsUpDown, Copy
 } from 'lucide-react';
 import { createVapiAssistant, updateVapiAssistant, triggerOutboundCall } from '../utils/vapiService';
+import { buildBeatrizCommercialReply } from '../utils/commercialCatalogUtils';
 
 export default function AssistantDetailView({ 
   assistant, 
@@ -151,9 +152,17 @@ export default function AssistantDetailView({
 
     setTimeout(() => {
       let reply = `Com certeza! Entendi perfeitamente sua dúvida sobre "${userMsg}". Como sou uma assistente completa de Chat + Ligação, posso tanto te responder por aqui no WhatsApp quanto te ligar agora mesmo se preferir!`;
-      if (userMsg.toLowerCase().includes('preço') || userMsg.toLowerCase().includes('valor') || userMsg.toLowerCase().includes('plano')) {
-        reply = `Temos planos a partir de R$ 209/mês para WhatsApp e Chatbot, e planos completos com ligações de voz a partir de R$ 503/mês. Gostaria que eu reserve uma demonstração gratuita ou prefere receber o resumo?`;
-      } else if (userMsg.toLowerCase().includes('olá') || userMsg.toLowerCase().includes('oi')) {
+      const lowerMsg = userMsg.toLowerCase();
+      if (
+        lowerMsg.includes('preço') ||
+        lowerMsg.includes('preco') ||
+        lowerMsg.includes('valor') ||
+        lowerMsg.includes('plano') ||
+        lowerMsg.includes('promoc') ||
+        lowerMsg.includes('anual')
+      ) {
+        reply = buildBeatrizCommercialReply(userMsg);
+      } else if (lowerMsg.includes('olá') || lowerMsg.includes('oi')) {
         reply = welcomeMessage;
       }
       setChatMessages(prev => [...prev, { sender: 'assistant', text: reply }]);
@@ -1148,7 +1157,7 @@ export default function AssistantDetailView({
                   </div>
                   <div>
                     <h3 className="text-xs font-bold text-[#1A1816]">Motor de Voz & Telefonia Neural (Vapi AI)</h3>
-                    <p className="text-[11px] text-[#736F69]">Sincronização em tempo real de latência ultra-baixa (&lt;450ms)</p>
+                    <p className="text-[11px] text-[#736F69]">Sincronização configurável de baixa latência</p>
                   </div>
                 </div>
                 <div className="flex items-center gap-2">

@@ -76,9 +76,9 @@ export default function AtendedorAutomaticoPage({ onOpenDemo, onOpenAuth, onNavi
   const howItWorksCards = [
     {
       num: 1,
-      title: 'Nenhuma ligação é perdida',
-      shortDesc: 'O atendedor automático por IA da Vocalis atende as ligações no 1º toque quando os colaboradores estiverem ocupados...',
-      fullDesc: 'O atendedor automático por IA da Vocalis atende as ligações no 1º toque quando os colaboradores estiverem ocupados, retendo clientes e pedidos sem espera ou linha ocupada.'
+      title: 'Apoio às chamadas recebidas',
+      shortDesc: 'O atendedor automático por IA da Vocalis apoia o atendimento telefônico quando os colaboradores estiverem ocupados...',
+      fullDesc: 'O atendedor automático por IA da Vocalis apoia o atendimento telefônico quando os colaboradores estiverem ocupados ou fora do expediente, registrando solicitações conforme o plano.'
     },
     {
       num: 2,
@@ -125,28 +125,28 @@ export default function AtendedorAutomaticoPage({ onOpenDemo, onOpenAuth, onNavi
       visual: (
         <div className="bg-[#EEF2FF] rounded-2xl p-4 border border-[#E0E7FF] flex items-center justify-around text-center py-2">
           <div className="space-y-1">
-            <span className="text-2xl font-serif-title font-bold text-[#1A1816]">0s</span>
-            <span className="text-[10px] text-stone-500 block uppercase">Tempo de espera</span>
+            <span className="text-lg font-serif-title font-bold text-[#1A1816]">Triagem</span>
+            <span className="text-[10px] text-stone-500 block uppercase">Recepção inicial</span>
           </div>
           <div className="w-[1px] h-8 bg-stone-300"></div>
           <div className="space-y-1">
-            <span className="text-2xl font-serif-title font-bold text-emerald-600">100%</span>
-            <span className="text-[10px] text-stone-500 block uppercase">Atendidas</span>
+            <span className="text-lg font-serif-title font-bold text-emerald-700">Contínuo</span>
+            <span className="text-[10px] text-stone-500 block uppercase">Fora do expediente</span>
           </div>
         </div>
       )
     },
     {
       title: 'Economia de tempo e custos',
-      shortDesc: 'Com nosso atendedor automático por IA você economiza tempo e custos, cobrindo o expediente sem necessidade de...',
-      fullDesc: 'Com nosso atendedor automático por IA você economiza tempo e custos, cobrindo o expediente sem necessidade de plantões caros de horas extras.',
+      shortDesc: 'Com nosso atendedor automático por IA você organiza atendimentos fora do expediente sem depender apenas de plantões...',
+      fullDesc: 'Com nosso atendedor automático por IA você organiza atendimentos fora do expediente e reduz a sobrecarga operacional da equipe.',
       visual: (
         <div className="bg-[#EEF2FF] rounded-2xl p-4 border border-[#E0E7FF] text-xs space-y-1.5 font-sans">
           <div className="flex items-center gap-2 text-[#4F46E5] font-bold">
             <DollarSign className="w-4 h-4" />
-            <span>Redução de até 70% dos custos</span>
+            <span>Apoio à eficiência operacional</span>
           </div>
-          <p className="text-[11px] text-stone-600">Elimina perda de faturamento por chamadas não atendidas.</p>
+          <p className="text-[11px] text-stone-600">Apoia a redução de chamadas não atendidas fora do horário comercial.</p>
         </div>
       )
     }
@@ -155,30 +155,30 @@ export default function AtendedorAutomaticoPage({ onOpenDemo, onOpenAuth, onNavi
   const segmentDetails = {
     servicos: {
       title: 'Atendedor automático para prestadores de serviços',
-      desc: 'Ideal para assistências técnicas, consultorias e agências. A IA identifica se o cliente quer orçamento urgente, tira dúvidas e encaminha para o WhatsApp do comercial.'
+      desc: 'Ideal para assistências técnicas, consultorias e agências. A IA coleta informações sobre o pedido e organiza o encaminhamento para a equipe comercial.'
     },
     clinicas: {
       title: 'Atendedor automático para clínicas médicas',
-      desc: 'Gerencia triagens de pacientes, confirmação de exames, cancelamentos e encaixes de última hora sem sobrecarregar as recepcionistas do consultório.'
+      desc: 'Apoia triagens de pacientes, confirmação de agendamentos e orientações iniciais sem sobrecarregar as recepcionistas do consultório.'
     },
     empresas: {
       title: 'Atendedor automático para empresas e escritórios',
-      desc: 'Atua como PABX inteligente de nova geração, encaminhando ligações para colaboradores em home office ou ramais corporativos com histórico registrado.'
+      desc: 'Direciona chamadas para colaboradores ou setores com registro do resumo da conversa.'
     }
   };
 
   const accordionItems = [
     {
       title: 'Transferência de IA: Transfira quando você estiver ocupado',
-      content: 'Configure para a IA atender apenas quando a linha principal tocar por mais de 3 vezes ou estiver ocupada. Seus clientes nunca escutam sinal de ocupado.'
+      content: 'Configure o transbordo de chamadas para atender quando a linha principal estiver ocupada ou fora do expediente, conforme a infraestrutura contratada.'
     },
     {
-      title: 'Configuração em minutos',
-      content: 'Basta configurar o desvio de chamadas (siga-me) para o número inteligente da Vocalis. Nenhuma instalação técnica no seu roteador ou central física é necessária.'
+      title: 'Configuração guiada',
+      content: 'O desvio de chamadas e a ativação são alinhados conforme a sua operadora ou tronco SIP existente.'
     },
     {
-      title: 'Configure individualmente. Disponível automaticamente.',
-      content: 'Personalize saudações diferentes para o horário comercial e para a madrugada. Deixe a IA registrar recados, enviar lembretes e criar tarefas no seu CRM.'
+      title: 'Configure individualmente conforme a sua rotina',
+      content: 'Personalize saudações diferentes para o horário comercial e fora do expediente, registrando recados e enviando resumos para sua equipe.'
     }
   ];
 
@@ -201,7 +201,7 @@ export default function AtendedorAutomaticoPage({ onOpenDemo, onOpenAuth, onNavi
 
           {/* Subtitle */}
           <p className="text-base sm:text-lg text-[#5C5955] max-w-2xl mx-auto font-normal leading-relaxed mb-10">
-            O atendedor automático por IA da Vocalis é um assistente de telefonia inteligente que atende clientes no primeiro toque quando sua equipe está ocupada ou fora do horário comercial.
+            O atendedor automático por IA da Vocalis é um assistente de telefonia configurável para apoiar o atendimento quando sua equipe está ocupada ou fora do expediente.
           </p>
 
           {/* Audio Wave Visualizer Circle with Loop */}
@@ -260,7 +260,7 @@ export default function AtendedorAutomaticoPage({ onOpenDemo, onOpenAuth, onNavi
                 type="tel"
                 value={phoneNumber}
                 onChange={handlePhoneChange}
-                placeholder="Seu celular com DDD"
+                placeholder="Seu celular com DDD (opcional)"
                 className="flex-1 px-3 py-2.5 bg-transparent text-[#1A1816] placeholder-[#9E9B95] text-sm focus:outline-none"
               />
 
@@ -270,11 +270,15 @@ export default function AtendedorAutomaticoPage({ onOpenDemo, onOpenAuth, onNavi
                 className="shrink-0 px-6 py-3 rounded-full bg-[#11100F] text-white text-xs sm:text-sm font-semibold hover:bg-black transition-all flex items-center gap-2 shadow-sm cursor-pointer"
               >
                 <Phone className="w-4 h-4 text-white" />
-                <span>Ouvir a Vocalis agora</span>
+                <span>Abrir simulação ilustrativa</span>
               </button>
 
             </div>
           </form>
+
+          <p className="text-[11px] text-[#736F69] max-w-2xl mx-auto mb-3 leading-relaxed">
+            Simulação ilustrativa no navegador (Web Speech / TTS): não realiza chamada telefônica real e não armazena seu número. Em operação real, telefonia, números/SIP, transferência, gravação, limites de minutos, chamadas simultâneas e regras de excedente dependem de provedores terceiros (como Vapi e operadora SIP) e de confirmação no catálogo oficial.
+          </p>
 
           {/* Secondary Link: Agendar demo */}
           <div className="mb-8">
@@ -286,11 +290,11 @@ export default function AtendedorAutomaticoPage({ onOpenDemo, onOpenAuth, onNavi
             </button>
           </div>
 
-          {/* Checklist */}
+          {/* Checklist prudente */}
           <div className="flex flex-wrap items-center justify-center gap-6 md:gap-8 text-xs font-semibold text-[#5C5955]">
             <div className="flex items-center gap-1.5">
               <Check className="w-4 h-4 text-[#4F46E5]" strokeWidth={2.5} />
-              <span>Garantia de 30 dias</span>
+              <span>Condições comerciais sob consulta</span>
             </div>
             <div className="flex items-center gap-1.5">
               <Check className="w-4 h-4 text-[#4F46E5]" strokeWidth={2.5} />
@@ -298,7 +302,7 @@ export default function AtendedorAutomaticoPage({ onOpenDemo, onOpenAuth, onNavi
             </div>
             <div className="flex items-center gap-1.5">
               <Check className="w-4 h-4 text-[#4F46E5]" strokeWidth={2.5} />
-              <span>No ar em minutos</span>
+              <span>Configuração guiada</span>
             </div>
           </div>
 
@@ -318,7 +322,7 @@ export default function AtendedorAutomaticoPage({ onOpenDemo, onOpenAuth, onNavi
                 24/7
               </span>
               <p className="text-xs sm:text-sm text-[#5C5955] leading-relaxed">
-                Atendimento, inclusive fora do expediente.
+                Atendimento configurável, inclusive fora do expediente.
               </p>
             </div>
 
@@ -332,23 +336,23 @@ export default function AtendedorAutomaticoPage({ onOpenDemo, onOpenAuth, onNavi
               </p>
             </div>
 
-            {/* Card 3: 100+ */}
+            {/* Card 3: API & Webhooks */}
             <div className="bg-[#FAF9F5] rounded-3xl p-8 border border-[#E7E4DC] shadow-sm text-left">
-              <span className="text-4xl sm:text-5xl font-serif-title font-normal text-[#1A1816] block mb-3">
-                100+
+              <span className="text-3xl sm:text-4xl font-serif-title font-normal text-[#1A1816] block mb-3">
+                API &amp; Webhooks
               </span>
               <p className="text-xs sm:text-sm text-[#5C5955] leading-relaxed">
-                Integrações.
+                Integrações sob consulta conforme o plano.
               </p>
             </div>
 
-            {/* Card 4: 30 dias */}
+            {/* Card 4: PT-BR */}
             <div className="bg-[#FAF9F5] rounded-3xl p-8 border border-[#E7E4DC] shadow-sm text-left">
               <span className="text-4xl sm:text-5xl font-serif-title font-normal text-[#1A1816] block mb-3">
-                30 dias
+                PT-BR
               </span>
               <p className="text-xs sm:text-sm text-[#5C5955] leading-relaxed">
-                Para decidir, ou seu dinheiro de volta.
+                Foco em atendimento em português brasileiro.
               </p>
             </div>
 
@@ -418,7 +422,7 @@ export default function AtendedorAutomaticoPage({ onOpenDemo, onOpenAuth, onNavi
               </h2>
             </div>
             <div className="max-w-md text-xs sm:text-sm text-[#5C5955]">
-              As principais vantagens do nosso atendedor automático por IA são a economia de tempo e custos, mais conversões e atendimento 24/7 sem limites de linha.
+              O atendedor automático por IA ajuda a organizar ligações fora do expediente e em horários de pico, respeitando a capacidade simultânea do plano contratado.
             </div>
           </div>
 
@@ -588,7 +592,7 @@ export default function AtendedorAutomaticoPage({ onOpenDemo, onOpenAuth, onNavi
               </h2>
 
               <p className="text-sm text-stone-300 leading-relaxed max-w-xl mx-auto">
-                Crie a sua assistente em poucos minutos e ouça como ela atende com calma, em português, a qualquer hora.
+                Configure sua assistente em português conforme o plano escolhido e conheça os fluxos disponíveis.
               </p>
 
               <div className="pt-3">
@@ -606,7 +610,7 @@ export default function AtendedorAutomaticoPage({ onOpenDemo, onOpenAuth, onNavi
               <AudioFrequencyWave 
                 variant="full" 
                 showLatencyBadge={true}
-                latencyText="Latência 380ms • Frequência Vocal em Tempo Real"
+                latencyText="Visualização ilustrativa • Voz em português brasileiro"
               />
             </div>
 

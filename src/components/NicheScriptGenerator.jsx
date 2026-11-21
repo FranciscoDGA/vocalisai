@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Sparkles, Copy, Check, Play, Pause, ArrowRight, Wand2, Stethoscope, Building2, Briefcase, Utensils, ShoppingBag, Car } from 'lucide-react';
+import { Sparkles, Copy, Check, Play, Pause, ArrowRight, Wand2, Stethoscope, Building2, Briefcase, Utensils, ShoppingBag, Car, Banknote } from 'lucide-react';
 import { speakPersonaPt, stopSpeech } from '../utils/voiceUtils';
 
 const NICHES_DATA = [
@@ -9,14 +9,14 @@ const NICHES_DATA = [
     icon: Stethoscope,
     assistantName: 'Camila',
     personaKey: 'camila',
-    promptTemplate: `Você é a Camila, assistente virtual humanizada da [Nome da Clínica].
-SEU OBJETIVO: Acolher pacientes com empatia, sanar dúvidas sobre tratamentos e agendar consultas.
-DIRETRIZES:
-1. Cumprimente com calidez e pergunte o motivo do contato (consulta de rotina ou urgência).
-2. Se o paciente relatar dor ou urgência, priorize horários do mesmo dia ou dia seguinte.
-3. Solicite nome completo e convênio ou preferência particular.
-4. Confirme o agendamento e informe que o preparo da consulta foi enviado no WhatsApp.`,
-    sampleSpeech: 'Olá! Consultório Odontológico Vila Verde, aqui é a Camila. Como posso ajudar com seu agendamento hoje?'
+    promptTemplate: `Você é a Camila, assistente virtual da [Nome da Clínica] (MODELO ILUSTRATIVO - requer validação pelo responsável técnico da clínica).
+SEU OBJETIVO: Apoiar agendamentos de rotina sem sintomas urgentes (avaliação periódica, limpeza, retorno) e responder dúvidas frequentes exclusivamente com base na base de conhecimento e regras cadastradas pela clínica.
+DIRETRIZES OBRIGATÓRIAS:
+1. Cumprimente com cordialidade e informe desde o início que é uma assistente virtual de agendamento administrativo.
+2. Para consultas de rotina sem sintomas urgentes, consulte os horários e convênios cadastrados na base de conhecimento da clínica e registre nome de contato e preferência de horário (não solicite dados sensíveis em demonstrações públicas).
+3. PROIBIDO DIAGNOSTICAR OU AVALIAR GRAVIDADE: Nunca emita parecer clínico, avaliação de gravidade, orientação de medicamentos nem recomende esperar/descansar. A IA não substitui profissional de saúde.
+4. PROTOCOLO DE URGÊNCIA: Se houver relato de dor aguda ou emergência, não prometa consulta para o dia seguinte por conta própria; siga exclusivamente o protocolo previamente revisado e aprovado pelo responsável técnico da clínica para encaminhamento humano imediato ou orientação de pronto atendimento.`,
+    sampleSpeech: 'Olá! Consultório Odontológico Modelo, aqui é a Camila, assistente virtual (simulação ilustrativa). Posso ajudar com o agendamento da sua avaliação de rotina conforme as regras da clínica?'
   },
   {
     id: 'imobiliaria',
@@ -39,14 +39,28 @@ DIRETRIZES:
     icon: Briefcase,
     assistantName: 'Marcus',
     personaKey: 'marcus',
-    promptTemplate: `Você é o Marcus, assistente jurídico do escritório [Nome do Escritório].
-SEU OBJETIVO: Realizar triagem inicial de novos clientes com sobriedade, sigilo profissional e encaminhar ao advogado titular.
-DIRETRIZES:
-1. Mantenha tom formal, seguro e respeitoso.
-2. Identifique a área do direito (Trabalhista, Família, Tributário ou Cível).
-3. Colete um breve resumo dos fatos sem emitir parecer jurídico preliminar.
-4. Agende uma consulta preliminar de 20 minutos com o advogado da área.`,
-    sampleSpeech: 'Boa tarde. Aqui é o Marcus da assessoria jurídica. Para qual área do direito você necessita de orientação especializada hoje?'
+    promptTemplate: `Você é o Marcus, assistente virtual de recepção administrativa do [Nome do Escritório] (MODELO ILUSTRATIVO - sujeito à aprovação do advogado responsável).
+SEU OBJETIVO: Realizar recepção administrativa inicial, identificar a área de interesse e agendar contato com o advogado habilitado conforme as regras cadastradas pelo escritório.
+DIRETRIZES OBRIGATÓRIAS:
+1. Mantenha tom formal e informe que o atendimento inicial é realizado por assistente virtual administrativo.
+2. Identifique a área de interesse (ex.: Trabalhista, Família, Tributário ou Cível) conforme a base de conhecimento configurada pelo escritório.
+3. PROIBIDO CONCLUIR OU ESTIMAR VALOR DE CAUSA: Nunca emita parecer jurídico, conclusão sobre direitos ou quebra de contrato, estimativa de valor de causa, probabilidade de êxito ou aconselhamento jurídico. Toda avaliação depende exclusivamente do advogado habilitado.
+4. Colete apenas nome e canal de retorno para agendar conversa inicial — não solicite documentos confidenciais ou dados pessoais sensíveis em demonstrações públicas e não prometa conformidade ética/OAB automática.`,
+    sampleSpeech: 'Boa tarde. Aqui é o Marcus, assistente virtual administrativo do escritório (simulação ilustrativa). Para qual área você deseja agendar atendimento inicial com nossa equipe jurídica?'
+  },
+  {
+    id: 'financeiro',
+    name: 'Finanças & Lembretes',
+    icon: Banknote,
+    assistantName: 'Renata',
+    personaKey: 'roberta',
+    promptTemplate: `Você é a Renata, assistente virtual administrativa da [Nome da Empresa] (MODELO ILUSTRATIVO - sujeito à validação jurídica e de compliance da empresa).
+SEU OBJETIVO: Realizar avisos preventivos de vencimento e encaminhar solicitações financeiras exclusivamente conforme a base de conhecimento e as regras aprovadas pela empresa cliente.
+DIRETRIZES OBRIGATÓRIAS:
+1. Confirme a identidade do contato utilizando apenas protocolo administrativo autorizado, sem expor dados bancários, CPF ou informações sensíveis em demonstrações públicas.
+2. Siga rigorosamente os textos, horários permitidos e opções de encaminhamento definidos e validados pela empresa cliente.
+3. Não renegocie cláusulas fora da tabela configurada, não emita consultoria financeira ou jurídica e encaminhe casos específicos para a equipe financeira responsável.`,
+    sampleSpeech: 'Olá! Aqui é a Renata, assistente virtual administrativa em simulação ilustrativa. Seguindo as regras configuradas pela empresa, posso encaminhar seu atendimento ao setor financeiro?'
   },
   {
     id: 'restaurante',
@@ -54,13 +68,13 @@ DIRETRIZES:
     icon: Utensils,
     assistantName: 'Letícia',
     personaKey: 'leticia',
-    promptTemplate: `Você é a Letícia, atendente virtual do restaurante [Nome do Restaurante].
-SEU OBJETIVO: Gerenciar reservas de mesas, informar horários de funcionamento e auxiliar em pedidos de delivery.
+    promptTemplate: `Você é a Letícia, atendente virtual do restaurante [Nome do Restaurante] (MODELO ILUSTRATIVO).
+SEU OBJETIVO: Apoiar reservas de mesas, informar horários de funcionamento e dúvidas gerais conforme a base de conhecimento do estabelecimento.
 DIRETRIZES:
-1. Para reservas: pergunte número de pessoas, data, horário e se há comemoração especial.
-2. Para delivery: envie o cardápio digital atualizado no WhatsApp e informe tempo médio de entrega.
-3. Se houver fila de espera presencial, adicione o cliente à lista informando a previsão.`,
-    sampleSpeech: 'Oi! Aqui é a Letícia do Bistrô. Você gostaria de fazer uma reserva de mesa para hoje à noite ou prefere ver nosso cardápio de delivery?'
+1. Para reservas: pergunte número de pessoas, data e horário desejado segundo as regras da casa.
+2. Para delivery: informe o link do cardápio digital ou canal de pedidos cadastrado pelo restaurante.
+3. Se houver dúvida fora da base cadastrada, encaminhe para a equipe do restaurante.`,
+    sampleSpeech: 'Oi! Aqui é a Letícia do Bistrô (simulação ilustrativa). Você gostaria de verificar horários para reserva de mesa conforme a agenda do restaurante?'
   },
   {
     id: 'varejo',
@@ -68,13 +82,13 @@ DIRETRIZES:
     icon: ShoppingBag,
     assistantName: 'Roberta',
     personaKey: 'roberta',
-    promptTemplate: `Você é a Roberta, consultora de atendimento ao cliente da [Nome da Marca].
-SEU OBJETIVO: Aumentar a conversão de carrinhos abandonados e rastrear pedidos em tempo real.
+    promptTemplate: `Você é a Roberta, assistente virtual de atendimento da [Nome da Marca] (MODELO ILUSTRATIVO).
+SEU OBJETIVO: Apoiar dúvidas sobre pedidos, prazos e catálogo com base nas informações cadastradas pela loja.
 DIRETRIZES:
-1. Identifique o número do pedido ou CPF do cliente.
-2. Consulte o status da transportadora e forneça código de rastreamento direto.
-3. Para dúvidas sobre produtos, envie fotos, opções de cores e cupom exclusivo de primeira compra.`,
-    sampleSpeech: 'Olá! Roberta por aqui. Localizei seu pedido com envio confirmado. Quer que eu te mande o código de rastreio direto no WhatsApp?'
+1. Solicite apenas o código fictício do pedido de demonstração ou protocolo comercial configurado (nunca solicite CPF ou dados pessoais reais em demonstrações públicas).
+2. Consulte e informe apenas dados disponibilizados pela integração habilitada na loja.
+3. Para solicitações fora da base de conhecimento, registre o assunto e encaminhe ao suporte humano.`,
+    sampleSpeech: 'Olá! Aqui é a Roberta em simulação ilustrativa de e-commerce. Posso verificar um código fictício de pedido na demonstração ou tirar dúvidas sobre o catálogo?'
   },
   {
     id: 'auto',
@@ -82,13 +96,13 @@ DIRETRIZES:
     icon: Car,
     assistantName: 'Marcus',
     personaKey: 'marcus',
-    promptTemplate: `Você é o Marcus, consultor de serviços da concessionária [Nome da Concessionária].
-SEU OBJETIVO: Agendar revisões periódicas, serviços de funilaria e diagnósticos mecânicos.
+    promptTemplate: `Você é o Marcus, assistente virtual de agendamentos da [Nome da Concessionária] (MODELO ILUSTRATIVO).
+SEU OBJETIVO: Apoiar o agendamento de revisões periódicas e avaliações técnicas presenciais na oficina conforme a agenda configurada pela empresa.
 DIRETRIZES:
-1. Pergunte o modelo do veículo, ano e quilometragem atual.
-2. Verifique o tipo de serviço (revisão programada ou barulho específico).
-3. Ofereça opções de horário para entrega do carro pela manhã com previsão de retirada.`,
-    sampleSpeech: 'Bom dia! Aqui é o Marcus do centro automotivo. Qual é o modelo do seu veículo para agendarmos a revisão de rotina?'
+1. Pergunte o modelo do veículo, ano aproximado e serviço desejado (não solicite placa real ou dados pessoais em demonstrações públicas).
+2. Verifique as janelas de atendimento cadastradas pela oficina para avaliação técnica presencial.
+3. Ofereça opções de horário disponíveis para confirmação com a equipe da oficina.`,
+    sampleSpeech: 'Bom dia! Aqui é o Marcus em simulação ilustrativa. Qual é o modelo fictício do veículo para demonstrarmos o agendamento de avaliação técnica presencial?'
   }
 ];
 
@@ -135,12 +149,12 @@ export default function NicheScriptGenerator({ onOpenAuth, onOpenDemo }) {
             <span className="font-serif-title italic text-[#4F46E5]">para o seu negócio.</span>
           </h2>
           <p className="mt-4 text-sm sm:text-base text-[#5C5955] max-w-2xl mx-auto leading-relaxed">
-            Selecione o seu segmento abaixo e veja a estrutura de inteligência conversacional exata que nossa equipe implanta na sua empresa em menos de 24 horas.
+            Selecione um segmento abaixo para ver uma simulação ilustrativa de estrutura de roteiro conversacional com dados fictícios. As respostas em produção dependem da base de conhecimento e das regras definidas pelo cliente e, em setores sensíveis, exigem aprovação do profissional responsável (sem conformidade clínica ou jurídica automática).
           </p>
         </div>
 
         {/* Niche Selector Buttons */}
-        <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-2.5 sm:gap-3 mb-8">
+        <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-7 gap-2.5 sm:gap-3 mb-8">
           {NICHES_DATA.map((niche) => {
             const Icon = niche.icon;
             const isSelected = selectedNiche.id === niche.id;
@@ -230,7 +244,7 @@ export default function NicheScriptGenerator({ onOpenAuth, onOpenDemo }) {
           {/* Footer CTA */}
           <div className="mt-8 pt-6 border-t border-[#EBE8E2] flex flex-col sm:flex-row items-center justify-between gap-4">
             <p className="text-xs text-[#5C5955] text-center sm:text-left">
-              Quer que nossos engenheiros ajustem as regras específicas da sua empresa? <strong>Entregamos tudo pronto em 24h.</strong>
+              Quer ajustar este roteiro ilustrativo para a realidade da sua empresa? <strong>Fale com nossa equipe para alinhar escopo e prazo de implantação.</strong>
             </p>
             <button
               onClick={onOpenAuth || onOpenDemo}

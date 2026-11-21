@@ -146,7 +146,7 @@ export default function KnowledgeBaseTab({ knowledgeList, setKnowledgeList, crea
             </span>
           </div>
           <p className="text-xs text-[#5C5955] mt-1">
-            Alimente suas assistentes de voz e WhatsApp com documentos, tabelas, FAQs e sites para respostas com 100% de precisão.
+            Organize documentos, tabelas, FAQs e sites como base de referência para orientar as respostas dos assistentes.
           </p>
         </div>
 
@@ -196,12 +196,12 @@ export default function KnowledgeBaseTab({ knowledgeList, setKnowledgeList, crea
 
         <div className="p-4 rounded-2xl bg-white border border-[#E7E4DC] shadow-sm">
           <div className="flex items-center justify-between text-xs text-[#736F69] mb-1 font-medium">
-            <span>Precisão Factual</span>
+            <span>Referência de Escopo</span>
             <ShieldCheck className="w-4 h-4 text-emerald-600" />
           </div>
-          <div className="text-2xl font-extrabold text-[#1A1816]">99.8%</div>
-          <div className="text-[11px] text-emerald-700 mt-1 font-medium">
-            Sem alucinações na fala
+          <div className="text-2xl font-extrabold text-[#1A1816]">Ilustrativo</div>
+          <div className="text-[11px] text-[#5C5955] mt-1 font-medium">
+            Base configurada para apoio às respostas
           </div>
         </div>
 

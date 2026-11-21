@@ -3,7 +3,18 @@ import { createClient } from '@supabase/supabase-js';
 const supabaseUrl = import.meta.env.VITE_SUPABASE_URL;
 const supabaseAnonKey = import.meta.env.VITE_SUPABASE_ANON_KEY;
 
-export const supabase = createClient(supabaseUrl, supabaseAnonKey);
+export const isSupabaseConfigured = Boolean(supabaseUrl && supabaseAnonKey);
+
+export const supabase = createClient(
+  supabaseUrl || 'https://placeholder.supabase.co',
+  supabaseAnonKey || 'placeholder-anon-key',
+  {
+    auth: {
+      persistSession: isSupabaseConfigured,
+      autoRefreshToken: isSupabaseConfigured,
+    },
+  }
+);
 
 /* ========================================================
    AUTENTICAÇÃO (LOGIN & CADASTRO REAL)
@@ -119,6 +130,7 @@ export async function updateLead(leadId, updates) {
 }
 
 export async function getLeads(limit = 50) {
+  if (!isSupabaseConfigured) return [];
   try {
     const { data, error } = await supabase
       .from('leads')
@@ -261,6 +273,7 @@ export async function deleteAssistant(id) {
 }
 
 export async function getAssistants() {
+  if (!isSupabaseConfigured) return [];
   try {
     const { data, error } = await supabase
       .from('assistants')

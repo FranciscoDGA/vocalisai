@@ -17,7 +17,7 @@ export default function StepsSection({ onOpenDemo }) {
             <span className="font-serif-title italic text-[#4F46E5]">Nenhuma linha de código.</span>
           </h2>
           <p className="mt-4 text-base sm:text-lg text-[#5C5955] leading-relaxed">
-            Você não precisa de equipe de TI ou consultores caros. Em menos de 5 minutos, sua assistente está pronta para atender o primeiro cliente.
+            Veja as etapas gerais para configurar um assistente de acordo com os canais e recursos do seu plano.
           </p>
         </div>
 
@@ -88,7 +88,7 @@ export default function StepsSection({ onOpenDemo }) {
               </div>
               <div className="flex items-center gap-2 text-xs font-medium text-[#1A1816] p-2 bg-white rounded-xl border border-[#E7E4DC]">
                 <Check className="w-4 h-4 text-emerald-600" />
-                <span>Google Agenda Sincronizada</span>
+                <span>Exemplo ilustrativo de agenda</span>
               </div>
             </div>
           </div>
@@ -105,25 +105,25 @@ export default function StepsSection({ onOpenDemo }) {
                 </span>
               </div>
               <h3 className="text-xl font-bold text-[#1A1816] mb-3">
-                Ative os números
+                Ative os canais
               </h3>
               <p className="text-sm text-[#5C5955] leading-relaxed mb-6">
-                Conecte seu WhatsApp oficial ou vincule o número fixo e 0800. A partir daí, nenhum cliente fica sem resposta.
+                Conecte os canais habilitados no seu plano e acompanhe os atendimentos pelo painel.
               </p>
             </div>
 
             {/* Visual Mini Mockup */}
             <div className="bg-[#1A1816] text-white rounded-2xl p-4 shadow-md flex items-center justify-between">
               <div className="flex items-center gap-3">
-                <div className="w-8 h-8 rounded-full bg-[#4F46E5] flex items-center justify-center animate-pulse">
+                <div className="w-8 h-8 rounded-full bg-[#4F46E5] flex items-center justify-center">
                   <PhoneCall className="w-4 h-4 text-white" />
                 </div>
                 <div>
-                  <div className="text-xs font-bold">Chamada em tempo real</div>
-                  <div className="text-[11px] text-[#A6A29A]">Atendida em 1 toque</div>
+                  <div className="text-xs font-bold">Simulação ilustrativa</div>
+                  <div className="text-[11px] text-[#A6A29A]">Fluxo de atendimento configurado</div>
                 </div>
               </div>
-              <span className="text-xs font-mono font-bold text-emerald-400">ATIVO</span>
+              <span className="text-xs font-mono font-bold text-indigo-300">EXEMPLO</span>
             </div>
           </div>
 

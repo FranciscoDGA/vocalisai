@@ -203,11 +203,11 @@ export default function DocsPortal({ isOpen, initialDoc = 'privacidade', onClose
                 {!['privacidade', 'termos', 'dpa', 'exclusao', 'central'].includes(activeDoc) && 'Central de Documentação'}
               </h1>
               <p className="mt-2 text-sm text-[#5C5955]">
-                {activeDoc === 'privacidade' && 'Como a Vocalis coleta, usa, compartilha e protege dados pessoais, conforme a LGPD.'}
-                {activeDoc === 'termos' && 'Condições gerais de contratação, SLA, uso aceitável e limites de responsabilidade.'}
-                {activeDoc === 'dpa' && 'Garantias contratuais de conformidade com a LGPD para controladores corporativos.'}
-                {activeDoc === 'exclusao' && 'Procedimentos e formulário para solicitar revogação de consentimento e eliminação de registros.'}
-                {activeDoc === 'central' && 'Guias práticos, tutoriais passo a passo e configurações da plataforma Vocalis.'}
+                {activeDoc === 'privacidade' && 'Diretrizes sobre coleta, uso, compartilhamento e proteção de dados pessoais (itens marcados como pendentes aguardam validação jurídica).'}
+                {activeDoc === 'termos' && 'Condições gerais de uso da plataforma e limites de responsabilidade (condições comerciais, cobrança e SLA pendentes de confirmação).'}
+                {activeDoc === 'dpa' && 'Diretrizes de tratamento de dados pessoais para clientes corporativos (termos do DPA pendentes de validação jurídica).'}
+                {activeDoc === 'exclusao' && 'Canais e diretrizes gerais para solicitação de eliminação ou revisão de registros (pendente de confirmação operacional).'}
+                {activeDoc === 'central' && 'Guias introdutórios e visão geral de configurações da plataforma Vocalis.'}
               </p>
             </div>
 
@@ -220,12 +220,16 @@ export default function DocsPortal({ isOpen, initialDoc = 'privacidade', onClose
             </button>
           </div>
 
-          {/* CONTENT: POLÍTICA DE PRIVACIDADE (Replica 1:1 of screenshot 1) */}
+          {/* CONTENT: POLÍTICA DE PRIVACIDADE */}
           {activeDoc === 'privacidade' && (
             <div className="space-y-8 text-sm text-[#383531] leading-relaxed">
               
+              <div className="p-4 rounded-xl bg-amber-50/70 border border-amber-200 text-xs text-[#5C5955] leading-relaxed">
+                <strong>Aviso de revisão técnica:</strong> os trechos marcados como <strong>PENDENTE DE CONFIRMAÇÃO</strong> dependem de validação pelo proprietário e por assessoria jurídica antes de publicação definitiva em produção.
+              </div>
+
               <p>
-                Esta Política se aplica à <strong>VOCALIS TECNOLOGIA LTDA</strong> (CNPJ 27.824.190/0001-18, Rua Rio Grande do Sul, 24, Setor Maria Liane, Cumaru do Norte/PA, CEP 68398-000) e aos dados pessoais de usuários de nosso site, de usuários da plataforma e de pessoas que conversam com assistentes configurados por nossos clientes, nos termos da Lei nº 13.709/2018 (LGPD).
+                Esta minuta referencia <strong>VOCALIS TECNOLOGIA LTDA</strong> (CNPJ 27.824.190/0001-18, Rua Rio Grande do Sul, 24, Setor Maria Liane, Cumaru do Norte/PA, CEP 68398-000). A confirmação cadastral oficial, eventual endereço institucional alternativo e os documentos contratuais finais estão <strong>PENDENTES DE CONFIRMAÇÃO</strong> pelo proprietário e assessoria jurídica.
               </p>
 
               {/* 1. Quem é o controlador */}
@@ -233,10 +237,10 @@ export default function DocsPortal({ isOpen, initialDoc = 'privacidade', onClose
                 <h2 className="text-xl font-bold text-[#1A1816]">Quem é o controlador</h2>
                 <ul className="list-disc pl-5 space-y-1.5">
                   <li>
-                    <strong>Dados de visitantes e usuários da conta:</strong> a Vocalis é a controladora.
+                    <strong>Dados de visitantes, leads comerciais e usuários cadastrados:</strong> a Vocalis atua como controladora.
                   </li>
                   <li>
-                    <strong>Conversas que sua empresa faz com um número da Vocalis:</strong> sua empresa é a controladora e a Vocalis atua como <strong>operadora</strong>, seguindo as instruções do acordo de proteção de dados.
+                    <strong>Conversas atendidas pelos assistentes configurados por clientes:</strong> o cliente contratante define finalidades e instruções e atua como controlador; a Vocalis atua como <strong>operadora</strong> (formalização contratual do DPA <strong>PENDENTE DE CONFIRMAÇÃO</strong>).
                   </li>
                 </ul>
               </section>
@@ -256,29 +260,29 @@ export default function DocsPortal({ isOpen, initialDoc = 'privacidade', onClose
                     </thead>
                     <tbody className="divide-y divide-[#EBE8E2]">
                       <tr>
-                        <td className="p-3 font-semibold text-[#1A1816]">Cadastro</td>
-                        <td className="p-3">Nome, e-mail, telefone, empresa</td>
-                        <td className="p-3">Criar conta e gerenciar o acesso à plataforma</td>
+                        <td className="p-3 font-semibold text-[#1A1816]">Cadastro e formulários</td>
+                        <td className="p-3">Nome, e-mail, telefone/WhatsApp, empresa</td>
+                        <td className="p-3">Criar conta e registrar pedidos de contato ou demonstração feitos pelo visitante</td>
+                      </tr>
+                      <tr>
+                        <td className="p-3 font-semibold text-[#1A1816]">Simulação ilustrativa</td>
+                        <td className="p-3">Número opcional digitado na prévia do navegador</td>
+                        <td className="p-3">Demonstração visual na tela, sem armazenamento nem disparo de ligação/WhatsApp real</td>
                       </tr>
                       <tr>
                         <td className="p-3 font-semibold text-[#1A1816]">Faturamento</td>
-                        <td className="p-3">CPF/CNPJ, endereço de cobrança</td>
-                        <td className="p-3">Emitir notas fiscais e cobranças</td>
+                        <td className="p-3">CPF/CNPJ, endereço de cobrança (a confirmar fluxo ativo)</td>
+                        <td className="p-3">Emitir notas fiscais e cobranças conforme o contrato confirmado</td>
                       </tr>
                       <tr>
                         <td className="p-3 font-semibold text-[#1A1816]">Uso da plataforma</td>
-                        <td className="p-3">Registros de acesso, configurações</td>
-                        <td className="p-3">Segurança, suporte e melhoria contínua do serviço</td>
+                        <td className="p-3">Registros de acesso e configurações</td>
+                        <td className="p-3">Segurança, suporte e operação do serviço</td>
                       </tr>
                       <tr>
-                        <td className="p-3 font-semibold text-[#1A1816]">Chamadas atendidas</td>
-                        <td className="p-3">Número de telefone, transcrição, áudio (se ativado)</td>
-                        <td className="p-3">Prestar o atendimento contratado pelo cliente</td>
-                      </tr>
-                      <tr>
-                        <td className="p-3 font-semibold text-[#1A1816]">Voz</td>
-                        <td className="p-3">Amostras de fala na gravação</td>
-                        <td className="p-3">Reconhecimento de fala, com consentimento explícito</td>
+                        <td className="p-3 font-semibold text-[#1A1816]">Chamadas e mensagens em operação</td>
+                        <td className="p-3">Número de telefone, transcrição, áudio (quando habilitado no provedor)</td>
+                        <td className="p-3">Prestar o atendimento contratado pelo cliente (gravação/retenção PENDENTES DE CONFIRMAÇÃO)</td>
                       </tr>
                     </tbody>
                   </table>
@@ -287,17 +291,17 @@ export default function DocsPortal({ isOpen, initialDoc = 'privacidade', onClose
 
               {/* 3. Bases legais */}
               <section id="bases" className="space-y-2">
-                <h2 className="text-xl font-bold text-[#1A1816]">Bases legais</h2>
+                <h2 className="text-xl font-bold text-[#1A1816]">Bases legais (sujeito a revisão jurídica)</h2>
                 <p>
-                  Execução de contrato, cumprimento de obrigação legal, legítimo interesse (por exemplo, prevenção a fraudes) e consentimento, quando exigido — como para comunicações não essenciais.
+                  Execução de contrato ou de procedimentos preliminares a pedido do titular, cumprimento de obrigação legal, legítimo interesse e consentimento quando exigido — cuja matriz definitiva de enquadramento está <strong>PENDENTE DE CONFIRMAÇÃO</strong> jurídica.
                 </p>
               </section>
 
               {/* 4. Compartilhamento */}
               <section id="compartilhamento" className="space-y-3">
-                <h2 className="text-xl font-bold text-[#1A1816]">Compartilhamento</h2>
+                <h2 className="text-xl font-bold text-[#1A1816]">Compartilhamento e subprocessadores (PENDENTE DE CONFIRMAÇÃO)</h2>
                 <p>
-                  Compartilhamos dados apenas com fornecedores necessários à operação, sob contrato e com medidas de segurança. <strong>Não vendemos dados pessoais.</strong> Subprocessadores atuais:
+                  Compartilhamos dados apenas com fornecedores necessários à operação, mediante contratos aplicáveis. <strong>Não vendemos dados pessoais.</strong> A relação abaixo consta da minuta histórica e está <strong>PENDENTE DE CONFIRMAÇÃO</strong> porque também há referências técnicas no sistema a provedores como <strong>Supabase, Vercel, Google Gemini, Vapi, OpenAI, Deepgram e UazAPI</strong>:
                 </p>
 
                 <div className="overflow-x-auto rounded-xl border border-[#E7E4DC]">
@@ -306,49 +310,54 @@ export default function DocsPortal({ isOpen, initialDoc = 'privacidade', onClose
                       <tr className="bg-[#FAF9F5] border-b border-[#E7E4DC] text-[#1A1816] font-bold">
                         <th className="p-3">Fornecedor</th>
                         <th className="p-3">Finalidade</th>
-                        <th className="p-3">Local</th>
+                        <th className="p-3">Local (a confirmar)</th>
                       </tr>
                     </thead>
                     <tbody className="divide-y divide-[#EBE8E2]">
                       <tr>
-                        <td className="p-3 font-mono font-semibold text-[#1A1816]">Fly.io</td>
-                        <td className="p-3">Hospedagem de servidores e de bancos de dados</td>
-                        <td className="p-3">EUA</td>
+                        <td className="p-3 font-mono font-semibold text-[#1A1816]">Fly.io (a confirmar)</td>
+                        <td className="p-3">Hospedagem citada na minuta anterior</td>
+                        <td className="p-3">EUA (a confirmar)</td>
                       </tr>
                       <tr>
-                        <td className="p-3 font-mono font-semibold text-[#1A1816]">Twilio</td>
-                        <td className="p-3">Telefonia (ligações normais)</td>
-                        <td className="p-3">EUA</td>
+                        <td className="p-3 font-mono font-semibold text-[#1A1816]">Twilio (a confirmar)</td>
+                        <td className="p-3">Telefonia citada na minuta anterior</td>
+                        <td className="p-3">EUA (a confirmar)</td>
                       </tr>
                       <tr>
-                        <td className="p-3 font-mono font-semibold text-[#1A1816]">LiveKit</td>
-                        <td className="p-3">Infraestrutura de áudio em tempo real</td>
-                        <td className="p-3">EUA</td>
+                        <td className="p-3 font-mono font-semibold text-[#1A1816]">LiveKit (a confirmar)</td>
+                        <td className="p-3">Infraestrutura de áudio citada na minuta anterior</td>
+                        <td className="p-3">EUA (a confirmar)</td>
                       </tr>
                       <tr>
-                        <td className="p-3 font-mono font-semibold text-[#1A1816]">Anthropic / ElevenLabs</td>
-                        <td className="p-3">Inteligência artificial / Modelos neurais de fala</td>
-                        <td className="p-3">UE / EUA</td>
+                        <td className="p-3 font-mono font-semibold text-[#1A1816]">Anthropic / ElevenLabs (a confirmar)</td>
+                        <td className="p-3">Modelos de IA/voz citados na minuta anterior</td>
+                        <td className="p-3">UE / EUA (a confirmar)</td>
                       </tr>
                       <tr>
-                        <td className="p-3 font-mono font-semibold text-[#1A1816]">Meta Platforms</td>
-                        <td className="p-3">Envio e recebimento de mensagens de WhatsApp Business</td>
-                        <td className="p-3">EUA</td>
+                        <td className="p-3 font-mono font-semibold text-[#1A1816]">Meta Platforms (a confirmar)</td>
+                        <td className="p-3">Mensagens de WhatsApp Business conforme modalidade confirmada</td>
+                        <td className="p-3">EUA (a confirmar)</td>
                       </tr>
                       <tr>
-                        <td className="p-3 font-mono font-semibold text-[#1A1816]">Stripe</td>
-                        <td className="p-3">Pagamentos e verificação de identidade corporativa</td>
-                        <td className="p-3">EUA</td>
+                        <td className="p-3 font-mono font-semibold text-[#1A1816]">Stripe (a confirmar)</td>
+                        <td className="p-3">Pagamentos citados na minuta anterior</td>
+                        <td className="p-3">EUA (a confirmar)</td>
                       </tr>
                       <tr>
-                        <td className="p-3 font-mono font-semibold text-[#1A1816]">Resend</td>
-                        <td className="p-3">Disparo transacional de e-mails</td>
-                        <td className="p-3">EUA / Américas</td>
+                        <td className="p-3 font-mono font-semibold text-[#1A1816]">Resend (a confirmar)</td>
+                        <td className="p-3">E-mails transacionais citados na minuta anterior</td>
+                        <td className="p-3">EUA / Américas (a confirmar)</td>
                       </tr>
                       <tr>
-                        <td className="p-3 font-mono font-semibold text-[#1A1816]">Cloudflare / Microsoft</td>
-                        <td className="p-3">Distribuição CDN de páginas e certificados de segurança</td>
-                        <td className="p-3">EUA / Global</td>
+                        <td className="p-3 font-mono font-semibold text-[#1A1816]">Cloudflare / Microsoft (a confirmar)</td>
+                        <td className="p-3">CDN e segurança citados na minuta anterior</td>
+                        <td className="p-3">EUA / Global (a confirmar)</td>
+                      </tr>
+                      <tr>
+                        <td className="p-3 font-mono font-semibold text-[#1A1816]">Supabase / Vercel / Google Gemini / Vapi / OpenAI / Deepgram / UazAPI</td>
+                        <td className="p-3">Provedores referenciados na base de código (sujeitos a consolidação contratual)</td>
+                        <td className="p-3">Países a confirmar</td>
                       </tr>
                     </tbody>
                   </table>
@@ -357,61 +366,61 @@ export default function DocsPortal({ isOpen, initialDoc = 'privacidade', onClose
 
               {/* 5. Transferência internacional */}
               <section id="transferencia" className="space-y-2">
-                <h2 className="text-xl font-bold text-[#1A1816]">Transferência internacional</h2>
+                <h2 className="text-xl font-bold text-[#1A1816]">Transferência internacional (PENDENTE DE CONFIRMAÇÃO)</h2>
                 <p>
-                  Alguns fornecedores podem processar dados fora do Brasil. Nesses casos, adotamos salvaguardas previstas na LGPD e nas normas da ANPD (cláusulas-padrão contratuais e criptografia ponta a ponta).
+                  Fornecedores de nuvem, telefonia e IA podem processar dados fora do Brasil. O uso de proteção de transporte via HTTPS/TLS não equivale a sigilo de extremo a extremo (E2EE); os mecanismos contratuais formais de transferência internacional (cláusulas-padrão ANPD) e a relação exata de países estão <strong>PENDENTES DE CONFIRMAÇÃO</strong> jurídica.
                 </p>
               </section>
 
               {/* 6. Retenção */}
               <section id="retencao" className="space-y-2">
-                <h2 className="text-xl font-bold text-[#1A1816]">Retenção</h2>
+                <h2 className="text-xl font-bold text-[#1A1816]">Gravação, retenção e exclusão (PENDENTE DE CONFIRMAÇÃO)</h2>
                 <p>
-                  Mantemos os dados pelo tempo necessário: dados de cadastro enquanto durar a conta; registros de conexões pelo prazo legal (Marco Civil da Internet, 6 meses); áudios e transcrições pelo prazo configurado pelo cliente em Técnico no assistente. Dados de conversas mantidos enquanto o cliente tiver contrato ativo. Em caso de rescisão, eliminamos os dados mantidos, ressalvadas as obrigações legais de guarda (como documentos fiscais).
+                  A política real de ativação de gravação de chamadas, guarda de transcrições, prazos específicos de retenção e eliminação ao término do contrato está <strong>PENDENTE DE CONFIRMAÇÃO</strong> técnica e jurídica, observadas as guardas legais obrigatórias quando aplicáveis (como documentos fiscais ou obrigações do Marco Civil da Internet).
                 </p>
               </section>
 
               {/* 7. Seus direitos */}
               <section id="direitos" className="space-y-3">
-                <h2 className="text-xl font-bold text-[#1A1816]">Seus direitos</h2>
+                <h2 className="text-xl font-bold text-[#1A1816]">Seus direitos e procedimento (PENDENTE DE CONFIRMAÇÃO)</h2>
                 <p>
-                  Você pode solicitar confirmação de tratamento, acesso, correção, anonimização, portabilidade, eliminação, informação sobre compartilhamento e revogação de consentimento. Se a sua conversa foi com um cliente da Vocalis, encaminharemos a dúvida a ele.
+                  Você pode solicitar informações sobre confirmação de tratamento, acesso, correção, anonimização, portabilidade, eliminação e revogação de consentimento (art. 18 da LGPD). Se a sua conversa foi atendida por um cliente empresarial da Vocalis, o atendimento ao pedido dependerá de encaminhamento ao respectivo cliente controlador. O fluxo de verificação de identidade e os prazos operacionais estão <strong>PENDENTES DE CONFIRMAÇÃO</strong>.
                 </p>
                 <p>
-                  Para exercer esses direitos: entre em contato pelo e-mail <strong>dpo@vocalis.ai</strong> (ou pelo WhatsApp), veja Exclusão de dados.
+                  Canais atualmente exibidos (sujeitos a confirmação operacional): e-mail <strong>dpo@vocalis.ai</strong> / <strong>privacidade@vocalis.ai</strong> e guia de Exclusão de dados.
                 </p>
 
                 {/* Box Encarregado */}
                 <div className="p-4 rounded-xl bg-[#FAF9F5] border border-[#E7E4DC] text-xs space-y-1">
                   <div className="font-bold text-[#1A1816] flex items-center gap-1.5">
                     <ShieldCheck className="w-3.5 h-3.5 text-[#4F46E5]" />
-                    <span>Encarregado de dados</span>
+                    <span>Encarregado de dados (DPO) — PENDENTE DE CONFIRMAÇÃO</span>
                   </div>
                   <p className="text-[#5C5955]">
-                    Encarregado (DPO): <strong>Sarah Freitas</strong> — <a href="mailto:privacidade@vocalis.ai" className="text-[#4F46E5] underline">privacidade@vocalis.ai</a>. Você também pode acionar a autoridade nacional de proteção de dados (ANPD).
+                    Indicação cadastrada na minuta: <strong>Sarah Freitas</strong> — <a href="mailto:privacidade@vocalis.ai" className="text-[#4F46E5] underline">privacidade@vocalis.ai</a> / <a href="mailto:dpo@vocalis.ai" className="text-[#4F46E5] underline">dpo@vocalis.ai</a>. Nome oficial do DPO e canal unificado estão <strong>PENDENTES DE CONFIRMAÇÃO</strong> pelo proprietário.
                   </p>
                 </div>
               </section>
 
               {/* 8. Segurança */}
               <section id="seguranca" className="space-y-2">
-                <h2 className="text-xl font-bold text-[#1A1816]">Segurança</h2>
+                <h2 className="text-xl font-bold text-[#1A1816]">Segurança da informação (PENDENTE DE CONFIRMAÇÃO)</h2>
                 <p>
-                  Usamos criptografia em trânsito (TLS 1.3) e em repouso (AES-256), controle de acesso para usuários e registros de auditoria. <strong>Suas conversas e dados de clientes nunca são utilizados para treinar modelos de inteligência artificial de terceiros sem autorização expressa.</strong> Caso ocorra um incidente relevante, comunicaremos os afetados e a ANPD conforme a lei.
+                  O site e integrações web utilizam conexões protegidas via HTTPS/TLS em trânsito e controles providos pela infraestrutura utilizada, sem alegação de sigilo de extremo a extremo (E2EE) em chamadas ou canais terceiros. Especificações de versão de TLS/criptografia em repouso (como AES-256), retenção zero, trilhas de auditoria e cláusulas contratuais de não uso para treinamento de modelos por terceiros estão <strong>PENDENTES DE CONFIRMAÇÃO</strong> técnica e contratual junto a cada fornecedor.
                 </p>
               </section>
 
               {/* 9. Alterações */}
               <section id="alteracoes" className="space-y-3">
-                <h2 className="text-xl font-bold text-[#1A1816]">Alterações</h2>
+                <h2 className="text-xl font-bold text-[#1A1816]">Alterações e versão</h2>
                 <p>
-                  Podemos atualizar esta Política. A versão vigente fica sempre nesta página.
+                  Esta minuta passará a ter data de vigência formal somente após validação jurídica e do proprietário.
                 </p>
 
                 <div className="p-4 rounded-xl bg-[#FAF9F5] border border-[#E7E4DC] text-xs space-y-1">
-                  <div className="font-bold text-[#1A1816]">Versão</div>
+                  <div className="font-bold text-[#1A1816]">Status da revisão</div>
                   <p className="text-[#5C5955]">
-                    Versão 1.0, vigente desde 20 de novembro de 2026. Alterações relevantes são avisadas com antecedência na plataforma ou por e-mail.
+                    Minuta técnica em revisão — pendente de aprovação jurídica e confirmação do proprietário antes da publicação definitiva.
                   </p>
                 </div>
               </section>
@@ -424,7 +433,7 @@ export default function DocsPortal({ isOpen, initialDoc = 'privacidade', onClose
                 
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                   <button 
-                    onClick={() => setActiveDoc('dpa')}
+                    onClick={() => setActiveDoc('exclusao')}
                     className="p-3.5 rounded-xl border border-[#E7E4DC] bg-white text-left hover:border-[#4F46E5] transition-colors group"
                   >
                     <div className="text-xs font-bold text-[#1A1816] group-hover:text-[#4F46E5] flex items-center justify-between">
@@ -432,7 +441,7 @@ export default function DocsPortal({ isOpen, initialDoc = 'privacidade', onClose
                       <ChevronRight className="w-3.5 h-3.5 text-[#8C8881]" />
                     </div>
                     <p className="text-[11px] text-[#5C5955] mt-1 leading-snug">
-                      Como pedir a exclusão dos seus dados da plataforma de voz e telefonia da Vocalis.
+                      Canais e diretrizes para solicitar revisão ou exclusão de dados pessoais.
                     </p>
                   </button>
 
@@ -445,7 +454,7 @@ export default function DocsPortal({ isOpen, initialDoc = 'privacidade', onClose
                       <ChevronRight className="w-3.5 h-3.5 text-[#8C8881]" />
                     </div>
                     <p className="text-[11px] text-[#5C5955] mt-1 leading-snug">
-                      Acordo de Processamento de Dados (DPA) para clientes corporativos sob instruções.
+                      Diretrizes de Acordo de Processamento de Dados (DPA) pendentes de revisão jurídica.
                     </p>
                   </button>
 
@@ -454,16 +463,16 @@ export default function DocsPortal({ isOpen, initialDoc = 'privacidade', onClose
                     className="p-3.5 rounded-xl border border-[#E7E4DC] bg-white text-left hover:border-[#4F46E5] transition-colors group"
                   >
                     <div className="text-xs font-bold text-[#1A1816] group-hover:text-[#4F46E5] flex items-center justify-between">
-                      <span>Termos de condições</span>
+                      <span>Termos e condições</span>
                       <ChevronRight className="w-3.5 h-3.5 text-[#8C8881]" />
                     </div>
                     <p className="text-[11px] text-[#5C5955] mt-1 leading-snug">
-                      Regras de uso da plataforma Vocalis, contratação, planos e responsabilidades.
+                      Regras de uso da plataforma Vocalis, cobrança e cancelamento.
                     </p>
                   </button>
 
                   <button 
-                    onClick={() => setActiveDoc('dpa')}
+                    onClick={() => setActiveDoc('privacidade')}
                     className="p-3.5 rounded-xl border border-[#E7E4DC] bg-white text-left hover:border-[#4F46E5] transition-colors group"
                   >
                     <div className="text-xs font-bold text-[#1A1816] group-hover:text-[#4F46E5] flex items-center justify-between">
@@ -471,7 +480,7 @@ export default function DocsPortal({ isOpen, initialDoc = 'privacidade', onClose
                       <ChevronRight className="w-3.5 h-3.5 text-[#8C8881]" />
                     </div>
                     <p className="text-[11px] text-[#5C5955] mt-1 leading-snug">
-                      Quanto tempo mantemos conversas, gravações de áudio e logs de auditoria no sistema.
+                      Diretrizes sobre gravações, transcrições e prazos em definição contratual.
                     </p>
                   </button>
                 </div>
@@ -529,18 +538,18 @@ export default function DocsPortal({ isOpen, initialDoc = 'privacidade', onClose
           {/* CONTENT: DPA */}
           {activeDoc === 'dpa' && (
             <div className="space-y-6 text-sm text-[#383531] leading-relaxed">
-              <h2 className="text-xl font-bold text-[#1A1816]">Acordo de Processamento de Dados (DPA)</h2>
+              <h2 className="text-xl font-bold text-[#1A1816]">Acordo de Processamento de Dados (DPA) — PENDENTE DE CONFIRMAÇÃO</h2>
               <p>
-                Em conformidade com a LGPD (Lei 13.709/2018), a Vocalis atua como <strong>Operadora</strong> de dados pessoais inseridos por seus clientes (<strong>Controladores</strong>).
+                Em linha com os papéis previstos na LGPD (Lei 13.709/2018), quando o cliente contratante utiliza a plataforma com terceiros finais, o cliente atua como <strong>Controlador</strong> e a Vocalis atua como <strong>Operadora</strong>, sujeitando-se às condições formais do DPA aprovado entre as partes.
               </p>
               <div className="p-4 rounded-xl bg-[#FAF9F5] border border-[#E7E4DC] text-xs space-y-2">
-                <h4 className="font-bold text-[#1A1816]">Principais compromissos assumidos pela Vocalis:</h4>
+                <h4 className="font-bold text-[#1A1816]">Diretrizes previstas nesta minuta (pendentes de validação jurídica e técnica):</h4>
                 <ul className="list-disc pl-5 space-y-1 text-[#5C5955]">
-                  <li>Tratar dados pessoais exclusivamente segundo instruções lícitas do Cliente.</li>
-                  <li>Manter isolamento lógico multitenant entre contas de clientes.</li>
-                  <li>Não treinar nem permitir o treinamento de LLMs públicos com dados de voz ou áudio dos seus clientes.</li>
-                  <li>Notificar o controlador em até 48 horas em caso de qualquer incidente de segurança relevante.</li>
-                  <li>Facilitar a eliminação ou anonimização imediata mediante requisição via painel ou API.</li>
+                  <li>Tratar dados pessoais apenas conforme finalidades contratadas e instruções lícitas do Cliente Controlador.</li>
+                  <li>Adotar controles de isolamento entre contas e restrição de acesso operacional (arquitetura multitenant e controles nos provedores sob confirmação).</li>
+                  <li>Cláusulas de não treinamento de modelos de terceiros com dados do cliente: <strong>PENDENTE DE CONFIRMAÇÃO</strong> nos termos dos fornecedores de IA.</li>
+                  <li>Comunicação de incidentes relevantes ao Controlador e à ANPD conforme prazos e obrigações legais (prazo contratual específico pendente de definição jurídica).</li>
+                  <li>Atendimento a pedidos de eliminação ou revisão pelos canais oficiais confirmados (fluxo técnico e prazos <strong>PENDENTES DE CONFIRMAÇÃO</strong>).</li>
                 </ul>
               </div>
             </div>
@@ -549,24 +558,23 @@ export default function DocsPortal({ isOpen, initialDoc = 'privacidade', onClose
           {/* CONTENT: EXCLUSÃO DE DADOS */}
           {activeDoc === 'exclusao' && (
             <div className="space-y-6 text-sm text-[#383531] leading-relaxed">
-              <h2 className="text-xl font-bold text-[#1A1816]">Como solicitar a exclusão dos seus dados pessoais</h2>
+              <h2 className="text-xl font-bold text-[#1A1816]">Como solicitar a exclusão ou revisão dos seus dados (PENDENTE DE CONFIRMAÇÃO)</h2>
               <p>
-                Em observância ao art. 18 da Lei Geral de Proteção de Dados (Lei nº 13.709/2018), você possui o direito de solicitar a anonimização, bloqueio ou eliminação dos dados pessoais desnecessários, excessivos ou tratados em desconformidade.
+                Com base no art. 18 da Lei Geral de Proteção de Dados (Lei nº 13.709/2018), o titular pode requerer confirmação de tratamento, revisão ou eliminação de dados pessoais quando aplicável.
               </p>
 
               <div className="p-4 rounded-xl bg-[#FAF9F5] border border-[#E7E4DC] text-xs space-y-2">
-                <h4 className="font-bold text-[#1A1816]">Canais para solicitação imediata:</h4>
+                <h4 className="font-bold text-[#1A1816]">Canais atualmente indicados (sujeitos a confirmação do DPO e procedimento):</h4>
                 <ul className="list-disc pl-5 space-y-1 text-[#5C5955]">
-                  <li>E-mail direto ao Encarregado (DPO): <a href="mailto:dpo@vocalis.ai" className="text-[#4F46E5] underline">dpo@vocalis.ai</a></li>
-                  <li>WhatsApp de Privacidade: <strong>(94) 98442-3948</strong></li>
-                  <li>Painel do Usuário: aba <em>Configurações da Conta &gt; Privacidade &gt; Solicitar Exclusão</em></li>
+                  <li>E-mail informado para privacidade/DPO: <a href="mailto:dpo@vocalis.ai" className="text-[#4F46E5] underline">dpo@vocalis.ai</a> / <a href="mailto:privacidade@vocalis.ai" className="text-[#4F46E5] underline">privacidade@vocalis.ai</a> (pendente de confirmação do canal único oficial)</li>
+                  <li>WhatsApp de atendimento: <strong>(94) 98442-3948</strong> (pendente de confirmação como canal oficial de privacidade)</li>
                 </ul>
               </div>
 
               <div className="space-y-2">
-                <h3 className="text-base font-bold text-[#1A1816]">Prazos e Tratamento</h3>
+                <h3 className="text-base font-bold text-[#1A1816]">Prazos, validação de identidade e tratamento</h3>
                 <p className="text-xs text-[#5C5955]">
-                  Requisições de exclusão são processadas e concluídas em até <strong>15 dias corridos</strong>, ressalvadas as hipóteses legais de retenção obrigatória previstas no Marco Civil da Internet (registros de conexão por 6 meses) e no Código Tributário Nacional (notas fiscais).
+                  O fluxo formal de confirmação de identidade do titular, a coordenação com clientes controladores (quando o atendimento ocorreu com uma empresa usuária da plataforma) e o prazo operacional definitivo de resposta estão <strong>PENDENTES DE CONFIRMAÇÃO</strong>, ressalvadas as hipóteses legais de guarda obrigatória (como registros fiscais ou legais aplicáveis).
                 </p>
               </div>
             </div>
@@ -575,9 +583,9 @@ export default function DocsPortal({ isOpen, initialDoc = 'privacidade', onClose
           {/* CONTENT: CENTRAL DE AJUDA */}
           {activeDoc === 'central' && (
             <div className="space-y-6 text-sm text-[#383531] leading-relaxed">
-              <h2 className="text-xl font-bold text-[#1A1816]">Central de Ajuda & Conhecimento</h2>
+              <h2 className="text-xl font-bold text-[#1A1816]">Central de Ajuda & Documentação</h2>
               <p className="text-[#5C5955]">
-                Bem-vindo à base oficial de conhecimento da Vocalis. Aqui você encontra tudo sobre configuração de números, treinamento de IA e integrações.
+                Visão geral introdutória dos módulos e documentos da plataforma Vocalis. Recursos, prazos e integrações variam conforme o plano confirmado.
               </p>
 
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 pt-2">
@@ -586,28 +594,28 @@ export default function DocsPortal({ isOpen, initialDoc = 'privacidade', onClose
                   className="p-4 rounded-xl border border-[#E7E4DC] hover:border-[#4F46E5] transition-colors cursor-pointer bg-white"
                 >
                   <h4 className="font-bold text-xs text-[#1A1816]">Primeiros Passos</h4>
-                  <p className="text-[11px] text-[#736F69] mt-1">Como criar seu primeiro assistente e ativar seu número em 3 minutos.</p>
+                  <p className="text-[11px] text-[#736F69] mt-1">Como configurar seu primeiro assistente conforme o plano escolhido.</p>
                 </div>
                 <div 
                   onClick={() => setActiveDoc('numeros')}
                   className="p-4 rounded-xl border border-[#E7E4DC] hover:border-[#4F46E5] transition-colors cursor-pointer bg-white"
                 >
                   <h4 className="font-bold text-xs text-[#1A1816]">Telefonia & Tronco SIP</h4>
-                  <p className="text-[11px] text-[#736F69] mt-1">Conecte números nacionais (DDDs 11..91) ou seu PABX existente.</p>
+                  <p className="text-[11px] text-[#736F69] mt-1">Opções de números e conexão SIP/PABX sujeitas à disponibilidade do plano.</p>
                 </div>
                 <div 
                   onClick={() => setActiveDoc('tecnicas')}
                   className="p-4 rounded-xl border border-[#E7E4DC] hover:border-[#4F46E5] transition-colors cursor-pointer bg-white"
                 >
                   <h4 className="font-bold text-xs text-[#1A1816]">Integrações & Webhooks</h4>
-                  <p className="text-[11px] text-[#736F69] mt-1">Sincronize com Google Calendar, RD Station, HubSpot e CRM próprio.</p>
+                  <p className="text-[11px] text-[#736F69] mt-1">Consulte opções de integração via webhooks e conectores disponíveis no plano.</p>
                 </div>
                 <div 
                   onClick={() => setActiveDoc('privacidade')}
                   className="p-4 rounded-xl border border-[#E7E4DC] hover:border-[#4F46E5] transition-colors cursor-pointer bg-white"
                 >
                   <h4 className="font-bold text-xs text-[#1A1816]">Segurança & LGPD</h4>
-                  <p className="text-[11px] text-[#736F69] mt-1">Acordo de proteção de dados (DPA) e subprocessadores homologados.</p>
+                  <p className="text-[11px] text-[#736F69] mt-1">Diretrizes de privacidade, DPA e subprocessadores (com pontos pendentes de confirmação).</p>
                 </div>
               </div>
             </div>

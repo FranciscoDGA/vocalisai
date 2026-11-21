@@ -37,16 +37,16 @@ export default function CtaSection({ onOpenDemo, onOpenAuth }) {
 
           <div className="relative z-10 max-w-3xl mx-auto space-y-6">
             <span className="inline-block text-xs font-bold tracking-widest text-[#A5B4FC] uppercase">
-              COMECE EM MENOS DE 5 MINUTOS
+              DEMONSTRAÇÃO INTERATIVA
             </span>
 
             <h2 className="text-3xl sm:text-6xl font-normal tracking-tight text-white leading-[1.1] break-words">
-              Seu próximo cliente vai ligar.<br />
-              <span className="font-serif-title italic text-[#A5B4FC]">A Vocalis vai atender no 1º toque.</span>
+              Seu próximo cliente vai entrar em contato.<br />
+              <span className="font-serif-title italic text-[#A5B4FC]">Automatize o atendimento da sua empresa.</span>
             </h2>
 
             <p className="text-sm sm:text-lg text-[#B5B0A8] max-w-2xl mx-auto leading-relaxed">
-              Pare de perder clientes por demora no WhatsApp ou telefone ocupado. Coloque a inteligência da Vocalis para atender sua empresa 24 horas por dia com voz humana ultra-realista.
+              Organize o atendimento por telefone, WhatsApp e webchat com assistentes configuráveis para a rotina do seu negócio.
             </p>
 
             {/* Quick Test Call Form */}
@@ -56,7 +56,8 @@ export default function CtaSection({ onOpenDemo, onOpenAuth }) {
                   <BrazilFlag className="w-5 h-3.5 mr-2 shrink-0" />
                   <input
                     type="tel"
-                    placeholder="Seu celular com DDD"
+                    placeholder="Seu celular com DDD (opcional)"
+                    aria-label="Número de referência opcional para simulação ilustrativa"
                     value={phoneNumber}
                     onChange={handlePhoneChange}
                     className="w-full min-w-0 bg-transparent text-white text-sm placeholder-[#736F69] focus:outline-none py-1.5 sm:py-0"
@@ -67,9 +68,12 @@ export default function CtaSection({ onOpenDemo, onOpenAuth }) {
                   className="w-full sm:w-auto px-6 py-3 rounded-xl sm:rounded-full bg-[#4F46E5] text-white text-xs sm:text-sm font-bold hover:bg-[#4338CA] transition-all whitespace-nowrap flex items-center justify-center gap-2 shrink-0 shadow-md cursor-pointer"
                 >
                   <Phone className="w-4 h-4 text-[#A5B4FC]" />
-                  <span>Ouvir a Vocalis agora</span>
+                  <span>Ouvir simulação ilustrativa</span>
                 </button>
               </div>
+              <p className="text-[11px] text-stone-400 mt-2">
+                Simulação ilustrativa no navegador: o número (opcional) é usado apenas para exibir o exemplo na tela, sem armazenamento automático nem chamada ou WhatsApp reais.
+              </p>
             </form>
 
             {/* CTAs */}
@@ -78,7 +82,7 @@ export default function CtaSection({ onOpenDemo, onOpenAuth }) {
                 onClick={onOpenAuth}
                 className="px-8 py-3.5 rounded-full bg-white text-[#1A1816] text-sm font-bold hover:bg-[#FAF9F5] transition-all shadow-lg hover:scale-105"
               >
-                Criar assistente grátis
+                Criar assistente
               </button>
               <button
                 onClick={onOpenDemo}
@@ -88,13 +92,10 @@ export default function CtaSection({ onOpenDemo, onOpenAuth }) {
               </button>
             </div>
 
-            {/* Quote attribution */}
+            {/* Neutral commercial note */}
             <div className="pt-6 border-t border-stone-800 text-xs text-stone-400 max-w-md mx-auto">
-              <p className="italic">
-                "Substituímos nossa fila de espera de 18 minutos por atendimento instantâneo com a Vocalis. Fechamos 3x mais orçamentos no primeiro mês."
-              </p>
-              <p className="mt-1 font-semibold text-stone-300">
-                — Rodrigo Camargo, Diretor de Operações
+              <p>
+                Recursos, integrações e condições comerciais variam conforme o plano confirmado na proposta.
               </p>
             </div>
 
@@ -103,7 +104,7 @@ export default function CtaSection({ onOpenDemo, onOpenAuth }) {
               <AudioFrequencyWave 
                 variant="full" 
                 showLatencyBadge={true}
-                latencyText="Latência 380ms • Frequência Vocal em Tempo Real"
+                latencyText="Visualização ilustrativa • Voz em português brasileiro"
               />
             </div>
 

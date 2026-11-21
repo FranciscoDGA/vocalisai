@@ -209,7 +209,7 @@ export default function CarreirasPage({ onOpenDemo, onOpenAuth, onNavigateHome }
           Toda empresa tem uma voz.
         </h2>
         <p className="text-2xl sm:text-3xl md:text-4xl font-serif italic text-[#4F46E5] tracking-tight mt-1">
-          A sua nunca mais fica em silêncio.
+          Mais agilidade para atender seus clientes.
         </p>
       </section>
 

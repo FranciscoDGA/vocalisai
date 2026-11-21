@@ -24,10 +24,10 @@ export default function InteractiveSimulator({ onOpenDemo }) {
 
   // WhatsApp simulation state
   const [messages, setMessages] = useState([
-    { sender: 'user', text: 'Boa tarde! Vocês ainda têm vagas para a revisão veicular amanhã?', time: '14:32' },
-    { sender: 'bot', text: 'Olá! Sim, temos dois horários disponíveis na nossa oficina amanhã: 09h00 ou 14h30. Qual fica mais cômodo para você?', time: '14:32' },
-    { sender: 'user', text: 'Às 14h30 seria excelente!', time: '14:33' },
-    { sender: 'bot', text: 'Perfeito! Agendamento pré-reservado para amanhã às 14h30. Por favor, me informe a placa do carro e o modelo.', time: '14:33' }
+    { sender: 'user', text: 'Boa tarde! Vocês têm horário disponível para uma revisão preventiva nesta semana? (Exemplo ilustrativo)', time: '14:32' },
+    { sender: 'bot', text: 'Olá! Sim, conforme as regras e horários configurados para esta simulação ilustrativa, há opções às 09h00 ou 14h30. Qual prefere?', time: '14:32' },
+    { sender: 'user', text: 'Às 14h30 seria ótimo!', time: '14:33' },
+    { sender: 'bot', text: 'Esta é uma simulação ilustrativa com dados fictícios. Em ambiente real, as respostas e a coleta mínima de informações dependem da base de conhecimento e das regras definidas pelo cliente — não informe placas, documentos ou dados pessoais reais aqui.', time: '14:33' }
   ]);
   const [chatInput, setChatInput] = useState('');
 
@@ -76,13 +76,13 @@ export default function InteractiveSimulator({ onOpenDemo }) {
         <div className="text-center max-w-3xl mx-auto mb-16 space-y-4">
           <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-orange-500/10 border border-orange-500/20 text-xs font-semibold text-orange-400">
             <Sparkles className="w-3.5 h-3.5" />
-            <span>Experiência ao Vivo</span>
+            <span>Simulação Ilustrativa</span>
           </div>
           <h2 className="text-3xl sm:text-5xl font-extrabold tracking-tight text-white">
-            Veja a Vocalis Operando na Prática
+            Veja um Fluxo Ilustrativo da Vocalis
           </h2>
           <p className="text-slate-400 text-base sm:text-lg">
-            Experimente a interface real de atendimento. Veja como a IA conversa pelo telefone e pelo WhatsApp, enquanto atualiza a base de dados em tempo real.
+            Simulação ilustrativa com dados fictícios para demonstrar um exemplo de fluxo configurável. Em uso real, as respostas dependem da base de conhecimento e das regras definidas pelo cliente, sem diagnóstico clínico, parecer jurídico ou conformidade automática. Não insira dados pessoais reais nesta prévia.
           </p>
 
           {/* Toggle buttons between Phone and WhatsApp */}
@@ -214,53 +214,53 @@ export default function InteractiveSimulator({ onOpenDemo }) {
                 <div className="rounded-2xl bg-[#131622] border border-white/10 p-6 space-y-4">
                   <div className="flex items-center justify-between border-b border-white/10 pb-3">
                     <div className="flex items-center gap-2">
-                      <span className="w-2.5 h-2.5 rounded-full bg-emerald-400 animate-ping"></span>
-                      <span className="text-xs font-bold text-white uppercase tracking-wider">Transcrição em Tempo Real</span>
+                      <span className="w-2.5 h-2.5 rounded-full bg-indigo-400"></span>
+                      <span className="text-xs font-bold text-white uppercase tracking-wider">Transcrição Simulada (Ilustrativa)</span>
                     </div>
-                    <span className="text-xs text-slate-400">Latência: 380ms</span>
+                    <span className="text-xs text-slate-400">Simulação ilustrativa</span>
                   </div>
 
                   <div className="space-y-3 text-sm">
                     <div className="p-3 rounded-xl bg-slate-900/60 border border-white/5">
-                      <span className="text-xs text-slate-400 block mb-1">Cliente:</span>
-                      <p className="text-slate-200">“Gostaria de saber se o Dr. Eduardo atende pela SulAmérica na unidade Jardins?”</p>
+                      <span className="text-xs text-slate-400 block mb-1">Paciente fictício (simulação ilustrativa de rotina):</span>
+                      <p className="text-slate-200">“Gostaria de saber quais convênios e horários de consulta de rotina vocês possuem na unidade modelo esta semana?”</p>
                     </div>
 
                     <div className="p-3 rounded-xl bg-orange-950/30 border border-orange-500/20">
-                      <span className="text-xs text-orange-400 font-semibold block mb-1">Vocalis (Resposta Neural):</span>
-                      <p className="text-white">“Sim! O Dr. Eduardo atende SulAmérica Especial e Executivo na unidade Jardins. Ele tem disponibilidade nesta quarta às 11h15 ou sexta às 16h00.”</p>
+                      <span className="text-xs text-orange-400 font-semibold block mb-1">Vocalis (Simulação ilustrativa · Regras da Clínica):</span>
+                      <p className="text-white">“Conforme a base de conhecimento configurada pela clínica, há horários disponíveis nesta quarta às 11h15 ou sexta às 16h00 para avaliação periódica de rotina (sem diagnóstico ou triagem clínica de urgência por IA).”</p>
                     </div>
                   </div>
                 </div>
 
-                {/* Instant CRM Auto-Update Card */}
+                {/* Example CRM Sync Card */}
                 <div className="rounded-2xl bg-[#131622] border border-white/10 p-6 space-y-4">
                   <div className="flex items-center justify-between border-b border-white/10 pb-3">
                     <div className="flex items-center gap-2">
                       <Database className="w-4 h-4 text-orange-400" />
-                      <span className="text-xs font-bold text-white uppercase tracking-wider">Automação de CRM & Agenda (HubSpot / RD / Google)</span>
+                      <span className="text-xs font-bold text-white uppercase tracking-wider">Exemplo Ilustrativo de Registro (Dados Fictícios)</span>
                     </div>
-                    <span className="text-[10px] uppercase font-bold px-2 py-0.5 rounded-full bg-emerald-500/20 text-emerald-400">
-                      Sincronizado
+                    <span className="text-[10px] uppercase font-bold px-2 py-0.5 rounded-full bg-indigo-500/20 text-indigo-300">
+                      Ilustrativo
                     </span>
                   </div>
 
                   <div className="grid grid-cols-2 gap-3 text-xs">
                     <div className="p-3 rounded-xl bg-slate-900/80 border border-white/5 space-y-1">
-                      <span className="text-slate-400">Lead / Paciente:</span>
-                      <p className="font-semibold text-white">Mariana Silveira (11) 98765-4321</p>
+                      <span className="text-slate-400">Contato Fictício (Demo):</span>
+                      <p className="font-semibold text-white">Exemplo Ilustrativo (00) 00000-0000</p>
                     </div>
                     <div className="p-3 rounded-xl bg-slate-900/80 border border-white/5 space-y-1">
-                      <span className="text-slate-400">Intenção Detectada:</span>
-                      <p className="font-semibold text-amber-400">Agendamento de Especialista</p>
+                      <span className="text-slate-400">Solicitação:</span>
+                      <p className="font-semibold text-amber-400">Agendamento de Rotina (Exemplo)</p>
                     </div>
                     <div className="p-3 rounded-xl bg-slate-900/80 border border-white/5 space-y-1">
-                      <span className="text-slate-400">Status da Agenda:</span>
-                      <p className="font-semibold text-emerald-400">Horário Bloqueado (Quarta 11h15)</p>
+                      <span className="text-slate-400">Status na Simulação:</span>
+                      <p className="font-semibold text-emerald-400">Pré-reserva (Quarta 11h15)</p>
                     </div>
                     <div className="p-3 rounded-xl bg-slate-900/80 border border-white/5 space-y-1">
-                      <span className="text-slate-400">Ação Disparada:</span>
-                      <p className="font-semibold text-white">WhatsApp de confirmação enviado</p>
+                      <span className="text-slate-400">Regra Aplicada:</span>
+                      <p className="font-semibold text-white">Conforme base e regras do cliente</p>
                     </div>
                   </div>
                 </div>
@@ -290,10 +290,9 @@ export default function InteractiveSimulator({ onOpenDemo }) {
                     </div>
                     <div>
                       <h4 className="text-sm font-bold text-white flex items-center gap-1.5">
-                        Vocalis Atendimento Oficial
-                        <span className="text-[10px] text-emerald-400">✔</span>
+                        Vocalis (Simulação Ilustrativa)
                       </h4>
-                      <p className="text-[11px] text-emerald-400">online agora · conta comercial</p>
+                      <p className="text-[11px] text-emerald-400">simulação ilustrativa no navegador</p>
                     </div>
                   </div>
                 </div>

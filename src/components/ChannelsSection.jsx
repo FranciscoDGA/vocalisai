@@ -24,7 +24,7 @@ export default function ChannelsSection({ onOpenDemo }) {
             <span className="font-serif-title italic text-[#4F46E5]">Onde o cliente estiver.</span>
           </h2>
           <p className="mt-4 text-base sm:text-lg text-[#5C5955] leading-relaxed">
-            As ligações e o WhatsApp são os canais de maior conversão da sua empresa. A Vocalis unifica o atendimento mantendo o tom da sua marca em todos eles.
+            Cada canal conta com fluxos próprios configuráveis no tom da sua marca, conforme os recursos, limites e integrações de terceiros habilitados no plano.
           </p>
         </div>
 

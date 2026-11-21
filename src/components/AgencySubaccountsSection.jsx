@@ -4,72 +4,76 @@ import {
   ArrowUpRight, Phone, ShieldCheck, CheckCircle2, DollarSign, Clock, Layers,
   ChevronRight, X, Sparkles, Filter, AlertCircle
 } from 'lucide-react';
+import { getAgencyPlanOptions } from '../utils/commercialCatalogUtils';
 
 export default function AgencySubaccountsSection({ onSwitchWorkspace }) {
   const [searchQuery, setSearchQuery] = useState('');
   const [statusFilter, setStatusFilter] = useState('all'); // all | active | onboarding | paused
   const [createModalOpen, setCreateModalOpen] = useState(false);
   const [selectedSubaccount, setSelectedSubaccount] = useState(null);
+  const agencyPlanOptions = getAgencyPlanOptions();
+  const findAgencyOption = (planId) =>
+    agencyPlanOptions.find((opt) => opt.id === planId) || agencyPlanOptions[0];
 
-  // Subcontas de exemplo do AI Agency OS
+  // Subcontas fictícias ilustrativas conectadas à fonte única
   const [subaccounts, setSubaccounts] = useState([
     {
       id: 'sub_01',
-      name: 'Clínica Odonto Prime',
-      responsible: 'Dra. Camila Santos',
+      name: 'Clínica Modelo Odonto (Exemplo Fictício)',
+      responsible: 'Responsável Técnico (Exemplo)',
       segment: 'Saúde & Odontologia',
-      subdomain: 'odonto.suaagencia.com.br',
-      phone: '+55 (11) 4003-8821',
+      subdomain: 'odonto-demo.suaagencia.com.br',
+      phone: '+55 (00) 0000-0001',
       assistantsCount: 2,
       minutesUsed: 460,
       minutesLimit: 600,
-      monthlyPlan: 'Plano Pro (R$ 1.497/mês)',
-      profitMargin: 'R$ 890/mês',
+      monthlyPlan: findAgencyOption('pro')?.optionLabel || 'Condições em confirmação',
+      profitMargin: findAgencyOption('pro')?.suggestedMarginText || 'Pendente de confirmação',
       status: 'active',
       createdAt: '10/10/2026'
     },
     {
       id: 'sub_02',
-      name: 'Imobiliária Morar Bem',
-      responsible: 'Lucas Silveira',
+      name: 'Imobiliária Modelo (Exemplo Fictício)',
+      responsible: 'Responsável Comercial (Exemplo)',
       segment: 'Imóveis & Locação',
-      subdomain: 'imoveis.suaagencia.com.br',
-      phone: '+55 (21) 3995-1200',
+      subdomain: 'imoveis-demo.suaagencia.com.br',
+      phone: '+55 (00) 0000-0002',
       assistantsCount: 3,
       minutesUsed: 780,
       minutesLimit: 1000,
-      monthlyPlan: 'Plano Scale (R$ 2.497/mês)',
-      profitMargin: 'R$ 1.620/mês',
+      monthlyPlan: findAgencyOption('scale')?.optionLabel || 'Condições em confirmação',
+      profitMargin: findAgencyOption('scale')?.suggestedMarginText || 'Pendente de confirmação',
       status: 'active',
       createdAt: '01/11/2026'
     },
     {
       id: 'sub_03',
-      name: 'Carvalho & Advogados Associados',
-      responsible: 'Dra. Mariana Carvalho',
-      segment: 'Jurídico & Compliance',
-      subdomain: 'juridico.suaagencia.com.br',
-      phone: '+55 (31) 3220-4490',
+      name: 'Escritório Jurídico Modelo (Exemplo Fictício)',
+      responsible: 'Advogado Responsável (Exemplo)',
+      segment: 'Jurídico (Recepção Administrativa)',
+      subdomain: 'juridico-demo.suaagencia.com.br',
+      phone: '+55 (00) 0000-0003',
       assistantsCount: 1,
       minutesUsed: 195,
       minutesLimit: 400,
-      monthlyPlan: 'Plano Starter (R$ 997/mês)',
-      profitMargin: 'R$ 640/mês',
+      monthlyPlan: findAgencyOption('starter')?.optionLabel || 'Condições em confirmação',
+      profitMargin: findAgencyOption('starter')?.suggestedMarginText || 'Pendente de confirmação',
       status: 'active',
       createdAt: '05/11/2026'
     },
     {
       id: 'sub_04',
-      name: 'Studio Bella Estética Avançada',
-      responsible: 'Juliana Mendes',
+      name: 'Studio Modelo Serviços (Exemplo Fictício)',
+      responsible: 'Coordenação (Exemplo)',
       segment: 'Beleza & Estética',
-      subdomain: 'estetica.suaagencia.com.br',
-      phone: '+55 (41) 3088-7711',
+      subdomain: 'servicos-demo.suaagencia.com.br',
+      phone: '+55 (00) 0000-0004',
       assistantsCount: 1,
       minutesUsed: 52,
       minutesLimit: 400,
-      monthlyPlan: 'Plano Starter (R$ 997/mês)',
-      profitMargin: 'R$ 640/mês',
+      monthlyPlan: findAgencyOption('starter')?.optionLabel || 'Condições em confirmação',
+      profitMargin: findAgencyOption('starter')?.suggestedMarginText || 'Pendente de confirmação',
       status: 'onboarding',
       createdAt: '12/11/2026'
     }
@@ -91,12 +95,13 @@ export default function AgencySubaccountsSection({ onSwitchWorkspace }) {
   });
 
   const totalMinutes = subaccounts.reduce((acc, curr) => acc + curr.minutesUsed, 0);
-  const totalProfit = 'R$ 3.790,00';
+  const totalProfit = 'Sob consulta (em confirmação)';
 
   const handleCreateSubaccount = (e) => {
     e.preventDefault();
     if (!newClientName) return;
 
+    const selectedOpt = findAgencyOption(newPlan);
     const newSub = {
       id: `sub_${Date.now()}`,
       name: newClientName,
@@ -106,9 +111,9 @@ export default function AgencySubaccountsSection({ onSwitchWorkspace }) {
       phone: '+55 (DDD) Pendente',
       assistantsCount: 1,
       minutesUsed: 0,
-      minutesLimit: newPlan === 'starter' ? 400 : newPlan === 'pro' ? 800 : 1500,
-      monthlyPlan: newPlan === 'starter' ? 'Plano Starter (R$ 997/mês)' : newPlan === 'pro' ? 'Plano Pro (R$ 1.497/mês)' : 'Plano Scale (R$ 2.497/mês)',
-      profitMargin: newPlan === 'starter' ? 'R$ 640/mês' : newPlan === 'pro' ? 'R$ 980/mês' : 'R$ 1.700/mês',
+      minutesLimit: 0,
+      monthlyPlan: selectedOpt?.optionLabel || 'Plano em confirmação',
+      profitMargin: selectedOpt?.suggestedMarginText || 'Pendente de confirmação',
       status: 'onboarding',
       createdAt: 'Hoje'
     };
@@ -158,7 +163,7 @@ export default function AgencySubaccountsSection({ onSwitchWorkspace }) {
             <Building2 className="w-4 h-4 text-[#4F46E5]" />
           </div>
           <div className="text-2xl font-bold text-[#1A1816]">{subaccounts.length}</div>
-          <div className="text-[11px] text-emerald-600 font-semibold mt-1">100% no ar e atendendo</div>
+          <div className="text-[11px] text-[#5C5955] font-medium mt-1">Exemplo ilustrativo de painel</div>
         </div>
 
         <div className="bg-white p-5 rounded-2xl border border-[#E7E4DC] shadow-xs">
@@ -394,9 +399,11 @@ export default function AgencySubaccountsSection({ onSwitchWorkspace }) {
                   onChange={(e) => setNewPlan(e.target.value)}
                   className="w-full px-3 py-2 rounded-xl border border-[#D0CBC0] text-xs bg-white focus:outline-none focus:border-[#4F46E5]"
                 >
-                  <option value="starter">Plano Starter (400 min - Margem sugerida: R$ 640/mês)</option>
-                  <option value="pro">Plano Pro (800 min - Margem sugerida: R$ 980/mês)</option>
-                  <option value="scale">Plano Scale (1.500 min - Margem sugerida: R$ 1.700/mês)</option>
+                  {agencyPlanOptions.map((opt) => (
+                    <option key={opt.id} value={opt.id}>
+                      {opt.optionLabel}
+                    </option>
+                  ))}
                 </select>
               </div>
 

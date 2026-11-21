@@ -4,12 +4,12 @@ import { INTEGRATIONS_LIST } from '../data/content';
 
 export default function IntegrationsSection({ onOpenDemo }) {
   const featured = [
-    { name: 'Google Calendar', type: 'Agendamento em tempo real', icon: Calendar, color: '#4285F4' },
-    { name: 'WhatsApp Cloud API', type: 'Envio de áudio e texto', icon: MessageSquare, color: '#25D366' },
-    { name: 'HubSpot & RD Station', type: 'CRM e criação de leads', icon: Database, color: '#FF7A59' },
-    { name: 'Stripe & Asaas', type: 'Pagamentos e Pix imediato', icon: CreditCard, color: '#635BFF' },
-    { name: 'Webhooks & API REST', type: 'Conexão com ERP próprio', icon: Code2, color: '#4F46E5' },
-    { name: 'PABX SIP Corporativo', type: '0800 e ramais telefônicos', icon: PhoneCall, color: '#0088CC' },
+    { name: 'Google Calendar', type: 'Agendamento (sob consulta)', icon: Calendar, color: '#4285F4' },
+    { name: 'WhatsApp', type: 'Envio de texto e áudio (conforme plano)', icon: MessageSquare, color: '#25D366' },
+    { name: 'HubSpot & RD Station', type: 'CRM e leads (integração sob consulta)', icon: Database, color: '#FF7A59' },
+    { name: 'Gateways de Pagamento', type: 'Fluxos financeiros (integração sob consulta)', icon: CreditCard, color: '#635BFF' },
+    { name: 'Webhooks & API REST', type: 'Conexão via webhook/API sob consulta', icon: Code2, color: '#4F46E5' },
+    { name: 'PABX SIP Corporativo', type: 'Telefonia SIP (conforme viabilidade técnica)', icon: PhoneCall, color: '#0088CC' },
   ];
 
   return (
@@ -19,14 +19,14 @@ export default function IntegrationsSection({ onOpenDemo }) {
         {/* Section Header */}
         <div className="text-center max-w-2xl mx-auto mb-16">
           <span className="inline-block text-xs font-semibold text-[#4F46E5] uppercase tracking-wider mb-3">
-            CONECTIVIDADE TOTAL
+            INTEGRAÇÕES SOB CONSULTA
           </span>
           <h2 className="text-4xl sm:text-5xl font-normal text-[#1A1816] tracking-tight leading-[1.12]">
-            Conversa com as ferramentas<br />
-            <span className="font-serif-title italic text-[#4F46E5]">que você já usa.</span>
+            Conecte com ferramentas<br />
+            <span className="font-serif-title italic text-[#4F46E5]">avaliadas para o seu fluxo.</span>
           </h2>
           <p className="mt-4 text-base sm:text-lg text-[#5C5955] leading-relaxed">
-            Agendas, CRMs e gateways: a Vocalis se integra em minutos às ferramentas do seu dia a dia, mantendo cada dado registrado automaticamente.
+            Conheça possibilidades de integração com agendas, CRMs, webhooks e telefonia. A disponibilidade nativa ou via API depende do plano contratado.
           </p>
         </div>
 

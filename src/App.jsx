@@ -22,7 +22,6 @@ import DoneForYouSection from './components/DoneForYouSection';
 import WhatsAppInstantAudioCard from './components/WhatsAppInstantAudioCard';
 import VoiceStudioPlayground from './components/VoiceStudioPlayground';
 import NicheScriptGenerator from './components/NicheScriptGenerator';
-import LiveSocialProofToasts from './components/LiveSocialProofToasts';
 import { supabase, getCurrentUser, signOutUser } from './utils/supabaseClient';
 
 // Lazy-loaded components for optimal bundle size and instant initial load
@@ -145,26 +144,27 @@ export default function App() {
           <Hero 
             onOpenDemo={() => setDemoModalOpen(true)} 
             onOpenAuth={() => setAuthModalOpen(true)}
+            onNavigate={handleNavigate}
           />
 
-          {/* 2. Test Drive Auditivo em 1 Clique (3 Cenários Reais) */}
+          {/* 2. Simulações ilustrativas auditivas por cenário */}
           <AudioShowcaseSection 
             onOpenDemo={() => setDemoModalOpen(true)}
           />
 
-          {/* 3. Estúdio & Playground Interativo de Vozes e Sotaques */}
+          {/* 3. Simulador ilustrativo de vozes no navegador */}
           <VoiceStudioPlayground 
             onOpenDemo={() => setDemoModalOpen(true)}
             onOpenAuth={() => setAuthModalOpen(true)}
           />
 
-          {/* 4. Calculadora de Faturamento Perdido (Agitador de Dor) */}
+          {/* 4. Simulador ilustrativo de oportunidades */}
           <LostRevenueCalculator 
             onOpenDemo={() => setDemoModalOpen(true)}
             onOpenAuth={() => setAuthModalOpen(true)}
           />
 
-          {/* 5. Gerador Instantâneo de Script / Prompt Neural por Nicho */}
+          {/* 5. Exemplos ilustrativos de roteiro por nicho */}
           <NicheScriptGenerator 
             onOpenDemo={() => setDemoModalOpen(true)}
             onOpenAuth={() => setAuthModalOpen(true)}
@@ -175,13 +175,13 @@ export default function App() {
             onOpenDemo={() => setDemoModalOpen(true)} 
           />
 
-          {/* 7. WhatsApp com Áudio Imediato no seu celular em 3s */}
+          {/* 7. Simulação ilustrativa de áudio no WhatsApp */}
           <WhatsAppInstantAudioCard />
 
-          {/* 8. Real Call Flow Timeline (00:03 to 01:00) */}
+          {/* 8. Fluxo ilustrativo de atendimento */}
           <CallTimelineSection />
 
-          {/* 9. Inside the Platform (Dashboard preview com WhatsApp Web nativo) */}
+          {/* 9. Inside the Platform (Dashboard preview) */}
           <Suspense fallback={
             <div className="py-24 bg-[#FAF9F5] border-t border-[#EBE8E2] text-center">
               <div className="inline-block w-8 h-8 border-2 border-[#4F46E5] border-t-transparent rounded-full animate-spin mb-3"></div>
@@ -196,7 +196,7 @@ export default function App() {
             />
           </Suspense>
 
-          {/* 10. Tabela Comparativa Brutal: Atendente CLT vs URA vs Vocalis AI */}
+          {/* 10. Tabela Comparativa ilustrativa */}
           <ComparisonMatrixSection 
             onOpenAuth={() => setAuthModalOpen(true)}
             onOpenDemo={() => setDemoModalOpen(true)}
@@ -207,17 +207,17 @@ export default function App() {
             onOpenDemo={() => setDemoModalOpen(true)}
           />
 
-          {/* 12. Prova Social em Áudio Real (3 Depoimentos de Empresários em Voz) */}
+          {/* 12. Simulações ilustrativas por segmento */}
           <VoiceTestimonialsSection />
 
-          {/* 13. Capabilities Use Cases Grid (Recepção, Agendamentos, Suporte, etc.) */}
+          {/* 13. Capabilities Use Cases Grid */}
           <UseCasesSection 
             onOpenDemo={() => setDemoModalOpen(true)}
             onOpenAuth={() => setAuthModalOpen(true)}
             onNavigate={handleNavigate}
           />
 
-          {/* 14. Oferta Feito Para Você em 24h (Done-For-You Onboarding) */}
+          {/* 14. Implantação assistida (escopo sob consulta) */}
           <DoneForYouSection 
             onOpenAuth={() => setAuthModalOpen(true)}
             onOpenDemo={() => setDemoModalOpen(true)}
@@ -228,13 +228,13 @@ export default function App() {
             onOpenDemo={() => setDemoModalOpen(true)}
           />
 
-          {/* 16. Garantia Blindada de 14 Dias (Risco Zero) */}
+          {/* 16. Condições comerciais transparentes */}
           <GuaranteeBadgeSection 
             onOpenAuth={() => setAuthModalOpen(true)}
             onOpenDemo={() => setDemoModalOpen(true)}
           />
 
-          {/* 17. Guarantees (30 Days, LGPD, You in control) */}
+          {/* 17. Condições operacionais e LGPD */}
           <GuaranteesSection />
 
           {/* 18. FAQ Accordions */}
@@ -412,8 +412,7 @@ export default function App() {
         />
       )}
 
-      {/* Live Social Proof Realtime Toasts (Active on landing & secondary pages) */}
-      {currentPage !== 'dashboard' && <LiveSocialProofToasts />}
+      {/* Notificações simuladas "ao vivo" foram desativadas até haver eventos reais verificáveis */}
 
       {/* Floating Webchat Widget com a Beatriz */}
       {currentPage !== 'dashboard' && (

@@ -33,32 +33,32 @@ export default function IntegracoesPage({ onOpenDemo, onOpenAuth, onNavigateHome
       id: 'google-calendar',
       category: 'agendas',
       name: 'Google Calendar',
-      desc: 'Verifica disponibilidade, agenda reuniões e envia convite de calendário com link do Meet no e-mail do cliente.',
-      tag: 'Popular',
+      desc: 'Possibilidade de consulta de disponibilidade e registro de agendamentos conforme configuração do plano.',
+      tag: 'Sob consulta',
       color: 'bg-blue-500'
     },
     {
       id: 'calendly',
       category: 'agendas',
       name: 'Calendly',
-      desc: 'Agenda compromissos verificando a disponibilidade em tempo real sem atrito nem sobreposição de horários.',
-      tag: null,
+      desc: 'Possibilidade de integração para consulta e agendamento de horários avaliada conforme o plano.',
+      tag: 'Sob consulta',
       color: 'bg-sky-500'
     },
     {
       id: 'calcom',
       category: 'agendas',
       name: 'Cal.com',
-      desc: 'Encontra horários livres com extrema rapidez e insere compromissos na sua agenda aberta Cal.com.',
-      tag: null,
+      desc: 'Possibilidade de conexão via webhook/API para consulta de disponibilidade conforme o plano.',
+      tag: 'Sob consulta',
       color: 'bg-stone-800'
     },
     {
       id: 'simples-agenda',
       category: 'agendas',
       name: 'SimplesAgenda',
-      desc: 'Identifica horários disponíveis e sincroniza agendamentos de clínicas e consultórios em tempo real.',
-      tag: null,
+      desc: 'Possibilidade de integração de agenda para clínicas avaliada sob consulta via API ou webhook.',
+      tag: 'Sob consulta',
       color: 'bg-emerald-600'
     },
     {
@@ -75,8 +75,8 @@ export default function IntegracoesPage({ onOpenDemo, onOpenAuth, onNavigateHome
       id: 'whatsapp-business',
       category: 'comunicacao',
       name: 'WhatsApp Business',
-      desc: 'Responde mensagens em tempo real, qualifica contatos e agenda compromissos diretamente no WhatsApp oficial.',
-      tag: 'Oficial Meta',
+      desc: 'Fluxos configuráveis em texto e áudio no WhatsApp; modalidade técnica e eventuais custos da Meta dependem do plano confirmado.',
+      tag: 'Sob consulta',
       color: 'bg-emerald-500'
     },
     {
@@ -93,16 +93,16 @@ export default function IntegracoesPage({ onOpenDemo, onOpenAuth, onNavigateHome
       id: 'rd-station',
       category: 'crm',
       name: 'RD Station',
-      desc: 'Cria novos leads ou contatos qualificados e registra a transcrição completa e resumo da conversa.',
-      tag: 'Nativo',
+      desc: 'Possibilidade de envio de leads e registro de resumos via integração sob consulta conforme o plano.',
+      tag: 'Sob consulta',
       color: 'bg-cyan-600'
     },
     {
       id: 'pipedrive',
       category: 'crm',
       name: 'Pipedrive',
-      desc: 'Cria ou atualiza negócios no funil de vendas e registra o histórico completo com a transcrição da ligação.',
-      tag: 'Nativo',
+      desc: 'Possibilidade de criação ou atualização de negócios via integração sob consulta conforme o plano.',
+      tag: 'Sob consulta',
       color: 'bg-green-600'
     },
     {
@@ -143,8 +143,8 @@ export default function IntegracoesPage({ onOpenDemo, onOpenAuth, onNavigateHome
       id: 'nuvemshop',
       category: 'ecommerce',
       name: 'Nuvemshop',
-      desc: 'Localiza status de pedidos, rastreio e regras de frete respondendo os clientes no WhatsApp ou chat.',
-      tag: 'Popular',
+      desc: 'Possibilidade de consulta de pedidos e suporte no WhatsApp ou chat conforme integração contratada.',
+      tag: 'Sob consulta',
       color: 'bg-blue-500'
     },
     {
@@ -219,8 +219,8 @@ export default function IntegracoesPage({ onOpenDemo, onOpenAuth, onNavigateHome
       id: 'google-sheets',
       category: 'produtividade',
       name: 'Google Sheets',
-      desc: 'Registra cada linha de atendimento com dados dos clientes em tempo real em planilhas compartilhadas.',
-      tag: 'Popular',
+      desc: 'Possibilidade de envio de registros para planilhas via webhook/API conforme escopo contratado.',
+      tag: 'Via Webhook/API',
       color: 'bg-emerald-600'
     },
     {
@@ -263,16 +263,16 @@ export default function IntegracoesPage({ onOpenDemo, onOpenAuth, onNavigateHome
       id: 'feegow',
       category: 'saude',
       name: 'Feegow Clinic',
-      desc: 'Agenda consultas presenciais e por telemedicina no prontuário eletrônico Feegow com verificação de convênios.',
-      tag: 'Popular',
+      desc: 'Possibilidade de integração de agendas clínicas avaliada sob consulta conforme o plano.',
+      tag: 'Sob consulta',
       color: 'bg-teal-600'
     },
     {
       id: 'clinicorp',
       category: 'saude',
       name: 'Clinicorp',
-      desc: 'Sincroniza procedimentos odontológicos e consultas estéticas na agenda dos profissionais.',
-      tag: null,
+      desc: 'Possibilidade de integração de agendas odontológicas e clínicas avaliada sob consulta.',
+      tag: 'Sob consulta',
       color: 'bg-sky-600'
     },
 
@@ -281,8 +281,8 @@ export default function IntegracoesPage({ onOpenDemo, onOpenAuth, onNavigateHome
       id: 'asaas',
       category: 'financas',
       name: 'Asaas',
-      desc: 'Gera cobranças via Pix e boleto e consulta status de faturas durante a ligação ou no WhatsApp.',
-      tag: 'Popular',
+      desc: 'Possibilidade de geração de cobranças e consulta de faturas via webhook/API sob consulta.',
+      tag: 'Sob consulta',
       color: 'bg-blue-600'
     },
     {
@@ -350,7 +350,7 @@ export default function IntegracoesPage({ onOpenDemo, onOpenAuth, onNavigateHome
                 type="text"
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
-                placeholder="Pesquise entre 100+ integrações (ex: Google Agenda, RD Station, HubSpot...)"
+                placeholder="Pesquise integrações e conectores sob consulta (ex: agenda, CRM, webhooks...)"
                 className="w-full bg-transparent text-sm text-[#1A1816] placeholder-[#9E9B95] focus:outline-none"
               />
               {searchQuery && (
@@ -406,7 +406,7 @@ export default function IntegracoesPage({ onOpenDemo, onOpenAuth, onNavigateHome
               
               <div className="flex items-center justify-between pb-3 border-b border-stone-200">
                 <span className="text-xs font-bold text-[#8C8881] uppercase tracking-wider">
-                  {filteredIntegrations.length} {filteredIntegrations.length === 1 ? 'integração encontrada' : 'integrações encontradas'}
+                  {filteredIntegrations.length} {filteredIntegrations.length === 1 ? 'integração listada' : 'integrações listadas'}
                 </span>
                 {selectedCategory !== 'all' && (
                   <button
@@ -417,6 +417,10 @@ export default function IntegracoesPage({ onOpenDemo, onOpenAuth, onNavigateHome
                   </button>
                 )}
               </div>
+
+              <p className="text-xs text-[#5C5955] bg-[#FAF9F5] border border-[#E7E4DC] rounded-2xl px-4 py-3">
+                Os itens abaixo representam possibilidades de integração sob consulta ou via webhook/API, sujeitas à confirmação técnica e aos recursos do plano contratado.
+              </p>
 
               {filteredIntegrations.length === 0 ? (
                 <div className="bg-[#FAF9F5] rounded-3xl p-12 text-center border border-dashed border-stone-300 space-y-3">
@@ -554,7 +558,7 @@ export default function IntegracoesPage({ onOpenDemo, onOpenAuth, onNavigateHome
               </h2>
 
               <p className="text-sm text-stone-300 leading-relaxed max-w-xl mx-auto">
-                Crie a sua assistente em poucos minutos e ouça como ela atende os seus clientes: por telefone, no WhatsApp e no chat do site.
+                Configure sua assistente conforme o plano escolhido e avalie as integrações necessárias para sua operação.
               </p>
 
               <div className="pt-3">
@@ -572,7 +576,7 @@ export default function IntegracoesPage({ onOpenDemo, onOpenAuth, onNavigateHome
               <AudioFrequencyWave 
                 variant="full" 
                 showLatencyBadge={true}
-                latencyText="Latência 380ms • Frequência Vocal em Tempo Real"
+                latencyText="Visualização ilustrativa • Voz em português brasileiro"
               />
             </div>
 

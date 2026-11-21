@@ -275,12 +275,6 @@ export default function AuthModal({ isOpen, onClose, onOpenLegal, onSuccessLogin
                   </div>
                 )}
 
-                <div className="flex items-center my-4">
-                  <div className="flex-1 border-t border-[#EBE8E2]"></div>
-                  <span className="px-3 text-xs text-[#8C8881]">ou</span>
-                  <div className="flex-1 border-t border-[#EBE8E2]"></div>
-                </div>
-
                 {!isLogin && (
                   <div>
                     <label className="block text-xs font-semibold text-[#1A1816] mb-1">
@@ -336,7 +330,7 @@ export default function AuthModal({ isOpen, onClose, onOpenLegal, onSuccessLogin
                       <span>{isLogin ? 'Entrando...' : 'Criando conta...'}</span>
                     </>
                   ) : (
-                    <span>{isLogin ? 'Entrar na Plataforma' : 'Criar Conta Grátis →'}</span>
+                    <span>{isLogin ? 'Entrar na Plataforma' : 'Criar Conta →'}</span>
                   )}
                 </button>
               </form>
@@ -356,7 +350,7 @@ export default function AuthModal({ isOpen, onClose, onOpenLegal, onSuccessLogin
                     }} 
                     className="font-bold text-[#4F46E5] hover:underline cursor-pointer"
                   >
-                    Criar conta grátis
+                    Criar conta
                   </button>
                 </span>
               ) : (
@@ -405,10 +399,10 @@ export default function AuthModal({ isOpen, onClose, onOpenLegal, onSuccessLogin
               INTELIGÊNCIA DE VOZ NEURAL
             </span>
             <h4 className="text-3xl font-normal leading-snug font-serif-title text-[#F5EDE0]">
-              Em poucos minutos, sua empresa <span className="italic text-[#A5B4FC]">ganha uma voz.</span>
+              Configure o atendimento automatizado <span className="italic text-[#A5B4FC]">da sua empresa.</span>
             </h4>
             <p className="text-xs text-[#B5B0A8] leading-relaxed">
-              Conte o que ela precisa saber, escolha como ela soa e ligue para ouvir a mágica acontecer.
+              Defina o roteiro, escolha a voz em português e teste o fluxo na simulação do painel.
             </p>
           </div>
 
@@ -418,7 +412,7 @@ export default function AuthModal({ isOpen, onClose, onOpenLegal, onSuccessLogin
               <AudioFrequencyWave 
                 variant="compact" 
                 showLatencyBadge={true} 
-                latencyText="Latência 380ms - 450ms • Voz neural brasileira"
+                latencyText="Visualização ilustrativa • Voz em português brasileiro"
               />
             </div>
           </div>

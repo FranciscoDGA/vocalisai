@@ -1,10 +1,17 @@
+import { COMMERCIAL_CATALOG } from './commercialCatalog';
+import {
+  getPlanCardViewModel,
+  getCommercialEntryLabel,
+  getSimultaneousCallsSummary,
+} from '../utils/commercialCatalogUtils';
+
 export const BRAND = {
   name: 'Vocalis AI',
   tagline: 'A voz da sua empresa, a qualquer hora.',
-  subtitle: 'IA que atende telefone e WhatsApp na voz e no tom da sua marca. Nunca mais perca um cliente que ligou fora de hora, demorou para ser atendido ou caiu numa fila.',
+  subtitle: 'IA para apoiar o atendimento por telefone, WhatsApp e webchat no tom da sua marca, inclusive fora do horário comercial conforme o plano contratado.',
   ctaPrimary: 'Criar assistente',
   ctaSecondary: 'Falar com especialista',
-  ctaCall: 'Receba uma ligação agora da nossa IA',
+  ctaCall: 'Abrir simulação ilustrativa da IA',
   phonePlaceholder: '(11) 98765-4321',
   emailPlaceholder: 'Seu melhor e-mail comercial',
 };
@@ -24,62 +31,62 @@ export const CHANNELS = [
   {
     id: 'telefone',
     title: 'Telefone',
-    badge: 'Voz Neural',
-    description: 'Atenda no primeiro toque com ligação em tempo real, voz natural em português brasileiro, zero pausas e latência inferior a 450ms.',
-    details: 'Integração com 0800, DDDs locais de todo o Brasil e PABX SIP existente.',
+    badge: 'Voz em PT-BR',
+    description: 'Atendimento telefônico automatizado em português brasileiro, configurável para triagem, dúvidas e agendamentos.',
+    details: 'Opções de telefonia e tipos de número sujeitos à disponibilidade e ao plano contratado.',
     icon: 'PhoneCall',
   },
   {
     id: 'whatsapp',
-    title: 'WhatsApp Web & Cloud',
-    badge: 'Zero Taxas por Mensagem',
-    description: 'Conecte via WhatsApp Web (QR Code direto sem pagar taxas por conversa à Meta) ou API Oficial. Responda na hora com notas de voz e texto.',
-    details: 'Automação completa com Baileys nativo ou Meta Cloud API.',
+    title: 'WhatsApp',
+    badge: 'Texto e Áudio',
+    description: 'Atendimento automatizado no WhatsApp com texto e áudio configuráveis. Modalidade de conexão e eventuais custos de provedor ou da Meta dependem do plano confirmado.',
+    details: 'Recursos e integração de WhatsApp sujeitos à configuração e às regras vigentes do provedor.',
     icon: 'MessageSquare',
   },
   {
     id: 'webchat',
     title: 'Webchat',
-    badge: 'Widget Inteligente',
-    description: 'Atenda no seu próprio site com a mesma inteligência, contexto unificado e transbordo humano instantâneo.',
-    details: 'Instalação com 1 linha de código JavaScript ou plugin simples.',
+    badge: 'Assistente de IA no Site',
+    description: 'Atenda visitantes no seu site com identificação clara de assistente de IA e opção de direcionamento para contato com a equipe humana, conforme configuração do plano.',
+    details: 'Implantação via script e regras de encaminhamento sob consulta conforme o plano.',
     icon: 'Globe',
   },
   {
     id: 'email-crm',
     title: 'E-mail IA & CRM',
-    badge: 'BETA',
-    description: 'Triagem automática de mensagens recebidas por e-mail, criação de tickets e atualização de status no seu CRM.',
-    details: 'Sincronização bidirecional com HubSpot, RD Station e Salesforce.',
+    badge: 'Sob consulta',
+    description: 'Triagem configurável de mensagens e organização de registros conforme as integrações habilitadas.',
+    details: 'Integração com ferramentas externas sob consulta e conforme o plano.',
     icon: 'Mail',
   },
 ];
 
 export const TIMELINE_STEPS = [
   {
-    time: '00:03',
-    title: 'Atende no primeiro segundo',
-    description: 'Sem musiquinha de espera ou menus infinitos. O cliente é acolhido com simpatia imediata.',
+    time: 'Etapa 01',
+    title: 'Atendimento inicial automatizado',
+    description: 'Recepção configurável para acolher o contato sem depender apenas de menus numéricos rígidos.',
   },
   {
-    time: '00:15',
-    title: 'Entende o que a pessoa quer',
-    description: 'Processamento de linguagem natural em português com sotaques regionais e capacidade de ouvir interrupções.',
+    time: 'Etapa 02',
+    title: 'Compreensão da solicitação',
+    description: 'Identificação do assunto e das informações iniciais em português brasileiro para direcionar a conversa.',
   },
   {
-    time: '00:30',
-    title: 'Resolve ali mesmo',
-    description: 'Consulta tabelas, tira dúvidas sobre serviços, verifica disponibilidade na agenda e passa valores.',
+    time: 'Etapa 03',
+    title: 'Consulta de informações configuradas',
+    description: 'Acesso à base cadastrada sobre serviços, horários e regras de atendimento definidos pela empresa.',
   },
   {
-    time: '00:45',
-    title: 'Se for urgente, avisa alguém',
-    description: 'Identifica prioridade ou casos sensíveis e transfere para o atendente humano com resumo prévio.',
+    time: 'Etapa 04',
+    title: 'Encaminhamento para equipe humana',
+    description: 'Regras de transbordo configuráveis para direcionar casos prioritários ou solicitações fora do escopo.',
   },
   {
-    time: '01:00',
-    title: 'Tudo documentado',
-    description: 'Gravação, transcrição completa, resumo dos pontos acordados e dados sincronizados no seu CRM.',
+    time: 'Etapa 05',
+    title: 'Registro do resumo do atendimento',
+    description: 'Organização de transcrição e resumo no painel e em eventuais webhooks ou CRMs integrados conforme o plano.',
   },
 ];
 
@@ -87,20 +94,20 @@ export const THREE_STEPS = [
   {
     step: '01',
     title: 'Escolha o tom e a voz',
-    description: 'Defina o sotaque, a personalidade e como sua assistente cumprimenta quem entra em contato com sua empresa.',
-    tag: 'Personalização Instantânea',
+    description: 'Defina o estilo de comunicação e como sua assistente cumprimenta quem entra em contato com sua empresa.',
+    tag: 'Personalização Guiada',
   },
   {
     step: '02',
     title: 'Alimente com dados',
-    description: 'Envie links do seu site, PDFs de catálogo, perguntas frequentes e conecte a agenda do Google ou CRM.',
-    tag: 'Base de Conhecimento Segura',
+    description: 'Inclua informações do seu site, catálogo, perguntas frequentes e regras de atendimento do negócio.',
+    tag: 'Base de Conhecimento Configurável',
   },
   {
     step: '03',
-    title: 'Ative os números',
-    description: 'Conecte seu WhatsApp oficial, porte seu número fixo, adquira um novo DDD ou ligue via ramal SIP.',
-    tag: 'Pronto em 5 minutos',
+    title: 'Ative os canais',
+    description: 'Configure os canais disponíveis no seu plano e acompanhe os atendimentos conforme os limites contratados.',
+    tag: 'Ativação Conforme Configuração',
   },
 ];
 
@@ -108,67 +115,67 @@ export const NICHES = [
   {
     id: 'saude',
     name: 'Clínicas & Consultórios',
-    tagline: 'Agendamentos 24h, confirmação de consultas e triagem humanizada',
-    description: 'Atenda pacientes a qualquer hora do dia ou da noite. A Vocalis consulta sua agenda em tempo real, verifica convênios médicos, marca e remarca consultas e envia lembretes para zerar o no-show.',
+    tagline: 'Agendamento de rotina e lembretes conforme regras aprovadas pela clínica',
+    description: 'Apoie a recepção com agendamentos de rotina (sem sintomas urgentes) e lembretes baseados na base de conhecimento e regras definidas pela clínica. Não realiza diagnóstico, avaliação clínica ou substituição profissional; protocolos de urgência exigem aprovação do responsável técnico e encaminhamento humano imediato.',
     icon: 'Stethoscope',
     metrics: [
-      { label: 'Redução de faltas (no-show)', value: '-78%' },
-      { label: 'Consultas agendadas após as 18h', value: '41%' },
+      { label: 'Foco principal', value: 'Rotina e lembretes' },
+      { label: 'Limites', value: 'Sem diagnóstico por IA' },
     ],
   },
   {
     id: 'imobiliario',
     name: 'Imobiliárias & Corretores',
-    tagline: 'Qualificação imediata de leads e agendamento de visitas',
-    description: 'Quem procura imóvel quer resposta rápida. A Vocalis qualifica perfil (compra ou locação, faixa de preço, bairro desejado), agenda visitas presenciais com o corretor responsável e salva o lead no CRM.',
+    tagline: 'Qualificação inicial de leads e encaminhamento de visitas',
+    description: 'Registre se o interessado busca compra ou locação, faixa de valor e região de interesse para organizar o agendamento com o corretor responsável conforme a base cadastrada.',
     icon: 'Building2',
     metrics: [
-      { label: 'Tempo de primeira resposta', value: '< 10s' },
-      { label: 'Aumento na conversão de leads', value: '+3.2x' },
+      { label: 'Foco principal', value: 'Qualificação inicial' },
+      { label: 'Encaminhamento', value: 'Para equipe comercial' },
     ],
   },
   {
     id: 'juridico',
     name: 'Escritórios de Advocacia',
-    tagline: 'Triagem jurídica sigilosa e agendamento de reuniões',
-    description: 'Capte potenciais clientes sem interromper o trabalho dos advogados. A Vocalis faz a triagem inicial da área do direito (trabalhista, cível, tributário), coleta informações básicas e agenda consulta inicial.',
+    tagline: 'Recepção administrativa e encaminhamento para advogado habilitado',
+    description: 'Realiza apenas recepção administrativa inicial e identificação da área de interesse conforme regras aprovadas pelo escritório. Não promete conclusão jurídica, valor de causa, aconselhamento ou conformidade jurídica automática.',
     icon: 'Scale',
     metrics: [
-      { label: 'Leads qualificados retidos', value: '94%' },
-      { label: 'Economia de horas de triagem/mês', value: '62h' },
+      { label: 'Foco principal', value: 'Recepção administrativa' },
+      { label: 'Revisão', value: 'Pelo advogado responsável' },
     ],
   },
   {
     id: 'varejo',
     name: 'E-commerce & Varejo',
-    tagline: 'Rastreio de pedidos, tira-dúvidas e recuperação de vendas',
-    description: 'Integre com seu ERP para informar status de entrega, tirar dúvidas sobre tamanhos e prazos, além de contatar clientes que abandonaram o carrinho com condições especiais.',
+    tagline: 'Tira-dúvidas sobre produtos, prazos e orientações de pedido',
+    description: 'Centralize perguntas frequentes de pré e pós-venda e encaminhe demandas mais complexas para o suporte humano com o contexto registrado.',
     icon: 'ShoppingBag',
     metrics: [
-      { label: 'Resoluções no primeiro contato', value: '88%' },
-      { label: 'Recuperação de carrinho via WhatsApp', value: '23%' },
+      { label: 'Foco principal', value: 'Dúvidas e triagem' },
+      { label: 'Canais', value: 'WhatsApp e Webchat' },
     ],
   },
   {
     id: 'servicos',
     name: 'Empresas de Serviços & Manutenção',
-    tagline: 'Orçamentos rápidos, agendamento de visitas técnicas e plantão',
-    description: 'Para assistência técnica, instaladores, oficinas e empresas de reformas. A IA coleta dados do serviço, solicita fotos ou localização e despacha ordens de serviço.',
+    tagline: 'Coleta de informações de serviço e registro de solicitações',
+    description: 'Para assistência técnica, oficinas e empresas de manutenção. O assistente coleta descrição do serviço e dados do cliente para organização da agenda.',
     icon: 'Wrench',
     metrics: [
-      { label: 'Chamados abertos sem espera', value: '100%' },
-      { label: 'Tempo médio de despacho técnico', value: '-65%' },
+      { label: 'Foco principal', value: 'Coleta de briefing' },
+      { label: 'Cobertura', value: 'Configurável por turno' },
     ],
   },
   {
     id: 'financeiro',
     name: 'Cobrança Amigável & Lembretes',
-    tagline: 'Avisos preventivos de vencimento e envio de Pix na hora',
-    description: 'Ligue de forma educada e empática lembrando do vencimento de faturas, negocie parcelamentos e envie a chave Pix ou linha digitável por WhatsApp durante a ligação.',
+    tagline: 'Avisos preventivos conforme base de conhecimento e regras aprovadas',
+    description: 'Realize lembretes administrativos de vencimento seguindo exclusivamente a base de conhecimento, scripts e alçadas validados pela equipe financeira/jurídica do cliente, sem consultoria financeira ou conformidade regulatória automática.',
     icon: 'Banknote',
     metrics: [
-      { label: 'Taxa de recuperação em D+3', value: '+47%' },
-      { label: 'Custo por contato efetivo', value: '-82%' },
+      { label: 'Foco principal', value: 'Lembretes programados' },
+      { label: 'Governança', value: 'Regras do cliente' },
     ],
   },
 ];
@@ -178,305 +185,278 @@ export const INTEGRATIONS_LIST = [
     id: 'google-cal',
     name: 'Google Calendar',
     category: 'Agendamentos',
-    desc: 'Consulta horários livres, agenda reuniões e sincroniza calendários da equipe.',
-    badge: 'Popular',
+    desc: 'Possibilidade de integração de agenda avaliada conforme o plano contratado.',
+    badge: 'Sob consulta',
   },
   {
     id: 'whatsapp-meta',
-    name: 'WhatsApp Cloud API',
+    name: 'WhatsApp',
     category: 'Mensageria',
-    desc: 'Conexão oficial da Meta para envio de mensagens, áudios e catálogos.',
-    badge: 'Oficial',
+    desc: 'Modalidade de conexão e eventuais custos de provedor ou da Meta confirmados por plano.',
+    badge: 'Sob consulta',
   },
   {
     id: 'hubspot',
     name: 'HubSpot',
     category: 'CRM & Vendas',
-    desc: 'Criação automática de contatos, negócios e notas com transcrição das chamadas.',
-    badge: 'Nativo',
+    desc: 'Envio de contatos e resumos via conectores ou webhook conforme escopo contratado.',
+    badge: 'Sob consulta',
   },
   {
     id: 'rdstation',
     name: 'RD Station',
     category: 'CRM & Vendas',
-    desc: 'Envio de leads qualificados e atualização de etapas do funil de vendas.',
-    badge: 'Brasil',
+    desc: 'Possibilidade de envio de leads avaliada conforme o plano e configuração técnica.',
+    badge: 'Sob consulta',
   },
   {
     id: 'pipedrive',
     name: 'Pipedrive',
     category: 'CRM & Vendas',
-    desc: 'Alimentação do funil de vendas com status de qualificação e tarefas atribuídas.',
-    badge: 'Nativo',
+    desc: 'Integração com etapas do funil avaliada sob consulta via API ou webhook.',
+    badge: 'Sob consulta',
   },
   {
     id: 'stripe',
-    name: 'Stripe',
+    name: 'Gateways de Pagamento',
     category: 'Financeiro',
-    desc: 'Geração de links de pagamento e verificação de faturas em aberto durante o contato.',
-    badge: 'Global',
+    desc: 'Fluxos financeiros externos disponíveis apenas sob consulta e validação técnica.',
+    badge: 'Sob consulta',
   },
   {
     id: 'webhooks',
     name: 'Webhooks & API REST',
     category: 'Desenvolvedores',
-    desc: 'Dispare ações em qualquer ERP, sistema próprio ou automação via n8n / Zapier.',
-    badge: 'Flexível',
+    desc: 'Integração flexível com sistemas próprios ou fluxos externos conforme o plano.',
+    badge: 'Via Webhook/API',
   },
   {
     id: 'sip-telecom',
-    name: 'PABX SIP & 0800',
+    name: 'PABX SIP & Telefonia',
     category: 'Telefonia',
-    desc: 'Conecte ramais Asterisk, FreePBX, Zadarma ou operadoras nacionais.',
-    badge: 'Telecom',
+    desc: 'Opções de conexão telefônica sujeitas à viabilidade técnica e ao plano contratado.',
+    badge: 'Sob consulta',
   },
 ];
 
-export const PRICING_PLANS = [
-  {
-    id: 'starter',
-    name: 'Starter',
-    badge: 'Para Iniciar',
-    priceMonthly: 290,
-    priceYearly: 232,
-    description: 'Ideal para profissionais autônomos, consultórios individuais e pequenos comércios.',
+export const PRICING_PLANS = COMMERCIAL_CATALOG.channels.telefone.plans.map((plan) => {
+  const card = getPlanCardViewModel('telefone', plan.id, 'monthly');
+  const yearlyCard = getPlanCardViewModel('telefone', plan.id, 'yearly');
+  return {
+    id: card.id,
+    name: card.name,
+    badge: card.badge || card.statusLabel,
+    status: card.status,
+    priceMonthly: card.pricing.hasConfirmedPrice ? card.pricing.numericPrice : card.pricing.displayPrice,
+    priceYearly: yearlyCard.pricing.hasConfirmedPrice ? yearlyCard.pricing.numericPrice : yearlyCard.pricing.displayPrice,
+    description: card.tagline,
     features: [
-      '1 Assistente de Voz Neural dedicado',
-      '300 minutos de chamadas incluídos/mês',
-      'Atendimento WhatsApp Oficial (Meta Cloud)',
-      'Integração com Google Calendar',
-      'Transcrição e resumos em tempo real',
-      'Suporte padrão por WhatsApp',
+      ...card.includedRows.filter((r) => !r.isUnavailable).map((r) => `${r.label}: ${r.text}`),
+      ...card.limitRows.filter((r) => !r.isUnavailable).map((r) => `${r.label}: ${r.text}`),
     ],
-    cta: 'Começar Agora',
-    popular: false,
-  },
-  {
-    id: 'pro',
-    name: 'Profissional',
-    badge: 'Mais Escolhido',
-    priceMonthly: 690,
-    priceYearly: 552,
-    description: 'Para empresas com fluxo ativo de clientes buscando escala e produtividade máxima.',
-    features: [
-      '3 Assistentes de Voz Neural configuráveis',
-      '1.000 minutos de chamadas incluídos/mês',
-      'WhatsApp + Webchat com contexto unificado',
-      'Integração com CRM (HubSpot, RD Station, Pipedrive)',
-      'Transferência e transbordo humanizado ao vivo',
-      'Clonagem da voz da sua marca',
-      'Suporte prioritário com gerente de conta',
-    ],
-    cta: 'Criar Assistente Pro',
-    popular: true,
-  },
-  {
-    id: 'enterprise',
-    name: 'Enterprise',
-    badge: 'Grandes Operações',
-    priceMonthly: 'Sob Consulta',
-    priceYearly: 'Sob Consulta',
-    description: 'Para clínicas com múltiplos especialistas, redes imobiliárias e centrais de atendimento.',
-    features: [
-      'Assistentes ilimitados por departamento',
-      'Minutos sob demanda com tarifas reduzidas',
-      'Conexão com PABX SIP corporativo e números 0800',
-      'Base de conhecimento RAG dedicada e isolada',
-      'SLA de 99,9% garantido em contrato',
-      'Treinamento e onboarding presencial/remoto da equipe',
-    ],
-    cta: 'Falar com Especialista',
-    popular: false,
-  },
-];
+    cta: card.cta.label,
+    popular: Boolean(card.highlight),
+  };
+});
 
 export const GUARANTEES = [
   {
-    title: '30 dias de teste sem risco',
-    description: 'Você testa a Vocalis em operação real. Se não economizar tempo ou não aprovar a voz e os agendamentos, o cancelamento é livre e sem burocracia.',
-    badge: '30 Dias',
+    title: 'Condições de teste e cancelamento claras',
+    description: 'As regras de avaliação, cancelamento e eventual reembolso são informadas antes da contratação, conforme os termos vigentes do plano e a legislação aplicável.',
+    badge: 'Transparência',
   },
   {
-    title: 'LGPD & Segurança Corporativa',
-    description: 'Transmissão criptografada ponta a ponta (TLS 1.3), servidores protegidos e total conformidade com a Lei Geral de Proteção de Dados.',
+    title: 'Privacidade e boas práticas LGPD',
+    description: 'Práticas técnicas e contratuais orientadas à proteção de dados pessoais, conforme nossa Política de Privacidade e termos aplicáveis.',
     badge: 'LGPD',
   },
   {
-    title: 'Você no controle absoluto',
-    description: 'Defina limites de orçamento, regras de transbordo e pause o assistente com 1 clique a qualquer momento.',
-    badge: 'Total Controle',
+    title: 'Controle operacional configurável',
+    description: 'Defina regras de atendimento, limites operacionais e encaminhamento para a equipe humana conforme a necessidade do negócio.',
+    badge: 'Controle',
   },
 ];
 
 export const FAQS = [
   {
     q: 'Como funciona a voz da Vocalis? Parece um robô daqueles chatos?',
-    a: 'Não! A Vocalis utiliza redes neurais generativas treinadas no sotaque brasileiro. Ela respira, usa entonação adequada, entende interrupções e responde em menos de 450 milissegundos. Mais de 90% das pessoas não percebem que estão conversando com uma IA.'
+    a: 'A Vocalis utiliza síntese e reconhecimento de voz em português brasileiro configuráveis para oferecer um atendimento mais natural do que menus numéricos tradicionais. A experiência varia conforme o canal, a qualidade da linha e o fluxo configurado.'
   },
   {
     q: 'Posso usar meu número de telefone e WhatsApp atual?',
-    a: 'Sim! Você pode conectar seu número fixo existente, configurar um ramal no seu PABX virtual (SIP) ou conectar sua linha de WhatsApp oficial (Meta Cloud API). Também oferecemos números novos com DDD de qualquer estado do Brasil e números 0800.'
+    a: 'As opções de uso de número atual, ramal SIP, novos números e conexão com WhatsApp dependem da disponibilidade técnica e do plano contratado, sendo confirmadas com nossa equipe antes da ativação.'
   },
   {
     q: 'E se o cliente fizer uma pergunta difícil ou quiser falar com um humano?',
-    a: 'A Vocalis faz o transbordo imediato. Ela pode transferir a ligação para o telefone de um atendente ou transferir o chamado no WhatsApp, repassando o resumo de tudo o que foi falado para o atendente não precisar fazer as mesmas perguntas.'
+    a: 'É possível configurar regras de encaminhamento para um atendente humano junto com o resumo do que foi conversado, conforme o fluxo implantado.'
   },
   {
     q: 'Como ela se conecta à agenda da minha empresa?',
-    a: 'A Vocalis possui integração nativa com Google Calendar, Outlook, Doctoralia, Feegow, Hotmart, HubSpot, Pipedrive e RD Station, além de Webhooks para sistemas próprios.'
+    a: 'As integrações com agendas, CRMs e outros sistemas variam conforme o plano e a viabilidade técnica, podendo ser avaliadas via webhooks ou conectores disponíveis.'
   },
   {
     q: 'Quanto tempo leva para colocar no ar?',
-    a: 'Você consegue criar e testar seu primeiro assistente em menos de 5 minutos. Basta dar um nome, definir a voz, colar as informações da sua empresa e fazer uma chamada de teste gratuita.'
+    a: 'O prazo de configuração e entrada em operação varia conforme a complexidade do atendimento, os canais escolhidos e eventuais integrações. Alinhamos o cronograma antes da contratação.'
   }
 ];
 
 export const COMPARISONS = [
   {
     feature: 'Velocidade de atendimento',
-    vocalis: 'Imediato (< 450ms) sem filas',
+    vocalis: 'Atendimento automatizado sem menu numérico tradicional',
     oldBot: 'Lento (menu de opções 1, 2, 3)',
     human: 'Depende de disponibilidade na fila',
   },
   {
     feature: 'Atendimento por voz no telefone',
-    vocalis: 'Sim, voz humana e sotaque natural',
+    vocalis: 'Voz configurável em português brasileiro',
     oldBot: 'Voz robótica sintetizada ou inexistente',
     human: 'Sim, mas com alto custo de escala',
   },
   {
     feature: 'Disponibilidade horária',
-    vocalis: '24 horas por dia, 7 dias por semana',
+    vocalis: 'Horário configurável, inclusive fora do expediente',
     oldBot: '24h (mas limitado a botões)',
     human: 'Geralmente 8h às 18h em dias úteis',
   },
   {
     feature: 'Capacidade de ligações simultâneas',
-    vocalis: 'Ilimitada (atende 100 ao mesmo tempo)',
+    vocalis: getSimultaneousCallsSummary('telefone'),
     oldBot: 'Inexistente para ligações de voz',
     human: '1 chamada por atendente',
   },
   {
     feature: 'Atualização do CRM & Agenda',
-    vocalis: 'Instantânea e 100% preenchida',
+    vocalis: 'Registro estruturado conforme integrações habilitadas',
     oldBot: 'Apenas campos básicos de texto',
     human: 'Depende de preenchimento manual',
   },
   {
-    feature: 'Custo médio por atendimento',
-    vocalis: '~ R$ 0,80 por conversa completa',
+    feature: 'Referência de planos comerciais',
+    vocalis: getCommercialEntryLabel(),
     oldBot: 'Baixo, porém com alta rejeição do cliente',
-    human: 'R$ 15,00 a R$ 28,00 por atendimento CLT',
+    human: 'Referência salarial e encargos trabalhistas da equipe',
   },
 ];
 
 export const PRIVACY_POLICY = {
   title: 'Política de privacidade',
-  subtitle: 'Como a Vocalis coleta, usa, compartilha e protege dados pessoais, conforme a LGPD.',
-  company: 'VOCALIS TECNOLOGIA LTDA',
-  updatedAt: '23 de outubro de 2026',
+  subtitle: 'Como a Vocalis coleta, usa, compartilha e protege dados pessoais, conforme a LGPD (itens operacionais e jurídicos sinalizados como pendentes de confirmação).',
+  company: 'VOCALIS TECNOLOGIA LTDA (PENDENTE DE CONFIRMAÇÃO)',
+  updatedAt: 'Revisão técnica em andamento — pendente de validação jurídica',
   sections: [
     {
+      id: 'identificacao',
+      title: 'Identificação da empresa e atendimento (PENDENTE DE CONFIRMAÇÃO)',
+      content: 'Esta minuta referencia VOCALIS TECNOLOGIA LTDA (CNPJ 27.824.190/0001-18, Rua Rio Grande do Sul, 24, Setor Maria Liane, Cumaru do Norte/PA, CEP 68398-000). A confirmação cadastral oficial, endereço institucional vigente e canais formais de atendimento ao titular estão PENDENTES DE CONFIRMAÇÃO pelo proprietário e assessoria jurídica.'
+    },
+    {
       id: 'controlador',
-      title: 'Quem é o controlador',
+      title: 'Quem é o controlador e quem é o operador',
       items: [
-        'Dados de visitantes e novos clientes: a Vocalis é a controladora.',
-        'Dados de quem liga ou escreve para um cliente da Vocalis: o cliente é o controlador e a Vocalis atua como operadora, seguindo as instruções do acordo de proteção de dados.'
+        'Dados de visitantes do site, leads comerciais e usuários cadastrados na plataforma: a Vocalis atua como controladora, definindo as finalidades de contato, cadastro e faturamento.',
+        'Dados tratados nas conversas atendidas pelos assistentes configurados por clientes (telefone, WhatsApp e webchat): o cliente contratante define finalidades e instruções e atua como controlador; a Vocalis atua como operadora (sujeita à formalização de DPA aplicável — PENDENTE DE CONFIRMAÇÃO).'
       ]
     },
     {
       id: 'dados-tratados',
-      title: 'Dados que tratamos',
+      title: 'Dados que tratamos e fluxos de coleta',
       table: [
-        { categoria: 'Cadastro', exemplos: 'Nome, e-mail, telefone, empresa', finalidade: 'Criar conta e faturar a conta' },
-        { categoria: 'Faturamento', exemplos: 'CPF/CNPJ e endereço de cobrança', finalidade: 'Emitir notas fiscais e cobrar faturas' },
-        { categoria: 'Uso da plataforma', exemplos: 'Registros de acesso, configurações', finalidade: 'Segurança, suporte técnico e melhoria do serviço' },
-        { categoria: 'Chamadas atendidas', exemplos: 'Número de telefone, transcrição, gravação de áudio e resumo', finalidade: 'Prestar o atendimento contratado pelo cliente' },
-        { categoria: 'Chat', exemplos: 'Conversas de WhatsApp e Webchat', finalidade: 'Funcionamento do assistente e repasse ao cliente' },
+        { categoria: 'Cadastro', exemplos: 'Nome, e-mail comercial, senha e nome da empresa', finalidade: 'Criar conta e gerenciar acesso à plataforma' },
+        { categoria: 'Formulários de contato e demonstração', exemplos: 'Nome, telefone/WhatsApp, e-mail, empresa e segmento informados nos formulários de contato/demonstração', finalidade: 'Registrar solicitação e permitir retorno pela equipe comercial ou agendamento de demonstração' },
+        { categoria: 'Simulações ilustrativas no navegador', exemplos: 'Telefones digitados no simulador interativo de tela', finalidade: 'Uso ilustrativo na tela do navegador, sem armazenamento oculto nem disparo real de ligação ou WhatsApp' },
+        { categoria: 'Faturamento', exemplos: 'CPF/CNPJ e endereço de cobrança (quando aplicável)', finalidade: 'Emitir notas fiscais e processar cobranças conforme o contrato confirmado' },
+        { categoria: 'Chamadas e mensagens em operação', exemplos: 'Número de telefone, transcrição, áudio (se ativado) e mensagens em canais conectados', finalidade: 'Executar o atendimento configurado pelo cliente controlador (regras de gravação e retenção PENDENTES DE CONFIRMAÇÃO)' }
       ]
     },
     {
       id: 'bases-legais',
-      title: 'Bases legais',
-      content: 'Execução de contrato, cumprimento de obrigações legais, legítimo interesse (por exemplo, prevenção a fraudes) e consentimento quando exigido - como para cookies não essenciais.'
+      title: 'Bases legais (sujeito a revisão jurídica)',
+      content: 'O tratamento busca amparo nas hipóteses previstas na Lei nº 13.709/2018 (LGPD), como execução de contrato ou procedimentos preliminares solicitados pelo titular, cumprimento de obrigação legal ou regulatória, legítimo interesse e consentimento quando exigido. A definição final do enquadramento jurídico e política de cookies está PENDENTE DE CONFIRMAÇÃO jurídica.'
     },
     {
       id: 'compartilhamento',
-      title: 'Compartilhamento de fornecedores',
-      content: 'Compartilhamos dados apenas com fornecedores necessários à operação, sob contrato e com medidas de segurança. Não vendemos dados pessoais. Subprocessadores atuais:',
+      title: 'Compartilhamento com fornecedores e subprocessadores (PENDENTE DE CONFIRMAÇÃO)',
+      content: 'Lista preliminar em consolidação (PENDENTE DE CONFIRMAÇÃO pelo proprietário e jurídico): esta relação histórica menciona provedores abaixo, enquanto o código da aplicação também referencia integrações com Supabase (banco/autenticação), Vercel (hospedagem/funções), Google Gemini (IA/áudio), Vapi (telefonia), OpenAI/Deepgram (via Vapi) e UazAPI/WhatsApp. A lista oficial única de subprocessadores ativos, países de processamento e salvaguardas internacionais (cláusulas-padrão contratuais ANPD) depende de validação do proprietário e advogado.',
       suppliers: [
-        { fornecedor: 'Retell', finalidade: 'Orquestragem de plataforma e voz neural', local: 'EUA' },
-        { fornecedor: 'ElevenLabs', finalidade: 'Modelos de IA generativa de voz', local: 'EUA' },
-        { fornecedor: 'Twilio / Infobip', finalidade: 'Infraestrutura de telecomunicações e números', local: 'EUA / Brasil' },
-        { fornecedor: 'Meta Platforms', finalidade: 'Envio e recebimento de mensagens no WhatsApp Cloud API', local: 'EUA' },
-        { fornecedor: 'Stripe / Asaas', finalidade: 'Pagamentos e verificação de faturamento', local: 'EUA / Brasil' },
-        { fornecedor: 'Supabase / AWS', finalidade: 'Banco de dados, autenticação e armazenamento seguro', local: 'EUA / Brasil' },
+        { fornecedor: 'Retell (a confirmar na lista unificada)', finalidade: 'Orquestração de voz citada na minuta anterior', local: 'EUA (a confirmar)' },
+        { fornecedor: 'ElevenLabs (a confirmar na lista unificada)', finalidade: 'Modelos de voz citados na minuta anterior', local: 'EUA (a confirmar)' },
+        { fornecedor: 'Twilio / Infobip (a confirmar na lista unificada)', finalidade: 'Telefonia citada na minuta anterior', local: 'EUA / Brasil (a confirmar)' },
+        { fornecedor: 'Meta Platforms (a confirmar conforme modalidade WhatsApp)', finalidade: 'WhatsApp Cloud API (ou outro provedor confirmado)', local: 'EUA (a confirmar)' },
+        { fornecedor: 'Stripe / Asaas (a confirmar meio de cobrança ativo)', finalidade: 'Pagamentos e faturamento', local: 'EUA / Brasil (a confirmar)' },
+        { fornecedor: 'Supabase / AWS / Vercel (identificados no código + minuta)', finalidade: 'Banco de dados, autenticação e hospedagem web', local: 'Região a confirmar' }
       ]
     },
     {
+      id: 'retencao-exclusao',
+      title: 'Gravação, transcrição, retenção e exclusão (PENDENTE DE CONFIRMAÇÃO)',
+      content: 'As configurações reais de gravação de chamadas, armazenamento de áudios/transcrições, prazos exatos de retenção e política de eliminação após o encerramento do contrato estão PENDENTES DE CONFIRMAÇÃO técnica e jurídica. Caso a retenção zero ou exclusão automática seja oferecida em algum plano, os limites e prazos exatos dependerão de confirmação nos provedores e no contrato.'
+    },
+    {
       id: 'direitos-dpo',
-      title: 'Seus direitos e Encarregado de Dados (DPO)',
-      content: 'Você pode solicitar confirmação de tratamento, acesso, correção, anonimização, portabilidade, eliminação e revogação de consentimento. Para exercer seus direitos, entre em contato com nosso DPO:',
-      dpoEmail: 'dpo@vocalis.ai'
+      title: 'Seus direitos, procedimento e Encarregado de Dados (DPO) (PENDENTE DE CONFIRMAÇÃO)',
+      content: 'Os titulares podem solicitar informações sobre seus direitos previstos no art. 18 da LGPD (confirmação de tratamento, acesso, correção, anonimização, portabilidade, eliminação e revogação de consentimento). Caso a conversa tenha ocorrido com um cliente empresarial da Vocalis, o atendimento ao pedido poderá depender do encaminhamento ao respectivo cliente controlador. O nome do Encarregado (DPO), o e-mail/canal oficial definitivo, o fluxo operacional de autenticação de identidade e o prazo formal de resposta estão PENDENTES DE CONFIRMAÇÃO.',
+      dpoEmail: 'dpo@vocalis.ai',
+      dpoStatus: 'PENDENTE DE CONFIRMAÇÃO (canal sujeito a validação oficial)'
     },
     {
       id: 'seguranca',
-      title: 'Segurança e criptografia',
-      content: 'Usamos criptografia em trânsito (TLS 1.3), criptografia em repouso (AES-256), controles de acesso restrito e registros de auditoria.'
+      title: 'Segurança, criptografia e não uso para treinamento (PENDENTE DE CONFIRMAÇÃO)',
+      content: 'A aplicação web utiliza conexão segura HTTPS/TLS em trânsito e controles de acesso vinculados à infraestrutura contratada, sem alegação de sigilo de extremo a extremo (E2EE) nas chamadas, WhatsApp ou processamento por IA. Especificações sobre versões específicas de TLS/criptografia em repouso (como AES-256), retenção zero, trilhas de auditoria e compromissos contratuais de não uso de dados para treinamento de modelos por terceiros estão PENDENTES DE CONFIRMAÇÃO nos contratos vigentes com os provedores.'
     }
   ]
 };
 
 export const TERMS_OF_SERVICE = {
   title: 'Termos e condições',
-  subtitle: 'Regras de uso da plataforma Vocalis: contratação, créditos, responsabilidades e encerramento.',
-  company: 'VOCALIS TECNOLOGIA LTDA',
-  version: 'Versão 1.0, vigente desde 23 de outubro de 2026',
+  subtitle: 'Regras gerais de uso da plataforma Vocalis — cláusulas comerciais e operacionais sujeitas a confirmação contratual e revisão jurídica.',
+  company: 'VOCALIS TECNOLOGIA LTDA (PENDENTE DE CONFIRMAÇÃO)',
+  version: 'Minuta revisada tecnicamente — pendente de validação jurídica e comercial',
   sections: [
     {
       num: '1',
-      title: 'Aceite',
-      content: 'Ao criar uma conta em Criar conta ou usar qualquer recurso da plataforma, você declara ter lido e aceitado estes Termos, a Política de privacidade e o Acordo de proteção de dados. Se você contrata em nome de uma empresa, declara ter poderes para representá-la.'
+      title: 'Aceite e escopo contratual',
+      content: 'O uso da plataforma e a eventual contratação de planos sujeitam-se aos Termos aplicáveis e à proposta comercial confirmada entre as partes. Se você atua em nome de uma empresa, declara possuir poderes para representá-la.'
     },
     {
       num: '2',
       title: 'Conta e acesso',
-      content: 'Cada organização tem um ou mais usuários com papéis definidos em Usuários. Você é responsável por manter as credenciais em sigilo e por toda atividade realizada na sua conta. Informações cadastrais e de faturamento devem ser verdadeiras e mantidas atualizadas.'
+      content: 'Cada organização é responsável pela guarda de suas credenciais e pelas atividades realizadas em sua conta, devendo manter os dados cadastrais verdadeiros e atualizados.'
     },
     {
       num: '3',
-      title: 'Planos, créditos e pagamento',
-      content: 'Os planos e os valores vigentes estão em Planos. Consumo de minutos, mensagens e números é registrado no painel. As assinaturas renovam automaticamente no fim de cada ciclo, salvo cancelamento antes da renovação. O pagamento é feito por cartão de crédito ou Pix.'
+      title: 'Planos, cobrança, promoções, excedentes e renovação (PENDENTE DE CONFIRMAÇÃO)',
+      content: 'Valores vigentes, duração e data de validade de promoções temporárias, definição das unidades de uso (minutos, ligações, conversas ou mensagens), regras de excedentes, custos adicionais de provedores/operadoras, meios de pagamento aceitos e condições de renovação mensal ou anual estão PENDENTES DE CONFIRMAÇÃO no catálogo oficial e na proposta comercial, devendo ser informados expressamente antes de qualquer pagamento.'
     },
     {
       num: '4',
       title: 'Uso aceitável',
-      content: 'Você concorda em não usar a Vocalis para: realizar ligações ou enviar mensagens sem base legal ou em desacordo com regras de telemarketing; se passar por ou ocultar que o atendimento é feito por um assistente de IA quando a lei exigir; tratar dados sensíveis sem base legal; ou burlar limites técnicos.'
+      content: 'É vedado utilizar a plataforma em desacordo com a legislação brasileira, regras de telecomunicações/telemarketing aplicáveis, normas da LGPD ou políticas dos provedores de mensageria, bem como tentar burlar limites técnicos.'
     },
     {
       num: '5',
-      title: 'Conteúdo do cliente e respostas da IA',
-      content: 'Prompts, bases de conhecimento, gravações e transcrições pertencem ao cliente. A Vocalis trata esse conteúdo apenas para prestar o serviço, conforme o Acordo de proteção de dados. Respostas geradas por IA podem conter imprecisões; o cliente deve revisar regras e prompts.'
+      title: 'Conteúdo do cliente, gravações e respostas da IA',
+      content: 'Prompts, bases de conhecimento, transcrições e eventuais gravações pertencem ao cliente ou a seus respectivos titulares. Respostas geradas por IA podem conter imprecisões, cabendo ao cliente revisar roteiros, permissões de gravação, avisos ao usuário final e fluxos configurados.'
     },
     {
       num: '6',
-      title: 'Disponibilidade e suporte',
-      content: 'A Vocalis empenha todos os esforços para manter a plataforma disponível 99,9% do tempo, exceto em manutenções programadas ou falhas fora do seu controle (por exemplo, falhas de operadoras de telefonia). O suporte é prestado pelos canais indicados na Central de ajuda.'
+      title: 'Disponibilidade e suporte (PENDENTE DE CONFIRMAÇÃO)',
+      content: 'Eventual meta de disponibilidade (SLA), janelas de manutenção, histórico de operação, canais oficiais e horários/SLAs de atendimento do suporte humano estão PENDENTES DE CONFIRMAÇÃO contratual e não constituem garantia irrestrita contra falhas de operadoras, internet ou serviços terceirizados.'
     },
     {
       num: '7',
-      title: 'Responsabilidade',
-      content: 'Na extensão permitida pela lei, a responsabilidade total da Vocalis fica limitada aos valores pagos pelo cliente nos 12 meses anteriores ao evento. Nada nestes Termos limita direitos garantidos pelo Código de Defesa do Consumidor quando aplicável.'
+      title: 'Limitação de responsabilidade e direitos do consumidor',
+      content: 'As responsabilidades contratuais e eventuais limites de indenização dependem de revisão jurídica específica na contratação. Nada nestes Termos afasta direitos assegurados pelo Código de Defesa do Consumidor (Lei nº 8.078/1990) quando aplicável.'
     },
     {
       num: '8',
-      title: 'Encerramento',
-      content: 'Você pode cancelar a qualquer momento em Faturamento. A Vocalis pode suspender contas que violem estes Termos, mediante aviso quando possível.'
+      title: 'Teste, cancelamento, devolução e reembolso (PENDENTE DE CONFIRMAÇÃO)',
+      content: 'As regras comerciais de período de teste/avaliação, procedimento de cancelamento, retenção ou devolução de valores pagos antecipadamente e prazo para reembolso estão PENDENTES DE CONFIRMAÇÃO pelo proprietário e assessoria jurídica, observando-se, quando aplicável, o direito legal de arrependimento de 7 dias previsto no art. 49 do Código de Defesa do Consumidor.'
     },
     {
       num: '9',
       title: 'Lei aplicável e foro',
-      content: 'Aplica-se a legislação brasileira. Para dirimir quaisquer litígios, fica eleito o foro da comarca da sede da Vocalis ou o foro do domicílio do consumidor.'
+      content: 'Aplica-se a legislação brasileira, sujeita à definição jurídica do foro contratual e respeitado o foro legal do domicílio do consumidor quando aplicável.'
     }
   ]
 };

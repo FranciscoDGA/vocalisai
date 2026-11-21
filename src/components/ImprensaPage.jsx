@@ -37,34 +37,17 @@ export default function ImprensaPage({ onOpenDemo, onOpenAuth, onNavigateHome })
     {
       id: 'release-1',
       date: '20.12.2025',
-      title: 'Vocalis lança assistentes de IA para telefone, WhatsApp e chat do site para pequenas e médias empresas',
-      summary: 'Nova suíte unificada combina reconhecimento de voz de ultrabaixa latência em português do Brasil com automação em múltiplos canais sem necessidade de código.',
+      title: 'Vocalis apresenta plataforma de assistentes de IA para telefone, WhatsApp e chat do site',
+      summary: 'Plataforma reúne fluxos configuráveis de atendimento por voz em português brasileiro, WhatsApp e widget webchat no mesmo painel.',
       content: {
-        location: 'SÃO PAULO (SP)',
+        location: 'COMUNICADO INSTITUCIONAL',
         paragraphs: [
-          'A Vocalis Tecnologia anunciou hoje o lançamento oficial de sua plataforma de comunicação com inteligência artificial conversacional desenhada sob medida para o mercado brasileiro de pequenas e médias empresas.',
-          'Diferente das URAs convencionais ou robôs de texto estáticos, a Vocalis emprega modelos acústicos próprios treinados na fonética e nos sotaques regionais do Brasil. O assistente telefônico atende ligações em menos de 1 segundo, compreende interrupções e responde dúvidas complexas em linguagem natural com latência ponta a ponta inferior a 500 milissegundos.',
-          'Além do atendimento telefônico receptivo e ativo com números homologados pela Anatel, a plataforma integra de forma nativa com a API oficial do WhatsApp (enviando e recebendo áudios humanizados) e disponibiliza um widget de Webchat instalável em apenas uma linha de código.',
-          'Com mais de 100 integrações com sistemas como Google Agenda, HubSpot, RD Station e ERPs nacionais, a Vocalis já atende clínicas médicas, escritórios jurídicos, imobiliárias e empresas de serviços que antes perdiam chamadas por falta de equipe dedicada 24 horas.'
+          'A Vocalis Tecnologia desenvolveu uma plataforma de comunicação com inteligência artificial conversacional orientada a pequenas e médias empresas no Brasil.',
+          'A solução reúne fluxos configuráveis para atendimento telefônico, WhatsApp e webchat, permitindo estruturar triagens iniciais, coleta de informações e encaminhamento para equipes humanas.',
+          'Recursos específicos, integrações com sistemas externos, disponibilidade telefônica e condições comerciais variam conforme o plano contratado e são confirmados antes da implantação.'
         ],
-        quote: '“Nosso objetivo é garantir que nenhuma empresa brasileira fique em silêncio. Um cliente que liga para agendar uma consulta ou tirar uma dúvida precisa ser acolhido com calor humano e eficiência imediata, seja às 14h de uma terça ou às 23h de um domingo.”',
-        author: 'Equipe de Liderança Vocalis'
-      }
-    },
-    {
-      id: 'release-2',
-      date: '15.01.2026',
-      title: 'Vocalis ultrapassa 1 milhão de minutos de voz processados e anuncia expansão de rede de parceiros white-label',
-      summary: 'Empresa acelera adoção entre agências e integradores de telecomunicações que já oferecem agentes de voz com marca própria.',
-      content: {
-        location: 'SÃO PAULO (SP)',
-        paragraphs: [
-          'Apenas semanas após o lançamento de sua versão 2.0, a Vocalis atingiu o marco de 1 milhão de minutos de conversação por voz operados por inteligência artificial em território nacional.',
-          'O crescimento expressivo reflete a alta demanda de PMEs por atendimento automatizado que não pareça robótico. Segundo métricas da própria plataforma, a taxa de resolução na primeira chamada (FCR) superou 82% no último trimestre.',
-          'Para impulsionar a distribuição, a Vocalis ampliou seu programa de parceiros certificados, permitindo que consultorias de TI e agências de marketing revendam a tecnologia em modelo white-label com margens de receita recorrente de até 50%.'
-        ],
-        quote: '“A voz humana continua sendo o canal de maior confiança para decisões de compra e agendamentos importantes no Brasil. Democratizar agentes de voz de padrão internacional para qualquer PME é a nossa missão.”',
-        author: 'Diretoria de Inovação Vocalis'
+        quote: '“Nosso objetivo é oferecer ferramentas práticas para que empresas organizem o atendimento ao cliente em múltiplos canais com clareza e transparência.”',
+        author: 'Equipe Vocalis Tecnologia Ltda.'
       }
     }
   ];
@@ -144,7 +127,7 @@ export default function ImprensaPage({ onOpenDemo, onOpenAuth, onNavigateHome })
         </div>
       </section>
 
-      {/* 2. STATS ROW (Canais de atendimento: 3 | Integrações: 100+) */}
+      {/* 2. STATS ROW (Canais de atendimento: 3 | Idioma principal: PT-BR) */}
       <section className="py-8 px-4 sm:px-6 lg:px-8 max-w-xl mx-auto">
         <div className="grid grid-cols-2 gap-8 text-center border-y border-[#ECEAE4] py-8">
           <div>
@@ -157,10 +140,10 @@ export default function ImprensaPage({ onOpenDemo, onOpenAuth, onNavigateHome })
           </div>
           <div>
             <div className="text-xs text-[#8C8881] font-medium mb-1">
-              Integrações
+              Idioma principal
             </div>
             <div className="text-4xl sm:text-5xl font-extrabold text-[#1A1816] tracking-tight">
-              100+
+              PT-BR
             </div>
           </div>
         </div>
@@ -196,10 +179,10 @@ export default function ImprensaPage({ onOpenDemo, onOpenAuth, onNavigateHome })
             A Vocalis é uma plataforma de IA para comunicação com clientes, criada para pequenas e médias empresas. Seus assistentes atendem ligações, conversam pelo WhatsApp e pelo chat do site, agendam compromissos e registram cada atendimento.
           </p>
           <p>
-            A plataforma começou com o assistente telefônico e evoluiu para um atendimento omnicanal, com agenda própria, integrações com CRMs e ferramentas de automação e uma central de conversas unificada.
+            A plataforma combina assistentes para telefone, WhatsApp e webchat em uma central unificada, com escopo de integrações e condições definidas conforme o plano.
           </p>
           <p>
-            A Vocalis é desenvolvida pela Vocalis Tecnologia Ltda., com sede em São Paulo (SP), e atende empresas de todo o Brasil, de clínicas e escritórios a oficinas e restaurantes.
+            A Vocalis é desenvolvida pela Vocalis Tecnologia Ltda. com foco em empresas no Brasil.
           </p>
         </div>
       </section>
@@ -256,7 +239,7 @@ export default function ImprensaPage({ onOpenDemo, onOpenAuth, onNavigateHome })
               </span>
             </h2>
             <p className="text-xs sm:text-sm text-[#A8A49C] leading-relaxed mb-8">
-              Crie a sua assistente em poucos minutos e ouça como ela atende os seus clientes: por telefone, no WhatsApp e no chat do site.
+              Configure sua assistente conforme o plano escolhido e conheça os fluxos por telefone, WhatsApp e webchat.
             </p>
             <button
               onClick={() => {
@@ -268,7 +251,7 @@ export default function ImprensaPage({ onOpenDemo, onOpenAuth, onNavigateHome })
             </button>
           </div>
 
-          {/* Soundwave animada com frequência e latência ao vivo */}
+          {/* Soundwave animada com frequência e legenda ilustrativa */}
           <LiveSoundwaveBars />
         </div>
       </section>
@@ -279,7 +262,7 @@ export default function ImprensaPage({ onOpenDemo, onOpenAuth, onNavigateHome })
           Toda empresa tem uma voz.
         </h2>
         <p className="text-2xl sm:text-3xl md:text-4xl font-serif italic text-[#4F46E5] tracking-tight mt-1">
-          A sua nunca mais fica em silêncio.
+          Mais agilidade para atender seus clientes.
         </p>
       </section>
 

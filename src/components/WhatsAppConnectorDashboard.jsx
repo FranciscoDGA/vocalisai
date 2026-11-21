@@ -5,6 +5,7 @@ import {
   Terminal, ExternalLink, QrCode
 } from 'lucide-react';
 import { sendWhatsAppMessage, sendWhatsAppAudio } from '../utils/uazapiClient';
+import { getProviderCostSummary } from '../utils/commercialCatalogUtils';
 
 export default function WhatsAppConnectorDashboard({ userPhone = '559484423948' }) {
   const [serverStatus, setServerStatus] = useState('checking'); // checking, connected, qr_ready, offline
@@ -14,7 +15,7 @@ export default function WhatsAppConnectorDashboard({ userPhone = '559484423948' 
 
   // Test form state
   const [testNumber, setTestNumber] = useState(userPhone);
-  const [testMessage, setTestMessage] = useState('👋 Olá! Teste de integração da Vocalis AI. O robô de WhatsApp está 100% conectado e operacional!');
+  const [testMessage, setTestMessage] = useState('Mensagem de teste local do protótipo Vocalis AI (uso restrito a desenvolvimento).');
   const [isSending, setIsSending] = useState(false);
   const [sendResult, setSendResult] = useState(null);
 
@@ -131,20 +132,19 @@ export default function WhatsAppConnectorDashboard({ userPhone = '559484423948' 
       {/* Header */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-4 border-b border-[#EBE8E2]">
         <div>
-          <div className="flex items-center gap-2 mb-1">
-            <span className="px-2.5 py-0.5 rounded-full text-[10px] font-bold bg-[#E6F4EA] text-emerald-800 uppercase tracking-wider flex items-center gap-1">
-              <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
-              Evolution Open-Source Engine
+          <div className="flex flex-wrap items-center gap-2 mb-1">
+            <span className="px-2.5 py-0.5 rounded-full text-[10px] font-bold bg-amber-100 text-amber-900 border border-amber-300 uppercase tracking-wider flex items-center gap-1">
+              <span>Protótipo Experimental Local (Não Oficial · Fora da Oferta Comercial Pública)</span>
             </span>
             <span className="text-[10px] text-stone-500 bg-stone-100 px-2 py-0.5 rounded-full font-mono">
-              Porta 8080
+              Porta local 8080 · Baileys
             </span>
           </div>
           <h2 className="text-2xl sm:text-3xl font-bold text-[#1A1816] tracking-tight">
-            Conexão WhatsApp Web
+            Protótipo Local WhatsApp Web (Uso Interno / Testes)
           </h2>
           <p className="text-xs text-[#5C5955] mt-1">
-            Gerencie o chip conectado à IA para envio de mensagens, áudios humanizados e geração de Pix em tempo real.
+            Interface de teste local para o servidor experimental baseado em Baileys (`localhost:8080`). Não integra a oferta comercial principal nem equivale à WhatsApp Business Platform (Meta Cloud API).
           </p>
         </div>
 
@@ -156,6 +156,17 @@ export default function WhatsAppConnectorDashboard({ userPhone = '559484423948' 
           <RefreshCw className={`w-3.5 h-3.5 ${refreshing ? 'animate-spin' : ''}`} />
           <span>Atualizar Status</span>
         </button>
+      </div>
+
+      {/* Warning Notice */}
+      <div className="p-4 rounded-2xl border border-amber-200 bg-amber-50/70 text-xs text-[#5C5955] space-y-1.5 leading-relaxed">
+        <div className="font-bold text-amber-950 flex items-center gap-1.5">
+          <AlertCircle className="w-4 h-4 text-amber-700 shrink-0" />
+          <span>Aviso de Risco e Decisão Pendente (Não Oficial vs. API Oficial Meta)</span>
+        </div>
+        <p>
+          Esta conexão não oficial (WhatsApp Web / Baileys) foi <strong>retirada da oferta comercial pública principal</strong>: o servidor local executa apenas disparos outbound manuais de teste (sem receptor `messages.upsert` integrado à IA), depende de sessão pareada localmente em um processo Node e está sujeito a desconexões e risco de restrição ou banimento do número pela Meta. Para operação comercial oficial, utilize integração aprovada via Meta Cloud API / provedor oficial (sujeita às regras e tarifas da Meta).
+        </p>
       </div>
 
       {/* ========================================================
@@ -193,7 +204,7 @@ export default function WhatsAppConnectorDashboard({ userPhone = '559484423948' 
             <div className="p-3.5 rounded-2xl bg-white border border-[#EBE8E2] space-y-1">
               <div className="text-[10px] text-stone-400 uppercase font-bold">Modo de Operação</div>
               <div className="font-bold text-[#1A1816]">Voz Neural + WhatsApp</div>
-              <div className="text-[11px] text-emerald-600 font-semibold">Custo R$ 0,00 por mensagem</div>
+              <div className="text-[11px] text-emerald-700 font-semibold">{getProviderCostSummary('whatsapp')}</div>
             </div>
             <div className="p-3.5 rounded-2xl bg-white border border-[#EBE8E2] space-y-1">
               <div className="text-[10px] text-stone-400 uppercase font-bold">Simulação de Presença</div>
@@ -201,9 +212,9 @@ export default function WhatsAppConnectorDashboard({ userPhone = '559484423948' 
               <div className="text-[11px] text-stone-500">Comportamento humano natural</div>
             </div>
             <div className="p-3.5 rounded-2xl bg-white border border-[#EBE8E2] space-y-1">
-              <div className="text-[10px] text-stone-400 uppercase font-bold">Sessão Salva</div>
-              <div className="font-bold text-[#1A1816]">Permanente</div>
-              <div className="text-[11px] text-stone-500">Não precisa escanear novamente</div>
+              <div className="text-[10px] text-stone-400 uppercase font-bold">Sessão Local (Baileys)</div>
+              <div className="font-bold text-[#1A1816]">Sujeita a expiração</div>
+              <div className="text-[11px] text-stone-500">Pode exigir nova leitura de QR Code ou encerrar pelo WhatsApp</div>
             </div>
           </div>
         </div>
@@ -384,9 +395,9 @@ export default function WhatsAppConnectorDashboard({ userPhone = '559484423948' 
           <span>Diretrizes de Segurança & Aquecimento de Chip</span>
         </h4>
         <ul className="list-disc list-inside space-y-1 leading-relaxed">
-          <li><strong>Atendimento Receptivo:</strong> Os disparos são acionados quando o cliente solicita um diagnóstico, agenda no site ou responde à ligação da Roberta.</li>
-          <li><strong>Zero Risco de Banimento:</strong> Por ser um fluxo 100% consentido pelo próprio cliente, a taxa de denúncias é nula.</li>
-          <li><strong>Desconexão:</strong> Caso queira desconectar o chip, basta acessar <em>Aparelhos Conectados</em> no seu WhatsApp e desconectar a sessão <em>Vocalis AI / Chrome</em>.</li>
+          <li><strong>Atendimento Receptivo:</strong> Os envios dependem da integração configurada e das interações autorizadas pelo usuário.</li>
+          <li><strong>Boas práticas contra restrições:</strong> o atendimento consentido reduz denúncias, mas não elimina a necessidade de cumprir as políticas da Meta nem garante ausência de bloqueios.</li>
+          <li><strong>Desconexão:</strong> Caso queira desconectar uma sessão conectada, basta acessar <em>Aparelhos Conectados</em> no seu WhatsApp e encerrar o vínculo ativo.</li>
         </ul>
       </div>
 

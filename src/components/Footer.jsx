@@ -278,7 +278,7 @@ export default function Footer({ onOpenDocs, onOpenDemo, onNavigate, onOpenDossi
               Proteção de dados
             </button>
             <button 
-              onClick={() => onOpenDocs('dpa')}
+              onClick={() => onOpenDocs('exclusao')}
               className="hover:text-[#1A1816] transition-colors cursor-pointer"
             >
               Exclusão de dados

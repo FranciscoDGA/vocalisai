@@ -1,54 +1,58 @@
 import React from 'react';
 import { Check, X, Sparkles, ArrowRight } from 'lucide-react';
+import {
+  getCommercialEntryLabel,
+  getSimultaneousCallsSummary,
+} from '../utils/commercialCatalogUtils';
 
 const COMPARISON_ROWS = [
   {
     feature: 'Custo Mensal Real',
     clt: 'R$ 3.800+ (com FGTS, 13º e férias)',
     ura: 'R$ 400 a R$ 900/mês',
-    vocalis: 'A partir de R$ 297/mês',
+    vocalis: getCommercialEntryLabel(),
     highlight: true
   },
   {
     feature: 'Horário de Disponibilidade',
     clt: '8h/dia (apenas dias úteis)',
-    ura: '24h/dia (mas 68% desligam na cara)',
-    vocalis: '24h por dia, 365 dias/ano ininterruptos',
+    ura: 'Menu numérico rígido com maior atrito para quem liga',
+    vocalis: 'Configurável para operar também fora do horário comercial',
     highlight: false
   },
   {
     feature: 'Capacidade de Chamadas Simultâneas',
     clt: 'Apenas 1 ligação (dá linha ocupada)',
-    ura: 'Fila de espera com musiquinha chata',
-    vocalis: '100+ chamadas simultâneas sem fila',
+    ura: 'Fila de espera com musiquinha',
+    vocalis: getSimultaneousCallsSummary('telefone'),
     highlight: true
   },
   {
     feature: 'Faltas, Atestados e Férias',
-    clt: 'Sim (deixa a recepção desprotegida)',
+    clt: 'Sim (pode deixar a recepção sem cobertura)',
     ura: 'Não',
-    vocalis: 'Zero faltas, zero interrupções',
+    vocalis: 'Operação automatizada sem escala trabalhista (sujeita à disponibilidade técnica)',
     highlight: false
   },
   {
     feature: 'Voz e Experiência do Cliente',
     clt: 'Varia com o cansaço do atendente',
     ura: 'Robô mecânico ("digite 1 ou 2")',
-    vocalis: 'Humana, calorosa e fluente em PT-BR',
+    vocalis: 'Fluxo conversacional natural configurável em PT-BR',
     highlight: true
   },
   {
-    feature: 'WhatsApp Web Sem Taxas da Meta',
-    clt: 'Não (digitação lenta no teclado)',
+    feature: 'Atendimento via WhatsApp',
+    clt: 'Digitação manual durante o expediente',
     ura: 'Não possui',
-    vocalis: 'Sim (áudios e textos automáticos via Baileys)',
+    vocalis: 'Texto e áudio configuráveis (modalidade e custos de provedor sob confirmação)',
     highlight: true
   },
   {
-    feature: 'Atualização Automática de Agenda e CRM',
+    feature: 'Atualização de Agenda e CRM',
     clt: 'Manual e sujeita a esquecimentos',
     ura: 'Não integrado',
-    vocalis: 'Sincronização instantânea em tempo real',
+    vocalis: 'Registro estruturado e integrações conforme escopo do plano',
     highlight: false
   }
 ];
@@ -70,7 +74,7 @@ export default function ComparisonMatrixSection({ onOpenAuth, onOpenDemo }) {
             <span className="font-serif-title italic text-[#4F46E5]">é o jeito mais caro</span> de atender?
           </h2>
           <p className="mt-4 text-sm sm:text-base text-[#5C5955] max-w-2xl mx-auto">
-            Veja a comparação real entre contratar uma equipe tradicional, usar robôs antiquados de URA ou colocar a inteligência da Vocalis AI para trabalhar.
+            Veja uma comparação ilustrativa entre atendimento tradicional, URA convencional e automação com a Vocalis AI.
           </p>
         </div>
 

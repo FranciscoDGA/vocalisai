@@ -10,14 +10,14 @@ export default function CallTimelineSection() {
         {/* Header */}
         <div className="max-w-2xl mx-auto mb-16">
           <span className="inline-block text-xs font-semibold text-[#4F46E5] uppercase tracking-wider mb-3">
-            FLUXO DE UMA CHAMADA REAL
+            FLUXO ILUSTRATIVO DE ATENDIMENTO
           </span>
           <h2 className="text-4xl sm:text-5xl font-normal text-[#1A1816] tracking-tight leading-[1.15]">
-            Um minuto de conversa,<br />
-            <span className="font-serif-title italic text-[#4F46E5]">dá até um resumo.</span>
+            Etapas de um atendimento,<br />
+            <span className="font-serif-title italic text-[#4F46E5]">do contato ao resumo.</span>
           </h2>
           <p className="mt-4 text-base sm:text-lg text-[#5C5955] leading-relaxed">
-            Veja como cada segundo é aproveitado para entender, resolver e atualizar seu sistema sem deixar o cliente esperando na fila.
+            Veja um exemplo ilustrativo de como as etapas de um atendimento automatizado podem ser organizadas.
           </p>
         </div>
 

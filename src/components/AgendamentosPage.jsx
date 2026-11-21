@@ -75,29 +75,29 @@ export default function AgendamentosPage({ onOpenDemo, onOpenAuth, onNavigateHom
     {
       num: 2,
       title: 'Sincronizar agenda',
-      text: 'Conecte sua agenda (por exemplo, Google Agenda, Outlook ou Feegow) via integração direta com 1 clique.',
-      detail: 'A IA verifica slots livres em tempo real e bloqueia horários sem nenhum risco de conflito de agenda.'
+      text: 'Avalie e configure a conexão com sua agenda conforme as integrações habilitadas no plano.',
+      detail: 'Possibilidade de consulta de disponibilidade e bloqueio de horários conforme integração configurada.'
     },
     {
       num: 3,
       title: 'Testar agendamento',
-      text: 'Ligue para a IA e agende um compromisso para garantir que tudo esteja funcionando perfeitamente.',
-      detail: 'Simule o fluxo completo no seu próprio celular antes de divulgar para os clientes.'
+      text: 'Valide o fluxo de agendamento nas ferramentas de teste antes de publicar o atendimento.',
+      detail: 'Revise as mensagens de confirmação e horários antes da entrada em operação.'
     }
   ];
 
   const accordionItems = [
     {
       title: 'Pós-processamento automático',
-      content: 'Assim que o cliente confirma o horário na ligação ou no WhatsApp, a Vocalis insere o evento no calendário, dispara mensagem de confirmação com localização e envia lembrete 24h antes para zerar no-shows.'
+      content: 'Quando integrado à agenda habilitada no plano, o fluxo permite registrar o horário e enviar lembretes configuráveis para apoiar a redução de faltas.'
     },
     {
-      title: 'Integração perfeita com agenda',
-      content: 'Compatível nativamente com Google Calendar, Microsoft Outlook, Calendly, Cal.com e softwares clínicos como Feegow, Clinicorp e Conexa. Qualquer alteração feita manualmente pela sua recepcionista é respeitada instantaneamente pela IA.'
+      title: 'Integração com agendas sob consulta',
+      content: 'Integrações com agendas e sistemas clínicos externos são avaliadas conforme o plano contratado e a viabilidade técnica.'
     },
     {
       title: 'Organização eficiente de compromissos',
-      content: 'Se o cliente precisar cancelar ou reagendar de última hora, ele liga ou manda mensagem e a IA faz a alteração na hora, liberando a vaga imediatamente para novos pacientes ou clientes.'
+      content: 'É possível configurar regras para solicitação de cancelamento ou reagendamento conforme o fluxo da empresa.'
     }
   ];
 
@@ -179,7 +179,7 @@ export default function AgendamentosPage({ onOpenDemo, onOpenAuth, onNavigateHom
                 type="tel"
                 value={phoneNumber}
                 onChange={handlePhoneChange}
-                placeholder="Seu celular com DDD"
+                placeholder="Seu celular com DDD (opcional)"
                 className="flex-1 px-3 py-2.5 bg-transparent text-[#1A1816] placeholder-[#9E9B95] text-sm focus:outline-none"
               />
 
@@ -189,11 +189,15 @@ export default function AgendamentosPage({ onOpenDemo, onOpenAuth, onNavigateHom
                 className="shrink-0 px-6 py-3 rounded-full bg-[#11100F] text-white text-xs sm:text-sm font-semibold hover:bg-black transition-all flex items-center gap-2 shadow-sm cursor-pointer"
               >
                 <Phone className="w-4 h-4 text-white" />
-                <span>Ouvir a Vocalis agora</span>
+                <span>Abrir simulação ilustrativa</span>
               </button>
 
             </div>
           </form>
+
+          <p className="text-[11px] text-[#736F69] max-w-2xl mx-auto mb-3 leading-relaxed">
+            Simulação ilustrativa no navegador (Web Speech / TTS): não realiza chamada telefônica real e não armazena seu número. Em operação real, telefonia, números/SIP, transferência, gravação, limites de minutos, chamadas simultâneas e regras de excedente dependem de provedores terceiros (como Vapi e operadora SIP) e de confirmação no catálogo oficial.
+          </p>
 
           {/* Secondary Link: Agendar demo */}
           <div className="mb-8">
@@ -205,11 +209,11 @@ export default function AgendamentosPage({ onOpenDemo, onOpenAuth, onNavigateHom
             </button>
           </div>
 
-          {/* Checklist */}
+          {/* Checklist prudente */}
           <div className="flex flex-wrap items-center justify-center gap-6 md:gap-8 text-xs font-semibold text-[#5C5955]">
             <div className="flex items-center gap-1.5">
               <Check className="w-4 h-4 text-[#4F46E5]" strokeWidth={2.5} />
-              <span>Garantia de 30 dias</span>
+              <span>Condições comerciais sob consulta</span>
             </div>
             <div className="flex items-center gap-1.5">
               <Check className="w-4 h-4 text-[#4F46E5]" strokeWidth={2.5} />
@@ -217,7 +221,7 @@ export default function AgendamentosPage({ onOpenDemo, onOpenAuth, onNavigateHom
             </div>
             <div className="flex items-center gap-1.5">
               <Check className="w-4 h-4 text-[#4F46E5]" strokeWidth={2.5} />
-              <span>No ar em minutos</span>
+              <span>Configuração guiada</span>
             </div>
           </div>
 
@@ -237,7 +241,7 @@ export default function AgendamentosPage({ onOpenDemo, onOpenAuth, onNavigateHom
                 24/7
               </span>
               <p className="text-xs sm:text-sm text-[#5C5955] leading-relaxed">
-                Atendimento, inclusive fora do expediente.
+                Atendimento configurável, inclusive fora do expediente.
               </p>
             </div>
 
@@ -251,23 +255,23 @@ export default function AgendamentosPage({ onOpenDemo, onOpenAuth, onNavigateHom
               </p>
             </div>
 
-            {/* Card 3: 100+ */}
+            {/* Card 3: API & Webhooks */}
             <div className="bg-[#FAF9F5] rounded-3xl p-8 border border-[#E7E4DC] shadow-sm text-left">
-              <span className="text-4xl sm:text-5xl font-serif-title font-normal text-[#1A1816] block mb-3">
-                100+
+              <span className="text-3xl sm:text-4xl font-serif-title font-normal text-[#1A1816] block mb-3">
+                API &amp; Webhooks
               </span>
               <p className="text-xs sm:text-sm text-[#5C5955] leading-relaxed">
-                Integrações.
+                Integrações sob consulta conforme o plano.
               </p>
             </div>
 
-            {/* Card 4: 30 dias */}
+            {/* Card 4: PT-BR */}
             <div className="bg-[#FAF9F5] rounded-3xl p-8 border border-[#E7E4DC] shadow-sm text-left">
               <span className="text-4xl sm:text-5xl font-serif-title font-normal text-[#1A1816] block mb-3">
-                30 dias
+                PT-BR
               </span>
               <p className="text-xs sm:text-sm text-[#5C5955] leading-relaxed">
-                Para decidir, ou seu dinheiro de volta.
+                Foco em atendimento em português brasileiro.
               </p>
             </div>
 
@@ -395,7 +399,7 @@ export default function AgendamentosPage({ onOpenDemo, onOpenAuth, onNavigateHom
               </h2>
 
               <p className="text-sm text-stone-300 leading-relaxed max-w-xl mx-auto">
-                Crie a sua assistente em poucos minutos e ouça como ela atende com calma, em português, a qualquer hora.
+                Configure sua assistente conforme o plano escolhido e conheça como ela atende em português, seguindo as regras do seu negócio.
               </p>
 
               <div className="pt-3">
@@ -413,7 +417,7 @@ export default function AgendamentosPage({ onOpenDemo, onOpenAuth, onNavigateHom
               <AudioFrequencyWave 
                 variant="full" 
                 showLatencyBadge={true}
-                latencyText="Latência 380ms • Frequência Vocal em Tempo Real"
+                latencyText="Visualização ilustrativa • Voz em português brasileiro"
               />
             </div>
 
