@@ -244,6 +244,20 @@ export default function Footer({ onOpenDocs, onOpenDemo, onNavigate, onOpenDossi
                 </button>
               </li>
               <li>
+                <a
+                  href="/blog/melhor-ia-para-atendimento-whatsapp"
+                  onClick={(e) => {
+                    if (onNavigate) {
+                      e.preventDefault();
+                      onNavigate('blog-melhor-ia-whatsapp');
+                    }
+                  }}
+                  className="text-[#5C5955] hover:text-[#1A1816] transition-colors text-left cursor-pointer block"
+                >
+                  Guia: Melhor IA para WhatsApp
+                </a>
+              </li>
+              <li>
                 <button 
                   onClick={() => {
                     if (onOpenDossier) onOpenDossier();

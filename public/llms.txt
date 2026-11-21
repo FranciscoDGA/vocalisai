@@ -7,6 +7,7 @@ Plataforma de assistentes de atendimento configuráveis via telefone, WhatsApp e
 ## Páginas Principais
 
 - [Vocalis AI — Página Principal](https://vocalisai-phi.vercel.app/): Apresentação dos canais Telefone, WhatsApp e Webchat, simulações ilustrativas e catálogo comercial sujeito a confirmação por plano.
+- [Melhor IA para Atendimento no WhatsApp (2026)](https://vocalisai-phi.vercel.app/blog/melhor-ia-para-atendimento-whatsapp): Guia completo comparando chatbots de fluxo fixo vs. agentes de IA conversacionais com texto e áudio, API Oficial, CRM, transbordo humano e LGPD.
 
 ## Canais e Recursos
 

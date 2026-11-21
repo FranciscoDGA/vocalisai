@@ -41,6 +41,20 @@ const CarreirasPage = lazy(() => import('./components/CarreirasPage'));
 const ImprensaPage = lazy(() => import('./components/ImprensaPage'));
 const ContatoPage = lazy(() => import('./components/ContatoPage'));
 const SobrePage = lazy(() => import('./components/SobrePage'));
+const MelhorIaWhatsAppArticlePage = lazy(() => import('./components/MelhorIaWhatsAppArticlePage'));
+
+const PAGE_TO_PATH = {
+  home: '/',
+  'blog-melhor-ia-whatsapp': '/blog/melhor-ia-para-atendimento-whatsapp',
+};
+
+function getPageFromPathname(pathname) {
+  const normalized = (pathname || '/').replace(/\/+$/, '') || '/';
+  if (normalized === '/blog/melhor-ia-para-atendimento-whatsapp') {
+    return 'blog-melhor-ia-whatsapp';
+  }
+  return 'home';
+}
 
 // Lazy-loaded modals
 const DocsPortal = lazy(() => import('./components/DocsPortal'));
@@ -63,7 +77,9 @@ function PageFallback() {
 }
 
 export default function App() {
-  const [currentPage, setCurrentPage] = useState('home'); // 'home' | 'dashboard' | 'parceiros' | 'whatsapp' | ...
+  const [currentPage, setCurrentPage] = useState(() =>
+    typeof window !== 'undefined' ? getPageFromPathname(window.location.pathname) : 'home'
+  ); // 'home' | 'dashboard' | 'parceiros' | 'whatsapp' | 'blog-melhor-ia-whatsapp' | ...
   const [currentUser, setCurrentUser] = useState(null);
   const [demoModalOpen, setDemoModalOpen] = useState(false);
   const [authModalOpen, setAuthModalOpen] = useState(false);
@@ -114,8 +130,22 @@ export default function App() {
     setDocsPortalOpen(true);
   };
 
+  useEffect(() => {
+    const handlePopState = () => {
+      setCurrentPage(getPageFromPathname(window.location.pathname));
+    };
+    window.addEventListener('popstate', handlePopState);
+    return () => window.removeEventListener('popstate', handlePopState);
+  }, []);
+
   const handleNavigate = (page) => {
     setCurrentPage(page);
+    if (typeof window !== 'undefined' && window.history?.pushState) {
+      const targetPath = PAGE_TO_PATH[page] || '/';
+      if (window.location.pathname !== targetPath) {
+        window.history.pushState({}, '', targetPath);
+      }
+    }
     window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
@@ -382,6 +412,15 @@ export default function App() {
                 onOpenDemo={() => setDemoModalOpen(true)}
                 onOpenAuth={() => setAuthModalOpen(true)}
                 onNavigate={handleNavigate}
+              />
+            </main>
+          ) : currentPage === 'blog-melhor-ia-whatsapp' ? (
+            <main className="flex-1 w-full max-w-full overflow-x-hidden min-w-0 animate-fadeIn">
+              <MelhorIaWhatsAppArticlePage
+                onOpenDemo={() => setDemoModalOpen(true)}
+                onOpenAuth={() => setAuthModalOpen(true)}
+                onNavigate={handleNavigate}
+                onNavigateHome={() => handleNavigate('home')}
               />
             </main>
           ) : currentPage === 'precos' ? (
