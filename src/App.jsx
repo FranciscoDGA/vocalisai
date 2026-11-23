@@ -42,16 +42,21 @@ const ImprensaPage = lazy(() => import('./components/ImprensaPage'));
 const ContatoPage = lazy(() => import('./components/ContatoPage'));
 const SobrePage = lazy(() => import('./components/SobrePage'));
 const MelhorIaWhatsAppArticlePage = lazy(() => import('./components/MelhorIaWhatsAppArticlePage'));
+const AtendimentoWhatsAppArticlePage = lazy(() => import('./components/AtendimentoWhatsAppArticlePage'));
 
 const PAGE_TO_PATH = {
   home: '/',
   'blog-melhor-ia-whatsapp': '/blog/melhor-ia-para-atendimento-whatsapp',
+  'blog-atendimento-automatico-whatsapp': '/blog/atendimento-automatico-whatsapp-inteligencia-artificial',
 };
 
 function getPageFromPathname(pathname) {
   const normalized = (pathname || '/').replace(/\/+$/, '') || '/';
   if (normalized === '/blog/melhor-ia-para-atendimento-whatsapp') {
     return 'blog-melhor-ia-whatsapp';
+  }
+  if (normalized === '/blog/atendimento-automatico-whatsapp-inteligencia-artificial') {
+    return 'blog-atendimento-automatico-whatsapp';
   }
   return 'home';
 }
@@ -420,6 +425,13 @@ export default function App() {
                 onOpenDemo={() => setDemoModalOpen(true)}
                 onOpenAuth={() => setAuthModalOpen(true)}
                 onNavigate={handleNavigate}
+                onNavigateHome={() => handleNavigate('home')}
+              />
+            </main>
+          ) : currentPage === 'blog-atendimento-automatico-whatsapp' ? (
+            <main className="flex-1 w-full max-w-full overflow-x-hidden min-w-0 animate-fadeIn">
+              <AtendimentoWhatsAppArticlePage
+                onOpenLeadModal={() => setDemoModalOpen(true)}
                 onNavigateHome={() => handleNavigate('home')}
               />
             </main>

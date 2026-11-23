@@ -35,3 +35,4 @@ dist-ssr
 whatsapp-server/node_modules
 whatsapp-server/session_auth
 
+.env*
