@@ -55,7 +55,10 @@ function getPageFromPathname(pathname) {
   if (normalized === '/blog/melhor-ia-para-atendimento-whatsapp') {
     return 'blog-melhor-ia-whatsapp';
   }
-  if (normalized === '/blog/atendimento-automatico-whatsapp-inteligencia-artificial') {
+  if (
+    normalized === '/blog/atendimento-automatico-whatsapp-inteligencia-artificial' ||
+    normalized === '/blog/como-automatizar-atendimento-whatsapp-com-ia'
+  ) {
     return 'blog-atendimento-automatico-whatsapp';
   }
   return 'home';
