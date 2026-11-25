@@ -1,22 +1,41 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { X, Printer, Download, ShieldCheck, CheckCircle2, TrendingUp, Building2, Phone, MessageSquare, Clock } from 'lucide-react';
 import VocalisLogo from './VocalisLogo';
 import { BRAND } from '../data/content';
 import {
   getCommercialEntryLabel,
+  getLowestConfirmedEntryDetails,
   getLowestConfirmedEntryPrice,
   getSimultaneousCallsSummary,
 } from '../utils/commercialCatalogUtils';
 
 export default function ExecutiveDossierModal({ isOpen, onClose, onOpenDemo }) {
+  useEffect(() => {
+    if (!isOpen) return;
+    const handleKeyDown = (event) => {
+      if (event.key === 'Escape') {
+        onClose?.();
+      }
+    };
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, [isOpen, onClose]);
+
   if (!isOpen) return null;
+
+  const telefoneEntry = getLowestConfirmedEntryDetails('telefone');
 
   const handlePrint = () => {
     window.print();
   };
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-6 bg-black/70 backdrop-blur-xs animate-fadeIn overflow-y-auto">
+    <div
+      role="dialog"
+      aria-modal="true"
+      aria-label="Dossiê Executivo Vocalis AI"
+      className="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-6 bg-black/70 backdrop-blur-xs animate-fadeIn overflow-y-auto"
+    >
       <div className="bg-white rounded-3xl max-w-4xl w-full p-6 sm:p-12 border border-[#E7E4DC] shadow-2xl relative text-left my-8 max-h-[92vh] overflow-y-auto print:max-h-none print:overflow-visible print:border-none print:shadow-none print:p-0">
         
         {/* Print Styles */}
@@ -58,7 +77,9 @@ export default function ExecutiveDossierModal({ isOpen, onClose, onOpenDemo }) {
               <span>Imprimir / Salvar em PDF</span>
             </button>
             <button
+              type="button"
               onClick={onClose}
+              aria-label="Fechar dossiê executivo"
               className="p-2 text-[#8C8881] hover:text-[#1A1816] rounded-xl hover:bg-[#FAF9F5] transition-colors cursor-pointer"
             >
               <X className="w-5 h-5" />
@@ -128,12 +149,12 @@ export default function ExecutiveDossierModal({ isOpen, onClose, onOpenDemo }) {
                   <td className="p-3.5 font-bold text-emerald-700 bg-indigo-50/30">{getSimultaneousCallsSummary('telefone')}</td>
                 </tr>
                 <tr className="bg-[#FAF9F5] font-bold">
-                  <td className="p-3.5 text-[#1A1816]">Diferença Ilustrativa (Referência CLT)</td>
-                  <td className="p-3.5 text-rose-600">Referência ilustrativa: ~R$ 45.600/ano</td>
+                  <td className="p-3.5 text-[#1A1816]">Comparativo Ilustrativo de Entrada</td>
+                  <td className="p-3.5 text-rose-600">Referência ilustrativa CLT: ~R$ 45.600/ano</td>
                   <td className="p-3.5 text-emerald-700 bg-indigo-50/50">
-                    {typeof getLowestConfirmedEntryPrice('telefone') === 'number'
-                      ? `Diferença ilustrativa de R$ ${(45600 - getLowestConfirmedEntryPrice('telefone') * 12).toLocaleString('pt-BR')}/ano vs. piso confirmado (sem garantia de economia)`
-                      : 'Calculada na proposta conforme plano confirmado (valores CLT são referências ilustrativas)'}
+                    {telefoneEntry && typeof getLowestConfirmedEntryPrice('telefone') === 'number'
+                      ? `${telefoneEntry.channelShortName} ${telefoneEntry.planName}: ${telefoneEntry.displayPrice}/mês nos 3 primeiros meses${telefoneEntry.regularPriceLabel ? ` (depois ${telefoneEntry.regularPriceLabel}/mês no plano mensal)` : ''} — valores CLT são meramente ilustrativos.`
+                      : 'Calculada na proposta conforme plano confirmado (valores CLT são referências ilustrativas).'}
                   </td>
                 </tr>
               </tbody>

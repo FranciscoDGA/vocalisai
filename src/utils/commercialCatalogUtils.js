@@ -3,6 +3,8 @@ import {
   INFO_STATUS,
   ANNUAL_CHARGE_TYPES,
   PROMOTION_BILLING_SCOPES,
+  applyDiscountWithRounding,
+  calculateEffectiveDiscountPercent,
 } from '../data/commercialCatalog';
 
 export const STATUS_LABELS = Object.freeze({
@@ -166,6 +168,17 @@ export function formatIsoDateBR(isoDate) {
   return `${day}/${month}/${year}`;
 }
 
+function toIsoDateOnly(referenceDate = new Date()) {
+  if (typeof referenceDate === 'string' && isValidIsoDate(referenceDate)) {
+    return referenceDate;
+  }
+  const d = referenceDate instanceof Date ? referenceDate : new Date(referenceDate);
+  if (Number.isNaN(d.getTime())) {
+    return new Date().toISOString().slice(0, 10);
+  }
+  return d.toISOString().slice(0, 10);
+}
+
 export function canStackAnnualAndPromotion(plan) {
   const stackField = plan?.pricing?.promotion?.stackingWithAnnualDiscount;
   return stackField?.status === INFO_STATUS.CONFIRMADA && stackField.value === true;
@@ -200,7 +213,7 @@ export function getPromotionRuleSummary(plan) {
   return null;
 }
 
-export function isPromotionConfirmedAndValid(plan) {
+export function isPromotionConfirmedAndValid(plan, referenceDate = new Date()) {
   const promo = plan?.pricing?.promotion;
   const promoMonthly = plan?.pricing?.promotionalMonthly;
   const regularMonthly = plan?.pricing?.regularMonthly;
@@ -245,6 +258,11 @@ export function isPromotionConfirmedAndValid(plan) {
     return false;
   }
   if (promo.validUntil?.status !== INFO_STATUS.CONFIRMADA || !isValidIsoDate(promo.validUntil.value)) {
+    return false;
+  }
+  // Validação de expiração da promoção
+  const currentIso = toIsoDateOnly(referenceDate);
+  if (currentIso > promo.validUntil.value) {
     return false;
   }
   if (
@@ -314,23 +332,60 @@ export function getChannelAnnualAvailability(channelId, catalog = COMMERCIAL_CAT
   };
 }
 
+export function getChannelAnnualToggleBadge(channelId, catalog = COMMERCIAL_CATALOG) {
+  const plans = getChannelPlans(channelId, catalog);
+  const discounts = plans
+    .map((p) => getPlanPricingSummary(channelId, p.id, 'yearly', catalog))
+    .filter((s) => s.hasConfirmedPrice && typeof s.annualDiscountPercentage === 'number' && s.annualDiscountPercentage > 0)
+    .map((s) => s.annualDiscountPercentage);
+
+  if (discounts.length === 0) return null;
+  const unique = Array.from(new Set(discounts));
+  if (unique.length === 1) {
+    return `-${unique[0]}%`;
+  }
+  const maxDiscount = Math.max(...unique);
+  return `até -${maxDiscount}%`;
+}
+
+export function isPlanFullyConfirmed(plan, channel = null) {
+  if (!plan || plan.status !== INFO_STATUS.CONFIRMADA) return false;
+  if (channel && channel.limitReachedPolicy?.status !== INFO_STATUS.CONFIRMADA) return false;
+  if (plan.usageUnitDefinition?.status !== INFO_STATUS.CONFIRMADA) return false;
+  if (plan.overagesAndAddons?.extraUsage?.status !== INFO_STATUS.CONFIRMADA) return false;
+  const hasPendingLimit = Object.values(plan.limits || {}).some(
+    (f) => f?.status === INFO_STATUS.PENDENTE
+  );
+  if (hasPendingLimit) return false;
+  return true;
+}
+
 export function getPlanPricingSummary(
   channelId,
   planId,
   billingCycle = 'monthly',
-  catalog = COMMERCIAL_CATALOG
+  catalog = COMMERCIAL_CATALOG,
+  options = {}
 ) {
+  const { referenceDate = new Date() } = options;
   const cycle = normalizeBillingCycle(billingCycle);
-  const { plan } = findPlan(channelId, planId, catalog);
+  const { channel, plan } = findPlan(channelId, planId, catalog);
+
+  const externalCostsNote =
+    'Custos de telefonia/operadora, Meta Cloud API, integrações e tributos aplicáveis pendentes de confirmação.';
 
   if (!plan) {
     return {
       status: INFO_STATUS.PENDENTE,
       statusLabel: getStatusLabel(INFO_STATUS.PENDENTE),
+      isPlanFullyConfirmed: false,
+      readinessLabel: 'Condições pendentes',
       cycle,
       hasConfirmedPrice: false,
       displayPrice: 'Sob consulta',
       numericPrice: null,
+      standardMonthlyPrice: null,
+      standardMonthlyLabel: null,
       regularPriceLabel: null,
       hasActiveConfirmedPromo: false,
       promoBadgeLabel: null,
@@ -338,9 +393,20 @@ export function getPlanPricingSummary(
       promoScopeLabel: null,
       promoValidUntilLabel: null,
       afterPromoLabel: 'Condições após promoção pendentes de confirmação.',
+      billingPeriodicityLabel:
+        cycle === 'anual' ? 'Modalidade anual pendente' : 'Periodicidade pendente',
+      immediatePaymentAmount: null,
+      immediatePaymentLabel: 'Sob consulta',
+      firstPeriodTotalAmount: null,
+      firstPeriodTotalLabel: 'Sob consulta',
+      renewalLabel: 'Renovação pendente de confirmação.',
+      totalAnnualAmount: null,
+      totalAnnualLabel: null,
       annualChargeTypeLabel:
         cycle === 'anual' ? 'Modalidade anual ainda não disponível' : null,
       annualDiscountBadge: null,
+      annualDiscountPercentage: null,
+      externalCostsNote,
       checkoutUrl: null,
     };
   }
@@ -357,10 +423,14 @@ export function getPlanPricingSummary(
     return {
       status: INFO_STATUS.INDISPONIVEL,
       statusLabel: getStatusLabel(INFO_STATUS.INDISPONIVEL),
+      isPlanFullyConfirmed: false,
+      readinessLabel: 'Modalidade indisponível',
       cycle,
       hasConfirmedPrice: false,
       displayPrice: 'Indisponível nesta modalidade',
       numericPrice: null,
+      standardMonthlyPrice: null,
+      standardMonthlyLabel: null,
       regularPriceLabel: null,
       hasActiveConfirmedPromo: false,
       promoBadgeLabel: null,
@@ -368,21 +438,39 @@ export function getPlanPricingSummary(
       promoScopeLabel: null,
       promoValidUntilLabel: null,
       afterPromoLabel: 'Modalidade indisponível para este plano.',
+      billingPeriodicityLabel: 'Indisponível',
+      immediatePaymentAmount: null,
+      immediatePaymentLabel: 'Indisponível',
+      firstPeriodTotalAmount: null,
+      firstPeriodTotalLabel: 'Indisponível',
+      renewalLabel: 'Indisponível',
+      totalAnnualAmount: null,
+      totalAnnualLabel: null,
       annualChargeTypeLabel: isAnnual ? 'Modalidade anual ainda não disponível' : null,
       annualDiscountBadge: null,
+      annualDiscountPercentage: null,
+      externalCostsNote,
       checkoutUrl: null,
     };
   }
 
-  const basePromoValid = isPromotionConfirmedAndValid(plan);
+  const basePromoValid = isPromotionConfirmedAndValid(plan, referenceDate);
   const allowPromoOnCycle = !isAnnual || canStackAnnualAndPromotion(plan);
   const promoActive = basePromoValid && allowPromoOnCycle;
   const regularMonthlyField = plan.pricing?.regularMonthly;
   const promoMonthlyField = plan.pricing?.promotionalMonthly;
   const afterPromo = plan.pricing?.afterPromotion;
 
+  const standardMonthlyPrice =
+    regularMonthlyField?.status === INFO_STATUS.CONFIRMADA &&
+    typeof regularMonthlyField.value === 'number'
+      ? regularMonthlyField.value
+      : null;
+
   let annualChargeTypeLabel = null;
   let annualDiscountBadge = null;
+  let annualDiscountPercentage = null;
+  let totalAnnualAmount = null;
 
   if (isAnnual) {
     const formattedCharge = formatCommercialField(modality?.chargeType, {
@@ -394,10 +482,19 @@ export function getPlanPricingSummary(
 
     if (
       modality?.status === INFO_STATUS.CONFIRMADA &&
+      modality?.totalAnnualAmount?.status === INFO_STATUS.CONFIRMADA &&
+      typeof modality.totalAnnualAmount.value === 'number'
+    ) {
+      totalAnnualAmount = modality.totalAnnualAmount.value;
+    }
+
+    if (
+      modality?.status === INFO_STATUS.CONFIRMADA &&
       modality?.discountPercentage?.status === INFO_STATUS.CONFIRMADA &&
       typeof modality.discountPercentage.value === 'number' &&
       modality.discountPercentage.value > 0
     ) {
+      annualDiscountPercentage = modality.discountPercentage.value;
       annualDiscountBadge = `-${modality.discountPercentage.value}%`;
     }
   }
@@ -419,24 +516,32 @@ export function getPlanPricingSummary(
       ) {
         numericPrice = modality.regularMonthlyEquivalent.value;
       }
+
       if (
         promoActive &&
         modality.regularMonthlyEquivalent?.status === INFO_STATUS.CONFIRMADA &&
         typeof modality.regularMonthlyEquivalent.value === 'number'
       ) {
         regularNumeric = modality.regularMonthlyEquivalent.value;
+      } else if (
+        typeof standardMonthlyPrice === 'number' &&
+        typeof numericPrice === 'number' &&
+        standardMonthlyPrice > numericPrice
+      ) {
+        regularNumeric = standardMonthlyPrice;
+      }
+
+      if (totalAnnualAmount === null && typeof numericPrice === 'number') {
+        totalAnnualAmount = numericPrice * 12;
       }
     }
   } else {
     if (promoActive) {
       numericPrice = promoMonthlyField.value;
-      regularNumeric = regularMonthlyField.value;
-    } else if (
-      regularMonthlyField?.status === INFO_STATUS.CONFIRMADA &&
-      typeof regularMonthlyField.value === 'number'
-    ) {
-      numericPrice = regularMonthlyField.value;
-      regularNumeric = regularMonthlyField.value;
+      regularNumeric = standardMonthlyPrice;
+    } else if (typeof standardMonthlyPrice === 'number') {
+      numericPrice = standardMonthlyPrice;
+      regularNumeric = standardMonthlyPrice;
     }
   }
 
@@ -456,40 +561,90 @@ export function getPlanPricingSummary(
 
   const promoScopeLabel = promoActive ? getPromotionRuleSummary(plan) : null;
   const promoDurationLabel = promoScopeLabel;
+  const promoDurationMonths = promoActive ? plan.pricing?.promotion?.durationMonths?.value || null : null;
   const promoValidUntilLabel = promoActive
     ? `Válida até ${formatIsoDateBR(plan.pricing.promotion.validUntil.value)}`
     : null;
 
   let afterPromoLabel = 'Preço e cobrança pós-promoção pendentes de confirmação.';
-  if (promoActive) {
+  let billingPeriodicityLabel = isAnnual
+    ? annualChargeTypeLabel || 'Modalidade anual pendente de confirmação'
+    : 'Assinatura mensal recorrente';
+  let immediatePaymentAmount = null;
+  let immediatePaymentLabel = 'Sob consulta';
+  let firstPeriodTotalAmount = null;
+  let firstPeriodTotalLabel = 'Sob consulta';
+  let renewalLabel = 'Condições de renovação pendentes de confirmação.';
+  const totalAnnualLabel =
+    isAnnual && typeof totalAnnualAmount === 'number' ? formatCurrencyBRL(totalAnnualAmount) : null;
+
+  if (isAnnual && hasConfirmedPrice) {
+    const equivFormatted = formatCurrencyBRL(numericPrice);
+    const totalFormatted = totalAnnualLabel || formatCurrencyBRL(numericPrice * 12);
+    const chargePrefix = annualChargeTypeLabel || 'Cobrança anual antecipada';
+    afterPromoLabel = `${chargePrefix} · Total anual: ${totalFormatted} (equiv. ${equivFormatted}/mês; não acumula com promoção mensal)`;
+    billingPeriodicityLabel = `${chargePrefix} (ciclo de 12 meses)`;
+    immediatePaymentAmount = totalAnnualAmount ?? numericPrice * 12;
+    immediatePaymentLabel = `Total pago imediatamente (12 meses): ${totalFormatted}`;
+    firstPeriodTotalAmount = immediatePaymentAmount;
+    firstPeriodTotalLabel = `Total do 1º período contratado (12 meses): ${totalFormatted}`;
+    renewalLabel = `Renovação anual de ${totalFormatted}/ano (equiv. ${equivFormatted}/mês)`;
+  } else if (promoActive && hasConfirmedPrice) {
     const afterAmt = formatCurrencyBRL(afterPromo.amountMonthly.value);
+    const promoFormatted = formatCurrencyBRL(numericPrice);
     afterPromoLabel = `Depois ${afterAmt}/mês · ${afterPromo.billingMethod.value}`;
+    billingPeriodicityLabel = afterPromo.billingMethod.value;
+    immediatePaymentAmount = numericPrice;
+    immediatePaymentLabel = `Total na 1ª mensalidade: ${promoFormatted}`;
+    if (promoDurationMonths) {
+      firstPeriodTotalAmount = numericPrice * promoDurationMonths;
+      firstPeriodTotalLabel = `Total nos ${promoDurationMonths} primeiros meses: ${formatCurrencyBRL(
+        firstPeriodTotalAmount
+      )} (${promoDurationMonths} × ${promoFormatted})`;
+    }
+    renewalLabel = `Renovação após ${promoDurationMonths || 1} meses: ${afterAmt}/mês (${afterPromo.billingMethod.value})`;
   } else if (hasConfirmedPrice && !isAnnual) {
     const billingField = formatCommercialField(afterPromo?.billingMethod, {
-      pendingLabel: 'Forma de cobrança pendente de confirmação',
+      pendingLabel: 'Assinatura mensal recorrente',
     });
-    afterPromoLabel = `Valor normal confirmado · ${billingField.text}`;
-  } else if (hasConfirmedPrice && isAnnual) {
-    const totalAnnual = formatCommercialField(modality?.totalAnnualAmount, {
-      formatter: formatCurrencyBRL,
-      pendingLabel: 'Total anual pendente de confirmação',
-    });
-    afterPromoLabel = `${annualChargeTypeLabel} · Total anual: ${totalAnnual.text}`;
+    const currentFormatted = formatCurrencyBRL(numericPrice);
+    afterPromoLabel = `Valor mensal padrão · ${billingField.text}`;
+    billingPeriodicityLabel = billingField.text;
+    immediatePaymentAmount = numericPrice;
+    immediatePaymentLabel = `Total na 1ª mensalidade: ${currentFormatted}`;
+    firstPeriodTotalAmount = numericPrice;
+    firstPeriodTotalLabel = `Mensalidade padrão: ${currentFormatted}/mês`;
+    renewalLabel = `Renovação mensal: ${currentFormatted}/mês (${billingField.text})`;
   } else if (isAnnual) {
     afterPromoLabel = 'Modalidade anual ainda não disponível.';
   }
 
-  const effectiveStatus = hasConfirmedPrice ? INFO_STATUS.CONFIRMADA : INFO_STATUS.PENDENTE;
+  const fullConfirmed = isPlanFullyConfirmed(plan, channel);
+  const effectiveStatus = fullConfirmed
+    ? INFO_STATUS.CONFIRMADA
+    : hasConfirmedPrice
+      ? INFO_STATUS.CONFIRMADA
+      : INFO_STATUS.PENDENTE;
+  const readinessLabel = !hasConfirmedPrice
+    ? 'Pendente de confirmação'
+    : fullConfirmed
+      ? 'Confirmado'
+      : 'Condições parciais · Sob validação';
 
   return {
     status: effectiveStatus,
-    statusLabel: getStatusLabel(effectiveStatus),
+    statusLabel: readinessLabel,
+    isPlanFullyConfirmed: fullConfirmed,
+    readinessLabel,
     cycle,
     hasConfirmedPrice,
     displayPrice: hasConfirmedPrice ? formatCurrencyBRL(numericPrice) : 'Sob consulta',
     numericPrice,
+    standardMonthlyPrice,
+    standardMonthlyLabel:
+      typeof standardMonthlyPrice === 'number' ? formatCurrencyBRL(standardMonthlyPrice) : null,
     regularPriceLabel:
-      promoActive && typeof regularNumeric === 'number' && regularNumeric > numericPrice
+      typeof regularNumeric === 'number' && typeof numericPrice === 'number' && regularNumeric > numericPrice
         ? formatCurrencyBRL(regularNumeric)
         : null,
     hasActiveConfirmedPromo: promoActive && hasConfirmedPrice,
@@ -498,8 +653,18 @@ export function getPlanPricingSummary(
     promoScopeLabel,
     promoValidUntilLabel,
     afterPromoLabel,
+    billingPeriodicityLabel,
+    immediatePaymentAmount,
+    immediatePaymentLabel,
+    firstPeriodTotalAmount,
+    firstPeriodTotalLabel,
+    renewalLabel,
+    totalAnnualAmount,
+    totalAnnualLabel,
     annualChargeTypeLabel,
     annualDiscountBadge,
+    annualDiscountPercentage,
+    externalCostsNote,
     checkoutUrl,
   };
 }
@@ -507,13 +672,14 @@ export function getPlanPricingSummary(
 export function getChannelConfirmedPromoBanner(
   channelId,
   billingCycle = 'monthly',
-  catalog = COMMERCIAL_CATALOG
+  catalog = COMMERCIAL_CATALOG,
+  options = {}
 ) {
   const plans = getChannelPlans(channelId, catalog);
   const summaries = plans
     .map((p) => ({
       planName: p.name,
-      summary: getPlanPricingSummary(channelId, p.id, billingCycle, catalog),
+      summary: getPlanPricingSummary(channelId, p.id, billingCycle, catalog, options),
     }))
     .filter((entry) => entry.summary.hasActiveConfirmedPromo);
 
@@ -567,7 +733,8 @@ export function getAllUsageTerms(catalog = COMMERCIAL_CATALOG) {
 export function getChannelLimitReachedPolicy(channelId, catalog = COMMERCIAL_CATALOG) {
   const channel = catalog?.channels?.[channelId];
   return formatCommercialField(channel?.limitReachedPolicy, {
-    pendingLabel: 'Regra de limite atingido pendente de confirmação.',
+    pendingLabel:
+      'Regra sobre o que acontece após atingir o limite e valores de excedente pendentes de confirmação comercial.',
   });
 }
 
@@ -646,12 +813,13 @@ export function getPlanCardViewModel(
   channelId,
   planId,
   billingCycle = 'monthly',
-  catalog = COMMERCIAL_CATALOG
+  catalog = COMMERCIAL_CATALOG,
+  options = {}
 ) {
   const { channel, plan } = findPlan(channelId, planId, catalog);
   if (!channel || !plan) return null;
 
-  const pricing = getPlanPricingSummary(channelId, planId, billingCycle, catalog);
+  const pricing = getPlanPricingSummary(channelId, planId, billingCycle, catalog, options);
   const badgeFormatted = formatCommercialField(plan.badge, { pendingLabel: null });
   const usageDefField = plan.usageUnitDefinition || channel.usageUnitDefinition?.definition;
   const usageUnitFormatted = formatCommercialField(usageDefField);
@@ -665,7 +833,7 @@ export function getPlanCardViewModel(
     tagline: plan.tagline,
     highlight: Boolean(plan.highlight),
     status: plan.status,
-    statusLabel: getStatusLabel(plan.status),
+    statusLabel: pricing.readinessLabel,
     badge: badgeFormatted.isConfirmed ? badgeFormatted.text : null,
     pricing,
     usageUnitDefinition: {
@@ -679,8 +847,8 @@ export function getPlanCardViewModel(
     visibleOverageRows: getPlanVisibleOverageRows(plan, catalog),
     featureRows: getPlanFeatureRows(plan),
     cta: {
-      label: pricing.checkoutUrl ? `Selecionar ${plan.name}` : plan.cta?.label || 'Consultar condições',
-      action: pricing.checkoutUrl ? 'checkout' : plan.cta?.action || 'demo',
+      label: pricing.checkoutUrl ? `Selecionar ${plan.name}` : plan.cta?.label || `Selecionar ${plan.name}`,
+      action: pricing.checkoutUrl ? 'checkout' : plan.cta?.action || 'plan_request',
       url: pricing.checkoutUrl,
     },
   };
@@ -689,13 +857,14 @@ export function getPlanCardViewModel(
 export function getChannelComparisonTable(
   channelId,
   billingCycle = 'monthly',
-  catalog = COMMERCIAL_CATALOG
+  catalog = COMMERCIAL_CATALOG,
+  options = {}
 ) {
   const channel = catalog?.channels?.[channelId];
   if (!channel) return null;
 
   const cardViewModels = channel.plans.map((p) =>
-    getPlanCardViewModel(channelId, p.id, billingCycle, catalog)
+    getPlanCardViewModel(channelId, p.id, billingCycle, catalog, options)
   );
 
   const buildRowGroup = (category, rowDefs, getter) => ({
@@ -790,41 +959,70 @@ export function getChannelComparisonTable(
   };
 }
 
-export function getLowestConfirmedEntryPrice(channelId = null, catalog = COMMERCIAL_CATALOG) {
+export function getLowestConfirmedEntryDetails(channelId = null, catalog = COMMERCIAL_CATALOG) {
   const channelIds = channelId ? [channelId] : Object.keys(catalog?.channels || {});
-  const prices = [];
+  let lowestEntry = null;
 
   channelIds.forEach((cid) => {
+    const channel = catalog?.channels?.[cid];
     const plans = getChannelPlans(cid, catalog);
     plans.forEach((plan) => {
       const summary = getPlanPricingSummary(cid, plan.id, 'monthly', catalog);
       if (summary.hasConfirmedPrice && typeof summary.numericPrice === 'number') {
-        prices.push(summary.numericPrice);
+        if (!lowestEntry || summary.numericPrice < lowestEntry.numericPrice) {
+          lowestEntry = {
+            channelId: cid,
+            channelName: channel?.name || cid,
+            channelShortName: channel?.shortName || cid,
+            planId: plan.id,
+            planName: plan.name,
+            numericPrice: summary.numericPrice,
+            displayPrice: summary.displayPrice,
+            regularPriceLabel: summary.standardMonthlyLabel,
+            promoScopeLabel: summary.promoScopeLabel,
+            hasPromo: summary.hasActiveConfirmedPromo,
+            afterPromoLabel: summary.afterPromoLabel,
+          };
+        }
       }
     });
   });
 
-  if (prices.length === 0) return null;
-  return Math.min(...prices);
+  return lowestEntry;
+}
+
+export function getLowestConfirmedEntryPrice(channelId = null, catalog = COMMERCIAL_CATALOG) {
+  return getLowestConfirmedEntryDetails(channelId, catalog)?.numericPrice ?? null;
 }
 
 export function getCommercialEntryLabel(channelId = null, catalog = COMMERCIAL_CATALOG) {
-  const lowest = getLowestConfirmedEntryPrice(channelId, catalog);
-  if (typeof lowest === 'number') {
-    return `A partir de ${formatCurrencyBRL(lowest)}/mês`;
+  const details = getLowestConfirmedEntryDetails(channelId, catalog);
+  if (!details) {
+    return 'Condições sob consulta (pendente de confirmação)';
   }
-  return 'Condições sob consulta (pendente de confirmação)';
+
+  const channelScopeNote =
+    channelId === null ? ' Telefonia e WhatsApp possuem valores próprios.' : '';
+
+  if (details.hasPromo && details.regularPriceLabel) {
+    return `${details.channelShortName} ${details.planName} a partir de ${details.displayPrice}/mês (${details.promoScopeLabel?.toLowerCase()}; depois ${details.regularPriceLabel}/mês · mensal).${channelScopeNote}`;
+  }
+
+  return `${details.channelShortName} ${details.planName} a partir de ${details.displayPrice}/mês (mensal).${channelScopeNote}`;
 }
 
 export function getCommercialCtaLabel(
   fallback = 'Consultar Planos e Condições',
   catalog = COMMERCIAL_CATALOG
 ) {
-  const lowest = getLowestConfirmedEntryPrice(null, catalog);
-  if (typeof lowest === 'number') {
-    return `Começar a partir de ${formatCurrencyBRL(lowest)}/mês`;
+  const details = getLowestConfirmedEntryDetails(null, catalog);
+  if (!details) {
+    return fallback;
   }
-  return fallback;
+  if (details.hasPromo) {
+    return `Ver planos (${details.channelShortName} ${details.planName} desde ${details.displayPrice}/mês · 3 meses)`;
+  }
+  return `Ver planos (${details.channelShortName} ${details.planName} desde ${details.displayPrice}/mês)`;
 }
 
 export function getSimultaneousCallsSummary(channelId = 'telefone', catalog = COMMERCIAL_CATALOG) {
@@ -881,9 +1079,9 @@ export function getProviderCostSummary(channelId = 'telefone', catalog = COMMERC
 }
 
 export function getOverageOrUnitCostHint(channelId = 'telefone', catalog = COMMERCIAL_CATALOG) {
-  const entry = getLowestConfirmedEntryPrice(channelId, catalog);
-  if (typeof entry === 'number') {
-    return `Compare o custo dos planos confirmados da Vocalis (${formatCurrencyBRL(entry)}/mês iniciais) com o custo de atendimento manual.`;
+  const details = getLowestConfirmedEntryDetails(channelId, catalog);
+  if (details) {
+    return `Compare o plano ${details.channelShortName} ${details.planName} (${details.displayPrice}/mês nos 3 primeiros meses; depois ${details.regularPriceLabel || details.displayPrice}/mês) com o custo do atendimento manual.`;
   }
   return 'Compare a operação da Vocalis (valores e tarifas por minuto sob consulta, em confirmação) contra o custo de atendimento tradicional.';
 }
@@ -943,68 +1141,183 @@ export function getPartnerProgramSummary(catalog = COMMERCIAL_CATALOG) {
   };
 }
 
-function summarizeChannelForAssistant(channelId, catalog) {
+function summarizeChannelForAssistant(channelId, catalog, includeAnnual = true) {
   const channel = catalog?.channels?.[channelId];
   if (!channel) return null;
 
   const confirmedPlans = channel.plans
     .map((plan) => ({
       plan,
-      summary: getPlanPricingSummary(channelId, plan.id, 'monthly', catalog),
+      monthly: getPlanPricingSummary(channelId, plan.id, 'monthly', catalog),
+      annual: getPlanPricingSummary(channelId, plan.id, 'yearly', catalog),
     }))
-    .filter((item) => item.summary.hasConfirmedPrice);
+    .filter((item) => item.monthly.hasConfirmedPrice);
 
   if (confirmedPlans.length === 0) {
     return `${channel.name}: condições comerciais e preços pendentes de confirmação`;
   }
 
-  const parts = confirmedPlans.map(({ plan, summary }) => {
-    if (summary.hasActiveConfirmedPromo) {
-      return `${plan.name} a ${summary.displayPrice}/mês (${summary.promoScopeLabel}, ${summary.promoValidUntilLabel}; ${summary.afterPromoLabel})`;
+  const monthlyParts = confirmedPlans.map(({ plan, monthly }) => {
+    if (monthly.hasActiveConfirmedPromo) {
+      return `${plan.name}: ${monthly.displayPrice}/mês (${monthly.promoScopeLabel}, ${monthly.promoValidUntilLabel}; ${monthly.afterPromoLabel})`;
     }
-    return `${plan.name} a ${summary.displayPrice}/mês`;
+    return `${plan.name}: ${monthly.displayPrice}/mês (${monthly.billingPeriodicityLabel})`;
   });
 
-  return `${channel.name}: ${parts.join(' | ')}`;
+  const annualConfirmed = confirmedPlans.filter((item) => item.annual.hasConfirmedPrice);
+  let annualText = '';
+  if (includeAnnual && annualConfirmed.length > 0) {
+    const annualParts = annualConfirmed.map(
+      ({ plan, annual }) =>
+        `${plan.name}: equiv. ${annual.displayPrice}/mês (total ${annual.totalAnnualLabel} no ciclo anual antecipado)`
+    );
+    annualText = ` | Modalidade Anual (sem acúmulo com a promoção de 3 meses): ${annualParts.join('; ')}`;
+  }
+
+  return `${channel.name} — Mensal: ${monthlyParts.join(' | ')}${annualText}`;
+}
+
+function buildLimitAndOverageReply(channelIds, catalog) {
+  const parts = channelIds.map((cid) => {
+    const channel = catalog?.channels?.[cid];
+    if (!channel) return null;
+
+    const policy = getChannelLimitReachedPolicy(cid, catalog);
+    const overageEntries = (channel.plans || []).map((plan) => ({
+      planName: plan.name,
+      extraUsage: formatCommercialField(plan?.overagesAndAddons?.extraUsage),
+    }));
+    const confirmedOverages = overageEntries.filter((o) => o.extraUsage.isConfirmed);
+
+    const includedSummary = (channel.plans || [])
+      .map((plan) => {
+        const usageKey = cid === 'telefone' ? 'minutes' : 'conversations';
+        const formatted = formatCommercialField(plan?.includedUsage?.[usageKey]);
+        return formatted.isConfirmed ? `${plan.name}: ${formatted.text}` : null;
+      })
+      .filter(Boolean)
+      .join(', ');
+
+    const policyText = policy.isConfirmed
+      ? policy.text
+      : 'o que acontece após ultrapassar o limite está pendente de confirmação comercial (não há tarifa automática confirmada no site)';
+
+    const overageText =
+      confirmedOverages.length > 0
+        ? `Excedentes confirmados: ${confirmedOverages.map((o) => `${o.planName}: ${o.extraUsage.text}`).join(', ')}.`
+        : 'O valor de uso excedente também está pendente de confirmação comercial e será informado pela equipe antes da contratação.';
+
+    return `Limite e excedente em ${channel.name}: franquias de ${includedSummary || 'conforme plano'}; ${policyText}. ${overageText}`;
+  });
+
+  return parts.filter(Boolean).join(' ');
 }
 
 export function buildBeatrizCommercialReply(userText = '', catalog = COMMERCIAL_CATALOG) {
-  const lower = String(userText || '').toLowerCase();
-  const channelEntries = ['telefone', 'whatsapp', 'webchat'].map((cid) => ({
-    cid,
-    text: summarizeChannelForAssistant(cid, catalog),
-  }));
+  const raw = String(userText || '');
+  const lower = raw.toLowerCase();
 
-  const anyConfirmed = channelEntries.some(
-    (entry) => entry.text && !entry.text.includes('pendentes de confirmação')
-  );
+  const mentionsSensitiveData =
+    /\b\d{3}\.?\d{3}\.?\d{3}-?\d{2}\b/.test(raw) ||
+    lower.includes('cpf') ||
+    lower.includes('cartão') ||
+    lower.includes('cartao') ||
+    lower.includes('senha');
+
+  const wantsWhatsapp = lower.includes('whatsapp') || lower.includes('zap');
+  const wantsTelefone =
+    lower.includes('telefone') ||
+    lower.includes('voz') ||
+    lower.includes('ligação') ||
+    lower.includes('ligacao') ||
+    lower.includes('chamada');
+  const wantsWebchat = lower.includes('webchat') || (lower.includes('site') && !wantsWhatsapp);
+
+  const selectedChannels = [];
+  if (wantsTelefone) selectedChannels.push('telefone');
+  if (wantsWhatsapp) selectedChannels.push('whatsapp');
+  if (wantsWebchat) selectedChannels.push('webchat');
+  const targetChannels = selectedChannels.length > 0 ? selectedChannels : ['telefone', 'whatsapp', 'webchat'];
+
+  const channelSummaries = targetChannels
+    .map((cid) => summarizeChannelForAssistant(cid, catalog, true))
+    .filter(Boolean);
+
+  const anyConfirmed = channelSummaries.some((text) => !text.includes('pendentes de confirmação'));
 
   if (!anyConfirmed) {
-    return 'Atuamos nos canais Telefonia (Solo, Team e Scale), WhatsApp (Solo, Team e Scale) e Webchat (Solo, Team e Scale). Os preços, condições promocionais, planos anuais, limites de uso e excedentes estão atualmente pendentes de confirmação oficial. Posso encaminhar seu atendimento para nossa equipe apresentar a proposta vigente.';
+    return 'Sou a Beatriz, assistente virtual de IA (demonstração). Atuamos nos canais Telefonia (Solo, Team e Scale), WhatsApp (Solo, Team e Scale) e Webchat (Solo, Team e Scale). Os preços, condições promocionais, planos anuais, limites de uso e excedentes estão atualmente pendentes de confirmação oficial. Posso encaminhar seu atendimento para nossa equipe humana apresentar a proposta vigente.';
   }
 
-  if (lower.includes('whatsapp') && !lower.includes('telefone') && !lower.includes('webchat')) {
-    return `Condições confirmadas para IA de WhatsApp: ${channelEntries[1].text}. Itens sem valor confirmado são informados diretamente pela nossa equipe comercial.`;
+  const asksLimitOrOverage =
+    lower.includes('ultrapass') ||
+    lower.includes('exced') ||
+    lower.includes('limite') ||
+    lower.includes('acaba') ||
+    lower.includes('passar') ||
+    lower.includes('adicional') ||
+    lower.includes('franquia');
+
+  const asksProviderOrTax =
+    lower.includes('meta') ||
+    lower.includes('taxa') ||
+    lower.includes('imposto') ||
+    lower.includes('operadora') ||
+    lower.includes('sip');
+
+  const asksCancelOrRenewal =
+    lower.includes('cancel') ||
+    lower.includes('reembols') ||
+    lower.includes('teste') ||
+    lower.includes('fidelidade') ||
+    lower.includes('renova');
+
+  const blocks = [
+    `[Assistente de IA · Demonstração] Condições registradas no catálogo oficial — ${channelSummaries.join(' || ')}`,
+  ];
+
+  if (asksLimitOrOverage) {
+    blocks.push(buildLimitAndOverageReply(targetChannels, catalog));
   }
 
-  if ((lower.includes('webchat') || lower.includes('chat') || lower.includes('site')) && !lower.includes('telefone')) {
-    return `Condições confirmadas para Webchat de IA: ${channelEntries[2].text}. Itens sem valor confirmado são informados diretamente pela nossa equipe comercial.`;
+  if (asksProviderOrTax) {
+    blocks.push(
+      'Custos externos (como tarifas da Meta Cloud API no WhatsApp, operadora/SIP e tributos aplicáveis) estão pendentes de confirmação comercial para cada proposta.'
+    );
   }
 
-  if (lower.includes('telefone') || lower.includes('voz') || lower.includes('ligação') || lower.includes('ligacao')) {
-    return `Condições confirmadas para Telefonia: ${channelEntries[0].text}. Itens sem valor confirmado são informados diretamente pela nossa equipe comercial.`;
+  if (asksCancelOrRenewal) {
+    blocks.push(
+      'Regras de teste, cancelamento, reembolso e termos contratuais definitivos estão pendentes de confirmação e são apresentados antes de qualquer contratação (não realizamos cobrança automática neste chat).'
+    );
   }
 
-  const summary = channelEntries.map((e) => e.text).filter(Boolean).join('; ');
-  return `Resumo comercial oficial da Vocalis AI — ${summary}. Qualquer condição não confirmada é apresentada sob consulta pela nossa equipe.`;
+  if (!asksLimitOrOverage && !asksProviderOrTax && !asksCancelOrRenewal) {
+    blocks.push(
+      'Itens sem valor confirmado (como excedentes após o limite e taxas externas da Meta/operadora) estão pendentes de confirmação comercial.'
+    );
+  }
+
+  if (mentionsSensitiveData) {
+    blocks.push(
+      'Importante: por segurança, não envie CPF, senhas ou dados de cartão neste chat de demonstração.'
+    );
+  }
+
+  blocks.push('Se desejar falar com uma pessoa da equipe comercial para fechar ou tirar dúvidas, clique no botão de encaminhamento abaixo.');
+
+  return blocks.join(' ');
 }
 
 export function buildRobertaCommercialReply(catalog = COMMERCIAL_CATALOG) {
-  const lowest = getLowestConfirmedEntryPrice(null, catalog);
-  if (typeof lowest === 'number') {
-    return `Nossos planos confirmados começam em ${formatCurrencyBRL(lowest)} por mês. Quer agendar uma demonstração rápida para ver qual canal atende melhor sua empresa?`;
+  const details = getLowestConfirmedEntryDetails(null, catalog);
+  if (details) {
+    if (details.hasPromo && details.regularPriceLabel) {
+      return `Na demonstração, nossa menor entrada é ${details.channelShortName} ${details.planName} a ${details.displayPrice}/mês nos 3 primeiros meses (depois ${details.regularPriceLabel}/mês); Telefonia e WhatsApp têm planos próprios. Quer falar com nossa equipe?`;
+    }
+    return `Nossos planos começam em ${details.channelShortName} ${details.planName} a ${details.displayPrice}/mês. Quer agendar uma apresentação com nossa equipe?`;
   }
-  return 'Atendemos por telefone, WhatsApp e Webchat nos perfis Solo, Team e Scale, com valores e condições sob consulta em confirmação. Quer agendar uma demonstração rápida de 15 minutos com nossa equipe?';
+  return 'Atendemos por telefone, WhatsApp e Webchat nos perfis Solo, Team e Scale, com valores e condições sob consulta em confirmação. Quer falar com nossa equipe?';
 }
 
 const VALID_STATUS_SET = new Set([
@@ -1229,6 +1542,18 @@ export function validateCommercialCatalog(catalog = COMMERCIAL_CATALOG) {
             path: `${pPath}.pricing.promotionalMonthly`,
             message: `Promoção em ${pPath} exige preço promocional confirmado menor que o preço normal confirmado.`,
           });
+        } else if (
+          typeof promo?.discountLabel?.value === 'string' &&
+          promo.discountLabel.value.includes('30%')
+        ) {
+          const expectedPromo = applyDiscountWithRounding(regularMonthly.value, 30);
+          if (promotionalMonthly.value !== expectedPromo) {
+            errors.push({
+              code: 'PROMO_ROUNDING_MISMATCH',
+              path: `${pPath}.pricing.promotionalMonthly`,
+              message: `Preço promocional em ${pPath} (${promotionalMonthly.value}) diverge da regra de arredondamento de 30% (${expectedPromo}).`,
+            });
+          }
         }
       }
 
@@ -1249,23 +1574,47 @@ export function validateCommercialCatalog(catalog = COMMERCIAL_CATALOG) {
           });
         }
 
+        if (
+          annualModality?.regularMonthlyEquivalent?.status === INFO_STATUS.CONFIRMADA &&
+          annualModality?.totalAnnualAmount?.status === INFO_STATUS.CONFIRMADA &&
+          typeof annualModality.regularMonthlyEquivalent.value === 'number' &&
+          typeof annualModality.totalAnnualAmount.value === 'number'
+        ) {
+          const expectedTotal = annualModality.regularMonthlyEquivalent.value * 12;
+          if (annualModality.totalAnnualAmount.value !== expectedTotal) {
+            errors.push({
+              code: 'ANNUAL_TOTAL_MISMATCH',
+              path: `${pPath}.pricing.modalities.annual.totalAnnualAmount`,
+              message: `Total anual em ${pPath} (${annualModality.totalAnnualAmount.value}) deve ser equivalente mensal × 12 (${expectedTotal}).`,
+            });
+          }
+
+          if (
+            regularMonthly?.status === INFO_STATUS.CONFIRMADA &&
+            typeof regularMonthly.value === 'number' &&
+            annualModality?.discountPercentage?.status === INFO_STATUS.CONFIRMADA &&
+            typeof annualModality.discountPercentage.value === 'number'
+          ) {
+            const expectedPct = calculateEffectiveDiscountPercent(
+              regularMonthly.value,
+              annualModality.regularMonthlyEquivalent.value
+            );
+            if (annualModality.discountPercentage.value !== expectedPct) {
+              errors.push({
+                code: 'ANNUAL_DISCOUNT_MISMATCH',
+                path: `${pPath}.pricing.modalities.annual.discountPercentage`,
+                message: `Desconto anual em ${pPath} (${annualModality.discountPercentage.value}%) diverge do cálculo real (${expectedPct}%).`,
+              });
+            }
+          }
+        }
+
+        // Acúmulo proibido somente quando a modalidade anual também tenta aplicar preço promocional mensal
         const attemptsStackingWithPromo =
           promoClaimed &&
-          (annualModality?.promotionalMonthlyEquivalent?.status === INFO_STATUS.CONFIRMADA ||
-            (annualModality?.discountPercentage?.status === INFO_STATUS.CONFIRMADA &&
-              annualModality.discountPercentage.value > 0 &&
-              annualModality?.promotionalMonthlyEquivalent?.status === INFO_STATUS.CONFIRMADA));
+          annualModality?.promotionalMonthlyEquivalent?.status === INFO_STATUS.CONFIRMADA;
 
-        const annualHasDiscountTryingToStack =
-          promoClaimed &&
-          (annualModality?.promotionalMonthlyEquivalent?.status === INFO_STATUS.CONFIRMADA ||
-            (annualModality?.discountPercentage?.status === INFO_STATUS.CONFIRMADA &&
-              annualModality.discountPercentage.value > 0));
-
-        if (
-          (attemptsStackingWithPromo || annualHasDiscountTryingToStack) &&
-          !canStackAnnualAndPromotion(plan)
-        ) {
+        if (attemptsStackingWithPromo && !canStackAnnualAndPromotion(plan)) {
           errors.push({
             code: 'PROMOTION_ANNUAL_STACKING_UNAPPROVED',
             path: `${pPath}.pricing.promotion.stackingWithAnnualDiscount`,
@@ -1283,7 +1632,19 @@ export function validateCommercialCatalog(catalog = COMMERCIAL_CATALOG) {
 
       const limitDefs = CHANNEL_LIMIT_ROW_DEFINITIONS[channelId] || [];
       limitDefs.forEach((def) => {
-        checkTrackedField(errors, `${pPath}.limits.${def.key}`, plan?.limits?.[def.key]);
+        const limitField = plan?.limits?.[def.key];
+        checkTrackedField(errors, `${pPath}.limits.${def.key}`, limitField);
+        if (
+          limitField?.status === INFO_STATUS.CONFIRMADA &&
+          typeof limitField.value === 'string' &&
+          /ilimitad/i.test(limitField.value)
+        ) {
+          errors.push({
+            code: 'UNVERIFIED_UNLIMITED_CLAIM',
+            path: `${pPath}.limits.${def.key}`,
+            message: `Promessa de uso/recurso "ilimitado" em ${pPath}.limits.${def.key} sem comprovação comercial/técnica.`,
+          });
+        }
       });
 
       const overageDefs = CHANNEL_OVERAGE_ROW_DEFINITIONS[channelId] || [];
@@ -1574,6 +1935,8 @@ export function detectPendingShownAsFact(renderedText, catalog = COMMERCIAL_CATA
     { re: /R\$\s*70\s*\/\s*h/i, num: 70 },
     { re: /R\$\s*0,25\s*\/\s*min/i, num: 0.25 },
     { re: /R\$\s*0,80\s*por conversa/i, num: 0.8 },
+    { re: /\b(?:atendimentos?|assistentes?|usu[áa]rios?|chamadas?|ligações?)\s+ilimitad[oa]s?\b/i, num: 'ilimitado' },
+    { re: /\b(?:por|a)\s+0\s*reais\b|\bR\$\s*0(?:,00)?\s*(?:\/\s*m[eê]s|por\b|de\s+taxa|setup|ades[aã]o)/i, num: 0 },
   ];
 
   legacyUnconfirmedPricePatterns.forEach(({ re, num }) => {

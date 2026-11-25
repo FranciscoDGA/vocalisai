@@ -5,52 +5,56 @@ import {
   PhoneCall, PhoneForwarded, PhoneMissed, ArrowRight
 } from 'lucide-react';
 
-export default function OutboundCampaignsSection() {
+export default function OutboundCampaignsSection({ isDemoMode = true, onOpenDemo }) {
   const [createModalOpen, setCreateModalOpen] = useState(false);
-  const [campaignStatus, setCampaignStatus] = useState('running'); // idle | running | paused
+  const [notice, setNotice] = useState('');
   
-  // Lista de Campanhas
-  const [campaigns, setCampaigns] = useState([
-    {
-      id: 'camp_01',
-      name: 'Confirmação de Consultas D-1',
-      assistant: 'Roberta (Voz Clara Neural)',
-      channel: 'Telefonia + WhatsApp Confirmação',
-      totalContacts: 120,
-      dialed: 114,
-      answered: 104,
-      confirmed: 92,
-      rescheduled: 8,
-      status: 'completed',
-      date: 'Hoje, 09:30'
-    },
-    {
-      id: 'camp_02',
-      name: 'Reativação de Leads Imobiliários (Residencial Jardins)',
-      assistant: 'Lucas (Voz Masculina Comercial)',
-      channel: 'Telefonia Ativa',
-      totalContacts: 280,
-      dialed: 184,
-      answered: 142,
-      confirmed: 38,
-      rescheduled: 14,
-      status: 'running',
-      date: 'Em andamento'
-    },
-    {
-      id: 'camp_03',
-      name: 'Cobrança Preventiva Pix (Vencimento Hoje)',
-      assistant: 'Roberta (Closer Pix)',
-      channel: 'Telefone + Envio de Pix no WhatsApp',
-      totalContacts: 85,
-      dialed: 0,
-      answered: 0,
-      confirmed: 0,
-      rescheduled: 0,
-      status: 'scheduled',
-      date: 'Agendada para 16:00'
-    }
-  ]);
+  // Lista de Campanhas (apenas dados fictícios ilustrativos em demonstração)
+  const [campaigns, setCampaigns] = useState(() =>
+    isDemoMode
+      ? [
+          {
+            id: 'camp_01',
+            name: 'Confirmação de Consultas D-1 (Exemplo)',
+            assistant: 'Clara (Voz — Demo)',
+            channel: 'Telefonia (Simulação)',
+            totalContacts: 120,
+            dialed: 114,
+            answered: 104,
+            confirmed: 92,
+            rescheduled: 8,
+            status: 'completed',
+            date: 'Exemplo ilustrativo'
+          },
+          {
+            id: 'camp_02',
+            name: 'Reativação de Contatos Imobiliários (Exemplo)',
+            assistant: 'Lucas (Exemplo)',
+            channel: 'Telefonia Ativa (Simulação)',
+            totalContacts: 280,
+            dialed: 184,
+            answered: 142,
+            confirmed: 38,
+            rescheduled: 14,
+            status: 'scheduled',
+            date: 'Exemplo ilustrativo'
+          },
+          {
+            id: 'camp_03',
+            name: 'Lembrete Preventivo Administrativo (Exemplo)',
+            assistant: 'Renata (Exemplo)',
+            channel: 'Telefonia + WhatsApp (Sob consulta)',
+            totalContacts: 85,
+            dialed: 0,
+            answered: 0,
+            confirmed: 0,
+            rescheduled: 0,
+            status: 'scheduled',
+            date: 'Prévia ilustrativa'
+          }
+        ]
+      : []
+  );
 
   // Form states for new campaign
   const [newCampaignName, setNewCampaignName] = useState('');
@@ -88,16 +92,16 @@ export default function OutboundCampaignsSection() {
 
     const newCamp = {
       id: `camp_${Date.now()}`,
-      name: newCampaignName,
-      assistant: `${selectedAssistant} (Neural)`,
-      channel: sendWhatsAppPix ? 'Telefonia + WhatsApp' : 'Telefonia Ativa',
-      totalContacts: parsedContacts.length || 50,
+      name: `${newCampaignName} (Prévia local)`,
+      assistant: `${selectedAssistant} (Simulação)`,
+      channel: sendWhatsAppPix ? 'Telefonia + WhatsApp (Sob consulta)' : 'Telefonia Ativa (Sob consulta)',
+      totalContacts: parsedContacts.length || 5,
       dialed: 0,
       answered: 0,
       confirmed: 0,
       rescheduled: 0,
-      status: 'running',
-      date: 'Agora'
+      status: 'scheduled',
+      date: 'Prévia local · sem discagem real'
     };
 
     setCampaigns([newCamp, ...campaigns]);
@@ -105,7 +109,13 @@ export default function OutboundCampaignsSection() {
     setNewCampaignName('');
     setUploadedFile(null);
     setParsedContacts([]);
+    setNotice('Prévia local adicionada apenas na interface. Discador em lote e envios automáticos exigem onboarding comercial e provedor ativo.');
   };
+
+  const totalDialed = campaigns.reduce((acc, c) => acc + (c.dialed || 0), 0);
+  const totalAnswered = campaigns.reduce((acc, c) => acc + (c.answered || 0), 0);
+  const totalConfirmed = campaigns.reduce((acc, c) => acc + (c.confirmed || 0), 0);
+  const answerRate = totalDialed > 0 ? `${((totalAnswered / totalDialed) * 100).toFixed(1)}%` : '0%';
 
   return (
     <div className="space-y-6 max-w-6xl animate-fadeIn">
@@ -115,21 +125,22 @@ export default function OutboundCampaignsSection() {
           <div className="flex items-center gap-2 mb-1">
             <span className="px-2.5 py-0.5 rounded-full text-[10px] font-bold bg-[#EEF2FF] text-[#4F46E5] border border-[#F2E8DC] uppercase tracking-wider flex items-center gap-1">
               <Megaphone className="w-3 h-3 text-[#4F46E5]" />
-              Campanhas Outbound com IA
+              Campanhas Outbound · Em Desenvolvimento
             </span>
-            <span className="text-[10px] text-emerald-700 bg-emerald-50 px-2 py-0.5 rounded-full font-bold">
-              Disparo em Lote • Vapi & WhatsApp
+            <span className="text-[10px] text-amber-800 bg-amber-50 border border-amber-200 px-2 py-0.5 rounded-full font-bold">
+              {isDemoMode ? 'Simulação Ilustrativa (Sem Disparo Real)' : 'Sob consulta comercial'}
             </span>
           </div>
           <h2 className="text-2xl sm:text-3xl font-bold text-[#1A1816] tracking-tight">
-            Campanhas Ativas & Discador em Lote
+            Campanhas & Discador em Lote (Prévia)
           </h2>
           <p className="text-xs text-[#5C5955] mt-1 max-w-2xl">
-            Importe planilhas de contatos (CSV/Excel) e coloque a IA para discar automaticamente. Confirme consultas, reative clientes inativos e envie ofertas personalizadas.
+            Prévia visual do módulo de campanhas. O disparo real em lote depende de contratação, verificação de número/WABA e habilitação em servidor.
           </p>
         </div>
 
         <button 
+          type="button"
           onClick={() => setCreateModalOpen(true)}
           className="flex items-center gap-2 px-4 py-2.5 rounded-xl bg-[#1A1816] text-white text-xs font-bold hover:bg-black transition-colors shadow-sm self-start cursor-pointer"
         >
@@ -138,15 +149,22 @@ export default function OutboundCampaignsSection() {
         </button>
       </div>
 
+      {notice && (
+        <div role="status" className="p-3.5 rounded-2xl bg-amber-50 border border-amber-200 text-amber-950 text-xs flex items-center justify-between gap-3">
+          <span>{notice}</span>
+          <button type="button" onClick={() => setNotice('')} className="font-bold cursor-pointer" aria-label="Fechar aviso">✕</button>
+        </div>
+      )}
+
       {/* KPI Cards de Performance Outbound */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
         <div className="bg-white p-5 rounded-2xl border border-[#E7E4DC] shadow-xs">
           <div className="flex items-center justify-between text-[#736F69] mb-2">
-            <span className="text-[11px] font-bold uppercase tracking-wider">Total Discadas</span>
+            <span className="text-[11px] font-bold uppercase tracking-wider">Total Discadas (Exemplo)</span>
             <PhoneCall className="w-4 h-4 text-[#4F46E5]" />
           </div>
-          <div className="text-2xl font-bold text-[#1A1816]">298</div>
-          <div className="text-[11px] text-[#736F69] mt-1">Ligações efetuadas pela IA</div>
+          <div className="text-2xl font-bold text-[#1A1816]">{totalDialed}</div>
+          <div className="text-[11px] text-[#736F69] mt-1">{isDemoMode ? 'Dados fictícios (simulação)' : 'Sem campanhas executadas'}</div>
         </div>
 
         <div className="bg-white p-5 rounded-2xl border border-[#E7E4DC] shadow-xs">
@@ -154,8 +172,8 @@ export default function OutboundCampaignsSection() {
             <span className="text-[11px] font-bold uppercase tracking-wider">Taxa de Atendimento (Exemplo)</span>
             <PhoneForwarded className="w-4 h-4 text-emerald-600" />
           </div>
-          <div className="text-2xl font-bold text-emerald-600">82.5%</div>
-          <div className="text-[11px] text-[#736F69] mt-1">Dados fictícios (simulação ilustrativa)</div>
+          <div className="text-2xl font-bold text-emerald-600">{answerRate}</div>
+          <div className="text-[11px] text-[#736F69] mt-1">{isDemoMode ? 'Dados fictícios (simulação ilustrativa)' : 'Registros da conta'}</div>
         </div>
 
         <div className="bg-white p-5 rounded-2xl border border-[#E7E4DC] shadow-xs">
@@ -163,8 +181,8 @@ export default function OutboundCampaignsSection() {
             <span className="text-[11px] font-bold uppercase tracking-wider">Confirmações (Exemplo)</span>
             <CheckCircle2 className="w-4 h-4 text-emerald-600" />
           </div>
-          <div className="text-2xl font-bold text-[#1A1816]">130</div>
-          <div className="text-[11px] text-[#5C5955] font-medium mt-1">Dados fictícios (simulação ilustrativa)</div>
+          <div className="text-2xl font-bold text-[#1A1816]">{totalConfirmed}</div>
+          <div className="text-[11px] text-[#5C5955] font-medium mt-1">{isDemoMode ? 'Dados fictícios (simulação ilustrativa)' : 'Registros da conta'}</div>
         </div>
 
         <div className="bg-white p-5 rounded-2xl border border-[#E7E4DC] shadow-xs">

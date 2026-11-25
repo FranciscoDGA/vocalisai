@@ -2,9 +2,10 @@ import React, { useState, useMemo } from 'react';
 import { 
   Search, Calendar, MessageCircle, Database, ShoppingBag, Home, 
   Layers, Utensils, Stethoscope, DollarSign, ArrowRight, ExternalLink, 
-  Sparkles, Check, CheckCircle2, X
+  Sparkles, Check, CheckCircle2, X, AlertCircle
 } from 'lucide-react';
 import { BRAND } from '../data/content';
+import { saveLead } from '../utils/supabaseClient';
 import AudioFrequencyWave from './AudioFrequencyWave';
 
 export default function IntegracoesPage({ onOpenDemo, onOpenAuth, onNavigateHome }) {
@@ -13,6 +14,8 @@ export default function IntegracoesPage({ onOpenDemo, onOpenAuth, onNavigateHome
   const [requestModalOpen, setRequestModalOpen] = useState(false);
   const [requestedApp, setRequestedApp] = useState('');
   const [requestSubmitted, setRequestSubmitted] = useState(false);
+  const [requestSubmitting, setRequestSubmitting] = useState(false);
+  const [requestError, setRequestError] = useState('');
 
   const categories = [
     { id: 'all', name: 'Todas as categorias', icon: Layers },
@@ -304,14 +307,29 @@ export default function IntegracoesPage({ onOpenDemo, onOpenAuth, onNavigateHome
     });
   }, [selectedCategory, searchQuery]);
 
-  const handleRequestSubmit = (e) => {
+  const handleRequestSubmit = async (e) => {
     e.preventDefault();
-    setRequestSubmitted(true);
-    setTimeout(() => {
-      setRequestModalOpen(false);
-      setRequestSubmitted(false);
-      setRequestedApp('');
-    }, 2000);
+    if (!requestedApp.trim()) return;
+    setRequestError('');
+    setRequestSubmitting(true);
+    try {
+      const res = await saveLead({
+        phone: 'Nao informado (Integracao)',
+        niche: 'Solicitacao de Integracao',
+        notes: `Integracao solicitada: ${requestedApp.trim()}`,
+      });
+      if (res?.success) {
+        setRequestSubmitted(true);
+      } else {
+        setRequestError(
+          'Não foi possível registrar o pedido no servidor neste momento. Envie diretamente para contato@vocalis.ai.'
+        );
+      }
+    } catch {
+      setRequestError('Erro ao enviar pedido. Utilize contato@vocalis.ai.');
+    } finally {
+      setRequestSubmitting(false);
+    }
   };
 
   return (
@@ -621,11 +639,19 @@ export default function IntegracoesPage({ onOpenDemo, onOpenAuth, onNavigateHome
                   />
                 </div>
 
+                {requestError && (
+                  <div role="alert" className="p-3 rounded-xl bg-rose-50 border border-rose-200 text-rose-800 text-xs flex items-start gap-2">
+                    <AlertCircle className="w-4 h-4 text-rose-600 shrink-0 mt-0.5" />
+                    <span>{requestError}</span>
+                  </div>
+                )}
+
                 <button
                   type="submit"
-                  className="w-full py-3 rounded-full bg-[#11100F] text-white text-xs font-bold hover:bg-black transition-colors"
+                  disabled={requestSubmitting}
+                  className="w-full py-3 rounded-full bg-[#11100F] text-white text-xs font-bold hover:bg-black transition-colors cursor-pointer disabled:opacity-60"
                 >
-                  Enviar solicitação
+                  {requestSubmitting ? 'Enviando solicitação...' : 'Enviar solicitação'}
                 </button>
               </form>
             ) : (

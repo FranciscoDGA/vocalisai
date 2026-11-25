@@ -10,8 +10,7 @@ import {
   ChevronsLeft, ChevronsRight, BookOpen, Home, Menu, Mic, Building2, Terminal
 } from 'lucide-react';
 import { BRAND } from '../data/content';
-import { getLeads, getAssistants, saveAssistant, updateAssistant, deleteAssistant } from '../utils/supabaseClient';
-import { createVapiAssistant, triggerOutboundCall } from '../utils/vapiService';
+import * as supabaseService from '../utils/supabaseClient';
 import DashboardPricingModal from './DashboardPricingModal';
 import KnowledgeBaseTab from './KnowledgeBaseTab';
 import AssistantDetailView from './AssistantDetailView';
@@ -22,7 +21,18 @@ import OutboundCampaignsSection from './OutboundCampaignsSection';
 import PlatformPresentationSlider from './PlatformPresentationSlider';
 import WhatsAppConnectorDashboard from './WhatsAppConnectorDashboard';
 import VocalisLogo from './VocalisLogo';
-import { sendWhatsAppMessage } from '../utils/uazapiClient';
+import {
+  DEMO_WORKSPACE,
+  DEMO_WORKSPACE_NOTICE,
+  DEMO_ASSISTANTS,
+  DEMO_CONVERSATIONS,
+  DEMO_NUMBERS,
+  DEMO_MEMBERS,
+  DEMO_KNOWLEDGE_ITEMS,
+  DEMO_API_KEYS,
+  buildDemoMetricsSummary,
+} from '../data/demoDashboardData';
+import { formatDuration } from '../utils/durationUtils';
 import {
   getChannelLimitReachedPolicy,
   getDashboardAddonPriceLabel,
@@ -30,79 +40,84 @@ import {
   getReferralCreditLabel,
 } from '../utils/commercialCatalogUtils';
 
-export default function InsideDashboardSection({ onOpenDemo, onOpenLegal, onOpenAuth, onOpenDocs, isStandalone = false, onLogout, currentUser, onNavigateHome, onOpenPresentation }) {
+const buildDemoKnowledgeState = () =>
+  DEMO_KNOWLEDGE_ITEMS.map((item, idx) => ({
+    id: item.id,
+    name: item.title,
+    type: idx === 0 ? 'documento' : 'faq',
+    fileType: item.type,
+    size: `${item.chunks} blocos`,
+    updatedAt: item.updatedAt,
+    status: 'Demonstração',
+    target: 'Todas as assistentes (Demo)',
+    tokens: item.chunks * 120,
+    description: 'Base de conhecimento fictícia usada exclusivamente na demonstração ilustrativa.',
+  }));
+
+const buildDemoNumbersState = () =>
+  DEMO_NUMBERS.map((n) => ({
+    id: n.id,
+    name: 'Linha Ilustrativa (Demo)',
+    number: n.number,
+    uso: n.carrier,
+    vinculacao: n.assistant,
+    type: n.type,
+  }));
+
+const buildDemoMembersState = () =>
+  DEMO_MEMBERS.map((m) => ({
+    id: m.id,
+    name: m.name,
+    email: m.email,
+    phone: '—',
+    role: m.role,
+    joined: m.status,
+  }));
+
+export default function InsideDashboardSection({
+  onOpenDemo,
+  onOpenLegal,
+  onOpenAuth,
+  onOpenDocs,
+  onSelectPlan,
+  isStandalone = false,
+  onLogout,
+  currentUser,
+  onNavigateHome,
+  onOpenPresentation,
+}) {
+  const isDemoMode = !isStandalone || !currentUser;
+  const userEmail = isDemoMode
+    ? DEMO_WORKSPACE.userEmail
+    : currentUser?.email || 'conta@vocalis.ai';
+  const workspaceName = isDemoMode
+    ? DEMO_WORKSPACE.name
+    : currentUser?.user_metadata?.company_name || userEmail.split('@')[0] || 'Minha Empresa';
+  const userName = isDemoMode
+    ? DEMO_WORKSPACE.userName
+    : currentUser?.user_metadata?.company_name || userEmail.split('@')[0] || 'Usuário';
+  const userInitial =
+    workspaceName
+      .split(/\s+/)
+      .filter(Boolean)
+      .slice(0, 2)
+      .map((part) => part[0]?.toUpperCase() || '')
+      .join('') || 'VA';
+
   const [activeTab, setActiveTab] = useState('inicio');
-  const [pricingModalOpen, setPricingModalOpen] = useState(isStandalone);
+  const [pricingModalOpen, setPricingModalOpen] = useState(isStandalone && Boolean(currentUser));
   const [profileMenuOpen, setProfileMenuOpen] = useState(false);
   const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
   const [selectedAssistant, setSelectedAssistant] = useState(null);
+  const [selectedConversation, setSelectedConversation] = useState(null);
   const [copiedLink, setCopiedLink] = useState(false);
   const [voiceCloningOpen, setVoiceCloningOpen] = useState(false);
   const [presentationOpen, setPresentationOpen] = useState(false);
   const [realLeads, setRealLeads] = useState([]);
   const [sendingWaLead, setSendingWaLead] = useState(null);
   const [waSentToast, setWaSentToast] = useState(null);
+  const [actionNotice, setActionNotice] = useState(null);
 
-  const handleSendDirectWhatsApp = async (lead) => {
-    const cleanPhone = String(lead.phone).replace(/\D/g, '');
-    if (lead.isDemo || cleanPhone.startsWith('00')) {
-      setWaSentToast('Simulação ilustrativa: contato fictício de demonstração — nenhum envio real é disparado.');
-      setTimeout(() => setWaSentToast(null), 4000);
-      return;
-    }
-    const targetPhone = cleanPhone.startsWith('55') ? cleanPhone : `55${cleanPhone}`;
-    const msg = `Olá! Aqui é o ${userName} da Vocalis AI. Vi que você fez o diagnóstico para ${lead.seg}. Gostaria de te mostrar como implantar isso na sua empresa.`;
-
-    setSendingWaLead(lead.name || lead.phone);
-    try {
-      const res = await sendWhatsAppMessage({ phone: targetPhone, message: msg });
-      if (res?.success) {
-        setWaSentToast(`✓ Mensagem enviada automaticamente para ${lead.name} (+${targetPhone}) pelo robô do WhatsApp!`);
-        setTimeout(() => setWaSentToast(null), 5000);
-      } else {
-        window.open(`https://wa.me/${targetPhone}?text=${encodeURIComponent(msg)}`, '_blank');
-      }
-    } catch {
-      window.open(`https://wa.me/${targetPhone}?text=${encodeURIComponent(msg)}`, '_blank');
-    } finally {
-      setSendingWaLead(null);
-    }
-  };
-
-  const userEmail = currentUser?.email || 'afiliadopebas@gmail.com';
-  const userName = currentUser?.user_metadata?.company_name || userEmail.split('@')[0] || 'Francisco';
-  const userInitial = (userName[0] || 'F').toUpperCase();
-  
-  // Efeito para carregar leads e assistentes reais do Supabase
-  React.useEffect(() => {
-    getLeads(20).then(data => {
-      if (data && data.length > 0) {
-        setRealLeads(data);
-      }
-    });
-
-    getAssistants().then(data => {
-      if (data && data.length > 0) {
-        setCreatedAssistants(prev => {
-          const defaultItems = prev.filter(p => typeof p.id === 'number');
-          const remoteMapped = data.map(d => ({
-            id: d.id,
-            name: d.name,
-            type: d.type,
-            typeName: d.type === 'voz' ? 'Assistente de voz' : d.type === 'chat' ? 'Assistente de chat' : 'Chat + Ligação',
-            status: d.status || 'Ativo',
-            channel: d.channel || 'Telefone (11) 4003-9821',
-            calls: d.calls_count || 0,
-            prompt: d.prompt || '',
-            voice: d.voice || 'Camila',
-            vapi_assistant_id: d.vapi_assistant_id || null
-          }));
-          return [...remoteMapped, ...defaultItems.filter(def => !remoteMapped.some(r => r.name === def.name))];
-        });
-      }
-    });
-  }, [activeTab]);
-  
   // Modals
   const [createModalOpen, setCreateModalOpen] = useState(false);
   const [numberModalOpen, setNumberModalOpen] = useState(false);
@@ -115,146 +130,68 @@ export default function InsideDashboardSection({ onOpenDemo, onOpenLegal, onOpen
   const [rolesInfoOpen, setRolesInfoOpen] = useState(false);
   const [testCallModalOpen, setTestCallModalOpen] = useState(false);
   const [testPhoneNumber, setTestPhoneNumber] = useState('');
-  const [testCallSuccess, setTestCallSuccess] = useState(false);
+  const [testCallNotice, setTestCallNotice] = useState('');
 
   // User Account Tab state
   const [showPassword, setShowPassword] = useState(false);
-  const [accountSaved, setAccountSaved] = useState(false);
+  const [accountNotice, setAccountNotice] = useState('');
 
   // Sub-tabs
   const [configSubTab, setConfigSubTab] = useState('geral');
   const [userSubTab, setUserSubTab] = useState('membros');
   const [userSearch, setUserSearch] = useState('');
   const [timeframe, setTimeframe] = useState('30 dias');
-  const [autoBuyAddons, setAutoBuyAddons] = useState(true);
+  const [autoBuyAddons, setAutoBuyAddons] = useState(false);
 
-  // Assistant State
+  // Assistant State (declared before useEffect)
   const [selectedType, setSelectedType] = useState('voz');
-  const [assistantName, setAssistantName] = useState('Roberta');
-  const [createdAssistants, setCreatedAssistants] = useState([
-    {
-      id: 1,
-      name: 'Roberta',
-      type: 'voz',
-      typeName: 'Assistente de voz (Telefone)',
-      status: 'Ativo',
-      channel: 'Telefone (94) 98447-8168',
-      calls: 58,
-      description: 'Primeiros atendimentos via telefone, SDR, triagem humanizada e qualificação com voz neural.'
-    },
-    {
-      id: 2,
-      name: 'Camila',
-      type: 'chat',
-      typeName: 'Assistente de WhatsApp',
-      status: 'Ativo',
-      channel: 'WhatsApp Oficial (+55 11 98412-****)',
-      calls: 142,
-      description: 'Atendimento, orçamentos e agendamentos no WhatsApp 24/7 com geração de Pix.'
-    },
-    {
-      id: 3,
-      name: 'Beatriz',
-      type: 'hibrido',
-      typeName: 'Webchat do Site',
-      status: 'Ativo',
-      channel: 'Webchat Widget Institucional',
-      calls: 89,
-      description: 'Concierge virtual do site, tira dúvidas com base de conhecimento RAG e captura contatos.'
-    }
-  ]);
+  const [assistantName, setAssistantName] = useState(() =>
+    isDemoMode ? 'Clara (Demo)' : 'Nova Assistente'
+  );
+  const [createdAssistants, setCreatedAssistants] = useState(() =>
+    isDemoMode ? DEMO_ASSISTANTS : []
+  );
+  const [conversationsList, setConversationsList] = useState(() =>
+    isDemoMode ? DEMO_CONVERSATIONS : []
+  );
 
-  // Knowledge Base State (Base de Conhecimento RAG - PDFs, FAQs, URLs)
-  const [knowledgeList, setKnowledgeList] = useState([
-    {
-      id: 1,
-      name: 'Tabela_de_Precos_e_Servicos_2026.pdf',
-      type: 'documento',
-      fileType: 'PDF',
-      size: '2.4 MB',
-      updatedAt: 'Hoje às 10:15',
-      status: 'Indexado',
-      target: 'Todas as assistentes',
-      tokens: 4200,
-      description: 'Preços oficiais de consultas, procedimentos, formas de pagamento via Pix/Cartão e políticas de agendamento.'
-    },
-    {
-      id: 2,
-      name: 'FAQ_Atendimento_e_Convenios.txt',
-      type: 'faq',
-      fileType: 'FAQ',
-      size: '34 KB',
-      updatedAt: 'Ontem',
-      status: 'Indexado',
-      target: 'Roberta (SDR · Voz Neural)',
-      tokens: 1850,
-      description: '18 respostas calibradas para dúvidas recorrentes sobre convênios aceitos, estacionamento gratuito e preparo de exames.'
-    },
-    {
-      id: 3,
-      name: 'https://suaempresa.com.br/sobre',
-      type: 'url',
-      fileType: 'URL',
-      size: '12 páginas',
-      updatedAt: '11/11/2026',
-      status: 'Indexado',
-      target: 'Todas as assistentes',
-      tokens: 8600,
-      description: 'Sincronização automática contínua do site institucional com especialidades, corpo clínico e horário de atendimento.'
-    }
-  ]);
+  // Knowledge Base State
+  const [knowledgeList, setKnowledgeList] = useState(() =>
+    isDemoMode ? buildDemoKnowledgeState() : []
+  );
   const [moreMenuOpen, setMoreMenuOpen] = useState(false);
 
   // Telephony State
   const [phoneFilter, setPhoneFilter] = useState('Tudo');
   const [phoneSearch, setPhoneSearch] = useState('');
   const [selectedDdd, setSelectedDdd] = useState('11 - São Paulo');
-  const [sipNumber, setSipNumber] = useState('+5511987654321');
+  const [sipNumber, setSipNumber] = useState('');
   const [importNumber, setImportNumber] = useState('');
-  const [numbersList, setNumbersList] = useState([
-    {
-      id: 1,
-      name: 'Linha Principal SP',
-      number: '+55 11 4003-9821',
-      uso: 'Entrada & Saída',
-      vinculacao: 'Roberta (SDR · Voz Neural)',
-      type: 'Entrada'
-    }
-  ]);
+  const [numbersList, setNumbersList] = useState(() =>
+    isDemoMode ? buildDemoNumbersState() : []
+  );
 
   // Members & Invites State
-  const [membersList, setMembersList] = useState([
-    {
-      id: 1,
-      name: 'Francisco',
-      email: 'francisco@empresa.com.br',
-      phone: '(11) 98412-****',
-      role: 'Admin',
-      joined: '11/11/2026, 15:10:20'
-    },
-    {
-      id: 2,
-      name: '—',
-      email: 'afiliadopebas@gmail.com',
-      phone: '—',
-      role: 'Admin',
-      joined: '11/11/2026, 15:45:53'
-    }
-  ]);
+  const [membersList, setMembersList] = useState(() =>
+    isDemoMode
+      ? buildDemoMembersState()
+      : [
+          {
+            id: currentUser?.id || 'owner',
+            name: userName,
+            email: userEmail,
+            phone: '—',
+            role: 'Admin',
+            joined: 'Conta atual',
+          },
+        ]
+  );
 
   const [invitesList, setInvitesList] = useState([]);
 
   // API Keys state
   const [apiKeySearch, setApiKeySearch] = useState('');
-  const [apiKeys, setApiKeys] = useState([
-    {
-      id: 1,
-      name: 'Produção Primária',
-      key: 'voc_live_9a8f27*********************',
-      created: '11/11/2026',
-      lastUsed: 'Hoje às 15:42'
-    }
-  ]);
+  const [apiKeys, setApiKeys] = useState(() => (isDemoMode ? DEMO_API_KEYS : []));
 
   // Addons counter state
   const [addons, setAddons] = useState({
@@ -266,18 +203,130 @@ export default function InsideDashboardSection({ onOpenDemo, onOpenLegal, onOpen
     whatsAppNum: 0,
     whatsAppConv: 0,
     botConv: 0,
-    whatsActions: 0
+    whatsActions: 0,
   });
 
-  // Super Recursos Exclusivos AI Agency OS
+  // Super Recursos Exclusivos
   const [clonedSuccess, setClonedSuccess] = useState('');
   const [auditRunning, setAuditRunning] = useState(false);
   const [auditScore, setAuditScore] = useState(9.9);
   const [shadowModeActive, setShadowModeActive] = useState(false);
+
+  // Sincronizacao estrita entre modo demonstracao (ficticio) e conta autenticada (Supabase por user_id)
+  React.useEffect(() => {
+    if (isDemoMode) {
+      setCreatedAssistants(DEMO_ASSISTANTS);
+      setConversationsList(DEMO_CONVERSATIONS);
+      setKnowledgeList(buildDemoKnowledgeState());
+      setNumbersList(buildDemoNumbersState());
+      setMembersList(buildDemoMembersState());
+      setApiKeys(DEMO_API_KEYS);
+      setRealLeads([]);
+      return;
+    }
+
+    let cancelled = false;
+
+    if (typeof supabaseService.getLeads === 'function') {
+      supabaseService.getLeads(20).then((data) => {
+        if (!cancelled && Array.isArray(data)) {
+          setRealLeads(data);
+        }
+      });
+    }
+
+    if (typeof supabaseService.getAssistants === 'function') {
+      supabaseService.getAssistants().then((data) => {
+        if (!cancelled && Array.isArray(data)) {
+          setCreatedAssistants(
+            data.map((d) => ({
+              id: d.id,
+              name: d.name,
+              type: d.type,
+              typeName:
+                d.type === 'voz'
+                  ? 'Assistente de voz'
+                  : d.type === 'chat'
+                  ? 'Assistente de chat'
+                  : 'Webchat / Híbrido',
+              unitLabel: d.type === 'voz' ? 'ligações' : d.type === 'chat' ? 'conversas' : 'atendimentos',
+              status: d.status || 'Configurado (sem ativação)',
+              channel: d.channel || 'Canal sob configuração',
+              calls: d.calls_count || 0,
+              prompt: d.prompt || '',
+              voice: d.voice || 'Camila',
+              vapi_assistant_id: d.vapi_assistant_id || null,
+            }))
+          );
+        }
+      });
+    }
+
+    if (typeof supabaseService.getCalls === 'function') {
+      supabaseService.getCalls(50).then((data) => {
+        if (!cancelled && Array.isArray(data)) {
+          setConversationsList(
+            data.map((call, idx) => {
+              const durationSeconds = Number(call.duration_seconds) || 0;
+              return {
+                id: call.id || `call-${idx}`,
+                lead: call.lead_name || call.contact_name || 'Contato registrado',
+                phone: call.phone || '—',
+                assistant: call.assistant_name || 'Assistente da conta',
+                channel: call.channel || 'voz',
+                type: call.type || 'Atendimento',
+                durationSeconds,
+                duration: formatDuration(durationSeconds),
+                status: call.status || 'Registrado',
+                statusColor: 'text-emerald-700 bg-emerald-50',
+                time: call.created_at
+                  ? new Date(call.created_at).toLocaleString('pt-BR')
+                  : 'Registro da conta',
+                transcript: call.transcript || 'Sem transcrição registrada.',
+              };
+            })
+          );
+        }
+      });
+    }
+
+    return () => {
+      cancelled = true;
+    };
+  }, [isDemoMode, currentUser?.id, activeTab]);
+
+  const showNotice = (message, tone = 'info') => {
+    setActionNotice({ message, tone });
+    setTimeout(() => {
+      setActionNotice((prev) => (prev?.message === message ? null : prev));
+    }, 5000);
+  };
+
+  const handleSendDirectWhatsApp = async (lead) => {
+    const cleanPhone = String(lead?.phone || '').replace(/\D/g, '');
+    if (isDemoMode || lead?.isDemo || cleanPhone.startsWith('00')) {
+      setWaSentToast('Modo demonstração: nenhum envio real de WhatsApp é executado.');
+      setTimeout(() => setWaSentToast(null), 4000);
+      return;
+    }
+    setSendingWaLead(lead?.name || lead?.phone || 'Contato');
+    setWaSentToast(
+      'Disparos automáticos via WhatsApp dependem de onboarding comercial na Meta Cloud API oficial. Use o formulário comercial se precisar ativar este canal.'
+    );
+    setTimeout(() => setWaSentToast(null), 5000);
+    setSendingWaLead(null);
+  };
+
+  const metricsSummary = buildDemoMetricsSummary(
+    conversationsList,
+    createdAssistants,
+    membersList,
+    numbersList
+  );
   const [openbotWebhook, setOpenbotWebhook] = useState('https://openbot.run/api/v1/webhook/agency-flows-9821');
-  const [openbotConnected, setOpenbotConnected] = useState(true);
+  const [openbotConnected, setOpenbotConnected] = useState(false);
   const [openbotTestSuccess, setOpenbotTestSuccess] = useState(false);
-  const [openbotMode, setOpenbotMode] = useState('local'); // 'local' | 'cloud'
+  const [openbotMode, setOpenbotMode] = useState('mcp'); // 'cloud' | 'mcp'
   const [openbotLocalPort, setOpenbotLocalPort] = useState('3000');
   const [isTestingOpenbot, setIsTestingOpenbot] = useState(false);
   const [openbotResponseLog, setOpenbotResponseLog] = useState(null);
@@ -287,79 +336,111 @@ export default function InsideDashboardSection({ onOpenDemo, onOpenLegal, onOpen
   const [agencySaved, setAgencySaved] = useState(false);
 
   const handleCloneTemplate = async (tpl) => {
-    let vapiId = null;
-    try {
-      const vapiRes = await createVapiAssistant({
-        name: tpl.name,
-        systemPrompt: tpl.prompt || `Você é o assistente virtual executivo da Vocalis AI para o nicho de ${tpl.niche}. Atenda o cliente em português com extrema clareza e foco na resolução imediata.`,
-        firstMessage: `Olá! Aqui é ${tpl.name}. Como posso te ajudar hoje?`,
-        voiceId: 'Clara'
-      });
-      if (vapiRes.success && vapiRes.assistantId) {
-        vapiId = vapiRes.assistantId;
-      }
-    } catch (e) {
-      console.warn('Falha na criação Vapi durante clone:', e);
-    }
-
     const newAssis = {
-      id: Date.now(),
+      id: `local-${Date.now()}`,
       name: tpl.name,
       type: 'voz',
       typeName: 'Template: ' + tpl.niche,
-      status: 'Ativo',
-      channel: 'Telefone + WhatsApp',
+      unitLabel: 'ligações',
+      status: isDemoMode ? 'Simulação (Demo)' : 'Pendente de ativação',
+      channel: tpl.channels || 'Canal sob consulta',
       calls: 0,
-      prompt: tpl.prompt,
-      vapi_assistant_id: vapiId
+      prompt: tpl.prompt || tpl.desc,
+      isDemo: isDemoMode,
+      vapi_assistant_id: null,
     };
-    setCreatedAssistants(prev => [...prev, newAssis]);
-    setClonedSuccess(`Agente "${tpl.name}" clonado e sincronizado com a Vapi!`);
 
-    // Persiste no Supabase
-    saveAssistant({
+    if (isDemoMode) {
+      setCreatedAssistants((prev) => [...prev, newAssis]);
+      setClonedSuccess(
+        `Template "${tpl.name}" adicionado apenas como prévia local no modo demonstração (não salvo em servidor).`
+      );
+      setTimeout(() => {
+        setClonedSuccess('');
+        setActiveTab('assistentes');
+      }, 1500);
+      return;
+    }
+
+    const res = await supabaseService.saveAssistant?.({
       name: tpl.name,
       type: 'voz',
-      channel: 'Telefone + WhatsApp',
-      prompt: tpl.prompt,
-      vapi_assistant_id: vapiId
-    }).then(res => {
-      if (res?.success && res.data?.id) {
-        setCreatedAssistants(prev => prev.map(a => a.id === newAssis.id ? { ...a, id: res.data.id } : a));
-      }
+      channel: tpl.channels || 'Canal sob consulta',
+      prompt: tpl.prompt || tpl.desc,
+      vapi_assistant_id: null,
     });
 
-    setTimeout(() => {
-      setClonedSuccess('');
-      setActiveTab('assistentes');
-    }, 1500);
+    if (res?.success && res.data?.id) {
+      setCreatedAssistants((prev) => [...prev, { ...newAssis, id: res.data.id }]);
+      setClonedSuccess(`Modelo "${tpl.name}" salvo no cadastro da sua conta (ativação de canal pendente).`);
+      setTimeout(() => {
+        setClonedSuccess('');
+        setActiveTab('assistentes');
+      }, 1500);
+    } else {
+      showNotice(
+        `Não foi possível salvar no servidor: ${res?.error || 'serviço indisponível no momento.'}`,
+        'error'
+      );
+    }
   };
 
   const handleUpdateAssistant = async (updatedData) => {
-    setCreatedAssistants(prev => prev.map(a => a.id === updatedData.id ? { ...a, ...updatedData } : a));
-    if (selectedAssistant && selectedAssistant.id === updatedData.id) {
-      setSelectedAssistant(prev => ({ ...prev, ...updatedData }));
+    if (isDemoMode) {
+      setCreatedAssistants((prev) =>
+        prev.map((a) => (a.id === updatedData.id ? { ...a, ...updatedData } : a))
+      );
+      if (selectedAssistant && selectedAssistant.id === updatedData.id) {
+        setSelectedAssistant((prev) => ({ ...prev, ...updatedData }));
+      }
+      showNotice('Alteração exibida apenas na sessão demonstrativa local (sem persistência).');
+      return;
     }
 
-    if (typeof updatedData.id === 'string' && updatedData.id.includes('-')) {
-      await updateAssistant(updatedData.id, {
+    if (typeof updatedData.id === 'string' && !updatedData.id.startsWith('demo-') && !updatedData.id.startsWith('local-')) {
+      const res = await supabaseService.updateAssistant?.(updatedData.id, {
         name: updatedData.name,
         type: updatedData.type,
         channel: updatedData.channel,
         prompt: updatedData.prompt,
         voice: updatedData.voice,
-        vapi_assistant_id: updatedData.vapi_assistant_id
+        vapi_assistant_id: null,
       });
+      if (res?.success === false) {
+        showNotice(`Falha ao atualizar assistente: ${res.error || 'erro ao salvar.'}`, 'error');
+        return;
+      }
+    }
+
+    setCreatedAssistants((prev) =>
+      prev.map((a) => (a.id === updatedData.id ? { ...a, ...updatedData } : a))
+    );
+    if (selectedAssistant && selectedAssistant.id === updatedData.id) {
+      setSelectedAssistant((prev) => ({ ...prev, ...updatedData }));
     }
   };
 
-  const handleDeleteAssistant = async (id, vapiId) => {
-    setCreatedAssistants(prev => prev.filter(a => a.id !== id));
+  const handleDeleteAssistant = async (id) => {
+    if (isDemoMode) {
+      setCreatedAssistants((prev) => prev.filter((a) => a.id !== id));
+      if (selectedAssistant?.id === id) {
+        setSelectedAssistant(null);
+      }
+      showNotice('Remoção apenas visual na sessão demonstrativa (dados reais intactos).');
+      return;
+    }
+
+    if (typeof id === 'string' && !id.startsWith('demo-') && !id.startsWith('local-')) {
+      const res = await supabaseService.deleteAssistant?.(id);
+      if (res?.success === false) {
+        showNotice(`Falha ao excluir assistente: ${res.error || 'erro ao excluir.'}`, 'error');
+        return;
+      }
+    }
+
+    setCreatedAssistants((prev) => prev.filter((a) => a.id !== id));
     if (selectedAssistant?.id === id) {
       setSelectedAssistant(null);
-    }
-    if (typeof id === 'string' && id.includes('-')) {
-      await deleteAssistant(id);
     }
   };
 
@@ -368,82 +449,60 @@ export default function InsideDashboardSection({ onOpenDemo, onOpenLegal, onOpen
     setTimeout(() => {
       setAuditRunning(false);
       setAuditScore(9.9);
-    }, 2000);
+      showNotice(
+        'Simulação ilustrativa concluída com cenários estáticos de exemplo (não executa testes reais em LLM em produção).'
+      );
+    }, 600);
   };
 
   const handleTestOpenbot = async () => {
-    setIsTestingOpenbot(true);
+    setIsTestingOpenbot(false);
     setOpenbotTestSuccess(false);
-    setOpenbotResponseLog(null);
-
-    const targetUrl = openbotMode === 'local' 
-      ? `http://localhost:${openbotLocalPort}/api/webhook` 
-      : openbotWebhook;
-
-    const samplePayload = {
-      event: 'vocalis.call.analyzed',
-      call_id: `voc_call_${Math.random().toString(36).substring(2, 8)}`,
-      customer: { phone: '+5511987654321', name: 'Lead Demonstracao' },
-      transcription: 'Quero agendar uma consulta para amanhã às 14h com o especialista.',
-      intent: 'agendamento_consulta',
-      openbot_local_path: 'C:\\Users\\User\\OpenBot',
-      timestamp: new Date().toISOString()
-    };
-
-    try {
-      await fetch(targetUrl, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(samplePayload),
-        mode: 'no-cors'
-      });
-      setOpenbotTestSuccess(true);
-      setOpenbotResponseLog({
-        status: 200,
-        latency: 'Simulação ilustrativa',
-        target: targetUrl,
-        payloadSent: samplePayload
-      });
-    } catch {
-      setOpenbotTestSuccess(true);
-      setOpenbotResponseLog({
-        status: 200,
-        latency: 'Simulação ilustrativa',
-        target: targetUrl,
-        payloadSent: samplePayload
-      });
-    } finally {
-      setIsTestingOpenbot(false);
-    }
+    setOpenbotResponseLog({
+      status: 'Em desenvolvimento / Sob consulta',
+      latency: 'Sem conexão automática no navegador',
+      target:
+        openbotMode === 'mcp'
+          ? 'Endpoint /api/mcp requer MCP_API_KEY de servidor'
+          : 'Conector OpenBot não executa chamadas ao localhost do visitante nem webhooks públicos sem autenticação.',
+    });
+    showNotice(
+      'Integração OpenBot/MCP requer configuração técnica autenticada em servidor e está fora do autoatendimento público.'
+    );
   };
 
   const handleSaveAgency = (e) => {
     e.preventDefault();
-    setAgencySaved(true);
-    setTimeout(() => setAgencySaved(false), 2500);
+    setAgencySaved(false);
+    showNotice(
+      'White-Label e domínio personalizado dependem de provisionamento comercial sob consulta e ainda não possuem gravação autônoma em servidor.'
+    );
   };
 
   const updateAddon = (key, delta) => {
-    setAddons(prev => ({
+    setAddons((prev) => ({
       ...prev,
-      [key]: Math.max(0, prev[key] + delta)
+      [key]: Math.max(0, prev[key] + delta),
     }));
   };
 
   const handleCopy = () => {
-    navigator.clipboard?.writeText('https://vocalis.ai/convite/francisco-8921');
-    setCopiedLink(true);
-    setTimeout(() => setCopiedLink(false), 2000);
+    setCopiedLink(false);
+    showNotice(
+      isDemoMode
+        ? 'Links de convite de equipe estão indisponíveis no ambiente de demonstração.'
+        : 'O programa de indicações e geração de links está em desenvolvimento e pendente de regras comerciais.'
+    );
   };
 
   const openCreateModal = (type = 'voz') => {
     setSelectedType(type);
     if (type === 'voz') {
-      setAssistantName('Roberta');
+      setAssistantName(isDemoMode ? 'Clara (Demo)' : 'Assistente de Voz');
     } else if (type === 'chat') {
-      setAssistantName('Camila');
+      setAssistantName(isDemoMode ? 'Sofia (Demo)' : 'Assistente de Chat');
     } else if (type === 'hibrido') {
-      setAssistantName('Beatriz');
+      setAssistantName(isDemoMode ? 'Mateus (Demo)' : 'Assistente Webchat');
     }
     setCreateModalOpen(true);
   };
@@ -451,11 +510,11 @@ export default function InsideDashboardSection({ onOpenDemo, onOpenLegal, onOpen
   const handleSelectAssistantType = (type) => {
     setSelectedType(type);
     if (type === 'voz') {
-      setAssistantName('Roberta');
+      setAssistantName(isDemoMode ? 'Clara (Demo)' : 'Assistente de Voz');
     } else if (type === 'chat') {
-      setAssistantName('Maria');
+      setAssistantName(isDemoMode ? 'Sofia (Demo)' : 'Assistente de Chat');
     } else if (type === 'hibrido') {
-      setAssistantName('Ana');
+      setAssistantName(isDemoMode ? 'Mateus (Demo)' : 'Assistente Webchat');
     }
   };
 
@@ -464,111 +523,109 @@ export default function InsideDashboardSection({ onOpenDemo, onOpenLegal, onOpen
     const typeNames = {
       voz: 'Assistente de voz',
       chat: 'Assistente de chat',
-      hibrido: 'Chat + Ligação'
+      hibrido: 'Webchat / Híbrido',
     };
-    const chosenChannel = selectedType === 'voz' ? 'Telefone (11) 4003-9821' : selectedType === 'chat' ? 'WhatsApp Oficial' : 'Telefone + WhatsApp';
-    
-    let vapiId = null;
-    if (selectedType === 'voz' || selectedType === 'hibrido') {
-      try {
-        const vapiRes = await createVapiAssistant({
-          name: assistantName || 'Nova Assistente',
-          systemPrompt: `Você é uma assistente virtual executiva chamada ${assistantName || 'Camila'} da Vocalis AI. Você atende em português brasileiro com gentileza, brevidade e alta capacidade de resolução de dúvidas e agendamentos.`,
-          firstMessage: `Olá! Aqui é a ${assistantName || 'Camila'}. Como posso ajudar você hoje?`,
-          voiceId: 'Clara'
-        });
-        if (vapiRes.success && vapiRes.assistantId) {
-          vapiId = vapiRes.assistantId;
-        }
-      } catch (err) {
-        console.warn('Falha na criação Vapi:', err);
-      }
+    const chosenChannel =
+      selectedType === 'voz'
+        ? 'Telefonia (sob configuração)'
+        : selectedType === 'chat'
+        ? 'WhatsApp (Meta Cloud API sob consulta)'
+        : 'Webchat no Site';
+
+    if (isDemoMode) {
+      const demoAssis = {
+        id: `demo-local-${Date.now()}`,
+        name: assistantName || 'Assistente (Demo)',
+        type: selectedType,
+        typeName: typeNames[selectedType],
+        unitLabel: selectedType === 'voz' ? 'ligações' : selectedType === 'chat' ? 'conversas' : 'atendimentos',
+        status: 'Simulação (Demo)',
+        channel: chosenChannel,
+        calls: 0,
+        isDemo: true,
+        vapi_assistant_id: null,
+      };
+      setCreatedAssistants((prev) => [demoAssis, ...prev]);
+      setCreateModalOpen(false);
+      setActiveTab('assistentes');
+      showNotice('Assistente adicionado apenas na simulação demonstrativa local (não salvo em conta real).');
+      return;
     }
 
-    const newAssis = {
-      id: Date.now(),
-      name: assistantName || 'Nova Assistente',
-      type: selectedType,
-      typeName: typeNames[selectedType],
-      status: 'Ativo',
-      channel: chosenChannel,
-      calls: 0,
-      vapi_assistant_id: vapiId
-    };
-    setCreatedAssistants(prev => [newAssis, ...prev]);
-    setCreateModalOpen(false);
-    setActiveTab('assistentes');
-
-    // Persiste no Supabase
-    saveAssistant({
+    const res = await supabaseService.saveAssistant?.({
       name: assistantName || 'Nova Assistente',
       type: selectedType,
       channel: chosenChannel,
-      vapi_assistant_id: vapiId
-    }).then(res => {
-      if (res?.success && res.data?.id) {
-        setCreatedAssistants(prev => prev.map(a => a.id === newAssis.id ? { ...a, id: res.data.id } : a));
-      }
+      vapi_assistant_id: null,
     });
+
+    if (res?.success && res.data?.id) {
+      setCreatedAssistants((prev) => [
+        {
+          id: res.data.id,
+          name: assistantName || 'Nova Assistente',
+          type: selectedType,
+          typeName: typeNames[selectedType],
+          unitLabel: selectedType === 'voz' ? 'ligações' : selectedType === 'chat' ? 'conversas' : 'atendimentos',
+          status: 'Configurado (sem ativação)',
+          channel: chosenChannel,
+          calls: 0,
+          vapi_assistant_id: null,
+        },
+        ...prev,
+      ]);
+      setCreateModalOpen(false);
+      setActiveTab('assistentes');
+      showNotice('Assistente salvo no seu cadastro. A ativação telefônica real requer contratação e provedor configurado.');
+    } else {
+      showNotice(
+        `Não foi possível salvar no servidor: ${res?.error || 'verifique sua sessão autenticada.'}`,
+        'error'
+      );
+    }
   };
 
   const handleAddNumber = (e) => {
     e.preventDefault();
-    const newNum = {
-      id: Date.now(),
-      name: numberModalTab === 'comprar' ? `Número Nacional (${selectedDdd.slice(0, 2)})` : numberModalTab === 'sip' ? 'Tronco SIP Corporativo' : 'Caller ID Outbound',
-      number: numberModalTab === 'comprar' ? `+55 ${selectedDdd.slice(0, 2)} 4003-` + Math.floor(1000 + Math.random() * 9000) : numberModalTab === 'sip' ? sipNumber : importNumber,
-      uso: numberModalTab === 'importar' ? 'Apenas Saída' : 'Entrada & Saída',
-      vinculacao: assistantName || 'Roberta',
-      type: numberModalTab === 'importar' ? 'Saída' : 'Entrada'
-    };
-    setNumbersList([...numbersList, newNum]);
     setNumberModalOpen(false);
+    showNotice(
+      'Provisionamento de números (0800, 4003, DDD ou tronco SIP) requer onboarding comercial e verificação documental; não há compra automática nesta tela.'
+    );
   };
 
   const handleAddApiKey = (e) => {
     e.preventDefault();
-    const newK = {
-      id: Date.now(),
-      name: newKeyName || 'Chave API',
-      key: 'voc_live_' + Math.random().toString(36).substring(2, 10) + '****************',
-      created: 'Hoje',
-      lastUsed: 'Nunca'
-    };
-    setApiKeys([...apiKeys, newK]);
     setApiKeyModalOpen(false);
+    showNotice(
+      'Emissão de chaves de API de produção ainda está em desenvolvimento e indisponível no modo demonstrativo.'
+    );
   };
 
   const handleSendInvite = (e) => {
     e.preventDefault();
-    if (!inviteEmail) return;
-    const newInv = {
-      id: Date.now(),
-      email: inviteEmail,
-      role: inviteRole,
-      status: 'Pendente',
-      createdAt: 'Hoje',
-      lastSent: 'Agora',
-      expiresIn: 'em 7 dias'
-    };
-    setInvitesList([...invitesList, newInv]);
-    setInviteEmail('');
     setInviteModalOpen(false);
+    setInviteEmail('');
+    showNotice(
+      isDemoMode
+        ? 'Convite de membros está desabilitado no ambiente de demonstração.'
+        : 'Gestão multi-usuário por convite de e-mail está em desenvolvimento no backend.'
+    );
   };
 
   const handleSaveAccount = (e) => {
     e.preventDefault();
-    setAccountSaved(true);
-    setTimeout(() => setAccountSaved(false), 2500);
+    setAccountNotice(
+      isDemoMode
+        ? 'Modo demonstração: alterações de perfil ou senha não são salvas.'
+        : 'Atualização avançada de perfil e alteração de senha em desenvolvimento neste painel.'
+    );
   };
 
   const handleStartTestCall = (e) => {
     e.preventDefault();
-    setTestCallSuccess(true);
-    setTimeout(() => {
-      setTestCallSuccess(false);
-      setTestCallModalOpen(false);
-    }, 2000);
+    setTestCallNotice(
+      'Este painel público não realiza discagens telefônicas reais. Para solicitar uma demonstração assistida pela equipe, use o formulário de contato.'
+    );
   };
 
   return (
@@ -607,10 +664,10 @@ export default function InsideDashboardSection({ onOpenDemo, onOpenLegal, onOpen
                   className="flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-white border border-[#E7E4DC] text-xs font-bold text-[#1A1816]"
                 >
                   <div className="w-5 h-5 rounded-full bg-[#1A1816] text-white flex items-center justify-center text-[9px] font-bold">
-                    QS
+                    {userInitial}
                   </div>
-                  <span className="truncate max-w-[100px] uppercase text-[11px]">
-                    {currentUser?.user_metadata?.company_name || 'Q&C STORES'}
+                  <span className="truncate max-w-[120px] uppercase text-[11px]">
+                    {workspaceName}
                   </span>
                   <ChevronDown className="w-3 h-3 text-[#736F69]" />
                 </button>
@@ -902,13 +959,16 @@ export default function InsideDashboardSection({ onOpenDemo, onOpenLegal, onOpen
                       </button>
 
                       <button 
+                        type="button"
                         onClick={() => { setActiveTab('whatsapp'); setSelectedAssistant(null); }}
                         className={`w-full text-left py-1.5 px-2 rounded-lg transition-colors cursor-pointer flex items-center justify-between ${
                           activeTab === 'whatsapp' ? 'bg-[#EFECE6] text-[#1A1816] font-semibold' : 'text-[#5C5955] hover:text-[#1A1816] hover:bg-[#F3EFE8]'
                         }`}
                       >
                         <span>Conexão WhatsApp</span>
-                        <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" title="WhatsApp Operacional"></span>
+                        <span className="text-[9px] font-semibold px-1.5 py-0.2 rounded bg-[#EFECE6] text-[#5C5955]">
+                          {isDemoMode ? 'Demo' : 'Pendente'}
+                        </span>
                       </button>
 
                       <button 
@@ -987,11 +1047,11 @@ export default function InsideDashboardSection({ onOpenDemo, onOpenLegal, onOpen
                 >
                   <div className="flex items-center gap-2.5 overflow-hidden">
                     <div className="w-6 h-6 rounded-full bg-[#1A1816] text-white flex items-center justify-center text-[10px] font-bold shrink-0">
-                      QS
+                      {userInitial}
                     </div>
                     {!sidebarCollapsed && (
                       <span className="text-xs font-bold text-[#1A1816] truncate uppercase tracking-tight">
-                        {currentUser?.user_metadata?.company_name || 'Q&C STORES'}
+                        {workspaceName}
                       </span>
                     )}
                   </div>
@@ -1108,9 +1168,44 @@ export default function InsideDashboardSection({ onOpenDemo, onOpenLegal, onOpen
 
           {/* Main Dashboard Canvas Area */}
           <div className={`flex-1 p-4 sm:p-8 ${isStandalone ? 'md:p-10 min-h-screen' : ''} overflow-y-auto bg-white relative`}>
-            
+            {isDemoMode && (
+              <div
+                data-testid="demo-mode-banner"
+                className="mb-5 p-3.5 rounded-2xl bg-amber-50 border border-amber-300 text-amber-950 text-xs flex items-start gap-2.5 shadow-xs"
+              >
+                <AlertCircle className="w-4 h-4 text-amber-700 shrink-0 mt-0.5" />
+                <div>
+                  <strong className="font-bold">Ambiente de demonstração — dados fictícios.</strong>{' '}
+                  <span>
+                    {DEMO_WORKSPACE_NOTICE.replace('Ambiente de demonstração — dados fictícios. ', '')}
+                  </span>
+                </div>
+              </div>
+            )}
+
+            {actionNotice && (
+              <div
+                role="status"
+                className={`mb-5 p-3.5 rounded-2xl border text-xs flex items-center justify-between gap-3 animate-fadeIn ${
+                  actionNotice.tone === 'error'
+                    ? 'bg-rose-50 border-rose-200 text-rose-900'
+                    : 'bg-indigo-50 border-indigo-200 text-indigo-950'
+                }`}
+              >
+                <span>{actionNotice.message}</span>
+                <button
+                  type="button"
+                  onClick={() => setActionNotice(null)}
+                  className="text-xs font-bold px-2 py-0.5 rounded hover:bg-black/5 cursor-pointer shrink-0"
+                  aria-label="Fechar aviso"
+                >
+                  ✕
+                </button>
+              </div>
+            )}
+
             {/* ========================================================
-                1. TAB: INÍCIO (Exact replica of screenshot 3)
+                1. TAB: INÍCIO
                ======================================================== */}
             {activeTab === 'inicio' && (
               <div className="space-y-6 animate-fadeIn">
@@ -1119,6 +1214,7 @@ export default function InsideDashboardSection({ onOpenDemo, onOpenLegal, onOpen
                   <div className="flex items-center gap-3">
                     <h3 className="text-2xl font-bold text-[#1A1816]">Início</h3>
                     <button
+                      type="button"
                       onClick={() => setPresentationOpen(true)}
                       className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-[#EEF2FF] border border-[#F2E8DC] text-[#4F46E5] text-xs font-bold hover:bg-[#F5EADB] transition-all cursor-pointer shadow-xs"
                       title="Abrir apresentação completa do sistema para reuniões com clientes"
@@ -1130,6 +1226,7 @@ export default function InsideDashboardSection({ onOpenDemo, onOpenLegal, onOpen
                   <div className="flex items-center gap-1 bg-[#FAF9F5] p-1 rounded-xl border border-[#E7E4DC] text-xs">
                     {['Hoje', '7 dias', '30 dias', '90 dias'].map(tf => (
                       <button
+                        type="button"
                         key={tf}
                         onClick={() => setTimeframe(tf)}
                         className={`px-3 py-1 rounded-lg font-medium transition-colors ${
@@ -1139,70 +1236,90 @@ export default function InsideDashboardSection({ onOpenDemo, onOpenLegal, onOpen
                         {tf}
                       </button>
                     ))}
-                    <button className="flex items-center gap-1 px-3 py-1 rounded-lg text-[#736F69] hover:text-[#1A1816]">
-                      <Calendar className="w-3 h-3" />
-                      <span>Personalizado</span>
-                    </button>
                   </div>
                 </div>
 
                 {/* Top Metrics Card */}
                 <div className="p-6 rounded-2xl border border-[#E7E4DC] bg-white space-y-4">
                   <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-1">
-                    <h4 className="text-xs font-bold text-[#1A1816]">Veja o que seus assistentes resolveram</h4>
-                    <span className="text-[11px] text-[#8C8881]">Últimos 30 dias · em relação ao período anterior</span>
+                    <h4 className="text-xs font-bold text-[#1A1816]">
+                      {isDemoMode ? 'Resumo ilustrativo do workspace demo' : 'Resumo de atendimentos registrados'}
+                    </h4>
+                    <span className="text-[11px] text-[#736F69]">
+                      Período: {timeframe} · {isDemoMode ? 'Dados fictícios sincronizados entre abas' : 'Dados da sua conta'}
+                    </span>
                   </div>
 
                   <div className="grid grid-cols-1 sm:grid-cols-3 gap-6 pt-2">
                     <div>
-                      <div className="text-[11px] text-[#736F69]">Ligações atendidas</div>
-                      <div className="text-3xl font-normal text-[#1A1816] mt-1">0</div>
-                      <div className="text-[10px] text-[#8C8881] mt-0.5">0 com conversa</div>
+                      <div className="text-[11px] text-[#736F69]">Atendimentos registrados</div>
+                      <div data-testid="overview-total-interactions" className="text-3xl font-normal text-[#1A1816] mt-1">
+                        {metricsSummary.totalInteractions}
+                      </div>
+                      <div className="text-[10px] text-[#736F69] mt-0.5">
+                        {metricsSummary.voiceCount} ligações · {metricsSummary.whatsappCount} WhatsApp · {metricsSummary.webchatCount} Webchat
+                      </div>
                     </div>
                     <div>
-                      <div className="text-[11px] text-[#736F69]">Tratadas pelos assistentes</div>
-                      <div className="text-3xl font-normal text-[#1A1816] mt-1">—</div>
-                      <div className="text-[10px] text-[#8C8881] mt-0.5">Faltam 15 de 15 conversas</div>
+                      <div className="text-[11px] text-[#736F69]">Assistentes no painel</div>
+                      <div className="text-3xl font-normal text-[#1A1816] mt-1">
+                        {metricsSummary.assistantsCount}
+                      </div>
+                      <div className="text-[10px] text-[#736F69] mt-0.5">
+                        {metricsSummary.membersCount} membro(s) · {metricsSummary.numbersCount} número(s)
+                      </div>
                     </div>
                     <div>
-                      <div className="text-[11px] text-[#736F69]">Tempo economizado</div>
-                      <div className="text-3xl font-normal text-[#1A1816] mt-1">0 min</div>
-                      <div className="text-[10px] text-[#8C8881] mt-0.5">Tempo de conversa dos assistentes</div>
+                      <div className="text-[11px] text-[#736F69]">Duração média</div>
+                      <div className="text-3xl font-normal text-[#1A1816] mt-1">
+                        {metricsSummary.avgDurationFormatted}
+                      </div>
+                      <div className="text-[10px] text-[#736F69] mt-0.5">
+                        Tempo total: {formatDuration(metricsSummary.totalSeconds)}
+                      </div>
                     </div>
                   </div>
                 </div>
 
-                {/* Middle Chart Card: Histórico de Ligações */}
+                {/* Middle Chart Card: Histórico */}
                 <div className="p-6 rounded-2xl border border-[#E7E4DC] bg-white space-y-4">
-                  <div className="flex items-center justify-between">
+                  <div className="flex items-center justify-between flex-wrap gap-2">
                     <div>
-                      <h4 className="text-xs font-bold text-[#1A1816]">Histórico de ligações</h4>
-                      <p className="text-[11px] text-[#8C8881]">Ligações dos seus assistentes no período selecionado</p>
+                      <h4 className="text-xs font-bold text-[#1A1816]">Histórico de atendimentos</h4>
+                      <p className="text-[11px] text-[#736F69]">
+                        {isDemoMode ? 'Volume ilustrativo compatível com Conversas e Assistentes' : 'Registros consolidados da conta autenticada'}
+                      </p>
                     </div>
                     <div className="flex items-center gap-2 text-xs">
                       <span className="px-2.5 py-1 rounded-lg bg-[#FAF9F5] border border-[#E7E4DC] font-medium text-[#1A1816]">
-                        Ligações <strong>0</strong>
+                        Atendimentos <strong>{metricsSummary.totalInteractions}</strong>
                       </span>
                       <span className="px-2.5 py-1 rounded-lg bg-[#FAF9F5] border border-[#E7E4DC] font-medium text-[#736F69]">
-                        Minutos <strong>0</strong>
+                        Duração total <strong>{formatDuration(metricsSummary.totalSeconds)}</strong>
                       </span>
                     </div>
                   </div>
 
-                  {/* Empty Chart Canvas */}
-                  <div className="h-44 w-full flex flex-col justify-between pt-4 border-b border-[#EBE8E2]">
-                    <div className="text-[10px] text-[#8C8881]">1</div>
-                    <div className="border-b border-dashed border-[#EBE8E2] w-full my-auto"></div>
-                    <div className="text-[10px] text-[#8C8881]">0</div>
-                  </div>
-                  <div className="flex justify-between text-[10px] text-[#8C8881] px-2">
-                    <span>13/10</span>
-                    <span className="hidden sm:inline">18/10</span>
-                    <span>23/10</span>
-                    <span className="hidden sm:inline">28/10</span>
-                    <span>02/11</span>
-                    <span>07/11</span>
-                  </div>
+                  {conversationsList.length === 0 ? (
+                    <div className="h-36 w-full flex flex-col items-center justify-center text-center border border-dashed border-[#EBE8E2] rounded-xl text-xs text-[#736F69] p-4">
+                      <span>Nenhum atendimento real registrado ainda nesta conta.</span>
+                    </div>
+                  ) : (
+                    <div className="grid grid-cols-3 gap-3 pt-2">
+                      <div className="p-3 rounded-xl bg-[#FAF9F5] border border-[#E7E4DC] text-xs">
+                        <div className="text-[#736F69]">Telefonia (Voz)</div>
+                        <div className="text-lg font-bold text-[#1A1816] mt-0.5">{metricsSummary.voiceCount}</div>
+                      </div>
+                      <div className="p-3 rounded-xl bg-[#FAF9F5] border border-[#E7E4DC] text-xs">
+                        <div className="text-[#736F69]">WhatsApp</div>
+                        <div className="text-lg font-bold text-[#1A1816] mt-0.5">{metricsSummary.whatsappCount}</div>
+                      </div>
+                      <div className="p-3 rounded-xl bg-[#FAF9F5] border border-[#E7E4DC] text-xs">
+                        <div className="text-[#736F69]">Webchat</div>
+                        <div className="text-lg font-bold text-[#1A1816] mt-0.5">{metricsSummary.webchatCount}</div>
+                      </div>
+                    </div>
+                  )}
                 </div>
 
                 {/* Bottom 2 Grid Cards */}
@@ -1253,16 +1370,25 @@ export default function InsideDashboardSection({ onOpenDemo, onOpenLegal, onOpen
                       <Sparkles className="w-5 h-5 text-[#4F46E5]" />
                     </div>
                     <div>
-                      <h4 className="text-sm font-bold text-[#1A1816]">Sua análise está quase pronta</h4>
+                      <h4 className="text-sm font-bold text-[#1A1816]">
+                        {isDemoMode ? 'Prévia analítica (dados fictícios)' : 'Sua análise está quase pronta'}
+                      </h4>
                       <p className="text-xs text-[#5C5955] max-w-xs mt-1 leading-relaxed">
-                        A partir de 15 conversas, você verá aqui como terminaram e o que quem ligou queria.
+                        {isDemoMode
+                          ? `${metricsSummary.totalInteractions} atendimentos fictícios registrados no workspace demo, idênticos às listas de Assistentes e Conversas.`
+                          : 'A partir de 15 conversas reais, exibiremos padrões de conclusão e motivos principais de contato.'}
                       </p>
                     </div>
                     <div className="w-full max-w-xs">
                       <div className="w-full bg-[#EFECE6] h-1.5 rounded-full overflow-hidden">
-                        <div className="bg-[#4F46E5] h-full w-0"></div>
+                        <div
+                          className="bg-[#4F46E5] h-full transition-all"
+                          style={{ width: `${Math.min(100, Math.round((metricsSummary.totalInteractions / 15) * 100))}%` }}
+                        ></div>
                       </div>
-                      <div className="text-[10px] text-[#8C8881] mt-1.5">Faltam 15 de 15 conversas</div>
+                      <div className="text-[10px] text-[#736F69] mt-1.5">
+                        {metricsSummary.totalInteractions} de 15 conversas registradas
+                      </div>
                     </div>
                   </div>
                 </div>
@@ -1271,60 +1397,146 @@ export default function InsideDashboardSection({ onOpenDemo, onOpenLegal, onOpen
             )}
 
             {/* ========================================================
-                2. TAB: CONVERSAS (Exact replica of screenshot 4)
+                2. TAB: CONVERSAS
                ======================================================== */}
             {activeTab === 'conversas' && (
               <div className="space-y-6 animate-fadeIn">
-                <div className="flex items-center justify-between pb-4 border-b border-[#EBE8E2]">
-                  <h3 className="text-2xl font-bold text-[#1A1816]">Conversas</h3>
-                </div>
-
-                {/* Empty State */}
-                <div className="py-20 flex flex-col items-center justify-center text-center max-w-md mx-auto space-y-5">
-                  <div className="relative">
-                    <div className="w-24 h-16 rounded-2xl bg-white border border-[#E7E4DC] shadow-md flex flex-col justify-center px-4 space-y-1.5">
-                      <div className="flex items-center gap-1.5">
-                        <span className="w-2 h-2 rounded-full bg-[#4F46E5]"></span>
-                        <div className="w-14 h-2 bg-[#EFECE6] rounded-full"></div>
-                      </div>
-                      <div className="w-16 h-1.5 bg-[#E8F5E9] rounded-full"></div>
-                    </div>
-                    <div className="w-8 h-8 rounded-full bg-[#4F46E5] text-white flex items-center justify-center absolute -top-3 -right-3 shadow">
-                      <MessageSquare className="w-4 h-4" />
-                    </div>
-                  </div>
-
+                <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 pb-4 border-b border-[#EBE8E2]">
                   <div>
-                    <h4 className="text-lg font-bold text-[#1A1816]">Nenhuma conversa ainda</h4>
-                    <p className="text-xs text-[#5C5955] mt-1.5 leading-relaxed">
-                      Quando seus assistentes atenderem ligações ou chats, cada conversa aparece aqui com resumo, resultado e transcrição.
+                    <h3 className="text-2xl font-bold text-[#1A1816]">Conversas</h3>
+                    <p className="text-xs text-[#5C5955] mt-0.5">
+                      {isDemoMode
+                        ? 'Registros fictícios sincronizados com a Visão Geral e Assistentes.'
+                        : 'Histórico real de atendimentos vinculados à sua conta autenticada.'}
                     </p>
                   </div>
-
-                  <div className="flex flex-col sm:flex-row items-center gap-3 pt-2">
-                    <button 
-                      onClick={() => setTestCallModalOpen(true)}
-                      className="px-5 py-2.5 rounded-xl bg-[#4F46E5] text-white text-xs font-bold hover:bg-[#4338CA] transition-colors flex items-center gap-2 shadow-sm"
-                    >
-                      <Phone className="w-3.5 h-3.5" />
-                      <span>Testar ligação</span>
-                    </button>
-                    <button 
-                      onClick={() => { setNumberModalOpen(true); }}
-                      className="px-5 py-2.5 rounded-xl border border-[#D0CBC0] text-[#1A1816] text-xs font-bold hover:bg-[#FAF9F5] transition-colors"
-                    >
-                      Conectar um número
-                    </button>
+                  <div className="text-xs font-semibold text-[#5C5955]">
+                    Total: <strong className="text-[#1A1816]">{conversationsList.length}</strong> · Duração média:{' '}
+                    <strong className="text-[#1A1816]">{metricsSummary.avgDurationFormatted}</strong>
                   </div>
                 </div>
+
+                {conversationsList.length === 0 ? (
+                  <div className="py-20 flex flex-col items-center justify-center text-center max-w-md mx-auto space-y-5">
+                    <div className="relative">
+                      <div className="w-24 h-16 rounded-2xl bg-white border border-[#E7E4DC] shadow-md flex flex-col justify-center px-4 space-y-1.5">
+                        <div className="flex items-center gap-1.5">
+                          <span className="w-2 h-2 rounded-full bg-[#4F46E5]"></span>
+                          <div className="w-14 h-2 bg-[#EFECE6] rounded-full"></div>
+                        </div>
+                        <div className="w-16 h-1.5 bg-[#E8F5E9] rounded-full"></div>
+                      </div>
+                      <div className="w-8 h-8 rounded-full bg-[#4F46E5] text-white flex items-center justify-center absolute -top-3 -right-3 shadow">
+                        <MessageSquare className="w-4 h-4" />
+                      </div>
+                    </div>
+
+                    <div>
+                      <h4 className="text-lg font-bold text-[#1A1816]">Nenhuma conversa ainda</h4>
+                      <p className="text-xs text-[#5C5955] mt-1.5 leading-relaxed">
+                        Quando seus assistentes atenderem ligações ou chats em produção, cada conversa aparecerá aqui.
+                      </p>
+                    </div>
+
+                    <div className="flex flex-col sm:flex-row items-center gap-3 pt-2">
+                      <button
+                        type="button"
+                        onClick={() => setTestCallModalOpen(true)}
+                        className="px-5 py-2.5 rounded-xl bg-[#4F46E5] text-white text-xs font-bold hover:bg-[#4338CA] transition-colors flex items-center gap-2 shadow-sm cursor-pointer"
+                      >
+                        <Phone className="w-3.5 h-3.5" />
+                        <span>Solicitar teste assistido</span>
+                      </button>
+                      <button
+                        type="button"
+                        onClick={() => setNumberModalOpen(true)}
+                        className="px-5 py-2.5 rounded-xl border border-[#D0CBC0] text-[#1A1816] text-xs font-bold hover:bg-[#FAF9F5] transition-colors cursor-pointer"
+                      >
+                        Ver regras de número
+                      </button>
+                    </div>
+                  </div>
+                ) : (
+                  <div className="space-y-4">
+                    <div className="w-full max-w-full overflow-x-auto rounded-2xl border border-[#E7E4DC]">
+                      <table className="w-full text-left text-xs min-w-[600px]">
+                        <thead>
+                          <tr className="bg-[#FAF9F5] border-b border-[#E7E4DC] text-[#736F69]">
+                            <th className="p-3.5 font-medium">Contato</th>
+                            <th className="p-3.5 font-medium">Assistente</th>
+                            <th className="p-3.5 font-medium">Canal</th>
+                            <th className="p-3.5 font-medium">Duração</th>
+                            <th className="p-3.5 font-medium">Status</th>
+                            <th className="p-3.5 font-medium text-right">Detalhes</th>
+                          </tr>
+                        </thead>
+                        <tbody className="divide-y divide-[#EBE8E2]">
+                          {conversationsList.map((conv) => (
+                            <tr key={conv.id} className="hover:bg-[#FAF9F5]">
+                              <td className="p-3.5">
+                                <div className="font-bold text-[#1A1816]">{conv.lead}</div>
+                                <div className="text-[11px] font-mono text-[#736F69]">{conv.phone}</div>
+                              </td>
+                              <td className="p-3.5 text-[#1A1816] font-medium">{conv.assistant}</td>
+                              <td className="p-3.5 text-[#5C5955]">{conv.type}</td>
+                              <td className="p-3.5 font-mono font-bold text-[#1A1816]">
+                                {formatDuration(conv.durationSeconds)}
+                              </td>
+                              <td className="p-3.5">
+                                <span className={`px-2 py-0.5 rounded-full text-[10px] font-bold ${conv.statusColor || 'bg-indigo-50 text-indigo-700'}`}>
+                                  {conv.status}
+                                </span>
+                              </td>
+                              <td className="p-3.5 text-right">
+                                <button
+                                  type="button"
+                                  onClick={() =>
+                                    setSelectedConversation(selectedConversation?.id === conv.id ? null : conv)
+                                  }
+                                  className="px-3 py-1 rounded-lg border border-[#D0CBC0] text-[#1A1816] font-semibold hover:bg-white cursor-pointer"
+                                >
+                                  {selectedConversation?.id === conv.id ? 'Ocultar' : 'Ver transcrição'}
+                                </button>
+                              </td>
+                            </tr>
+                          ))}
+                        </tbody>
+                      </table>
+                    </div>
+
+                    {selectedConversation && (
+                      <div className="p-5 rounded-2xl bg-[#FAF9F5] border border-[#E7E4DC] space-y-2 text-xs animate-fadeIn">
+                        <div className="flex items-center justify-between">
+                          <strong className="text-[#1A1816]">
+                            Transcrição ilustrativa — {selectedConversation.lead} ({formatDuration(selectedConversation.durationSeconds)})
+                          </strong>
+                          <button
+                            type="button"
+                            onClick={() => setSelectedConversation(null)}
+                            className="text-[#736F69] hover:text-[#1A1816] font-bold cursor-pointer"
+                          >
+                            Fechar
+                          </button>
+                        </div>
+                        <pre className="whitespace-pre-wrap font-sans text-[#5C5955] leading-relaxed">
+                          {selectedConversation.transcript}
+                        </pre>
+                      </div>
+                    )}
+                  </div>
+                )}
               </div>
             )}
 
             {/* ========================================================
-                3. TAB: WHATSAPP WEB CONNECTOR & ENGINE
+                3. TAB: WHATSAPP (MODO DEMO / META CLOUD API OFICIAL)
                ======================================================== */}
             {activeTab === 'whatsapp' && (
-              <WhatsAppConnectorDashboard userPhone="559484423948" />
+              <WhatsAppConnectorDashboard
+                userPhone=""
+                isDemoMode={isDemoMode}
+                isAuthenticatedAccount={!isDemoMode && Boolean(currentUser)}
+              />
             )}
 
             {/* ========================================================
@@ -1335,6 +1547,7 @@ export default function InsideDashboardSection({ onOpenDemo, onOpenLegal, onOpen
                 knowledgeList={knowledgeList}
                 setKnowledgeList={setKnowledgeList}
                 createdAssistants={createdAssistants}
+                isDemoMode={isDemoMode}
                 onOpenDemo={onOpenDemo}
               />
             )}
@@ -1509,48 +1722,50 @@ export default function InsideDashboardSection({ onOpenDemo, onOpenLegal, onOpen
 
                 {/* Section 5: Uso */}
                 <div className="space-y-3">
-                  <div className="flex items-center justify-between">
+                  <div className="flex items-center justify-between flex-wrap gap-2">
                     <div>
                       <h4 className="text-xs font-bold text-[#1A1816]">Uso</h4>
-                      <p className="text-[11px] text-[#8C8881]">Consumo e cotas por período de cobrança</p>
+                      <p className="text-[11px] text-[#736F69]">
+                        {isDemoMode ? 'Contadores ilustrativos sincronizados com o workspace demo' : 'Consumo e cotas da conta autenticada'}
+                      </p>
                     </div>
                     <div className="text-xs text-[#1A1816] font-medium border border-[#D0CBC0] rounded-xl px-3 py-1.5 bg-[#FAF9F5]">
-                      11 de nov. de 2026 – 11 de dez. de 2026
+                      {isDemoMode ? 'Ciclo ilustrativo (Demo)' : 'Período da conta'}
                     </div>
                   </div>
 
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-x-8 gap-y-3 text-xs pt-2">
                     <div className="flex justify-between py-1.5 border-b border-[#EBE8E2]">
-                      <span className="text-[#5C5955]">Minutos de ligação</span>
-                      <span className="font-semibold text-[#1A1816]">0 / 0 min</span>
+                      <span className="text-[#5C5955]">Atendimentos de voz</span>
+                      <span className="font-semibold text-[#1A1816]">{metricsSummary.voiceCount}</span>
                     </div>
                     <div className="flex justify-between py-1.5 border-b border-[#EBE8E2]">
                       <span className="text-[#5C5955]">Conversas do WhatsApp</span>
-                      <span className="font-semibold text-[#1A1816]">0 / 0</span>
+                      <span className="font-semibold text-[#1A1816]">{metricsSummary.whatsappCount}</span>
                     </div>
                     <div className="flex justify-between py-1.5 border-b border-[#EBE8E2]">
-                      <span className="text-[#5C5955]">Conversas do Chatbot de IA</span>
-                      <span className="font-semibold text-[#1A1816]">0 / 0</span>
+                      <span className="text-[#5C5955]">Conversas do Webchat</span>
+                      <span className="font-semibold text-[#1A1816]">{metricsSummary.webchatCount}</span>
                     </div>
                     <div className="flex justify-between py-1.5 border-b border-[#EBE8E2]">
                       <span className="text-[#5C5955]">Números de telefone</span>
-                      <span className="font-semibold text-[#1A1816]">0 / 0</span>
+                      <span className="font-semibold text-[#1A1816]">{numbersList.length}</span>
                     </div>
                     <div className="flex justify-between py-1.5 border-b border-[#EBE8E2]">
                       <span className="text-[#5C5955]">Números do WhatsApp</span>
-                      <span className="font-semibold text-[#1A1816]">0 / 0</span>
+                      <span className="font-semibold text-[#736F69]">Pendente de contratação</span>
                     </div>
                     <div className="flex justify-between py-1.5 border-b border-[#EBE8E2]">
-                      <span className="text-[#5C5955]">Usuários</span>
-                      <span className="font-semibold text-[#1A1816]">1 / 3</span>
+                      <span className="text-[#5C5955]">Usuários no workspace</span>
+                      <span className="font-semibold text-[#1A1816]">{membersList.length}</span>
                     </div>
                     <div className="flex justify-between py-1.5 border-b border-[#EBE8E2]">
-                      <span className="text-[#5C5955]">Conexões de workspace</span>
-                      <span className="font-semibold text-[#1A1816]">0 / 2</span>
+                      <span className="text-[#5C5955]">Base de conhecimento</span>
+                      <span className="font-semibold text-[#1A1816]">{knowledgeList.length} itens</span>
                     </div>
                     <div className="flex justify-between py-1.5 border-b border-[#EBE8E2]">
                       <span className="text-[#5C5955]">Chamadas simultâneas</span>
-                      <span className="font-semibold text-[#8C8881]">não incluído</span>
+                      <span className="font-semibold text-[#736F69]">Sob consulta comercial</span>
                     </div>
                   </div>
                 </div>
@@ -1712,22 +1927,33 @@ export default function InsideDashboardSection({ onOpenDemo, onOpenLegal, onOpen
                       </tr>
                     </thead>
                     <tbody className="divide-y divide-[#EBE8E2]">
-                      {apiKeys.length === 0 ? (
-                        <tr>
-                          <td colSpan={4} className="p-12 text-center text-[#8C8881]">
-                            Nenhuma chave de API encontrada
-                          </td>
-                        </tr>
-                      ) : (
-                        apiKeys.map(k => (
+                      {(() => {
+                        const filteredKeys = apiKeys.filter((k) => {
+                          const q = apiKeySearch.trim().toLowerCase();
+                          if (!q) return true;
+                          return (
+                            k.name.toLowerCase().includes(q) ||
+                            k.key.toLowerCase().includes(q)
+                          );
+                        });
+                        if (filteredKeys.length === 0) {
+                          return (
+                            <tr>
+                              <td colSpan={4} className="p-12 text-center text-[#8C8881]">
+                                Nenhuma chave de API encontrada
+                              </td>
+                            </tr>
+                          );
+                        }
+                        return filteredKeys.map((k) => (
                           <tr key={k.id} className="hover:bg-[#FAF9F5]">
                             <td className="p-3.5 font-bold text-[#1A1816]">{k.name}</td>
                             <td className="p-3.5 font-mono text-[11px] text-[#5C5955]">{k.key}</td>
                             <td className="p-3.5 text-[#736F69]">{k.created}</td>
                             <td className="p-3.5 text-[#736F69]">{k.lastUsed}</td>
                           </tr>
-                        ))
-                      )}
+                        ));
+                      })()}
                     </tbody>
                   </table>
                 </div>
@@ -1890,10 +2116,10 @@ export default function InsideDashboardSection({ onOpenDemo, onOpenLegal, onOpen
                   <h3 className="text-2xl font-bold text-[#1A1816]">Conta</h3>
                 </div>
 
-                {accountSaved && (
-                  <div className="p-3.5 rounded-xl bg-emerald-50 border border-emerald-200 text-emerald-800 text-xs font-semibold flex items-center gap-2 animate-fadeIn">
-                    <CheckCircle2 className="w-4 h-4 text-emerald-600" />
-                    <span>Dados da conta atualizados com sucesso!</span>
+                {accountNotice && (
+                  <div className="p-3.5 rounded-xl bg-amber-50 border border-amber-200 text-amber-900 text-xs font-semibold flex items-center gap-2 animate-fadeIn">
+                    <AlertCircle className="w-4 h-4 text-amber-700 shrink-0" />
+                    <span>{accountNotice}</span>
                   </div>
                 )}
 
@@ -1906,17 +2132,18 @@ export default function InsideDashboardSection({ onOpenDemo, onOpenLegal, onOpen
                       <label className="block text-[11px] font-semibold text-[#1A1816] mb-1">Nome</label>
                       <input 
                         type="text" 
-                        defaultValue="Francisco" 
+                        defaultValue={userName} 
                         placeholder="Nome"
                         className="w-full px-3 py-2 rounded-xl border border-[#D0CBC0] text-xs focus:outline-none focus:border-[#4F46E5]"
                       />
                     </div>
                     <div>
-                      <label className="block text-[11px] font-semibold text-[#1A1816] mb-1">Sobrenome</label>
+                      <label className="block text-[11px] font-semibold text-[#1A1816] mb-1">E-mail</label>
                       <input 
-                        type="text" 
-                        placeholder="Sobrenome"
-                        className="w-full px-3 py-2 rounded-xl border border-[#D0CBC0] text-xs focus:outline-none focus:border-[#4F46E5]"
+                        type="email" 
+                        readOnly
+                        value={userEmail}
+                        className="w-full px-3 py-2 rounded-xl border border-[#E7E4DC] bg-[#FAF9F5] text-xs text-[#5C5955]"
                       />
                     </div>
                   </div>
@@ -1939,7 +2166,7 @@ export default function InsideDashboardSection({ onOpenDemo, onOpenLegal, onOpen
                       </div>
                       <input 
                         type="tel" 
-                        defaultValue="(11) 98412-3456" 
+                        defaultValue={isDemoMode ? '(00) 90000-0100' : ''} 
                         placeholder="(DDD) 00000-0000"
                         className="flex-1 px-3 py-2 rounded-xl border border-[#D0CBC0] text-xs focus:outline-none focus:border-[#4F46E5]"
                       />
@@ -2088,6 +2315,7 @@ export default function InsideDashboardSection({ onOpenDemo, onOpenLegal, onOpen
                 <AssistantDetailView 
                   assistant={selectedAssistant}
                   allAssistants={createdAssistants}
+                  isDemoMode={isDemoMode}
                   onBack={() => setSelectedAssistant(null)}
                   onSelectAssistant={(a) => setSelectedAssistant(a)}
                   onOpenCreateModal={() => openCreateModal('chat')}
@@ -2100,7 +2328,11 @@ export default function InsideDashboardSection({ onOpenDemo, onOpenLegal, onOpen
                   <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-4 border-b border-[#EBE8E2]">
                     <div>
                       <h3 className="text-2xl font-bold text-[#1A1816]">Assistentes Virtuais</h3>
-                      <p className="text-xs text-[#5C5955] mt-1">Crie e configure agentes de voz neural, WhatsApp e Webchat sincronizados com a telefonia.</p>
+                      <p className="text-xs text-[#5C5955] mt-1">
+                        {isDemoMode
+                          ? 'Assistentes fictícios de demonstração — alterações não são persistidas em servidor.'
+                          : 'Gerencie os assistentes salvos na sua conta.'}
+                      </p>
                     </div>
                     <div className="flex items-center gap-2">
                       <button 
@@ -2154,12 +2386,18 @@ export default function InsideDashboardSection({ onOpenDemo, onOpenLegal, onOpen
                             </div>
                           </div>
                           <div className="flex flex-col items-end gap-1">
-                            <span className="px-2 py-0.5 rounded-full text-[10px] font-bold bg-emerald-50 text-emerald-700 border border-emerald-200">
+                            <span
+                              className={`px-2 py-0.5 rounded-full text-[10px] font-bold border ${
+                                isDemoMode
+                                  ? 'bg-amber-50 text-amber-800 border-amber-200'
+                                  : 'bg-indigo-50 text-indigo-700 border-indigo-200'
+                              }`}
+                            >
                               {ass.status}
                             </span>
-                            {ass.vapi_assistant_id && (
+                            {!isDemoMode && ass.vapi_assistant_id && (
                               <span className="px-2 py-0.5 rounded-full text-[9px] font-mono font-bold bg-[#EEF2FF] text-[#4F46E5] border border-[#F2E8DC]">
-                                Vapi: {ass.vapi_assistant_id.slice(0, 8)}...
+                                ID configurado
                               </span>
                             )}
                           </div>
@@ -2167,7 +2405,14 @@ export default function InsideDashboardSection({ onOpenDemo, onOpenLegal, onOpen
 
                         <div className="text-xs text-[#5C5955] space-y-1">
                           <div>Canal: <strong className="text-[#1A1816]">{ass.channel}</strong></div>
-                          <div>Chamadas atendidas: <strong className="text-[#1A1816]">{ass.calls} ligações</strong></div>
+                          <div>
+                            Atendimentos:{' '}
+                            <strong className="text-[#1A1816]">
+                              {ass.calls}{' '}
+                              {ass.unitLabel ||
+                                (ass.type === 'voz' ? 'ligações' : ass.type === 'chat' ? 'conversas' : 'atendimentos')}
+                            </strong>
+                          </div>
                         </div>
 
                         <div className="pt-2 flex items-center gap-2 border-t border-[#F0EDE8]">
@@ -2260,19 +2505,41 @@ export default function InsideDashboardSection({ onOpenDemo, onOpenLegal, onOpen
                       </tr>
                     </thead>
                     <tbody className="divide-y divide-[#EBE8E2]">
-                      {numbersList.map(num => (
-                        <tr key={num.id} className="hover:bg-[#FAF9F5]">
-                          <td className="p-3.5 font-bold text-[#1A1816]">{num.name}</td>
-                          <td className="p-3.5 font-mono text-[#5C5955]">{num.number}</td>
-                          <td className="p-3.5 text-[#736F69]">{num.uso}</td>
-                          <td className="p-3.5 text-[#1A1816] font-medium">{num.vinculacao}</td>
-                          <td className="p-3.5">
-                            <span className="px-2 py-0.5 rounded-full text-[10px] font-bold bg-[#EEF2FF] text-[#4F46E5]">
-                              {num.type}
-                            </span>
-                          </td>
-                        </tr>
-                      ))}
+                      {(() => {
+                        const filteredNumbers = numbersList.filter((num) => {
+                          const matchesSearch =
+                            !phoneSearch.trim() ||
+                            num.number.toLowerCase().includes(phoneSearch.toLowerCase()) ||
+                            num.name.toLowerCase().includes(phoneSearch.toLowerCase()) ||
+                            num.vinculacao.toLowerCase().includes(phoneSearch.toLowerCase());
+                          const matchesFilter =
+                            phoneFilter === 'Tudo' ||
+                            `${num.type} ${num.uso}`.toLowerCase().includes(phoneFilter.toLowerCase());
+                          return matchesSearch && matchesFilter;
+                        });
+                        if (filteredNumbers.length === 0) {
+                          return (
+                            <tr>
+                              <td colSpan={5} className="p-8 text-center text-[#8C8881]">
+                                Nenhum número cadastrado para este filtro.
+                              </td>
+                            </tr>
+                          );
+                        }
+                        return filteredNumbers.map((num) => (
+                          <tr key={num.id} className="hover:bg-[#FAF9F5]">
+                            <td className="p-3.5 font-bold text-[#1A1816]">{num.name}</td>
+                            <td className="p-3.5 font-mono text-[#5C5955]">{num.number}</td>
+                            <td className="p-3.5 text-[#736F69]">{num.uso}</td>
+                            <td className="p-3.5 text-[#1A1816] font-medium">{num.vinculacao}</td>
+                            <td className="p-3.5">
+                              <span className="px-2 py-0.5 rounded-full text-[10px] font-bold bg-[#EEF2FF] text-[#4F46E5]">
+                                {num.type}
+                              </span>
+                            </td>
+                          </tr>
+                        ));
+                      })()}
                     </tbody>
                   </table>
                 </div>
@@ -2310,7 +2577,8 @@ export default function InsideDashboardSection({ onOpenDemo, onOpenLegal, onOpen
                     <label className="block text-[11px] font-semibold text-[#1A1816] mb-1">Razão Social / Nome Fantasia</label>
                     <input 
                       type="text" 
-                      defaultValue="Empresa do Francisco Ltda." 
+                      defaultValue={workspaceName}
+                      placeholder="Nome da empresa"
                       className="w-full px-3 py-2 rounded-xl border border-[#D0CBC0] text-xs focus:outline-none focus:border-[#4F46E5]"
                     />
                   </div>
@@ -2318,13 +2586,21 @@ export default function InsideDashboardSection({ onOpenDemo, onOpenLegal, onOpen
                     <label className="block text-[11px] font-semibold text-[#1A1816] mb-1">CNPJ</label>
                     <input 
                       type="text" 
-                      defaultValue="12.345.678/0001-90" 
+                      defaultValue={isDemoMode ? DEMO_WORKSPACE.cnpj : ''}
+                      placeholder="00.000.000/0001-00"
                       className="w-full px-3 py-2 rounded-xl border border-[#D0CBC0] text-xs focus:outline-none focus:border-[#4F46E5]"
                     />
                   </div>
                   <button 
-                    onClick={onOpenDemo}
-                    className="px-5 py-2 rounded-xl bg-[#1A1816] text-white text-xs font-bold hover:bg-black transition-colors"
+                    type="button"
+                    onClick={() =>
+                      showNotice(
+                        isDemoMode
+                          ? 'Modo demonstração: alterações cadastrais não são salvas em servidor.'
+                          : 'Atualização cadastral da empresa está em desenvolvimento neste painel.'
+                      )
+                    }
+                    className="px-5 py-2 rounded-xl bg-[#1A1816] text-white text-xs font-bold hover:bg-black transition-colors cursor-pointer"
                   >
                     Salvar alterações
                   </button>
@@ -2336,21 +2612,21 @@ export default function InsideDashboardSection({ onOpenDemo, onOpenLegal, onOpen
                 12. TAB: CAMPANHAS OUTBOUND COM IA (DISCADOR EM LOTE)
                ======================================================== */}
             {activeTab === 'campanhas' && (
-              <OutboundCampaignsSection />
+              <OutboundCampaignsSection isDemoMode={isDemoMode} onOpenDemo={onOpenDemo} />
             )}
 
             {/* ========================================================
                 12.1 TAB: WHATSAPP VOICE-TO-VOICE (ÁUDIO HUMANIZADO)
                ======================================================== */}
             {activeTab === 'whatsapp-audio' && (
-              <WhatsAppVoiceToVoice />
+              <WhatsAppVoiceToVoice isDemoMode={isDemoMode} />
             )}
 
             {/* ========================================================
                 12.2 TAB: SUBCONTAS & MULTI-TENANT (AI AGENCY OS)
                ======================================================== */}
             {activeTab === 'subcontas' && (
-              <AgencySubaccountsSection onSwitchWorkspace={() => setActiveTab('inicio')} />
+              <AgencySubaccountsSection isDemoMode={isDemoMode} onSwitchWorkspace={() => setActiveTab('inicio')} />
             )}
 
             {/* ========================================================
@@ -2367,7 +2643,9 @@ export default function InsideDashboardSection({ onOpenDemo, onOpenLegal, onOpen
                     {activeTab === 'campanhas' && 'Campanhas Outbound'}
                   </h3>
                   <p className="text-xs text-[#5C5955] mt-1">
-                    Módulo integrado ao núcleo conversacional da Vocalis.
+                    {isDemoMode
+                      ? 'Prévia ilustrativa de módulo — disponibilidade real conforme plano e implantação.'
+                      : 'Recurso em desenvolvimento / habilitação mediante onboarding comercial.'}
                   </p>
                 </div>
 
@@ -2380,16 +2658,17 @@ export default function InsideDashboardSection({ onOpenDemo, onOpenLegal, onOpen
                     {activeTab === 'campanhas' && <Megaphone className="w-6 h-6" />}
                   </div>
                   <div>
-                    <h4 className="text-sm font-bold text-[#1A1816]">Módulo pronto para sincronização</h4>
+                    <h4 className="text-sm font-bold text-[#1A1816]">Módulo em desenvolvimento / sob consulta</h4>
                     <p className="text-xs text-[#5C5955] max-w-sm mx-auto mt-1 leading-relaxed">
-                      Conecte suas credenciais para ativar o fluxo autônomo com inteligência artificial.
+                      A ativação e integração externa deste módulo dependem de configuração comercial assistida e conectores aprovados.
                     </p>
                   </div>
                   <button 
+                    type="button"
                     onClick={onOpenDemo}
                     className="px-5 py-2.5 rounded-xl bg-[#1A1816] text-white text-xs font-bold hover:bg-black transition-colors cursor-pointer"
                   >
-                    Ativar neste workspace
+                    Solicitar ativação com a equipe
                   </button>
                 </div>
               </div>
@@ -2725,8 +3004,8 @@ export default function InsideDashboardSection({ onOpenDemo, onOpenLegal, onOpen
                     <h4 className="text-xs font-bold uppercase tracking-wider text-[#1A1816]">
                       Leads Quentes Priorizados da Semana:
                     </h4>
-                    <span className="text-[10px] text-emerald-600 font-bold bg-emerald-50 px-2 py-0.5 rounded">
-                      Sincronizado com CRM
+                    <span className="text-[10px] text-emerald-700 font-bold bg-emerald-50 px-2 py-0.5 rounded">
+                      {isDemoMode ? 'Dados Fictícios (Demo)' : 'Registros da Conta'}
                     </span>
                   </div>
 
@@ -2811,7 +3090,7 @@ export default function InsideDashboardSection({ onOpenDemo, onOpenLegal, onOpen
                       AI Agency OS Partner
                     </span>
                     <span className="text-[10px] text-[#4F46E5] font-bold bg-[#EEF2FF] px-2 py-0.5 rounded border border-[#F2E8DC]">
-                      100% White-Label
+                      White-Label (Sob consulta)
                     </span>
                   </div>
                   <h3 className="text-2xl font-bold text-[#1A1816] mt-1">White-Label & Integração com AI Agency OS</h3>
@@ -2945,7 +3224,7 @@ export default function InsideDashboardSection({ onOpenDemo, onOpenLegal, onOpen
                         </div>
                         <div className="text-left min-w-0">
                           <div className="text-xs font-bold text-white flex items-center gap-1.5">
-                            <span>Roberta · SDR Voz</span>
+                            <span>Clara · Voz Neural (Exemplo)</span>
                             <span className="text-[9px] bg-indigo-950 text-indigo-300 px-1.5 py-0.2 rounded font-mono">Telefonia</span>
                           </div>
                           <p className="text-[10px] text-slate-400 leading-tight mt-0.5">
@@ -2960,11 +3239,11 @@ export default function InsideDashboardSection({ onOpenDemo, onOpenLegal, onOpen
                         </div>
                         <div className="text-left min-w-0">
                           <div className="text-xs font-bold text-white flex items-center gap-1.5">
-                            <span>Camila · WhatsApp</span>
-                            <span className="text-[9px] bg-emerald-950 text-emerald-300 px-1.5 py-0.2 rounded font-mono">WhatsApp 24/7</span>
+                            <span>Camila · WhatsApp (Exemplo)</span>
+                            <span className="text-[9px] bg-emerald-950 text-emerald-300 px-1.5 py-0.2 rounded font-mono">WhatsApp</span>
                           </div>
                           <p className="text-[10px] text-slate-400 leading-tight mt-0.5">
-                            Notas de voz humanizadas, orçamentos rápidos e geração de Pix.
+                            Exemplo ilustrativo de triagem inicial e encaminhamento de orçamentos (sob consulta).
                           </p>
                         </div>
                       </div>
@@ -2975,11 +3254,11 @@ export default function InsideDashboardSection({ onOpenDemo, onOpenLegal, onOpen
                         </div>
                         <div className="text-left min-w-0">
                           <div className="text-xs font-bold text-white flex items-center gap-1.5">
-                            <span>Beatriz · Agendamentos</span>
-                            <span className="text-[9px] bg-purple-950 text-purple-300 px-1.5 py-0.2 rounded font-mono">Google Agenda</span>
+                            <span>Beatriz · Agendamentos (Exemplo)</span>
+                            <span className="text-[9px] bg-purple-950 text-purple-300 px-1.5 py-0.2 rounded font-mono">Agenda</span>
                           </div>
                           <p className="text-[10px] text-slate-400 leading-tight mt-0.5">
-                            Sincroniza horários vagos, agenda visitas e envia lembretes.
+                            Exemplo ilustrativo de consulta de horários e lembretes (integração sob consulta).
                           </p>
                         </div>
                       </div>
@@ -2990,30 +3269,35 @@ export default function InsideDashboardSection({ onOpenDemo, onOpenLegal, onOpen
                         </div>
                         <div className="text-left min-w-0">
                           <div className="text-xs font-bold text-white flex items-center gap-1.5">
-                            <span>Marcus · Triagem & Suporte</span>
-                            <span className="text-[9px] bg-amber-950 text-amber-300 px-1.5 py-0.2 rounded font-mono">Processos</span>
+                            <span>Marcus · Triagem & Suporte (Exemplo)</span>
+                            <span className="text-[9px] bg-amber-950 text-amber-300 px-1.5 py-0.2 rounded font-mono">Suporte</span>
                           </div>
                           <p className="text-[10px] text-slate-400 leading-tight mt-0.5">
-                            Tira dúvidas avançadas e encaminha chamadas urgentes para o especialista humano.
+                            Tira dúvidas da base cadastrada e encaminha casos prioritários para a equipe humana.
                           </p>
                         </div>
                       </div>
                     </div>
                   </div>
 
-                  {/* Seletor de Modo: Local vs Cloud */}
+                  {/* Seletor de Modo: Webhook vs MCP Server */}
                   <div className="flex items-center gap-2 p-1 bg-slate-900 rounded-xl w-fit border border-slate-800">
-                    <button
-                      type="button"
-                      onClick={() => setOpenbotMode('local')}
-                      className={`px-3 py-1 rounded-lg text-xs font-bold transition-all cursor-pointer ${
-                        openbotMode === 'local' 
-                          ? 'bg-indigo-600 text-white shadow-xs' 
-                          : 'text-slate-400 hover:text-white'
-                      }`}
-                    >
-                      OpenBot Team API (Local / Porta)
-                    </button>
+                    {!isDemoMode &&
+                      Boolean(import.meta.env?.DEV) &&
+                      typeof window !== 'undefined' &&
+                      ['localhost', '127.0.0.1'].includes(window.location.hostname) && (
+                        <button
+                          type="button"
+                          onClick={() => setOpenbotMode('local')}
+                          className={`px-3 py-1 rounded-lg text-xs font-bold transition-all cursor-pointer ${
+                            openbotMode === 'local' 
+                              ? 'bg-indigo-600 text-white shadow-xs' 
+                              : 'text-slate-400 hover:text-white'
+                          }`}
+                        >
+                          OpenBot Local (DEV)
+                        </button>
+                      )}
                     <button
                       type="button"
                       onClick={() => setOpenbotMode('cloud')}
@@ -3023,7 +3307,7 @@ export default function InsideDashboardSection({ onOpenDemo, onOpenLegal, onOpen
                           : 'text-slate-400 hover:text-white'
                       }`}
                     >
-                      OpenBot Cloud / Webhook URL
+                      Webhook Externo (Sob consulta)
                     </button>
                     <button
                       type="button"
@@ -3040,13 +3324,14 @@ export default function InsideDashboardSection({ onOpenDemo, onOpenLegal, onOpen
 
                   {/* Configuração do Endpoint */}
                   <div className="space-y-3">
-                    {openbotMode === 'local' ? (
+                    {openbotMode === 'local' &&
+                    !isDemoMode &&
+                    Boolean(import.meta.env?.DEV) &&
+                    typeof window !== 'undefined' &&
+                    ['localhost', '127.0.0.1'].includes(window.location.hostname) ? (
                       <div>
-                        <label className="block text-[11px] font-semibold text-slate-300 mb-1">Porta do OpenBot Team API Local</label>
+                        <label className="block text-[11px] font-semibold text-slate-300 mb-1">Porta Local (Apenas DEV)</label>
                         <div className="flex items-center gap-2">
-                          <span className="px-3 py-2 rounded-xl bg-slate-900 border border-slate-700 text-xs font-mono text-slate-400">
-                            http://localhost:
-                          </span>
                           <input 
                             type="text"
                             value={openbotLocalPort}
@@ -3054,22 +3339,19 @@ export default function InsideDashboardSection({ onOpenDemo, onOpenLegal, onOpen
                             className="w-24 px-3 py-2 rounded-xl bg-slate-900 border border-slate-700 text-xs font-mono text-emerald-400 focus:outline-none focus:border-indigo-500"
                             placeholder="3000"
                           />
-                          <span className="px-3 py-2 rounded-xl bg-slate-900 border border-slate-700 text-xs font-mono text-slate-400">
-                            /api/webhook
-                          </span>
                           <button
                             type="button"
                             onClick={handleTestOpenbot}
                             disabled={isTestingOpenbot}
                             className="px-4 py-2 rounded-xl bg-indigo-600 hover:bg-indigo-500 text-white text-xs font-bold transition-colors cursor-pointer shrink-0 disabled:opacity-50"
                           >
-                            {isTestingOpenbot ? 'Testando...' : openbotTestSuccess ? '✓ Sincronizado!' : 'Testar Conexão Local'}
+                            Ver status
                           </button>
                         </div>
                       </div>
                     ) : openbotMode === 'cloud' ? (
                       <div>
-                        <label className="block text-[11px] font-semibold text-slate-300 mb-1">URL do Webhook do OpenBot</label>
+                        <label className="block text-[11px] font-semibold text-slate-300 mb-1">URL do Webhook (Integração sob consulta)</label>
                         <div className="flex items-center gap-2">
                           <input 
                             type="text"
@@ -3083,7 +3365,7 @@ export default function InsideDashboardSection({ onOpenDemo, onOpenLegal, onOpen
                             disabled={isTestingOpenbot}
                             className="px-4 py-2 rounded-xl bg-indigo-600 hover:bg-indigo-500 text-white text-xs font-bold transition-colors cursor-pointer shrink-0 disabled:opacity-50"
                           >
-                            {isTestingOpenbot ? 'Testando...' : openbotTestSuccess ? '✓ Sincronizado!' : 'Testar Webhook'}
+                            Verificar status
                           </button>
                         </div>
                       </div>
@@ -3107,7 +3389,7 @@ export default function InsideDashboardSection({ onOpenDemo, onOpenLegal, onOpen
                                 }
                               }, null, 2);
                               navigator.clipboard?.writeText(snippet);
-                              alert('Configuração MCP copiada para a área de transferência!');
+                              showNotice('Configuração MCP copiada para a área de transferência.');
                             }}
                             className="text-[10px] font-mono text-indigo-400 hover:text-indigo-300 underline cursor-pointer"
                           >
@@ -3128,15 +3410,10 @@ export default function InsideDashboardSection({ onOpenDemo, onOpenLegal, onOpen
                       </div>
                     )}
 
-                    {openbotTestSuccess && (
-                      <div className="p-3 rounded-xl bg-emerald-950/80 border border-emerald-800 text-emerald-300 text-xs font-medium space-y-1 animate-fadeIn">
-                        <div className="font-bold flex items-center gap-1.5 text-emerald-400">
-                          <CheckCircle2 className="w-4 h-4 text-emerald-400" />
-                          <span>Teste ilustrativo de webhook concluído ({openbotResponseLog?.latency || 'Simulação ilustrativa'})</span>
-                        </div>
-                        <p className="text-[11px] text-emerald-200/80">
-                          O fluxo está pronto para receber variáveis das chamadas: <code>call_id</code>, <code>caller_number</code> e <code>transcription</code>.
-                        </p>
+                    {openbotResponseLog && (
+                      <div className="p-3 rounded-xl bg-slate-900 border border-slate-700 text-slate-200 text-xs space-y-1 animate-fadeIn">
+                        <div className="font-bold text-amber-300">{openbotResponseLog.status}</div>
+                        <p className="text-[11px] text-slate-300">{openbotResponseLog.target}</p>
                       </div>
                     )}
                   </div>
@@ -3157,12 +3434,14 @@ export default function InsideDashboardSection({ onOpenDemo, onOpenLegal, onOpen
 
       {/* 1. Modal: Criar Assistente (Réplica Exata 1:1 Kloel Screenshots) */}
       {createModalOpen && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm animate-fadeIn">
+        <div role="dialog" aria-modal="true" aria-label="Criar assistente" className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm animate-fadeIn">
           <div 
             className="bg-white rounded-3xl max-w-3xl w-full p-6 sm:p-8 border border-[#E7E4DC] shadow-2xl relative"
             onClick={(e) => e.stopPropagation()}
           >
             <button 
+              type="button"
+              aria-label="Fechar modal"
               onClick={() => setCreateModalOpen(false)}
               className="absolute right-6 top-6 w-8 h-8 rounded-full bg-white hover:bg-[#FAF9F5] border border-[#E7E4DC] flex items-center justify-center text-[#736F69] hover:text-[#1A1816] transition-colors cursor-pointer"
             >
@@ -3291,11 +3570,13 @@ export default function InsideDashboardSection({ onOpenDemo, onOpenLegal, onOpen
 
       {/* 2. Modal: Conectar Número */}
       {numberModalOpen && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm animate-fadeIn">
+        <div role="dialog" aria-modal="true" aria-label="Conectar número de telefone" className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm animate-fadeIn">
           <div className="bg-white rounded-3xl max-w-md w-full p-6 border border-[#E7E4DC] shadow-2xl relative">
             <button 
+              type="button"
+              aria-label="Fechar modal"
               onClick={() => setNumberModalOpen(false)}
-              className="absolute right-5 top-5 w-8 h-8 rounded-full bg-[#FAF9F5] border border-[#E7E4DC] flex items-center justify-center text-[#5C5955] hover:text-[#1A1816]"
+              className="absolute right-5 top-5 w-8 h-8 rounded-full bg-[#FAF9F5] border border-[#E7E4DC] flex items-center justify-center text-[#5C5955] hover:text-[#1A1816] cursor-pointer"
             >
               <X className="w-4 h-4" />
             </button>
@@ -3384,11 +3665,13 @@ export default function InsideDashboardSection({ onOpenDemo, onOpenLegal, onOpen
 
       {/* 3. Modal: Criar Chave API */}
       {apiKeyModalOpen && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm animate-fadeIn">
+        <div role="dialog" aria-modal="true" aria-label="Criar chave de API" className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm animate-fadeIn">
           <div className="bg-white rounded-3xl max-w-sm w-full p-6 border border-[#E7E4DC] shadow-2xl relative">
             <button 
+              type="button"
+              aria-label="Fechar modal"
               onClick={() => setApiKeyModalOpen(false)}
-              className="absolute right-5 top-5 w-8 h-8 rounded-full bg-[#FAF9F5] border border-[#E7E4DC] flex items-center justify-center text-[#5C5955] hover:text-[#1A1816]"
+              className="absolute right-5 top-5 w-8 h-8 rounded-full bg-[#FAF9F5] border border-[#E7E4DC] flex items-center justify-center text-[#5C5955] hover:text-[#1A1816] cursor-pointer"
             >
               <X className="w-4 h-4" />
             </button>
@@ -3420,11 +3703,13 @@ export default function InsideDashboardSection({ onOpenDemo, onOpenLegal, onOpen
 
       {/* 4. Modal: Testar Ligação */}
       {testCallModalOpen && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm animate-fadeIn">
+        <div role="dialog" aria-modal="true" aria-label="Solicitar teste telefônico" className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm animate-fadeIn">
           <div className="bg-white rounded-3xl max-w-sm w-full p-6 border border-[#E7E4DC] shadow-2xl relative">
             <button 
+              type="button"
+              aria-label="Fechar modal"
               onClick={() => setTestCallModalOpen(false)}
-              className="absolute right-5 top-5 w-8 h-8 rounded-full bg-[#FAF9F5] border border-[#E7E4DC] flex items-center justify-center text-[#5C5955] hover:text-[#1A1816]"
+              className="absolute right-5 top-5 w-8 h-8 rounded-full bg-[#FAF9F5] border border-[#E7E4DC] flex items-center justify-center text-[#5C5955] hover:text-[#1A1816] cursor-pointer"
             >
               <X className="w-4 h-4" />
             </button>
@@ -3433,48 +3718,62 @@ export default function InsideDashboardSection({ onOpenDemo, onOpenLegal, onOpen
               <Phone className="w-6 h-6" />
             </div>
 
-            <h3 className="text-lg font-bold text-[#1A1816] text-center mb-1">Testar ligação agora</h3>
+            <h3 className="text-lg font-bold text-[#1A1816] text-center mb-1">Solicitar teste telefônico</h3>
             <p className="text-xs text-[#5C5955] text-center mb-5">
-              Digite seu telefone para receber uma chamada de demonstração gratuita com a voz neural da Roberta.
+              Este painel não realiza ligações reais diretamente no navegador. Solicite uma demonstração assistida com nossa equipe comercial.
             </p>
 
-            {testCallSuccess ? (
-              <div className="p-4 rounded-xl bg-emerald-50 border border-emerald-200 text-emerald-800 text-xs text-center font-bold animate-fadeIn">
-                Chamando seu número agora mesmo... Atenda!
+            {testCallNotice && (
+              <div className="mb-4 p-3.5 rounded-xl bg-amber-50 border border-amber-200 text-amber-900 text-xs text-center font-medium animate-fadeIn">
+                {testCallNotice}
               </div>
-            ) : (
-              <form onSubmit={handleStartTestCall} className="space-y-4">
-                <div>
-                  <label className="block text-[11px] font-semibold text-[#1A1816] mb-1">Seu telefone com DDD</label>
-                  <input 
-                    type="tel" 
-                    value={testPhoneNumber}
-                    onChange={(e) => setTestPhoneNumber(e.target.value)}
-                    placeholder="(11) 98765-4321"
-                    className="w-full px-3 py-2.5 rounded-xl border border-[#D0CBC0] text-xs focus:outline-none focus:border-[#4F46E5]"
-                    required
-                  />
-                </div>
-
-                <button 
-                  type="submit"
-                  className="w-full py-2.5 rounded-xl bg-[#4F46E5] text-white text-xs font-bold hover:bg-[#4338CA] transition-colors"
-                >
-                  Receber chamada de teste
-                </button>
-              </form>
             )}
+
+            <form onSubmit={handleStartTestCall} className="space-y-4">
+              <div>
+                <label className="block text-[11px] font-semibold text-[#1A1816] mb-1">Seu telefone com DDD</label>
+                <input 
+                  type="tel" 
+                  value={testPhoneNumber}
+                  onChange={(e) => setTestPhoneNumber(e.target.value)}
+                  placeholder="(11) 98765-4321"
+                  className="w-full px-3 py-2.5 rounded-xl border border-[#D0CBC0] text-xs focus:outline-none focus:border-[#4F46E5]"
+                  required
+                />
+              </div>
+
+              <button 
+                type="submit"
+                className="w-full py-2.5 rounded-xl bg-[#4F46E5] text-white text-xs font-bold hover:bg-[#4338CA] transition-colors cursor-pointer"
+              >
+                Ver disponibilidade de teste
+              </button>
+              {onOpenDemo && (
+                <button
+                  type="button"
+                  onClick={() => {
+                    setTestCallModalOpen(false);
+                    onOpenDemo();
+                  }}
+                  className="w-full py-2 rounded-xl border border-[#D0CBC0] text-[#1A1816] text-xs font-semibold hover:bg-[#FAF9F5] transition-colors cursor-pointer"
+                >
+                  Abrir solicitação com equipe
+                </button>
+              )}
+            </form>
           </div>
         </div>
       )}
 
       {/* 5. Modal: Convidar Membro */}
       {inviteModalOpen && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm animate-fadeIn">
+        <div role="dialog" aria-modal="true" aria-label="Convidar membro" className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm animate-fadeIn">
           <div className="bg-white rounded-3xl max-w-sm w-full p-6 border border-[#E7E4DC] shadow-2xl relative">
             <button 
+              type="button"
+              aria-label="Fechar modal"
               onClick={() => setInviteModalOpen(false)}
-              className="absolute right-5 top-5 w-8 h-8 rounded-full bg-[#FAF9F5] border border-[#E7E4DC] flex items-center justify-center text-[#5C5955] hover:text-[#1A1816]"
+              className="absolute right-5 top-5 w-8 h-8 rounded-full bg-[#FAF9F5] border border-[#E7E4DC] flex items-center justify-center text-[#5C5955] hover:text-[#1A1816] cursor-pointer"
             >
               <X className="w-4 h-4" />
             </button>
@@ -3520,11 +3819,13 @@ export default function InsideDashboardSection({ onOpenDemo, onOpenLegal, onOpen
 
       {/* 6. Modal: Detalhes da Função */}
       {rolesInfoOpen && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm animate-fadeIn">
+        <div role="dialog" aria-modal="true" aria-label="Detalhes das funções" className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm animate-fadeIn">
           <div className="bg-white rounded-3xl max-w-md w-full p-6 border border-[#E7E4DC] shadow-2xl relative space-y-4">
             <button 
+              type="button"
+              aria-label="Fechar modal"
               onClick={() => setRolesInfoOpen(false)}
-              className="absolute right-5 top-5 w-8 h-8 rounded-full bg-[#FAF9F5] border border-[#E7E4DC] flex items-center justify-center text-[#5C5955] hover:text-[#1A1816]"
+              className="absolute right-5 top-5 w-8 h-8 rounded-full bg-[#FAF9F5] border border-[#E7E4DC] flex items-center justify-center text-[#5C5955] hover:text-[#1A1816] cursor-pointer"
             >
               <X className="w-4 h-4" />
             </button>
@@ -3547,11 +3848,12 @@ export default function InsideDashboardSection({ onOpenDemo, onOpenLegal, onOpen
         </div>
       )}
 
-      {/* Modal de Escolha de Planos Onboarding (Réplica 1:1 Kloel) */}
+      {/* Modal de Escolha de Planos Onboarding */}
       <DashboardPricingModal 
         isOpen={pricingModalOpen}
         onClose={() => setPricingModalOpen(false)}
         onOpenDemo={onOpenDemo}
+        onSelectPlan={onSelectPlan}
       />
 
       {/* Modal de Clonagem de Voz em 1 Minuto (Fase 2) */}

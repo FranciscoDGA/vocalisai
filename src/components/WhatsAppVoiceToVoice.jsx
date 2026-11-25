@@ -174,7 +174,7 @@ export default function WhatsAppVoiceToVoice() {
               <label className="flex items-center justify-between text-xs cursor-pointer">
                 <div>
                   <div className="font-semibold text-[#1A1816]">Pausas respiratórias naturais</div>
-                  <div className="text-[10px] text-[#736F69]">Insere micro-pausas entre frases para soar 100% humano</div>
+                  <div className="text-[10px] text-[#736F69]">Insere micro-pausas entre frases para soar mais natural (ilustrativo)</div>
                 </div>
                 <input 
                   type="checkbox" 
@@ -210,13 +210,13 @@ export default function WhatsAppVoiceToVoice() {
                   VA
                 </div>
                 <div>
-                  <div className="font-bold text-xs sm:text-sm">Vocalis AI • Atendimento WhatsApp</div>
-                  <div className="text-[10px] text-emerald-200">online • Respostas por Áudio Ativas</div>
+                  <div className="font-bold text-xs sm:text-sm">Vocalis AI • Simulação WhatsApp</div>
+                  <div className="text-[10px] text-emerald-200">Simulação ilustrativa no navegador (sem envio real)</div>
                 </div>
               </div>
 
               <div className="text-[10px] font-mono bg-emerald-800/60 px-2 py-0.5 rounded border border-emerald-600/40">
-                UazAPI Oficial
+                Prévia Ilustrativa
               </div>
             </div>
 

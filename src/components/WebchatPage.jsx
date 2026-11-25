@@ -9,6 +9,7 @@ import { COMMERCIAL_CATALOG, INFO_STATUS } from '../data/commercialCatalog';
 import {
   getPlanCardViewModel,
   getChannelAnnualAvailability,
+  getChannelAnnualToggleBadge,
   getChannelUsageTerms,
   getChannelLimitReachedPolicy,
 } from '../utils/commercialCatalogUtils';
@@ -16,6 +17,7 @@ import {
 export default function WebchatPage({
   onOpenDemo,
   onOpenAuth,
+  onSelectPlan,
   onNavigateHome,
   catalog = COMMERCIAL_CATALOG,
 }) {
@@ -39,8 +41,7 @@ export default function WebchatPage({
   const webchatUsageTerms = getChannelUsageTerms('webchat', catalog);
   const webchatLimitPolicy = getChannelLimitReachedPolicy('webchat', catalog);
   const webchatAnnualDiscountBadge = webchatAnnualAvailability.isConfirmedAvailable
-    ? getPlanCardViewModel('webchat', webchatPlans[0].id, 'anual', catalog)?.pricing
-        ?.annualDiscountBadge || null
+    ? getChannelAnnualToggleBadge('webchat', catalog)
     : null;
 
   const steps = [
@@ -191,7 +192,7 @@ export default function WebchatPage({
               
               <div className="flex items-center justify-between pb-4 border-b border-stone-100">
                 <h3 className="text-base font-bold text-[#1A1816]">Criar assistente</h3>
-                <span className="text-stone-400 text-xs cursor-pointer">✕</span>
+                <span className="text-stone-400 text-xs select-none" aria-hidden="true">✕</span>
               </div>
 
               <div className="py-4 space-y-4">
@@ -243,10 +244,15 @@ export default function WebchatPage({
               </div>
 
               <div className="pt-3 border-t border-stone-100 flex items-center justify-end gap-2 text-xs font-semibold">
-                <button className="px-4 py-2 rounded-xl text-stone-500 hover:bg-stone-50">
-                  Cancelar
+                <button
+                  type="button"
+                  onClick={() => setCustomAssistantName('')}
+                  className="px-4 py-2 rounded-xl text-stone-500 hover:bg-stone-50"
+                >
+                  Limpar
                 </button>
                 <button 
+                  type="button"
                   onClick={onOpenAuth}
                   className="px-5 py-2 rounded-xl bg-[#11100F] text-white hover:bg-black transition-colors"
                 >
@@ -382,10 +388,12 @@ export default function WebchatPage({
 
               <div className="space-y-4 pt-4">
                 {steps.map((st, i) => (
-                  <div 
+                  <button
                     key={i}
+                    type="button"
+                    aria-pressed={activeStep === i}
                     onClick={() => setActiveStep(i)}
-                    className={`p-5 rounded-2xl border transition-all cursor-pointer ${
+                    className={`w-full text-left p-5 rounded-2xl border transition-all cursor-pointer ${
                       activeStep === i 
                         ? 'bg-[#EEF2FF] border-[#4F46E5]/30 shadow-sm' 
                         : 'bg-white border-stone-200 hover:border-stone-300'
@@ -397,7 +405,7 @@ export default function WebchatPage({
                     </div>
                     <h4 className="text-base font-bold text-[#1A1816] mb-1">{st.title}</h4>
                     <p className="text-xs sm:text-sm text-[#5C5955] leading-relaxed">{st.desc}</p>
-                  </div>
+                  </button>
                 ))}
               </div>
             </div>
@@ -541,16 +549,16 @@ export default function WebchatPage({
                   )}
 
                   <div>
-                    <div className="flex items-center justify-between gap-2">
+                    <div className="flex items-center justify-between gap-2 flex-wrap">
                       <h3 className="text-xl font-bold text-[#1A1816]">{card.name}</h3>
                       <span
                         className={`text-[10px] font-bold px-2 py-0.5 rounded-full ${
-                          pricing.status === INFO_STATUS.CONFIRMADA
+                          pricing.status === INFO_STATUS.CONFIRMADA && pricing.isPlanFullyConfirmed
                             ? 'bg-emerald-50 text-emerald-700'
                             : 'bg-amber-50 text-amber-800'
                         }`}
                       >
-                        {pricing.statusLabel}
+                        {pricing.readinessLabel}
                       </span>
                     </div>
                     <p className="text-xs text-[#5C5955] mt-1">{card.tagline}</p>
@@ -570,17 +578,20 @@ export default function WebchatPage({
                           {pricing.displayPrice}
                         </span>
                         {pricing.hasConfirmedPrice && (
-                          <span className="text-xs text-[#8C8881]">/mês</span>
+                          <span className="text-xs text-[#8C8881]">
+                            {effectiveCycle === 'anual' ? '/mês (equiv. anual)' : '/mês'}
+                          </span>
                         )}
                       </div>
                       <p className="text-[11px] text-[#5C5955] font-medium mt-1">
                         {pricing.afterPromoLabel}
                       </p>
-                      {effectiveCycle === 'anual' && pricing.annualChargeTypeLabel && (
-                        <p className="text-[11px] text-[#4F46E5] font-medium mt-1">
-                          {pricing.annualChargeTypeLabel}
+                      {effectiveCycle === 'anual' && pricing.totalAnnualLabel && (
+                        <p className="text-[11px] text-[#4F46E5] font-semibold mt-1">
+                          Total anual antecipado (12 meses): {pricing.totalAnnualLabel}
                         </p>
                       )}
+                      <p className="text-[10px] text-[#736F69] mt-1">{pricing.renewalLabel}</p>
                     </div>
 
                     <button
@@ -588,10 +599,25 @@ export default function WebchatPage({
                       onClick={() => {
                         if (card.cta.action === 'checkout' && card.cta.url) {
                           window.open(card.cta.url, '_blank', 'noopener,noreferrer');
-                        } else if (onOpenDemo) {
-                          onOpenDemo();
+                          return;
+                        }
+                        const selection = {
+                          channelId: card.channelId,
+                          channelName: card.channelName,
+                          planId: card.id,
+                          planName: card.name,
+                          billingCycle: effectiveCycle,
+                          displayPrice: pricing.displayPrice,
+                          totalAnnualLabel: pricing.totalAnnualLabel,
+                          afterPromoLabel: pricing.afterPromoLabel,
+                          billingPeriodicityLabel: pricing.billingPeriodicityLabel,
+                        };
+                        if (onSelectPlan) {
+                          onSelectPlan(selection);
                         } else if (onOpenAuth) {
                           onOpenAuth();
+                        } else if (onOpenDemo) {
+                          onOpenDemo();
                         }
                       }}
                       className={`w-full py-3 rounded-full text-xs font-bold transition-all shadow-sm flex items-center justify-center gap-2 cursor-pointer ${
@@ -637,18 +663,22 @@ export default function WebchatPage({
                 <span className="text-[#5C5955]">{term.text}</span>
               </div>
             ))}
-            {webchatLimitPolicy.isConfirmed && (
-              <div className="sm:col-span-2 p-4 rounded-2xl bg-white border border-[#E7E4DC]">
-                <strong className="text-[#1A1816] block mb-1">Quando o limite acaba</strong>
-                <span className="text-[#5C5955]">{webchatLimitPolicy.text}</span>
-              </div>
-            )}
+            <div
+              data-testid="webchat-limit-reached-policy"
+              className="sm:col-span-2 p-4 rounded-2xl bg-white border border-[#E7E4DC]"
+            >
+              <strong className="text-[#1A1816] block mb-1">
+                Quando o limite acaba {!webchatLimitPolicy.isConfirmed ? '(Pendente de decisão)' : ''}
+              </strong>
+              <span className="text-[#5C5955]">{webchatLimitPolicy.text}</span>
+            </div>
           </div>
 
           <div className="text-center mt-10">
             <button
+              type="button"
               onClick={onOpenDemo}
-              className="text-xs text-[#5C5955] hover:text-[#1A1816] underline font-medium"
+              className="text-xs text-[#5C5955] hover:text-[#1A1816] underline font-medium cursor-pointer"
             >
               Procura um plano corporativo sob medida? Conversar com a gente ➔
             </button>

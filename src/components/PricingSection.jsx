@@ -16,32 +16,33 @@ import {
   getChannelComparisonTable,
   getChannelOveragesBanner,
   getChannelAnnualAvailability,
+  getChannelAnnualToggleBadge,
   getChannelConfirmedPromoBanner,
   getChannelUsageTerms,
   getChannelLimitReachedPolicy,
 } from '../utils/commercialCatalogUtils';
 
-function StatusPill({ status, label }) {
-  if (status === INFO_STATUS.CONFIRMADA) {
-    return (
-      <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[10px] font-bold uppercase tracking-wider bg-emerald-50 text-emerald-700 border border-emerald-200">
-        <Check className="w-3 h-3" />
-        <span>{label || 'Confirmado'}</span>
-      </span>
-    );
-  }
+function StatusPill({ status, isFullyConfirmed, label }) {
   if (status === INFO_STATUS.INDISPONIVEL) {
     return (
       <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[10px] font-bold uppercase tracking-wider bg-stone-100 text-[#736F69] border border-[#E7E4DC]">
-        <X className="w-3 h-3" />
+        <X className="w-3 h-3" aria-hidden="true" />
         <span>{label || 'Indisponível'}</span>
+      </span>
+    );
+  }
+  if (status === INFO_STATUS.CONFIRMADA && isFullyConfirmed) {
+    return (
+      <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[10px] font-bold uppercase tracking-wider bg-emerald-50 text-emerald-700 border border-emerald-200">
+        <Check className="w-3 h-3" aria-hidden="true" />
+        <span>{label || 'Confirmado'}</span>
       </span>
     );
   }
   return (
     <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[10px] font-bold uppercase tracking-wider bg-amber-50 text-amber-800 border border-amber-200">
-      <Clock className="w-3 h-3" />
-      <span>{label || 'Pendente de confirmação'}</span>
+      <Clock className="w-3 h-3" aria-hidden="true" />
+      <span>{label || 'Condições parciais · Sob validação'}</span>
     </span>
   );
 }
@@ -52,7 +53,12 @@ function renderFieldTextClass(status) {
   return 'text-amber-800';
 }
 
-export default function PricingSection({ onOpenAuth, onOpenDemo, catalog = COMMERCIAL_CATALOG }) {
+export default function PricingSection({
+  onOpenAuth,
+  onOpenDemo,
+  onSelectPlan,
+  catalog = COMMERCIAL_CATALOG,
+}) {
   const [selectedChannel, setSelectedChannel] = useState('telefone'); // 'telefone' | 'whatsapp' | 'webchat'
   const [billingCycle, setBillingCycle] = useState('monthly'); // 'monthly' | 'yearly'
 
@@ -69,26 +75,37 @@ export default function PricingSection({ onOpenAuth, onOpenDemo, catalog = COMME
   const usageTerms = getChannelUsageTerms(selectedChannel, catalog);
   const limitReachedPolicy = getChannelLimitReachedPolicy(selectedChannel, catalog);
 
-  const annualDiscountBadge =
-    effectiveCycle === 'yearly' || annualAvailability.isConfirmedAvailable
-      ? cardViewModels.find((c) => {
-          const annualSummary = getPlanCardViewModel(selectedChannel, c.id, 'yearly', catalog);
-          return annualSummary?.pricing?.annualDiscountBadge;
-        })
-        ? getPlanCardViewModel(selectedChannel, cardViewModels[0].id, 'yearly', catalog)?.pricing
-            ?.annualDiscountBadge
-        : null
-      : null;
+  const annualDiscountBadge = annualAvailability.isConfirmedAvailable
+    ? getChannelAnnualToggleBadge(selectedChannel, catalog)
+    : null;
 
-  const handlePlanAction = (cta) => {
+  const handlePlanAction = (planSource) => {
+    const cta = planSource?.cta;
     if (cta?.action === 'checkout' && cta.url) {
       window.open(cta.url, '_blank', 'noopener,noreferrer');
       return;
     }
-    if (onOpenDemo) {
-      onOpenDemo();
-    } else if (onOpenAuth) {
+
+    const selection = {
+      channelId: planSource.channelId || selectedChannel,
+      channelName: planSource.channelName || channelMeta.name,
+      planId: planSource.id,
+      planName: planSource.name,
+      billingCycle: effectiveCycle === 'yearly' ? 'anual' : 'mensal',
+      displayPrice: planSource.pricing?.displayPrice,
+      totalAnnualLabel: planSource.pricing?.totalAnnualLabel,
+      afterPromoLabel: planSource.pricing?.afterPromoLabel,
+      billingPeriodicityLabel: planSource.pricing?.billingPeriodicityLabel,
+    };
+
+    if (onSelectPlan) {
+      onSelectPlan(selection);
+      return;
+    }
+    if (onOpenAuth) {
       onOpenAuth();
+    } else if (onOpenDemo) {
+      onOpenDemo();
     }
   };
 
@@ -104,10 +121,13 @@ export default function PricingSection({ onOpenAuth, onOpenDemo, catalog = COMME
             Planos para cada{' '}
             <span className="font-serif-title italic text-[#4F46E5]">ritmo de conversa.</span>
           </h2>
+          <p className="mt-3 text-xs sm:text-sm text-[#5C5955] max-w-2xl mx-auto">
+            Valores mensais e anuais exibidos com transparência. O site não realiza cobrança automática — ao selecionar um plano, sua escolha é preservada para solicitação comercial ou cadastro.
+          </p>
 
           {overagesBannerText && (
             <div className="mt-4 inline-flex items-center gap-2 text-xs text-[#5C5955] bg-white border border-[#E7E4DC] px-4 py-1.5 rounded-full shadow-sm">
-              <ShieldAlert className="w-3.5 h-3.5 text-emerald-700 shrink-0" />
+              <ShieldAlert className="w-3.5 h-3.5 text-emerald-700 shrink-0" aria-hidden="true" />
               <span>{overagesBannerText}</span>
             </div>
           )}
@@ -136,10 +156,12 @@ export default function PricingSection({ onOpenAuth, onOpenDemo, catalog = COMME
             <div className="bg-[#11100F] text-white rounded-2xl sm:rounded-full px-5 py-3 flex flex-col sm:flex-row items-center justify-between gap-2 shadow-xl text-xs sm:text-sm">
               <div className="flex items-center gap-2 text-center sm:text-left">
                 <span className="px-2.5 py-0.5 rounded-full bg-[#4F46E5] text-white text-[11px] font-bold uppercase tracking-wider shrink-0">
-                  Catálogo Oficial
+                  {effectiveCycle === 'yearly' ? 'Modalidade Anual' : 'Catálogo Oficial'}
                 </span>
                 <span className="font-medium text-white/90">
-                  Exibindo exclusivamente os recursos de {channelMeta.name}; itens não confirmados ficam sinalizados como pendentes.
+                  {effectiveCycle === 'yearly'
+                    ? `Ciclo anual de ${channelMeta.name} com cobrança anual antecipada (não acumula com promoção mensal de 3 meses).`
+                    : `Exibindo exclusivamente os recursos de ${channelMeta.name}; itens não confirmados ficam sinalizados como pendentes.`}
                 </span>
               </div>
               <span className="text-[11px] font-mono text-[#A5B4FC] shrink-0">
@@ -151,9 +173,15 @@ export default function PricingSection({ onOpenAuth, onOpenDemo, catalog = COMME
 
         {/* 3. TOP CHANNEL SWITCHER & BILLING TOGGLE */}
         <div className="flex flex-col sm:flex-row items-center justify-between gap-4 mb-10 pb-6 border-b border-[#EBE8E2]">
-          <div className="w-full sm:w-auto overflow-x-auto no-scrollbar flex items-center p-1 bg-[#EBE8E2] rounded-2xl gap-1 text-xs sm:text-sm font-semibold whitespace-nowrap">
+          <div
+            role="tablist"
+            aria-label="Canais comerciais"
+            className="w-full sm:w-auto overflow-x-auto no-scrollbar flex items-center p-1 bg-[#EBE8E2] rounded-2xl gap-1 text-xs sm:text-sm font-semibold whitespace-nowrap"
+          >
             <button
               type="button"
+              role="tab"
+              aria-selected={selectedChannel === 'telefone'}
               onClick={() => setSelectedChannel('telefone')}
               className={`flex items-center gap-2 px-4 py-2 rounded-xl transition-all cursor-pointer ${
                 selectedChannel === 'telefone'
@@ -161,12 +189,14 @@ export default function PricingSection({ onOpenAuth, onOpenDemo, catalog = COMME
                   : 'text-[#5C5955] hover:text-[#1A1816]'
               }`}
             >
-              <Phone className="w-4 h-4 text-[#4F46E5]" />
+              <Phone className="w-4 h-4 text-[#4F46E5]" aria-hidden="true" />
               <span>{catalog.channels.telefone.name}</span>
             </button>
 
             <button
               type="button"
+              role="tab"
+              aria-selected={selectedChannel === 'whatsapp'}
               onClick={() => setSelectedChannel('whatsapp')}
               className={`flex items-center gap-2 px-4 py-2 rounded-xl transition-all cursor-pointer ${
                 selectedChannel === 'whatsapp'
@@ -174,12 +204,14 @@ export default function PricingSection({ onOpenAuth, onOpenDemo, catalog = COMME
                   : 'text-[#5C5955] hover:text-[#1A1816]'
               }`}
             >
-              <MessageCircle className="w-4 h-4 text-[#25D366]" />
+              <MessageCircle className="w-4 h-4 text-[#25D366]" aria-hidden="true" />
               <span>{catalog.channels.whatsapp.name}</span>
             </button>
 
             <button
               type="button"
+              role="tab"
+              aria-selected={selectedChannel === 'webchat'}
               onClick={() => setSelectedChannel('webchat')}
               className={`flex items-center gap-2 px-4 py-2 rounded-xl transition-all cursor-pointer ${
                 selectedChannel === 'webchat'
@@ -187,15 +219,20 @@ export default function PricingSection({ onOpenAuth, onOpenDemo, catalog = COMME
                   : 'text-[#5C5955] hover:text-[#1A1816]'
               }`}
             >
-              <MessageSquare className="w-4 h-4 text-[#3B82F6]" />
+              <MessageSquare className="w-4 h-4 text-[#3B82F6]" aria-hidden="true" />
               <span>{catalog.channels.webchat.name}</span>
             </button>
           </div>
 
           {annualAvailability.isConfirmedAvailable ? (
-            <div className="inline-flex items-center p-1 bg-[#EBE8E2] rounded-xl text-xs sm:text-sm font-bold">
+            <div
+              role="group"
+              aria-label="Periodicidade de cobrança"
+              className="inline-flex items-center p-1 bg-[#EBE8E2] rounded-xl text-xs sm:text-sm font-bold"
+            >
               <button
                 type="button"
+                aria-pressed={effectiveCycle === 'monthly'}
                 onClick={() => setBillingCycle('monthly')}
                 className={`px-4 py-1.5 rounded-lg transition-all cursor-pointer ${
                   effectiveCycle === 'monthly'
@@ -207,6 +244,7 @@ export default function PricingSection({ onOpenAuth, onOpenDemo, catalog = COMME
               </button>
               <button
                 type="button"
+                aria-pressed={effectiveCycle === 'yearly'}
                 onClick={() => setBillingCycle('yearly')}
                 className={`px-4 py-1.5 rounded-lg transition-all flex items-center gap-1.5 cursor-pointer ${
                   effectiveCycle === 'yearly'
@@ -257,11 +295,15 @@ export default function PricingSection({ onOpenAuth, onOpenDemo, catalog = COMME
                 )}
 
                 <div>
-                  <div className="flex items-center justify-between gap-2 mb-2">
+                  <div className="flex items-center justify-between gap-2 mb-2 flex-wrap">
                     <span className="text-[11px] font-semibold uppercase tracking-wider text-[#736F69]">
                       {card.channelName}
                     </span>
-                    <StatusPill status={pricing.status} label={pricing.statusLabel} />
+                    <StatusPill
+                      status={pricing.status}
+                      isFullyConfirmed={pricing.isPlanFullyConfirmed}
+                      label={pricing.readinessLabel}
+                    />
                   </div>
 
                   <h3 className="text-3xl font-serif-title font-normal text-[#1A1816] mb-1">
@@ -292,24 +334,56 @@ export default function PricingSection({ onOpenAuth, onOpenDemo, catalog = COMME
                         {pricing.displayPrice}
                       </span>
                       {pricing.hasConfirmedPrice && (
-                        <span className="text-xs text-[#736F69]">/mês</span>
+                        <span className="text-xs text-[#736F69]">
+                          {effectiveCycle === 'yearly' ? '/mês (equiv. anual)' : '/mês'}
+                        </span>
+                      )}
+                      {effectiveCycle === 'yearly' && pricing.annualDiscountBadge && (
+                        <span className="text-[10px] font-bold px-2 py-0.5 rounded-full bg-indigo-50 text-[#4F46E5] border border-indigo-200">
+                          {pricing.annualDiscountBadge} vs. mensal
+                        </span>
                       )}
                     </div>
-                    <p className="text-[11px] text-[#736F69] mt-1">
+
+                    <p className="text-[11px] text-[#5C5955] mt-1 font-medium">
                       {pricing.afterPromoLabel}
                     </p>
-                    {effectiveCycle === 'yearly' && pricing.annualChargeTypeLabel && (
-                      <p className="text-[11px] text-[#4F46E5] font-medium mt-1">
-                        {pricing.annualChargeTypeLabel}
-                      </p>
-                    )}
+
+                    {/* Structured Commercial Breakdown */}
+                    <div className="mt-3 p-3 rounded-2xl bg-[#FAF9F5] border border-[#EBE8E2] text-[11px] text-[#5C5955] space-y-1">
+                      {pricing.standardMonthlyLabel && (
+                        <div>
+                          <strong className="text-[#1A1816]">Preço mensal padrão:</strong>{' '}
+                          {pricing.standardMonthlyLabel}/mês
+                        </div>
+                      )}
+                      <div>
+                        <strong className="text-[#1A1816]">Periodicidade:</strong>{' '}
+                        {pricing.billingPeriodicityLabel}
+                      </div>
+                      {effectiveCycle === 'yearly' && pricing.totalAnnualLabel && (
+                        <div className="text-[#4F46E5] font-semibold">
+                          Total pago antecipadamente (12 meses): {pricing.totalAnnualLabel}
+                        </div>
+                      )}
+                      {effectiveCycle !== 'yearly' && pricing.hasConfirmedPrice && (
+                        <>
+                          <div>{pricing.immediatePaymentLabel}</div>
+                          <div>{pricing.firstPeriodTotalLabel}</div>
+                        </>
+                      )}
+                      <div>{pricing.renewalLabel}</div>
+                      <div className="text-[10px] text-[#736F69] pt-0.5">
+                        {pricing.externalCostsNote}
+                      </div>
+                    </div>
                   </div>
 
                   {/* CTA Button */}
-                  <div className="my-6">
+                  <div className="my-6 space-y-1.5">
                     <button
                       type="button"
-                      onClick={() => handlePlanAction(card.cta)}
+                      onClick={() => handlePlanAction(card)}
                       className={`w-full py-3 rounded-full text-xs font-bold transition-all shadow-md flex items-center justify-center gap-1.5 cursor-pointer ${
                         isHighlight
                           ? 'bg-[#4F46E5] text-white hover:bg-[#4338CA]'
@@ -317,8 +391,11 @@ export default function PricingSection({ onOpenAuth, onOpenDemo, catalog = COMME
                       }`}
                     >
                       <span>{card.cta.label}</span>
-                      <ArrowRight className="w-3.5 h-3.5 opacity-80" />
+                      <ArrowRight className="w-3.5 h-3.5 opacity-80" aria-hidden="true" />
                     </button>
+                    <p className="text-[10px] text-center text-[#736F69]">
+                      Sem cobrança automática online · Solicitação com validação prévia
+                    </p>
                   </div>
 
                   {/* Uso incluído e definição (estrito do canal) */}
@@ -404,7 +481,7 @@ export default function PricingSection({ onOpenAuth, onOpenDemo, catalog = COMME
             className="inline-flex items-center gap-1.5 text-xs sm:text-sm font-semibold text-[#1A1816] hover:text-[#4F46E5] transition-colors border border-[#E0DCD4] bg-white px-5 py-2.5 rounded-full shadow-sm cursor-pointer"
           >
             <span>Ficou em dúvida? Converse com a gente</span>
-            <ArrowRight className="w-4 h-4" />
+            <ArrowRight className="w-4 h-4" aria-hidden="true" />
           </button>
         </div>
 
@@ -441,20 +518,39 @@ export default function PricingSection({ onOpenAuth, onOpenDemo, catalog = COMME
                         )}
                         <span>
                           {col.pricing.displayPrice}
-                          {col.pricing.hasConfirmedPrice ? '/mês' : ''}
+                          {col.pricing.hasConfirmedPrice
+                            ? effectiveCycle === 'yearly'
+                              ? '/mês equiv.'
+                              : '/mês'
+                            : ''}
                         </span>
                       </div>
+                      {effectiveCycle === 'yearly' && col.pricing.totalAnnualLabel && (
+                        <div className="text-[10px] text-[#4F46E5] font-semibold">
+                          Total anual: {col.pricing.totalAnnualLabel}
+                        </div>
+                      )}
                       {col.pricing.hasActiveConfirmedPromo && (
                         <div className="text-[10px] text-[#4F46E5] font-medium">
                           {col.pricing.promoScopeLabel} · {col.pricing.afterPromoLabel}
                         </div>
                       )}
                       <div>
-                        <StatusPill status={col.pricing.status} label={col.pricing.statusLabel} />
+                        <StatusPill
+                          status={col.pricing.status}
+                          isFullyConfirmed={col.pricing.isPlanFullyConfirmed}
+                          label={col.pricing.readinessLabel}
+                        />
                       </div>
                       <button
                         type="button"
-                        onClick={() => handlePlanAction(col.cta)}
+                        onClick={() =>
+                          handlePlanAction({
+                            ...col,
+                            channelId: comparisonTable.channelId,
+                            channelName: comparisonTable.channelName,
+                          })
+                        }
                         className={`px-3 py-1 rounded-full text-[11px] font-bold cursor-pointer ${
                           col.highlight
                             ? 'bg-[#11100F] text-white hover:bg-black'
@@ -510,12 +606,10 @@ export default function PricingSection({ onOpenAuth, onOpenDemo, catalog = COMME
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-16">
           <div
             data-testid="usage-terms-section"
-            className={`bg-white rounded-3xl border border-[#E7E4DC] p-6 sm:p-8 shadow-sm ${
-              limitReachedPolicy.isConfirmed ? '' : 'md:col-span-2'
-            }`}
+            className="bg-white rounded-3xl border border-[#E7E4DC] p-6 sm:p-8 shadow-sm"
           >
             <div className="flex items-center gap-2 mb-4">
-              <Info className="w-4 h-4 text-[#4F46E5]" />
+              <Info className="w-4 h-4 text-[#4F46E5]" aria-hidden="true" />
               <h4 className="text-sm font-bold text-[#1A1816]">
                 Definições de uso — {channelMeta.name}
               </h4>
@@ -528,7 +622,11 @@ export default function PricingSection({ onOpenAuth, onOpenDemo, catalog = COMME
                 >
                   <div className="flex items-center justify-between gap-2">
                     <span className="text-xs font-bold text-[#1A1816]">{entry.term}</span>
-                    <StatusPill status={entry.status} />
+                    <StatusPill
+                      status={entry.status}
+                      isFullyConfirmed={entry.isConfirmed}
+                      label={entry.isConfirmed ? 'Confirmado' : 'Pendente'}
+                    />
                   </div>
                   <p className={`text-xs leading-relaxed ${renderFieldTextClass(entry.status)}`}>
                     {entry.text}
@@ -538,23 +636,27 @@ export default function PricingSection({ onOpenAuth, onOpenDemo, catalog = COMME
             </div>
           </div>
 
-          {/* Só exibe regra de quando o limite acaba se estiver confirmada */}
-          {limitReachedPolicy.isConfirmed && (
-            <div
-              data-testid="limit-reached-policy"
-              className="bg-white rounded-3xl border border-[#E7E4DC] p-6 sm:p-8 shadow-sm space-y-3"
-            >
-              <div className="flex items-center justify-between gap-2">
-                <h4 className="text-sm font-bold text-[#1A1816]">
-                  O que acontece quando o limite acaba ({channelMeta.shortName})
-                </h4>
-                <StatusPill status={limitReachedPolicy.status} />
-              </div>
-              <p className="text-xs text-[#4A4744] leading-relaxed">
-                {limitReachedPolicy.text}
-              </p>
+          <div
+            data-testid="limit-reached-policy"
+            className="bg-white rounded-3xl border border-[#E7E4DC] p-6 sm:p-8 shadow-sm space-y-3"
+          >
+            <div className="flex items-center justify-between gap-2 flex-wrap">
+              <h4 className="text-sm font-bold text-[#1A1816]">
+                O que acontece quando o limite acaba ({channelMeta.shortName})
+              </h4>
+              <StatusPill
+                status={limitReachedPolicy.status}
+                isFullyConfirmed={limitReachedPolicy.isConfirmed}
+                label={limitReachedPolicy.isConfirmed ? 'Confirmado' : 'Pendente de confirmação'}
+              />
             </div>
-          )}
+            <p className={`text-xs leading-relaxed ${renderFieldTextClass(limitReachedPolicy.status)}`}>
+              {limitReachedPolicy.text}
+            </p>
+            <p className="text-[11px] text-[#736F69] leading-relaxed">
+              Qualquer regra de bloqueio, pacote adicional ou cobrança excedente é confirmada por escrito antes da contratação.
+            </p>
+          </div>
         </div>
 
         {/* 7. BOTTOM CTA CARD */}
@@ -567,7 +669,7 @@ export default function PricingSection({ onOpenAuth, onOpenDemo, catalog = COMME
               <span className="font-serif-title italic text-[#A5B4FC]">Cresça falando.</span>
             </h3>
             <p className="text-xs sm:text-sm text-white/70 leading-relaxed">
-              Fale com nossa equipe para conhecer as condições vigentes e agendar uma demonstração.
+              Fale com nossa equipe para confirmar as condições vigentes do canal desejado e agendar uma demonstração.
             </p>
 
             <div className="pt-4">
@@ -581,7 +683,7 @@ export default function PricingSection({ onOpenAuth, onOpenDemo, catalog = COMME
             </div>
           </div>
 
-          <div className="mt-8 pt-4 flex items-center justify-center gap-1 opacity-25">
+          <div className="mt-8 pt-4 flex items-center justify-center gap-1 opacity-25" aria-hidden="true">
             {[15, 30, 45, 20, 35, 60, 75, 50, 30, 70, 95, 65, 40, 80, 100, 70, 45, 30, 60, 85, 50, 25, 40, 20].map(
               (h, i) => (
                 <span key={i} style={{ height: `${h * 0.4}px` }} className="w-1 bg-[#4F46E5] rounded-full" />
@@ -595,7 +697,9 @@ export default function PricingSection({ onOpenAuth, onOpenDemo, catalog = COMME
           <h2 className="text-4xl sm:text-6xl font-normal text-[#1A1816] tracking-tight leading-[1.12]">
             Toda empresa tem uma voz.
             <br />
-            <span className="font-serif-title italic text-[#4F46E5]">Mais clareza e agilidade para o atendimento da sua empresa.</span>
+            <span className="font-serif-title italic text-[#4F46E5]">
+              Mais clareza e agilidade para o atendimento da sua empresa.
+            </span>
           </h2>
         </div>
       </div>

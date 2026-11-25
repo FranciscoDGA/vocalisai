@@ -43,6 +43,8 @@ export default function CentralAjudaPage({
   const [aiResponse, setAiResponse] = useState(null);
   const [isAiThinking, setIsAiThinking] = useState(false);
   const [copiedCode, setCopiedCode] = useState(false);
+  const [aiFeedbackMsg, setAiFeedbackMsg] = useState('');
+  const [articleFeedbackMsg, setArticleFeedbackMsg] = useState('');
   const [isSearchModalOpen, setIsSearchModalOpen] = useState(false);
 
   const searchInputRef = useRef(null);
@@ -831,16 +833,18 @@ Nunca dê diagnósticos médicos, não avalie gravidade clínica nem recomende a
                     </p>
 
                     <div className="flex items-center justify-between pt-3 border-t border-[#E8D9C8]/80 text-xs text-[#736F69]">
-                      <span>Essa resposta ajudou você?</span>
+                      <span>{aiFeedbackMsg || 'Essa resposta ajudou você?'}</span>
                       <div className="flex items-center gap-2">
                         <button
-                          onClick={() => alert('Obrigado pelo feedback!')}
+                          type="button"
+                          onClick={() => setAiFeedbackMsg('Obrigado pelo feedback!')}
                           className="px-2.5 py-1 rounded-md bg-white border border-[#D5D2C9] text-[11px] font-medium hover:bg-[#FAF9F6] cursor-pointer"
                         >
                           👍 Sim
                         </button>
                         <button
-                          onClick={() => alert('Registramos sua sugestão para aprimorar os artigos!')}
+                          type="button"
+                          onClick={() => setAiFeedbackMsg('Registramos sua sugestão nesta sessão.')}
                           className="px-2.5 py-1 rounded-md bg-white border border-[#D5D2C9] text-[11px] font-medium hover:bg-[#FAF9F6] cursor-pointer"
                         >
                           👎 Não muito
@@ -1049,16 +1053,18 @@ Nunca dê diagnósticos médicos, não avalie gravidade clínica nem recomende a
                 <div className="pt-6 border-t border-[#ECEAE4] flex flex-col sm:flex-row sm:items-center justify-between gap-4">
                   <div className="flex items-center gap-3">
                     <span className="text-xs font-semibold text-[#1A1816]">
-                      Este guia foi útil?
+                      {articleFeedbackMsg || 'Este guia foi útil?'}
                     </span>
                     <button
-                      onClick={() => alert('Obrigado pelo seu voto!')}
+                      type="button"
+                      onClick={() => setArticleFeedbackMsg('Obrigado pelo seu feedback!')}
                       className="px-3 py-1.5 rounded-lg border border-[#E7E4DC] bg-white hover:bg-[#FAF9F5] text-xs font-medium text-[#1A1816] cursor-pointer"
                     >
                       👍 Sim
                     </button>
                     <button
-                      onClick={() => alert('Feedback anotado!')}
+                      type="button"
+                      onClick={() => setArticleFeedbackMsg('Feedback registrado nesta sessão.')}
                       className="px-3 py-1.5 rounded-lg border border-[#E7E4DC] bg-white hover:bg-[#FAF9F5] text-xs font-medium text-[#1A1816] cursor-pointer"
                     >
                       👎 Não

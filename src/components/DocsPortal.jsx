@@ -1,6 +1,6 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { 
-  Search, Sparkles, ShieldCheck, FileText, ChevronRight, Check, 
+  Search, ShieldCheck, FileText, ChevronRight, Check, 
   ExternalLink, Copy, CheckCircle2, ArrowRight, ArrowLeft, X,
   Phone, Bot, Layers, BookOpen, Users, Sliders, AlertCircle, HelpCircle
 } from 'lucide-react';
@@ -9,9 +9,25 @@ import { BRAND, PRIVACY_POLICY, TERMS_OF_SERVICE } from '../data/content';
 export default function DocsPortal({ isOpen, initialDoc = 'privacidade', onClose, onOpenApp }) {
   const [activeDoc, setActiveDoc] = useState(initialDoc);
   const [searchQuery, setSearchQuery] = useState('');
-  const [aiPromptOpen, setAiPromptOpen] = useState(false);
   const [copied, setCopied] = useState(false);
   const [feedback, setFeedback] = useState(null); // 'yes' | 'no'
+
+  useEffect(() => {
+    if (isOpen && initialDoc) {
+      setActiveDoc(initialDoc);
+    }
+  }, [isOpen, initialDoc]);
+
+  useEffect(() => {
+    if (!isOpen) return;
+    const handleKeyDown = (event) => {
+      if (event.key === 'Escape') {
+        onClose?.();
+      }
+    };
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, [isOpen, onClose]);
 
   if (!isOpen) return null;
 
@@ -22,14 +38,24 @@ export default function DocsPortal({ isOpen, initialDoc = 'privacidade', onClose
   };
 
   return (
-    <div className="fixed inset-0 z-50 overflow-y-auto bg-white flex flex-col font-sans">
+    <div
+      role="dialog"
+      aria-modal="true"
+      aria-label="Central de Documentação e Políticas Vocalis AI"
+      className="fixed inset-0 z-50 overflow-y-auto bg-white flex flex-col font-sans"
+    >
       
-      {/* 1. TOP HEADER BAR (Exact replica of screenshot 1) */}
+      {/* 1. TOP HEADER BAR */}
       <header className="sticky top-0 z-30 bg-white border-b border-[#EBE8E2] px-4 sm:px-8 py-3 flex items-center justify-between text-xs">
         
         {/* Left: Brand + Nav Links */}
         <div className="flex items-center gap-8">
-          <div className="flex items-center gap-2 cursor-pointer" onClick={onClose}>
+          <button
+            type="button"
+            className="flex items-center gap-2 cursor-pointer"
+            onClick={onClose}
+            aria-label="Fechar documentação e voltar"
+          >
             <div className="w-7 h-7 rounded-lg bg-[#4F46E5]/10 flex items-center justify-center border border-[#4F46E5]/20">
               <div className="flex items-center gap-[2px] h-3">
                 <span className="w-[2px] h-1.5 bg-[#4F46E5] rounded-full"></span>
@@ -38,42 +64,29 @@ export default function DocsPortal({ isOpen, initialDoc = 'privacidade', onClose
               </div>
             </div>
             <span className="font-bold text-base text-[#1A1816] tracking-tight">{BRAND.name}</span>
-          </div>
+          </button>
 
           <nav className="hidden lg:flex items-center gap-6 text-[#5C5955] font-medium">
-            <button onClick={() => setActiveDoc('primeiros-passos')} className="hover:text-[#1A1816] transition-colors">Começar</button>
-            <button onClick={() => setActiveDoc('comunicacao')} className="hover:text-[#1A1816] transition-colors">Recursos</button>
-            <button onClick={() => setActiveDoc('tecnicas')} className="hover:text-[#1A1816] transition-colors">Integrações</button>
-            <button onClick={() => setActiveDoc('dpa')} className="hover:text-[#1A1816] transition-colors">Parceiros</button>
+            <button type="button" onClick={() => setActiveDoc('primeiros-passos')} className="hover:text-[#1A1816] transition-colors cursor-pointer">Começar</button>
+            <button type="button" onClick={() => setActiveDoc('comunicacao')} className="hover:text-[#1A1816] transition-colors cursor-pointer">Recursos</button>
+            <button type="button" onClick={() => setActiveDoc('tecnicas')} className="hover:text-[#1A1816] transition-colors cursor-pointer">Integrações</button>
+            <button type="button" onClick={() => setActiveDoc('dpa')} className="hover:text-[#1A1816] transition-colors cursor-pointer">Parceiros</button>
           </nav>
         </div>
 
-        {/* Center: Search & Ask AI */}
+        {/* Center: Search */}
         <div className="hidden sm:flex items-center gap-2 max-w-md w-full mx-4">
           <div className="relative flex-1">
             <Search className="w-3.5 h-3.5 text-[#8C8881] absolute left-3 top-2.5" />
             <input 
               type="text" 
               placeholder="Pesquisar..." 
+              aria-label="Pesquisar na documentação"
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
-              className="w-full pl-9 pr-12 py-1.5 rounded-lg border border-[#E0DCD4] bg-[#FAF9F5] text-xs focus:outline-none focus:border-[#4F46E5] text-[#1A1816]"
+              className="w-full pl-9 pr-4 py-1.5 rounded-lg border border-[#E0DCD4] bg-[#FAF9F5] text-xs focus:outline-none focus:border-[#4F46E5] text-[#1A1816]"
             />
-            <span className="absolute right-2.5 top-2 text-[10px] text-[#8C8881] border border-[#D5D0C6] rounded px-1 font-mono">
-              Ctrl K
-            </span>
           </div>
-
-          <button 
-            onClick={() => setAiPromptOpen(true)}
-            className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg border border-[#E0DCD4] bg-white text-[#5C5955] hover:text-[#1A1816] hover:border-[#4F46E5] transition-colors shrink-0"
-          >
-            <Sparkles className="w-3 h-3 text-[#4F46E5]" />
-            <span>Perguntar à nossa IA...</span>
-            <span className="text-[10px] text-[#8C8881] border border-[#D5D0C6] rounded px-1 font-mono ml-1">
-              Ctrl I
-            </span>
-          </button>
         </div>
 
         {/* Right: Support, Flag & Back/Open App */}
@@ -526,8 +539,8 @@ export default function DocsPortal({ isOpen, initialDoc = 'privacidade', onClose
           {/* CONTENT: TERMOS E CONDIÇÕES */}
           {activeDoc === 'termos' && (
             <div className="space-y-6 text-sm text-[#383531] leading-relaxed">
-              {TERMS_OF_SERVICE.sections.map((sec) => (
-                <div key={sec.id} className="pt-4 border-t border-[#F0EDE8] space-y-2">
+              {TERMS_OF_SERVICE.sections.map((sec, idx) => (
+                <div key={sec.num || sec.title || idx} className="pt-4 border-t border-[#F0EDE8] space-y-2">
                   <h3 className="text-base font-bold text-[#1A1816]">{sec.title}</h3>
                   <p className="text-xs text-[#5C5955]">{sec.content}</p>
                 </div>

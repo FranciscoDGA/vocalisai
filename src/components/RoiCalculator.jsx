@@ -1,6 +1,10 @@
 import React, { useState } from 'react';
 import { Calculator, TrendingUp, DollarSign, Clock, Users, ArrowRight, Sparkles } from 'lucide-react';
-import { getCommercialEntryLabel, getLowestConfirmedEntryPrice } from '../utils/commercialCatalogUtils';
+import {
+  getCommercialEntryLabel,
+  getLowestConfirmedEntryDetails,
+  getLowestConfirmedEntryPrice,
+} from '../utils/commercialCatalogUtils';
 
 export default function RoiCalculator({ onOpenDemo }) {
   const [contactsPerMonth, setContactsPerMonth] = useState(1800);
@@ -11,13 +15,21 @@ export default function RoiCalculator({ onOpenDemo }) {
   const totalHumanCostMonthly = humanAgentsNeeded * costPerHumanAgent;
   const totalHumanCostAnnual = totalHumanCostMonthly * 12;
 
-  // Referência comercial obtida exclusivamente da fonte única
+  // Referência comercial obtida exclusivamente da fonte única (Webchat Solo; Telefonia e WhatsApp possuem valores próprios)
+  const lowestEntryDetails = getLowestConfirmedEntryDetails();
   const confirmedFloorMonthly = getLowestConfirmedEntryPrice();
   const hasConfirmedFloor = typeof confirmedFloorMonthly === 'number';
   const vocalisCostMonthly = hasConfirmedFloor ? confirmedFloorMonthly : null;
-  const vocalisCostAnnual = hasConfirmedFloor ? vocalisCostMonthly * 12 : null;
+  const regularFloorMonthly = lowestEntryDetails?.regularPriceLabel
+    ? Number(lowestEntryDetails.regularPriceLabel.replace(/[^\d]/g, ''))
+    : vocalisCostMonthly;
+  const vocalisCostAnnual = hasConfirmedFloor
+    ? lowestEntryDetails?.hasPromo
+      ? vocalisCostMonthly * 3 + (regularFloorMonthly || vocalisCostMonthly) * 9
+      : vocalisCostMonthly * 12
+    : null;
 
-  // Economia (calculada apenas quando há preço confirmado)
+  // Diferença ilustrativa (considerando apenas o menor plano de entrada Webchat Solo — sem custos de telefonia/WhatsApp)
   const monthlySavings = hasConfirmedFloor ? totalHumanCostMonthly - vocalisCostMonthly : null;
   const annualSavings = hasConfirmedFloor ? totalHumanCostAnnual - vocalisCostAnnual : null;
 
@@ -129,7 +141,7 @@ export default function RoiCalculator({ onOpenDemo }) {
                 </div>
                 <p className="text-xs text-emerald-400 font-medium">
                   {hasConfirmedFloor
-                    ? `R$ ${monthlySavings.toLocaleString('pt-BR')}/mês economizados`
+                    ? `Diferença ilustrativa de até R$ ${monthlySavings.toLocaleString('pt-BR')}/mês nos 3 primeiros meses (referência Webchat Solo)`
                     : 'Comparação financeira calculada após confirmação dos valores do plano'}
                 </p>
               </div>
@@ -142,11 +154,11 @@ export default function RoiCalculator({ onOpenDemo }) {
                   </span>
                 </div>
 
-                <div className="flex justify-between text-slate-300 font-medium">
-                  <span>Investimento Vocalis AI:</span>
-                  <span className="text-emerald-400 font-bold">
-                    {hasConfirmedFloor
-                      ? `R$ ${vocalisCostMonthly.toLocaleString('pt-BR')}/mês`
+                <div className="flex justify-between items-start gap-3 text-slate-300 font-medium">
+                  <span>Piso promocional de entrada:</span>
+                  <span className="text-emerald-400 font-bold text-right">
+                    {hasConfirmedFloor && lowestEntryDetails
+                      ? `${lowestEntryDetails.channelShortName} ${lowestEntryDetails.planName}: R$ ${vocalisCostMonthly.toLocaleString('pt-BR')}/mês (3 primeiros meses${lowestEntryDetails.regularPriceLabel ? `; depois ${lowestEntryDetails.regularPriceLabel}/mês` : ''})`
                       : getCommercialEntryLabel()}
                   </span>
                 </div>

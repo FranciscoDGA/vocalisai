@@ -20,43 +20,100 @@ export const supabase = createClient(
    AUTENTICAÇÃO (LOGIN & CADASTRO REAL)
    ======================================================== */
 
-export async function signUpUser({ email, password, companyName = '' }) {
+export async function signUpUser({ email, password, companyName = '', selectedPlan = null }) {
+  if (!isSupabaseConfigured) {
+    return {
+      success: false,
+      error: 'Cadastro indisponível no momento: serviço de autenticação não configurado.',
+    };
+  }
   try {
     const redirectUrl = typeof window !== 'undefined' ? window.location.origin : 'https://vocalisai-phi.vercel.app';
     const { data, error } = await supabase.auth.signUp({
-      email,
+      email: String(email || '').trim(),
       password,
       options: {
         emailRedirectTo: redirectUrl,
         data: {
-          company_name: companyName,
-          platform: 'Vocalis AI'
+          company_name: String(companyName || '').trim(),
+          platform: 'Vocalis AI',
+          selected_plan: selectedPlan || null,
         }
       }
     });
 
-    if (error) return { success: false, error: error.message };
+    if (error) {
+      const lowerMsg = String(error.message || '').toLowerCase();
+      if (lowerMsg.includes('already registered') || lowerMsg.includes('user already registered')) {
+        return {
+          success: false,
+          alreadyExists: true,
+          error: 'Este e-mail já está cadastrado. Faça login ou recupere sua senha.',
+        };
+      }
+      return { success: false, error: error.message };
+    }
+
+    // Supabase retorna identities vazio quando o e-mail já existe e a enumeração é ocultada
+    if (data?.user && Array.isArray(data.user.identities) && data.user.identities.length === 0) {
+      return {
+        success: false,
+        alreadyExists: true,
+        error: 'Este e-mail já está cadastrado. Faça login ou recupere sua senha.',
+      };
+    }
+
     return { success: true, data };
   } catch (err) {
-    return { success: false, error: err.message };
+    return { success: false, error: err?.message || 'Erro ao realizar cadastro.' };
   }
 }
 
 export async function signInUser({ email, password }) {
+  if (!isSupabaseConfigured) {
+    return {
+      success: false,
+      error: 'Login indisponível no momento: serviço de autenticação não configurado.',
+    };
+  }
   try {
     const { data, error } = await supabase.auth.signInWithPassword({
-      email,
+      email: String(email || '').trim(),
       password
     });
 
     if (error) return { success: false, error: error.message };
     return { success: true, data };
   } catch (err) {
-    return { success: false, error: err.message };
+    return { success: false, error: err?.message || 'Erro ao autenticar.' };
+  }
+}
+
+export async function resetPasswordForEmail(email) {
+  if (!isSupabaseConfigured) {
+    return {
+      success: false,
+      error: 'Recuperação de senha indisponível: serviço de autenticação não configurado.',
+    };
+  }
+  const cleanEmail = String(email || '').trim();
+  if (!cleanEmail) {
+    return { success: false, error: 'Informe um e-mail válido para recuperar a senha.' };
+  }
+  try {
+    const redirectUrl = typeof window !== 'undefined' ? window.location.origin : 'https://vocalisai-phi.vercel.app';
+    const { error } = await supabase.auth.resetPasswordForEmail(cleanEmail, {
+      redirectTo: redirectUrl,
+    });
+    if (error) return { success: false, error: error.message };
+    return { success: true };
+  } catch (err) {
+    return { success: false, error: err?.message || 'Erro ao enviar e-mail de recuperação.' };
   }
 }
 
 export async function signOutUser() {
+  if (!isSupabaseConfigured) return { success: true };
   try {
     await supabase.auth.signOut();
     return { success: true };
@@ -66,6 +123,7 @@ export async function signOutUser() {
 }
 
 export async function getCurrentUser() {
+  if (!isSupabaseConfigured) return null;
   try {
     const { data: { user } } = await supabase.auth.getUser();
     return user || null;
@@ -79,6 +137,12 @@ export async function getCurrentUser() {
    ======================================================== */
 
 export async function saveLead({ phone, niche = '', pain = '', notes = '' }) {
+  if (!isSupabaseConfigured) {
+    return {
+      success: false,
+      error: { message: 'Armazenamento de solicitações indisponível no momento.' },
+    };
+  }
   try {
     const { data, error } = await supabase
       .from('leads')
@@ -108,6 +172,7 @@ export async function saveLead({ phone, niche = '', pain = '', notes = '' }) {
 }
 
 export async function updateLead(leadId, updates) {
+  if (!isSupabaseConfigured) return { success: false, error: 'Serviço indisponível' };
   if (!leadId) return { success: false, error: 'ID do lead ausente' };
   try {
     const { data, error } = await supabase
@@ -132,6 +197,9 @@ export async function updateLead(leadId, updates) {
 export async function getLeads(limit = 50) {
   if (!isSupabaseConfigured) return [];
   try {
+    const user = await getCurrentUser();
+    if (!user?.id) return [];
+
     const { data, error } = await supabase
       .from('leads')
       .select('*')
@@ -151,21 +219,24 @@ export async function getLeads(limit = 50) {
 }
 
 /* ========================================================
-   ASSISTENTES (CRIAÇÃO, GESTÃO & SINCRONIZAÇÃO COM VAPI)
+   ASSISTENTES (ISOLADOS POR USER_ID DO USUÁRIO AUTENTICADO)
    ======================================================== */
 
 export async function saveAssistant({
   name,
   type = 'voz',
-  channel = 'Telefone (11) 4003-9821',
+  channel = 'Telefonia (sob configuração)',
   prompt = '',
   voice = 'pt-BR-Neural2-A',
   vapi_assistant_id = null
 }) {
+  if (!isSupabaseConfigured) return { success: false, error: 'Serviço indisponível' };
   try {
     const user = await getCurrentUser();
+    if (!user?.id) {
+      return { success: false, error: 'Sessão não autenticada.' };
+    }
 
-    // Armazenamos a configuração da voz e o ID da Vapi de forma segura
     const voicePayload = JSON.stringify({
       voice: typeof voice === 'object' ? voice.name : voice,
       vapi_assistant_id: vapi_assistant_id || null
@@ -180,9 +251,9 @@ export async function saveAssistant({
           channel,
           prompt,
           voice: voicePayload,
-          status: 'Ativo',
+          status: 'Configurado (sem ativação)',
           calls_count: 0,
-          user_id: user?.id || null
+          user_id: user.id
         }
       ])
       .select()
@@ -190,7 +261,7 @@ export async function saveAssistant({
 
     if (error) {
       console.warn('Erro ao salvar assistente no Supabase:', error.message);
-      return { success: false, error };
+      return { success: false, error: error.message };
     }
 
     return { 
@@ -202,7 +273,7 @@ export async function saveAssistant({
     };
   } catch (err) {
     console.warn('Exceção ao salvar assistente:', err);
-    return { success: false, error: err };
+    return { success: false, error: err?.message || err };
   }
 }
 
@@ -214,7 +285,11 @@ export async function updateAssistant(id, {
   voice,
   vapi_assistant_id
 }) {
+  if (!isSupabaseConfigured) return { success: false, error: 'Serviço indisponível' };
   try {
+    const user = await getCurrentUser();
+    if (!user?.id) return { success: false, error: 'Sessão não autenticada.' };
+
     const updates = {};
     if (name !== undefined) updates.name = name;
     if (type !== undefined) updates.type = type;
@@ -232,12 +307,13 @@ export async function updateAssistant(id, {
       .from('assistants')
       .update(updates)
       .eq('id', id)
+      .eq('user_id', user.id)
       .select()
       .single();
 
     if (error) {
       console.warn('Erro ao atualizar assistente no Supabase:', error.message);
-      return { success: false, error };
+      return { success: false, error: error.message };
     }
 
     return { 
@@ -249,35 +325,44 @@ export async function updateAssistant(id, {
     };
   } catch (err) {
     console.warn('Exceção ao atualizar assistente no Supabase:', err);
-    return { success: false, error: err };
+    return { success: false, error: err?.message || err };
   }
 }
 
 export async function deleteAssistant(id) {
+  if (!isSupabaseConfigured) return { success: false, error: 'Serviço indisponível' };
   try {
+    const user = await getCurrentUser();
+    if (!user?.id) return { success: false, error: 'Sessão não autenticada.' };
+
     const { error } = await supabase
       .from('assistants')
       .delete()
-      .eq('id', id);
+      .eq('id', id)
+      .eq('user_id', user.id);
 
     if (error) {
       console.warn('Erro ao deletar assistente no Supabase:', error.message);
-      return { success: false, error };
+      return { success: false, error: error.message };
     }
 
     return { success: true };
   } catch (err) {
     console.warn('Exceção ao deletar assistente:', err);
-    return { success: false, error: err };
+    return { success: false, error: err?.message || err };
   }
 }
 
 export async function getAssistants() {
   if (!isSupabaseConfigured) return [];
   try {
+    const user = await getCurrentUser();
+    if (!user?.id) return [];
+
     const { data, error } = await supabase
       .from('assistants')
       .select('*')
+      .eq('user_id', user.id)
       .order('created_at', { ascending: false });
 
     if (error) {
@@ -319,7 +404,11 @@ export async function getAssistants() {
    ======================================================== */
 
 export async function saveCall({ assistant_id = null, caller_phone, duration_seconds = 0, status = 'Concluída', transcript = '', sentiment = 'Positivo', score_purchase = 9.5 }) {
+  if (!isSupabaseConfigured) return { success: false, error: 'Serviço indisponível' };
   try {
+    const user = await getCurrentUser();
+    if (!user?.id) return { success: false, error: 'Sessão não autenticada.' };
+
     const { data, error } = await supabase
       .from('calls')
       .insert([
@@ -330,7 +419,8 @@ export async function saveCall({ assistant_id = null, caller_phone, duration_sec
           status,
           transcript,
           sentiment,
-          score_purchase
+          score_purchase,
+          user_id: user.id
         }
       ])
       .select()
@@ -338,21 +428,26 @@ export async function saveCall({ assistant_id = null, caller_phone, duration_sec
 
     if (error) {
       console.warn('Erro ao salvar chamada no Supabase:', error.message);
-      return { success: false, error };
+      return { success: false, error: error.message };
     }
 
     return { success: true, data };
   } catch (err) {
     console.warn('Exceção ao salvar chamada:', err);
-    return { success: false, error: err };
+    return { success: false, error: err?.message || err };
   }
 }
 
 export async function getCalls(limit = 50) {
+  if (!isSupabaseConfigured) return [];
   try {
+    const user = await getCurrentUser();
+    if (!user?.id) return [];
+
     const { data, error } = await supabase
       .from('calls')
       .select('*')
+      .eq('user_id', user.id)
       .order('created_at', { ascending: false })
       .limit(limit);
 

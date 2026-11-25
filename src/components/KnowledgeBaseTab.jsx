@@ -6,7 +6,7 @@ import {
 } from 'lucide-react';
 import { BRAND } from '../data/content';
 
-export default function KnowledgeBaseTab({ knowledgeList, setKnowledgeList, createdAssistants = [], onOpenDemo }) {
+export default function KnowledgeBaseTab({ knowledgeList, setKnowledgeList, createdAssistants = [], isDemoMode = true, onOpenDemo }) {
   const [filter, setFilter] = useState('todos'); // 'todos' | 'documento' | 'faq' | 'url' | 'texto'
   const [search, setSearch] = useState('');
   
@@ -56,10 +56,10 @@ export default function KnowledgeBaseTab({ knowledgeList, setKnowledgeList, crea
           fileType: ext || 'PDF',
           size: docFile ? `${(docFile.size / (1024 * 1024)).toFixed(1)} MB` : '1.8 MB',
           updatedAt: now,
-          status: 'Indexado',
+          status: isDemoMode ? 'Demonstração' : 'Prévia local',
           target: targetAssistant,
           tokens: 3200,
-          description: docText || 'Tabela de preços, normas ou catálogo enviado para consulta direta das assistentes.'
+          description: docText || 'Tabela de preços, normas ou catálogo enviado para prévia local.'
         };
       } else if (modalTab === 'url') {
         newItem = {
@@ -67,12 +67,12 @@ export default function KnowledgeBaseTab({ knowledgeList, setKnowledgeList, crea
           name: docUrl.startsWith('http') ? docUrl : `https://${docUrl || 'suaempresa.com.br'}`,
           type: 'url',
           fileType: 'URL',
-          size: '8 páginas',
+          size: 'Prévia local',
           updatedAt: now,
-          status: 'Indexado',
+          status: isDemoMode ? 'Demonstração' : 'Prévia local',
           target: targetAssistant,
           tokens: 6100,
-          description: 'Website oficial indexado. A IA lê e atualiza as informações de horários, serviços e localização.'
+          description: 'Endereço cadastrado apenas como prévia local na interface (não realiza varredura automática neste ambiente).'
         };
       } else if (modalTab === 'faq') {
         newItem = {
@@ -82,10 +82,10 @@ export default function KnowledgeBaseTab({ knowledgeList, setKnowledgeList, crea
           fileType: 'FAQ',
           size: '14 KB',
           updatedAt: now,
-          status: 'Indexado',
+          status: isDemoMode ? 'Demonstração' : 'Prévia local',
           target: targetAssistant,
           tokens: 450,
-          description: docAnswer || 'Resposta padronizada direta fornecida pela IA sempre que esse tema for questionado.'
+          description: docAnswer || 'Resposta padronizada de exemplo na prévia local.'
         };
       } else {
         newItem = {
@@ -95,10 +95,10 @@ export default function KnowledgeBaseTab({ knowledgeList, setKnowledgeList, crea
           fileType: 'TXT',
           size: '22 KB',
           updatedAt: now,
-          status: 'Indexado',
+          status: isDemoMode ? 'Demonstração' : 'Prévia local',
           target: targetAssistant,
           tokens: 1500,
-          description: docText || 'Instruções personalizadas sobre descontos, formas de pagamento e conduta.'
+          description: docText || 'Instruções personalizadas de exemplo (prévia local).'
         };
       }
 
@@ -111,7 +111,7 @@ export default function KnowledgeBaseTab({ knowledgeList, setKnowledgeList, crea
       setDocQuestion('');
       setDocAnswer('');
       setDocText('');
-    }, 1200);
+    }, 500);
   };
 
   const handleDelete = (id) => {
@@ -126,11 +126,29 @@ export default function KnowledgeBaseTab({ knowledgeList, setKnowledgeList, crea
 
     setTimeout(() => {
       setTestLoading(false);
-      setTestAnswer(`Com base nos documentos indexados (Tabela de Preços e FAQ da empresa):
-
-"Nosso valor de consulta/atendimento padrão é R$ 250,00. Aceitamos pagamentos à vista via Pix com 5% de desconto, ou cartão em até 3x sem juros. O agendamento é realizado de segunda a sexta, das 08h às 18h, e temos convênios com os principais planos de saúde."`);
-    }, 1200);
+      const qLower = testQuestion.toLowerCase();
+      const matched = knowledgeList.find(
+        (item) =>
+          item.name?.toLowerCase().includes(qLower) ||
+          item.description?.toLowerCase().includes(qLower)
+      );
+      if (matched) {
+        setTestAnswer(
+          `[Simulação local — sem RAG em servidor] Item encontrado na lista (${matched.name}):\n\n"${matched.description || 'Conteúdo cadastrado na prévia local.'}"`
+        );
+      } else if (knowledgeList.length > 0) {
+        setTestAnswer(
+          `[Simulação local — sem RAG em servidor] Nenhum trecho específico correspondeu a "${testQuestion}" nos ${knowledgeList.length} item(ns) da prévia atual. Em produção, a busca semântica consulta os documentos reais configurados para a conta.`
+        );
+      } else {
+        setTestAnswer(
+          '[Prévia vazia] Não há documentos cadastrados nesta conta ainda. A indexação semântica real está em desenvolvimento.'
+        );
+      }
+    }, 400);
   };
+
+  const totalTokens = knowledgeList.reduce((acc, item) => acc + (Number(item.tokens) || 0), 0);
 
   return (
     <div className="space-y-6 animate-fadeIn">
@@ -140,9 +158,8 @@ export default function KnowledgeBaseTab({ knowledgeList, setKnowledgeList, crea
         <div>
           <div className="flex items-center gap-2">
             <h3 className="text-2xl font-bold text-[#1A1816]">Conhecimento</h3>
-            <span className="px-2 py-0.5 rounded-full text-[10px] font-bold bg-emerald-50 text-emerald-700 border border-emerald-200 flex items-center gap-1">
-              <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse"></span>
-              IA Neural Sincronizada
+            <span className="px-2 py-0.5 rounded-full text-[10px] font-bold bg-amber-50 text-amber-800 border border-amber-200 flex items-center gap-1">
+              <span>{isDemoMode ? 'Base Fictícia (Demo)' : 'Prévia Local · Em Desenvolvimento'}</span>
             </span>
           </div>
           <p className="text-xs text-[#5C5955] mt-1">
@@ -152,6 +169,7 @@ export default function KnowledgeBaseTab({ knowledgeList, setKnowledgeList, crea
 
         <div className="flex items-center gap-2">
           <button
+            type="button"
             onClick={() => setTestModalOpen(true)}
             className="px-3.5 py-2 rounded-xl border border-[#D0CBC0] hover:bg-[#FAF9F5] text-xs font-semibold text-[#1A1816] transition-colors cursor-pointer flex items-center gap-1.5"
           >
@@ -160,6 +178,7 @@ export default function KnowledgeBaseTab({ knowledgeList, setKnowledgeList, crea
           </button>
 
           <button 
+            type="button"
             onClick={() => setAddModalOpen(true)}
             className="px-4 py-2 rounded-xl bg-[#1A1816] hover:bg-black text-white text-xs font-bold transition-colors flex items-center gap-1.5 cursor-pointer shadow-sm hover:shadow"
           >
@@ -173,24 +192,24 @@ export default function KnowledgeBaseTab({ knowledgeList, setKnowledgeList, crea
       <div className="grid grid-cols-2 md:grid-cols-4 gap-3 sm:gap-4">
         <div className="p-4 rounded-2xl bg-white border border-[#E7E4DC] shadow-sm">
           <div className="flex items-center justify-between text-xs text-[#736F69] mb-1 font-medium">
-            <span>Fontes Ativas</span>
+            <span>Fontes Listadas</span>
             <BookOpen className="w-4 h-4 text-[#4F46E5]" />
           </div>
           <div className="text-2xl font-extrabold text-[#1A1816]">{knowledgeList.length}</div>
-          <div className="text-[11px] text-emerald-700 mt-1 flex items-center gap-1 font-medium">
+          <div className="text-[11px] text-[#5C5955] mt-1 flex items-center gap-1 font-medium">
             <CheckCircle2 className="w-3 h-3" />
-            <span>Todas indexadas</span>
+            <span>{isDemoMode ? 'Itens fictícios (Demo)' : 'Registros na sessão'}</span>
           </div>
         </div>
 
         <div className="p-4 rounded-2xl bg-white border border-[#E7E4DC] shadow-sm">
           <div className="flex items-center justify-between text-xs text-[#736F69] mb-1 font-medium">
-            <span>Tokens / Palavras</span>
+            <span>Blocos / Tokens (Estim.)</span>
             <FileText className="w-4 h-4 text-[#5C5955]" />
           </div>
-          <div className="text-2xl font-extrabold text-[#1A1816]">14.650</div>
+          <div className="text-2xl font-extrabold text-[#1A1816]">{totalTokens.toLocaleString('pt-BR')}</div>
           <div className="text-[11px] text-[#736F69] mt-1">
-            Embeddings neurais prontos
+            {isDemoMode ? 'Estimativa ilustrativa' : 'Calculado sobre itens listados'}
           </div>
         </div>
 
@@ -207,14 +226,14 @@ export default function KnowledgeBaseTab({ knowledgeList, setKnowledgeList, crea
 
         <div className="p-4 rounded-2xl bg-white border border-[#E7E4DC] shadow-sm">
           <div className="flex items-center justify-between text-xs text-[#736F69] mb-1 font-medium">
-            <span>Assistentes Conectadas</span>
+            <span>Assistentes no Painel</span>
             <Sparkles className="w-4 h-4 text-[#4F46E5]" />
           </div>
           <div className="text-2xl font-extrabold text-[#1A1816]">
-            {createdAssistants.length > 0 ? createdAssistants.length : 1}
+            {createdAssistants.length}
           </div>
           <div className="text-[11px] text-[#736F69] mt-1">
-            Roberta & Canais Ativos
+            {isDemoMode ? 'Assistentes fictícios (Demo)' : 'Assistentes da conta'}
           </div>
         </div>
       </div>

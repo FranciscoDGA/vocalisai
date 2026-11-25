@@ -90,14 +90,14 @@ export default function SobrePage({ onOpenDemo, onOpenAuth, onNavigate }) {
               onClick={() => {
                 if (onNavigate) onNavigate('home');
                 setTimeout(() => {
-                  const el = document.getElementById('hero-test');
+                  const el = document.getElementById('demo-ilustrativa');
                   if (el) el.scrollIntoView({ behavior: 'smooth' });
                 }, 150);
               }}
               className="w-full sm:w-auto px-6 py-3.5 rounded-full bg-[#11100F] text-white text-xs sm:text-sm font-semibold hover:bg-black transition-all flex items-center justify-center gap-2 shadow-md cursor-pointer hover:scale-[1.01]"
             >
               <Phone className="w-4 h-4 text-[#6366F1]" />
-              <span>Testar Ligação da Roberta</span>
+              <span>Ouvir Demonstração no Topo</span>
             </button>
 
             <button
@@ -243,7 +243,7 @@ export default function SobrePage({ onOpenDemo, onOpenAuth, onNavigate }) {
                   onClick={() => {
                     if (onNavigate) onNavigate('home');
                     setTimeout(() => {
-                      const el = document.getElementById('hero-test');
+                      const el = document.getElementById('demo-ilustrativa');
                       if (el) el.scrollIntoView({ behavior: 'smooth' });
                     }, 150);
                   }}

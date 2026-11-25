@@ -1,12 +1,12 @@
 import React from 'react';
 import { Phone, MessageCircle, FileText } from 'lucide-react';
-import { BRAND } from '../data/content';
+import { BRAND, SOCIAL_LINKS } from '../data/content';
 import VocalisLogo from './VocalisLogo';
 import SystemStatusBadge from './SystemStatusBadge';
 
 export default function Footer({ onOpenDocs, onOpenDemo, onNavigate, onOpenDossier }) {
   return (
-    <footer className="bg-white border-t border-[#EBE8E2] pt-16 pb-12 text-[#5C5955] text-xs font-sans overflow-hidden w-full max-w-full">
+    <footer className="bg-white border-t border-[#EBE8E2] pt-16 pb-24 sm:pb-12 text-[#5C5955] text-xs font-sans overflow-hidden w-full max-w-full">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 w-full max-w-full min-w-0">
         
         {/* Top 4 Columns */}
@@ -36,11 +36,11 @@ export default function Footer({ onOpenDocs, onOpenDemo, onNavigate, onOpenDossi
                 <a 
                   href="tel:+5594984478168"
                   className="flex items-center gap-2 hover:text-[#4F46E5] transition-colors group cursor-pointer"
-                  title="Falar ou receber ligação da Roberta"
+                  title="Atendimento comercial Vocalis AI"
                 >
                   <Phone className="w-3.5 h-3.5 text-[#5C5955] group-hover:text-[#4F46E5] shrink-0" />
                   <span className="font-semibold text-[#1A1816] group-hover:text-[#4F46E5]">(94) 98447-8168</span>
-                  <span className="text-[#8C8881]">· Falar ou receber ligação da Roberta</span>
+                  <span className="text-[#8C8881]">· Atendimento comercial da equipe</span>
                 </a>
               </div>
 
@@ -48,7 +48,7 @@ export default function Footer({ onOpenDocs, onOpenDemo, onNavigate, onOpenDossi
                 <a 
                   href="https://wa.me/5594984423948?text=Ol%C3%A1!%20Vim%20pelo%20site%20da%20Vocalis%20AI%20e%20gostaria%20de%20falar%20com%20um%20especialista."
                   target="_blank"
-                  rel="noreferrer"
+                  rel="noopener noreferrer"
                   className="flex items-center gap-2 hover:text-[#16A34A] transition-colors group cursor-pointer"
                   title="Falar com Especialista WhatsApp"
                 >
@@ -59,33 +59,22 @@ export default function Footer({ onOpenDocs, onOpenDemo, onNavigate, onOpenDossi
               </div>
             </div>
 
-            {/* Social Icons (Instagram, Facebook) */}
-            <div className="flex items-center gap-3 pt-2 text-[#5C5955]">
-              <a 
-                href="https://instagram.com" 
-                target="_blank" 
-                rel="noreferrer" 
-                className="hover:text-[#1A1816] transition-colors"
-                title="Instagram"
-              >
-                <svg className="w-4 h-4 fill-none stroke-current stroke-2" viewBox="0 0 24 24">
-                  <rect width="20" height="20" x="2" y="2" rx="5" ry="5"/>
-                  <path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"/>
-                  <line x1="17.5" x2="17.51" y1="6.5" y2="6.5"/>
-                </svg>
-              </a>
-              <a 
-                href="https://facebook.com" 
-                target="_blank" 
-                rel="noreferrer" 
-                className="hover:text-[#1A1816] transition-colors"
-                title="Facebook"
-              >
-                <svg className="w-4 h-4 fill-none stroke-current stroke-2" viewBox="0 0 24 24">
-                  <path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"/>
-                </svg>
-              </a>
-            </div>
+            {/* Redes sociais exibidas somente quando houver perfis oficiais confirmados pelo proprietário */}
+            {SOCIAL_LINKS.length > 0 && (
+              <div className="flex items-center gap-3 pt-2 text-[#5C5955]">
+                {SOCIAL_LINKS.map((item) => (
+                  <a
+                    key={item.url}
+                    href={item.url}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="hover:text-[#1A1816] transition-colors underline"
+                  >
+                    {item.label}
+                  </a>
+                ))}
+              </div>
+            )}
 
             {/* Badge: Feita no Brasil, em português */}
             <div className="pt-2">
@@ -303,7 +292,7 @@ export default function Footer({ onOpenDocs, onOpenDemo, onNavigate, onOpenDossi
           <div className="flex flex-wrap items-center gap-3 text-xs text-[#8C8881] pt-1 sm:pt-0">
             <SystemStatusBadge />
             <span className="hidden sm:inline text-stone-300">·</span>
-            <span>dados tratados conforme a LGPD</span>
+            <span>Política de privacidade e transparência (em validação)</span>
           </div>
 
         </div>

@@ -16,15 +16,25 @@ export default function Navbar({ onOpenDemo, onOpenAuth, onOpenLegal, onOpenDocs
   const [activeDropdown, setActiveDropdown] = useState(null); // 'produtos' | 'solucoes' | 'recursos' | null
   const navRef = useRef(null);
 
-  // Close dropdown on click outside
+  // Close dropdown on click outside or Escape key
   useEffect(() => {
     function handleClickOutside(event) {
       if (navRef.current && !navRef.current.contains(event.target)) {
         setActiveDropdown(null);
       }
     }
+    function handleKeyDown(event) {
+      if (event.key === 'Escape') {
+        setActiveDropdown(null);
+        setMobileMenuOpen(false);
+      }
+    }
     document.addEventListener('mousedown', handleClickOutside);
-    return () => document.removeEventListener('mousedown', handleClickOutside);
+    window.addEventListener('keydown', handleKeyDown);
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+      window.removeEventListener('keydown', handleKeyDown);
+    };
   }, []);
 
   const toggleDropdown = (name) => {
@@ -68,8 +78,11 @@ export default function Navbar({ onOpenDemo, onOpenAuth, onOpenLegal, onOpenDocs
               {/* 1. DROPDOWN: PRODUTOS */}
               <div className="relative">
                 <button
+                  type="button"
+                  aria-expanded={activeDropdown === 'produtos'}
+                  aria-haspopup="menu"
                   onClick={() => toggleDropdown('produtos')}
-                  className={`flex items-center gap-1 text-[13.5px] font-medium transition-colors ${
+                  className={`flex items-center gap-1 text-[13.5px] font-medium transition-colors cursor-pointer ${
                     activeDropdown === 'produtos' 
                       ? 'text-[#1A1816]' 
                       : 'text-[#5C5955] hover:text-[#1A1816]'
@@ -93,7 +106,7 @@ export default function Navbar({ onOpenDemo, onOpenAuth, onOpenLegal, onOpenDocs
                       {/* Item 1: Assistente telefônico IA */}
                       <a
                         href="#canais"
-                        onClick={() => handleNavClick('canais')}
+                        onClick={(e) => { e.preventDefault(); handleNavClick('canais'); }}
                         className="flex items-center gap-3 px-3 py-2 rounded-xl text-xs font-medium text-[#1A1816] hover:bg-[#FAF9F5] transition-colors"
                       >
                         <Phone className="w-4 h-4 text-[#5C5955]" />
@@ -166,8 +179,11 @@ export default function Navbar({ onOpenDemo, onOpenAuth, onOpenLegal, onOpenDocs
               {/* 2. DROPDOWN: SOLUÇÕES */}
               <div className="relative">
                 <button
+                  type="button"
+                  aria-expanded={activeDropdown === 'solucoes'}
+                  aria-haspopup="menu"
                   onClick={() => toggleDropdown('solucoes')}
-                  className={`flex items-center gap-1 text-[13.5px] font-medium transition-colors ${
+                  className={`flex items-center gap-1 text-[13.5px] font-medium transition-colors cursor-pointer ${
                     activeDropdown === 'solucoes' 
                       ? 'text-[#1A1816]' 
                       : 'text-[#5C5955] hover:text-[#1A1816]'
@@ -265,8 +281,11 @@ export default function Navbar({ onOpenDemo, onOpenAuth, onOpenLegal, onOpenDocs
               {/* 3. DROPDOWN: RECURSOS */}
               <div className="relative">
                 <button
+                  type="button"
+                  aria-expanded={activeDropdown === 'recursos'}
+                  aria-haspopup="menu"
                   onClick={() => toggleDropdown('recursos')}
-                  className={`flex items-center gap-1 text-[13.5px] font-medium transition-colors ${
+                  className={`flex items-center gap-1 text-[13.5px] font-medium transition-colors cursor-pointer ${
                     activeDropdown === 'recursos' 
                       ? 'text-[#1A1816]' 
                       : 'text-[#5C5955] hover:text-[#1A1816]'
@@ -572,6 +591,9 @@ export default function Navbar({ onOpenDemo, onOpenAuth, onOpenLegal, onOpenDocs
               </button>
             )}
             <button
+              type="button"
+              aria-expanded={mobileMenuOpen}
+              aria-label={mobileMenuOpen ? 'Fechar menu de navegação' : 'Abrir menu de navegação'}
               onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
               className="p-2 rounded-lg text-[#1A1816] hover:bg-[#EBE8E2] cursor-pointer"
             >
@@ -586,7 +608,7 @@ export default function Navbar({ onOpenDemo, onOpenAuth, onOpenLegal, onOpenDocs
       {mobileMenuOpen && (
         <div className="xl:hidden bg-white border-b border-[#EBE8E2] px-6 py-6 space-y-4 shadow-xl text-sm">
           <div className="font-bold text-xs uppercase tracking-wider text-[#8C8881]">Produtos</div>
-          <a href="#canais" onClick={() => handleNavClick('canais')} className="block py-1 text-[#1A1816]">Assistente telefônico IA</a>
+          <a href="#canais" onClick={(e) => { e.preventDefault(); handleNavClick('canais'); }} className="block py-1 text-[#1A1816]">Assistente telefônico IA</a>
           <button 
             onClick={() => { 
               setMobileMenuOpen(false); 
@@ -731,7 +753,7 @@ export default function Navbar({ onOpenDemo, onOpenAuth, onOpenLegal, onOpenDocs
           </button>
 
           <div className="pt-2 font-bold text-xs uppercase tracking-wider text-[#8C8881]">Navegação</div>
-          <a href="#casos-de-uso" onClick={() => setMobileMenuOpen(false)} className="block py-1 text-[#5C5955]">Casos de uso</a>
+          <a href="#casos-de-uso" onClick={(e) => { e.preventDefault(); handleNavClick('casos-de-uso'); }} className="block py-1 text-[#5C5955]">Casos de uso</a>
           <button onClick={() => { setMobileMenuOpen(false); if (onNavigate) onNavigate('parceiros'); }} className="block py-1 text-[#5C5955] text-left">Parceiros</button>
           <button onClick={() => { setMobileMenuOpen(false); if (onNavigate) { onNavigate('precos'); window.scrollTo({ top: 0, behavior: 'smooth' }); } }} className="block py-1 text-left text-[#5C5955] cursor-pointer">Preços & Planos</button>
           

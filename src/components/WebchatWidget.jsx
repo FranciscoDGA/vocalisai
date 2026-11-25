@@ -29,6 +29,17 @@ export default function WebchatWidget({ onOpenDemo, onOpenAuth }) {
     }
   }, [messages, isOpen]);
 
+  useEffect(() => {
+    if (!isOpen) return;
+    const handleKeyDown = (event) => {
+      if (event.key === 'Escape') {
+        setIsOpen(false);
+      }
+    };
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, [isOpen]);
+
   const handleSendMessage = (textToSend) => {
     const text = textToSend || inputMessage;
     if (!text.trim()) return;
@@ -50,20 +61,24 @@ export default function WebchatWidget({ onOpenDemo, onOpenAuth }) {
       let showDemoCta = false;
 
       const lower = text.toLowerCase();
-      if (
-        lower.includes('preço') ||
-        lower.includes('preco') ||
-        lower.includes('plano') ||
-        lower.includes('valor') ||
-        lower.includes('quanto custa') ||
-        lower.includes('promoc') ||
-        lower.includes('promoç') ||
-        lower.includes('anual') ||
-        lower.includes('excedent') ||
-        lower.includes('limite') ||
-        lower.includes('minuto') ||
-        lower.includes('conversa')
-      ) {
+      const hasSensitiveKeyword =
+        /(diagn[óo]st|prescri|receita m[ée]dica|prontu[áa]rio|jur[íi]dic|processo judicial|senten[çc]a|cart[ãa]o|senha banc[áa]ria|pix|cpf|biometr)/i.test(
+          lower
+        );
+      const hasCommercialKeyword =
+        /(pre[çc]o|preco|plano|valor|quanto custa|promoc|promo[çc]|anual|mensal|excedent|limite|minuto|conversa|solo|team|scale|taxa|impost|meta|renov|cancel|reembols|descont|209|279|299|399|499|599)/i.test(
+          lower
+        );
+
+      if (hasSensitiveKeyword) {
+        reply =
+          'A Vocalis AI não realiza diagnósticos médicos, pareceres jurídicos nem coleta senhas, cartão ou dados sensíveis no atendimento automatizado. Triagens sensíveis exigem supervisão humana da empresa responsável.';
+        showDemoCta = true;
+        if (hasCommercialKeyword) {
+          reply = `${reply}\n\n${buildBeatrizCommercialReply(text)}`;
+          isCommercial = true;
+        }
+      } else if (hasCommercialKeyword) {
         reply = buildBeatrizCommercialReply(text);
         isCommercial = true;
         showDemoCta = true;
@@ -76,13 +91,14 @@ export default function WebchatWidget({ onOpenDemo, onOpenAuth }) {
       ) {
         reply = `Este widget executa apenas um atendimento automatizado por IA no navegador e não transfere automaticamente para atendente humano ao vivo dentro desta janela. Use o botão abaixo para enviar sua solicitação à nossa equipe humana.`;
         showDemoCta = true;
-      } else if (lower.includes('roberta') || lower.includes('telefone') || lower.includes('fone') || lower.includes('ligação') || lower.includes('sdr')) {
-        reply = `A Roberta é nossa demonstração conceitual para atendimento telefônico por IA. O simulador no topo da página roda no navegador de forma ilustrativa; a operação telefônica real depende de provedores terceiros e condições do plano contratado.`;
+      } else if (lower.includes('roberta') || lower.includes('telefone') || lower.includes('fone') || lower.includes('ligação') || lower.includes('ligacao') || lower.includes('sdr')) {
+        reply = `A Roberta ilustra o atendimento telefônico por IA. O simulador no topo da página roda no navegador de forma demonstrativa; a operação telefônica real depende de provedores terceiros e condições do plano contratado.`;
         showDemoCta = true;
       } else if (lower.includes('camila') || lower.includes('whatsapp') || lower.includes('zap')) {
-        reply = `A Camila ilustra o atendimento automatizado de IA no WhatsApp. As modalidades oficiais (Meta Cloud API) e custos aplicáveis variam conforme o plano confirmado.`;
+        reply = `A Camila ilustra o atendimento automatizado de IA no WhatsApp. ${buildBeatrizCommercialReply('whatsapp')} A integração oficial (Meta Cloud API) pode envolver custos diretos da Meta e configuração comercial dedicada.`;
+        isCommercial = true;
         showDemoCta = true;
-      } else if (lower.includes('olá') || lower.includes('oi') || lower.includes('bom dia') || lower.includes('boa tarde')) {
+      } else if (lower.includes('olá') || lower.includes('ola') || lower.includes('oi') || lower.includes('bom dia') || lower.includes('boa tarde')) {
         reply = `Olá! Sou uma assistente automatizada de Inteligência Artificial (IA). Posso consultar o catálogo comercial oficial ou encaminhar você para o formulário da nossa equipe humana.`;
         showDemoCta = true;
       }
@@ -108,8 +124,10 @@ export default function WebchatWidget({ onOpenDemo, onOpenAuth }) {
       {/* Floating Closed Pill / Button */}
       {!isOpen && (
         <button
+          type="button"
           onClick={() => setIsOpen(true)}
-          className="flex items-center gap-2.5 px-4 py-2.5 rounded-full bg-[#11100F] text-white hover:bg-black shadow-xl hover:shadow-2xl transition-all cursor-pointer border border-[#383531] group hover:scale-105"
+          aria-label="Abrir chat com Beatriz, assistente virtual de IA"
+          className="flex items-center justify-center sm:justify-start gap-2.5 w-12 h-12 sm:w-auto sm:h-auto p-0 sm:px-4 sm:py-2.5 rounded-full bg-[#11100F] text-white hover:bg-black shadow-xl hover:shadow-2xl transition-all cursor-pointer border border-[#383531] group hover:scale-105"
         >
           <div className="relative">
             <div className="w-8 h-8 rounded-full bg-[#EEF2FF] text-[#4F46E5] flex items-center justify-center font-bold text-xs border border-[#F2E8DC]">
@@ -117,17 +135,22 @@ export default function WebchatWidget({ onOpenDemo, onOpenAuth }) {
             </div>
             <span className="absolute -bottom-0.5 -right-0.5 w-2.5 h-2.5 bg-indigo-400 rounded-full border-2 border-[#11100F]"></span>
           </div>
-          <div className="text-left pr-1">
+          <div className="hidden sm:block text-left pr-1">
             <div className="text-xs font-bold leading-none text-white">Beatriz · Assistente de IA</div>
             <div className="text-[10px] text-[#A5B4FC] font-medium">Chat Automatizado por IA</div>
           </div>
-          <MessageSquare className="w-4 h-4 text-[#A5B4FC] ml-1 group-hover:rotate-12 transition-transform" />
+          <MessageSquare className="hidden sm:block w-4 h-4 text-[#A5B4FC] ml-1 group-hover:rotate-12 transition-transform" />
         </button>
       )}
 
       {/* Open Webchat Window */}
       {isOpen && (
-        <div className="w-[360px] max-w-[calc(100vw-2rem)] h-[520px] max-h-[calc(100vh-6rem)] bg-white rounded-3xl border border-[#E7E4DC] shadow-2xl flex flex-col overflow-hidden animate-fadeIn">
+        <div
+          role="dialog"
+          aria-modal="false"
+          aria-label="Atendimento virtual automatizado com Beatriz"
+          className="w-[360px] max-w-[calc(100vw-2rem)] h-[520px] max-h-[calc(100vh-6rem)] bg-white rounded-3xl border border-[#E7E4DC] shadow-2xl flex flex-col overflow-hidden animate-fadeIn"
+        >
           
           {/* Header */}
           <div className="p-4 bg-[#11100F] text-white flex items-center justify-between border-b border-[#2D2A26]">
@@ -150,7 +173,9 @@ export default function WebchatWidget({ onOpenDemo, onOpenAuth }) {
             </div>
 
             <button
+              type="button"
               onClick={() => setIsOpen(false)}
+              aria-label="Fechar chat da Beatriz"
               className="w-7 h-7 rounded-full bg-[#262422] hover:bg-[#383531] flex items-center justify-center text-[#B5B0A8] hover:text-white transition-colors cursor-pointer"
             >
               <X className="w-4 h-4" />
@@ -240,12 +265,14 @@ export default function WebchatWidget({ onOpenDemo, onOpenAuth }) {
               value={inputMessage}
               onChange={(e) => setInputMessage(e.target.value)}
               placeholder="Pergunte à Beatriz..."
+              aria-label="Mensagem para Beatriz"
               className="flex-1 px-3 py-2 rounded-xl border border-[#D0CBC0] text-xs text-[#1A1816] focus:outline-none focus:border-[#4F46E5] bg-white placeholder-[#A6A29A]"
             />
             <button
               type="submit"
               disabled={!inputMessage.trim()}
-              className="w-8 h-8 rounded-xl bg-[#4F46E5] disabled:opacity-40 text-white flex items-center justify-center hover:bg-[#B34018] transition-colors cursor-pointer shrink-0"
+              aria-label="Enviar mensagem"
+              className="w-8 h-8 rounded-xl bg-[#4F46E5] disabled:opacity-40 text-white flex items-center justify-center hover:bg-[#4338CA] transition-colors cursor-pointer shrink-0"
             >
               <Send className="w-3.5 h-3.5" />
             </button>

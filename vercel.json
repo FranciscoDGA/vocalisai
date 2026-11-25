@@ -1,8 +1,56 @@
 {
-  "rewrites": [
+  "headers": [
     {
-      "source": "/blog/(.*)",
-      "destination": "/index.html"
+      "source": "/(.*)",
+      "headers": [
+        {
+          "key": "X-Content-Type-Options",
+          "value": "nosniff"
+        },
+        {
+          "key": "X-Frame-Options",
+          "value": "DENY"
+        },
+        {
+          "key": "Referrer-Policy",
+          "value": "strict-origin-when-cross-origin"
+        },
+        {
+          "key": "Permissions-Policy",
+          "value": "camera=(), geolocation=(), payment=()"
+        },
+        {
+          "key": "Strict-Transport-Security",
+          "value": "max-age=63072000; includeSubDomains; preload"
+        },
+        {
+          "key": "Content-Security-Policy",
+          "value": "default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com data:; img-src 'self' data: https:; media-src 'self' data: blob:; connect-src 'self' https://*.supabase.co wss://*.supabase.co; frame-ancestors 'none'; base-uri 'self'; form-action 'self'"
+        }
+      ]
     }
+  ],
+  "rewrites": [
+    { "source": "/precos", "destination": "/index.html" },
+    { "source": "/whatsapp", "destination": "/index.html" },
+    { "source": "/webchat", "destination": "/index.html" },
+    { "source": "/sobre", "destination": "/index.html" },
+    { "source": "/contato", "destination": "/index.html" },
+    { "source": "/parceiros", "destination": "/index.html" },
+    { "source": "/integracoes", "destination": "/index.html" },
+    { "source": "/central-ajuda", "destination": "/index.html" },
+    { "source": "/carreiras", "destination": "/index.html" },
+    { "source": "/imprensa", "destination": "/index.html" },
+    { "source": "/webinars", "destination": "/index.html" },
+    { "source": "/agente-suporte", "destination": "/index.html" },
+    { "source": "/agendamentos", "destination": "/index.html" },
+    { "source": "/recepcionista-virtual", "destination": "/index.html" },
+    { "source": "/atendedor-automatico", "destination": "/index.html" },
+    { "source": "/equipe-externa", "destination": "/index.html" },
+    { "source": "/dashboard", "destination": "/index.html" },
+    { "source": "/privacidade", "destination": "/index.html" },
+    { "source": "/termos", "destination": "/index.html" },
+    { "source": "/exclusao", "destination": "/index.html" },
+    { "source": "/blog/(.*)", "destination": "/index.html" }
   ]
 }

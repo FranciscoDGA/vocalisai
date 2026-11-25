@@ -5,6 +5,7 @@ import {
 } from 'lucide-react';
 import { BRAND } from '../data/content';
 import { speakFemalePt } from '../utils/voiceUtils';
+import { formatDuration } from '../utils/durationUtils';
 
 // Harmonic base profile for 38 frequency bars (symmetrical vocal frequency spectrum)
 const FREQUENCY_BARS = [
@@ -105,6 +106,7 @@ export default function VoiceWaveformHeroCard({ onTestCall, onOpenAuth }) {
   const [isAudioMuted, setIsAudioMuted] = useState(true);
   const [callSeconds, setCallSeconds] = useState(27);
   const [isTransitioningLatency, setIsTransitioningLatency] = useState(false);
+  const [audioNotice, setAudioNotice] = useState('');
 
   const stepTimerRef = useRef(null);
   const clockTimerRef = useRef(null);
@@ -114,11 +116,11 @@ export default function VoiceWaveformHeroCard({ onTestCall, onOpenAuth }) {
   const isVocalisSpeaking = isPlaying && currentStep.speaker === 'vocalis' && !isTransitioningLatency;
   const isClienteSpeaking = isPlaying && currentStep.speaker === 'cliente' && !isTransitioningLatency;
 
-  // Live call clock ticker
+  // Live call clock ticker (0..180s loop; normalized with MM:SS / HH:MM:SS so 60 -> 01:00 and 63 -> 01:03)
   useEffect(() => {
     if (isPlaying) {
       clockTimerRef.current = setInterval(() => {
-        setCallSeconds(prev => (prev >= 99 ? 12 : prev + 1));
+        setCallSeconds((prev) => (prev >= 180 ? 0 : prev + 1));
       }, 1000);
     } else {
       clearInterval(clockTimerRef.current);
@@ -191,9 +193,20 @@ export default function VoiceWaveformHeroCard({ onTestCall, onOpenAuth }) {
 
   const handleToggleAudio = () => {
     const nextState = !isAudioMuted;
+    setAudioNotice('');
     setIsAudioMuted(nextState);
-    if (!nextState && currentStep.speaker === 'vocalis') {
-      speakFemalePt(currentStep.text);
+    if (!nextState) {
+      if (typeof window === 'undefined' || !('speechSynthesis' in window)) {
+        setIsAudioMuted(true);
+        setAudioNotice('Áudio ilustrativo indisponível neste navegador.');
+        return;
+      }
+      if (currentStep.speaker === 'vocalis') {
+        speakFemalePt(currentStep.text, undefined, undefined, () => {
+          setIsAudioMuted(true);
+          setAudioNotice('Não foi possível reproduzir o áudio neste navegador.');
+        });
+      }
     } else if (nextState && typeof window !== 'undefined' && 'speechSynthesis' in window) {
       window.speechSynthesis.cancel();
     }
@@ -260,7 +273,7 @@ export default function VoiceWaveformHeroCard({ onTestCall, onOpenAuth }) {
           {/* Elapsed simulation clock */}
           <span className="flex items-center gap-1.5 px-3 py-1 rounded-full bg-stone-800/80 border border-stone-700 text-[11px] text-stone-200 font-mono shadow-sm">
             <span className="w-2 h-2 rounded-full bg-indigo-400"></span>
-            <span>Simulação · 00:{String(callSeconds).padStart(2, '0')}</span>
+            <span data-testid="hero-simulation-clock">Simulação · {formatDuration(callSeconds)}</span>
           </span>
         </div>
       </div>
@@ -508,6 +521,9 @@ export default function VoiceWaveformHeroCard({ onTestCall, onOpenAuth }) {
           
           {/* Play/Pause Button */}
           <button
+            type="button"
+            aria-label={isPlaying ? 'Pausar simulação' : 'Continuar simulação'}
+            aria-pressed={isPlaying}
             onClick={handleTogglePlay}
             title={isPlaying ? 'Pausar simulação' : 'Continuar simulação'}
             className="w-10 h-10 rounded-full bg-white text-stone-950 hover:bg-stone-200 flex items-center justify-center transition-all shrink-0 shadow-lg cursor-pointer"
@@ -521,6 +537,8 @@ export default function VoiceWaveformHeroCard({ onTestCall, onOpenAuth }) {
 
           {/* Restart simulation */}
           <button
+            type="button"
+            aria-label="Reiniciar conversa do início"
             onClick={handleRestart}
             title="Reiniciar conversa do início"
             className="w-9 h-9 rounded-full bg-stone-800 hover:bg-stone-700 text-stone-300 flex items-center justify-center transition-all shrink-0 border border-stone-700 cursor-pointer"
@@ -530,6 +548,9 @@ export default function VoiceWaveformHeroCard({ onTestCall, onOpenAuth }) {
 
           {/* Sound Toggle (Speech Synthesis audio) */}
           <button
+            type="button"
+            aria-label={isAudioMuted ? 'Ativar voz demonstrativa' : 'Silenciar voz demonstrativa'}
+            aria-pressed={!isAudioMuted}
             onClick={handleToggleAudio}
             title={isAudioMuted ? 'Ativar voz em áudio' : 'Mutar voz'}
             className={`px-3 py-1.5 rounded-full text-xs font-medium flex items-center gap-1.5 border transition-all cursor-pointer ${
@@ -546,6 +567,8 @@ export default function VoiceWaveformHeroCard({ onTestCall, onOpenAuth }) {
           <div className="flex items-center gap-1 ml-1">
             {DIALOGUE_STEPS.map((_, i) => (
               <button
+                type="button"
+                aria-label={`Pular para fala ${i + 1}`}
                 key={`dot-${i}`}
                 onClick={() => {
                   setCurrentStepIndex(i);
@@ -567,6 +590,7 @@ export default function VoiceWaveformHeroCard({ onTestCall, onOpenAuth }) {
 
         {/* CTA Button to open interactive simulation */}
         <button
+          type="button"
           onClick={onTestCall}
           className="w-full sm:w-auto px-5 py-2.5 rounded-full bg-gradient-to-r from-orange-600 to-[#4F46E5] hover:from-orange-500 hover:to-orange-600 text-xs font-bold text-white transition-all flex items-center justify-center gap-2 shadow-lg shadow-orange-950/40 cursor-pointer border border-orange-500/30"
         >
@@ -575,6 +599,12 @@ export default function VoiceWaveformHeroCard({ onTestCall, onOpenAuth }) {
         </button>
 
       </div>
+
+      {audioNotice && (
+        <p role="status" className="mt-2 text-[11px] text-amber-300 text-left">
+          {audioNotice}
+        </p>
+      )}
 
     </div>
   );

@@ -3,16 +3,39 @@ import {
   Video, Calendar, Clock, Bell, CheckCircle2, ArrowRight, Sparkles 
 } from 'lucide-react';
 import { BRAND } from '../data/content';
+import { saveLead } from '../utils/supabaseClient';
 import AudioFrequencyWave from './AudioFrequencyWave';
 
 export default function WebinarsPage({ onOpenDemo, onOpenAuth, onNavigateHome }) {
   const [notifyEmail, setNotifyEmail] = useState('');
   const [notified, setNotified] = useState(false);
+  const [notifyError, setNotifyError] = useState('');
+  const [submitting, setSubmitting] = useState(false);
 
-  const handleNotifySubmit = (e) => {
+  const handleNotifySubmit = async (e) => {
     e.preventDefault();
-    if (notifyEmail) {
-      setNotified(true);
+    if (!notifyEmail) return;
+    setNotifyError('');
+    setSubmitting(true);
+    try {
+      const res = await saveLead({
+        phone: 'Nao informado (Webinar)',
+        niche: 'Webinars Vocalis AI',
+        notes: `Aviso de Webinar · Email: ${notifyEmail}`,
+      });
+      if (res?.success) {
+        setNotified(true);
+      } else {
+        setNotifyError(
+          'Não foi possível registrar seu e-mail no momento. Escreva para contato@vocalis.ai se desejar receber aviso das próximas turmas.'
+        );
+      }
+    } catch {
+      setNotifyError(
+        'Não foi possível registrar seu e-mail no momento. Escreva para contato@vocalis.ai.'
+      );
+    } finally {
+      setSubmitting(false);
     }
   };
 
@@ -68,11 +91,17 @@ export default function WebinarsPage({ onOpenDemo, onOpenAuth, onNavigateHome })
                   />
                   <button
                     type="submit"
-                    className="px-5 py-2.5 rounded-full bg-[#11100F] text-white text-xs font-semibold hover:bg-black transition-all shrink-0 cursor-pointer"
+                    disabled={submitting}
+                    className="px-5 py-2.5 rounded-full bg-[#11100F] text-white text-xs font-semibold hover:bg-black transition-all shrink-0 cursor-pointer disabled:opacity-60"
                   >
-                    Me avise
+                    {submitting ? 'Enviando...' : 'Me avise'}
                   </button>
                 </div>
+                {notifyError && (
+                  <p role="alert" className="text-xs text-rose-700 bg-rose-50 border border-rose-200 rounded-xl p-2.5">
+                    {notifyError}
+                  </p>
+                )}
               </form>
             ) : (
               <div className="p-4 rounded-2xl bg-emerald-500/10 border border-emerald-500/20 text-emerald-800 text-xs font-semibold flex items-center justify-center gap-2">

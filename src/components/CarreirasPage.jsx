@@ -11,9 +11,11 @@ import {
   FileText,
   MapPin,
   Laptop,
-  HeartHandshake
+  HeartHandshake,
+  AlertCircle
 } from 'lucide-react';
 import { BRAND } from '../data/content';
+import { saveLead } from '../utils/supabaseClient';
 
 export default function CarreirasPage({ onOpenDemo, onOpenAuth, onNavigateHome }) {
   const [isApplyModalOpen, setIsApplyModalOpen] = useState(false);
@@ -26,18 +28,40 @@ export default function CarreirasPage({ onOpenDemo, onOpenAuth, onNavigateHome }
     message: ''
   });
   const [submitted, setSubmitted] = useState(false);
+  const [submitting, setSubmitting] = useState(false);
+  const [submitError, setSubmitError] = useState('');
 
-  const handleSubmitApplication = (e) => {
+  const handleSubmitApplication = async (e) => {
     e.preventDefault();
     if (!formData.name || !formData.email) return;
-    setSubmitted(true);
-    setTimeout(() => {
-      // Keep feedback visible for a moment
-    }, 500);
+    setSubmitError('');
+    setSubmitting(true);
+    try {
+      const res = await saveLead({
+        phone: formData.phone || 'Nao informado (Carreiras)',
+        niche: `Carreiras · ${formData.roleArea}`,
+        notes: `Carreiras: ${formData.name} · Email: ${formData.email} · LinkedIn: ${formData.linkedin || 'N/A'} · Msg: ${formData.message || 'N/A'}`,
+      });
+      if (res?.success) {
+        setSubmitted(true);
+      } else {
+        setSubmitError(
+          'Não foi possível registrar sua candidatura no servidor neste momento. Envie seu currículo diretamente para contato@vocalis.ai.'
+        );
+      }
+    } catch {
+      setSubmitError(
+        'Erro ao enviar candidatura. Envie diretamente para contato@vocalis.ai.'
+      );
+    } finally {
+      setSubmitting(false);
+    }
   };
 
   const handleResetForm = () => {
     setSubmitted(false);
+    setSubmitting(false);
+    setSubmitError('');
     setFormData({
       name: '',
       email: '',
@@ -329,12 +353,20 @@ export default function CarreirasPage({ onOpenDemo, onOpenAuth, onNavigateHome }
                     />
                   </div>
 
+                  {submitError && (
+                    <div role="alert" className="p-3 rounded-xl bg-rose-50 border border-rose-200 text-rose-800 text-xs flex items-start gap-2">
+                      <AlertCircle className="w-4 h-4 text-rose-600 shrink-0 mt-0.5" />
+                      <span>{submitError}</span>
+                    </div>
+                  )}
+
                   <button
                     type="submit"
-                    className="w-full py-3 rounded-full bg-[#1A1816] hover:bg-[#302D2A] text-white text-xs font-bold transition-all shadow-md cursor-pointer flex items-center justify-center gap-2 mt-4"
+                    disabled={submitting}
+                    className="w-full py-3 rounded-full bg-[#1A1816] hover:bg-[#302D2A] text-white text-xs font-bold transition-all shadow-md cursor-pointer flex items-center justify-center gap-2 mt-4 disabled:opacity-60"
                   >
                     <Send className="w-3.5 h-3.5" />
-                    <span>Enviar minha candidatura</span>
+                    <span>{submitting ? 'Enviando candidatura...' : 'Enviar minha candidatura'}</span>
                   </button>
                 </form>
               </div>

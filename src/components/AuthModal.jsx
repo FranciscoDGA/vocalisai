@@ -1,27 +1,84 @@
-import React, { useState } from 'react';
-import { X, Sparkles, ArrowRight, ShieldCheck, AlertCircle, Loader2, Mail, CheckCircle2, RefreshCw } from 'lucide-react';
+import React, { useState, useEffect } from 'react';
+import { X, ArrowRight, AlertCircle, Loader2, Mail, CheckCircle2, RefreshCw } from 'lucide-react';
 import { BRAND } from '../data/content';
-import { signUpUser, signInUser, supabase } from '../utils/supabaseClient';
+import {
+  isSupabaseConfigured,
+  resetPasswordForEmail,
+  signUpUser,
+  signInUser,
+  supabase,
+} from '../utils/supabaseClient';
 import AudioFrequencyWave from './AudioFrequencyWave';
 
-export default function AuthModal({ isOpen, onClose, onOpenLegal, onSuccessLogin }) {
-  const [isLogin, setIsLogin] = useState(false);
+const EMAIL_REGEX = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+export default function AuthModal({
+  isOpen,
+  onClose,
+  onOpenLegal,
+  onSuccessLogin,
+  selectedPlan = null,
+  onClearSelectedPlan,
+  initialMode = 'signup',
+}) {
+  const [mode, setMode] = useState(initialMode); // 'signup' | 'login' | 'reset'
   const [empresa, setEmpresa] = useState('');
   const [email, setEmail] = useState('');
   const [senha, setSenha] = useState('');
   const [submitted, setSubmitted] = useState(false);
+  const [resetSent, setResetSent] = useState(false);
   const [loginSuccess, setLoginSuccess] = useState(false);
   const [loading, setLoading] = useState(false);
   const [errorMessage, setErrorMessage] = useState('');
   const [isEmailNotConfirmed, setIsEmailNotConfirmed] = useState(false);
   const [resending, setResending] = useState(false);
   const [resendSuccess, setResendSuccess] = useState(false);
+  const [cooldownUntil, setCooldownUntil] = useState(0);
+  const [failedAttempts, setFailedAttempts] = useState(0);
+
+  useEffect(() => {
+    if (!isOpen) return;
+    const handleKeyDown = (event) => {
+      if (event.key === 'Escape') {
+        onClose?.();
+      }
+    };
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, [isOpen, onClose]);
+
+  useEffect(() => {
+    if (isOpen) {
+      setMode(initialMode || 'signup');
+      setErrorMessage('');
+      setSubmitted(false);
+      setResetSent(false);
+      setLoginSuccess(false);
+      setIsEmailNotConfirmed(false);
+    }
+  }, [isOpen, initialMode]);
 
   if (!isOpen) return null;
 
+  const isLogin = mode === 'login';
+  const isReset = mode === 'reset';
+
+  const recordFailedAttempt = () => {
+    const next = failedAttempts + 1;
+    setFailedAttempts(next);
+    if (next >= 3) {
+      setCooldownUntil(Date.now() + 10_000);
+    }
+  };
+
   const handleResendConfirmation = async () => {
-    if (!email) {
-      setErrorMessage('Digite seu e-mail acima para reenviar a confirmação.');
+    const trimmedEmail = email.trim();
+    if (!EMAIL_REGEX.test(trimmedEmail)) {
+      setErrorMessage('Digite um e-mail válido acima para reenviar a confirmação.');
+      return;
+    }
+    if (!isSupabaseConfigured) {
+      setErrorMessage('Reenvio indisponível: serviço de autenticação não configurado.');
       return;
     }
     setResending(true);
@@ -30,7 +87,7 @@ export default function AuthModal({ isOpen, onClose, onOpenLegal, onSuccessLogin
       const redirectUrl = typeof window !== 'undefined' ? window.location.origin : 'https://vocalisai-phi.vercel.app';
       const { error } = await supabase.auth.resend({
         type: 'signup',
-        email: email.trim(),
+        email: trimmedEmail,
         options: {
           emailRedirectTo: redirectUrl
         }
@@ -41,45 +98,81 @@ export default function AuthModal({ isOpen, onClose, onOpenLegal, onSuccessLogin
         setResendSuccess(true);
         setTimeout(() => setResendSuccess(false), 6000);
       }
-    } catch (e) {
+    } catch {
       setErrorMessage('Erro ao tentar reenviar e-mail.');
     } finally {
       setResending(false);
     }
   };
 
-  const handleAdminBypass = () => {
-    const demoUser = {
-      id: 'usr_admin_pebas',
-      email: email.trim() || 'afiliadopebas@gmail.com',
-      user_metadata: {
-        company_name: empresa.trim() || 'Vocalis AI',
-        role: 'Admin'
-      }
-    };
-    setLoginSuccess(true);
-    setTimeout(() => {
-      if (onSuccessLogin) onSuccessLogin(demoUser);
-      onClose();
-    }, 800);
-  };
-
   const handleSubmit = async (e) => {
     e.preventDefault();
     setErrorMessage('');
     setIsEmailNotConfirmed(false);
+
+    if (Date.now() < cooldownUntil) {
+      const waitSeconds = Math.ceil((cooldownUntil - Date.now()) / 1000);
+      setErrorMessage(`Muitas tentativas seguidas. Aguarde ${waitSeconds}s antes de tentar novamente.`);
+      return;
+    }
+
+    const trimmedEmail = email.trim();
+    if (!EMAIL_REGEX.test(trimmedEmail)) {
+      setErrorMessage('Informe um endereço de e-mail válido.');
+      return;
+    }
+
+    if (!isSupabaseConfigured) {
+      setErrorMessage(
+        'Serviço de autenticação indisponível no momento. Para solicitar atendimento, utilize o formulário comercial.'
+      );
+      return;
+    }
+
+    if (isReset) {
+      setLoading(true);
+      try {
+        const res = await resetPasswordForEmail(trimmedEmail);
+        if (!res.success) {
+          recordFailedAttempt();
+          setErrorMessage(res.error || 'Não foi possível enviar o link de recuperação.');
+        } else {
+          setResetSent(true);
+          setFailedAttempts(0);
+        }
+      } finally {
+        setLoading(false);
+      }
+      return;
+    }
+
+    if (mode === 'signup') {
+      if (empresa.trim().length < 2) {
+        setErrorMessage('Informe o nome da empresa para concluir o cadastro.');
+        return;
+      }
+      if (senha.length < 8) {
+        setErrorMessage('A senha deve ter pelo menos 8 caracteres.');
+        return;
+      }
+    } else if (!senha) {
+      setErrorMessage('Informe sua senha.');
+      return;
+    }
+
     setLoading(true);
 
     try {
       if (isLogin) {
-        const res = await signInUser({ email: email.trim(), password: senha });
+        const res = await signInUser({ email: trimmedEmail, password: senha });
         if (!res.success) {
+          recordFailedAttempt();
           const errStr = String(res.error || '');
           if (errStr.toLowerCase().includes('email not confirmed') || errStr.toLowerCase().includes('not confirmed')) {
             setIsEmailNotConfirmed(true);
-            setErrorMessage('Seu e-mail ainda não foi confirmado. O Supabase enviou um link de ativação para a sua caixa de entrada.');
+            setErrorMessage('Seu e-mail ainda não foi confirmado. Verifique sua caixa de entrada ou reenvie o link de ativação.');
           } else if (errStr.toLowerCase().includes('invalid login credentials')) {
-            setErrorMessage('E-mail ou senha incorretos. Se acabou de criar a conta, certifique-se de ter clicado no link de confirmação recebido por e-mail.');
+            setErrorMessage('E-mail ou senha incorretos. Se acabou de criar a conta, confirme o link enviado para o seu e-mail.');
           } else {
             setErrorMessage(res.error || 'Credenciais inválidas. Verifique seu e-mail e senha.');
           }
@@ -87,73 +180,72 @@ export default function AuthModal({ isOpen, onClose, onOpenLegal, onSuccessLogin
           return;
         }
 
-        // Login realizado com sucesso!
+        setFailedAttempts(0);
         setLoginSuccess(true);
         setTimeout(() => {
           if (onSuccessLogin) onSuccessLogin(res.data.user);
           onClose();
-        }, 1200);
-
+        }, 700);
       } else {
-        const res = await signUpUser({ email: email.trim(), password: senha, companyName: empresa.trim() });
+        const res = await signUpUser({
+          email: trimmedEmail,
+          password: senha,
+          companyName: empresa.trim(),
+          selectedPlan,
+        });
         if (!res.success) {
+          recordFailedAttempt();
           setErrorMessage(res.error || 'Não foi possível criar a conta. Tente novamente.');
           setLoading(false);
           return;
         }
 
-        // Se o Supabase já retornar a sessão direto (quando confirm email está desligado)
+        setFailedAttempts(0);
         if (res.data?.session?.user) {
           setLoginSuccess(true);
           setTimeout(() => {
             if (onSuccessLogin) onSuccessLogin(res.data.session.user);
             onClose();
-          }, 1200);
+          }, 700);
           return;
         }
 
-        // Caso exija confirmação de e-mail
         setSubmitted(true);
       }
-    } catch (err) {
+    } catch {
       setErrorMessage('Erro de conexão ao autenticar.');
     } finally {
       setLoading(false);
     }
   };
 
-  const handleGoogleAuth = async () => {
-    try {
-      await supabase.auth.signInWithOAuth({
-        provider: 'google',
-        options: {
-          redirectTo: window.location.origin
-        }
-      });
-    } catch (err) {
-      setErrorMessage('Erro ao iniciar login com Google.');
-    }
-  };
-
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 sm:p-6 bg-black/60 backdrop-blur-sm animate-fadeIn">
+    <div
+      role="dialog"
+      aria-modal="true"
+      aria-label="Autenticação Vocalis AI"
+      className="fixed inset-0 z-50 flex items-center justify-center p-4 sm:p-6 bg-black/60 backdrop-blur-sm animate-fadeIn"
+      onClick={onClose}
+    >
       <div 
         className="bg-white rounded-3xl max-w-4xl w-full flex flex-col md:flex-row shadow-2xl border border-[#E7E4DC] overflow-hidden relative"
         onClick={(e) => e.stopPropagation()}
       >
         {/* Close Button */}
         <button
+          type="button"
           onClick={onClose}
+          aria-label="Fechar janela de acesso"
           className="absolute top-4 right-4 z-20 w-8 h-8 rounded-full bg-white/80 hover:bg-white border border-[#E7E4DC] flex items-center justify-center text-[#5C5955] hover:text-[#1A1816] transition-colors cursor-pointer"
         >
           <X className="w-4 h-4" />
         </button>
 
         {/* Left Form Area */}
-        <div className="flex-1 p-8 sm:p-12 flex flex-col justify-between">
+        <div className="flex-1 p-8 sm:p-10 flex flex-col justify-between">
           <div>
             {/* Logo */}
-            <div className="flex items-center gap-2 mb-8">
+            <div className="flex items-center gap-2 mb-6">
               <div className="w-8 h-8 rounded-lg bg-[#4F46E5]/10 flex items-center justify-center border border-[#4F46E5]/20">
                 <div className="flex items-center gap-[2px] h-3.5">
                   <span className="w-[2.5px] h-2 bg-[#4F46E5] rounded-full"></span>
@@ -164,13 +256,51 @@ export default function AuthModal({ isOpen, onClose, onOpenLegal, onSuccessLogin
               <span className="font-bold text-lg text-[#1A1816]">{BRAND.name}</span>
             </div>
 
-            <h3 className="text-2xl font-bold text-[#1A1816] mb-6">
+            <h3 className="text-2xl font-bold text-[#1A1816] mb-4">
               {loginSuccess 
                 ? 'Acesso Autorizado!' 
-                : isLogin 
-                  ? 'Acessar sua conta' 
-                  : 'Crie sua conta'}
+                : isReset
+                  ? 'Recuperar senha'
+                  : isLogin 
+                    ? 'Acessar sua conta' 
+                    : 'Crie sua conta'}
             </h3>
+
+            {selectedPlan && !loginSuccess && (
+              <div
+                data-testid="auth-selected-plan"
+                className="mb-5 p-3.5 rounded-2xl bg-[#EEF2FF] border border-[#E0E7FF] text-xs space-y-1"
+              >
+                <div className="flex items-center justify-between gap-2">
+                  <span className="font-bold text-[#4F46E5]">
+                    Plano selecionado: {selectedPlan.channelName || selectedPlan.channelId} — {selectedPlan.planName}
+                  </span>
+                  {onClearSelectedPlan && (
+                    <button
+                      type="button"
+                      onClick={onClearSelectedPlan}
+                      className="text-[11px] font-semibold text-[#5C5955] hover:text-[#1A1816] underline cursor-pointer"
+                    >
+                      Remover
+                    </button>
+                  )}
+                </div>
+                <div className="text-[#1A1816] font-medium">
+                  Modalidade:{' '}
+                  {selectedPlan.billingCycle === 'yearly' || selectedPlan.billingCycle === 'anual'
+                    ? 'Anual'
+                    : 'Mensal'}{' '}
+                  · {selectedPlan.displayPrice || 'Sob consulta'}
+                  {selectedPlan.totalAnnualLabel ? ` (Total anual: ${selectedPlan.totalAnnualLabel})` : ''}
+                </div>
+                {selectedPlan.afterPromoLabel && (
+                  <div className="text-[11px] text-[#5C5955]">{selectedPlan.afterPromoLabel}</div>
+                )}
+                <div className="text-[10px] text-[#5C5955]">
+                  Nenhuma cobrança é realizada nesta etapa; condições finais e limites pendentes são confirmados antes da contratação.
+                </div>
+              </div>
+            )}
 
             {loginSuccess ? (
               <div className="p-8 rounded-2xl bg-[#EEF2FF] border border-[#E0E7FF] text-center space-y-3 animate-fadeIn">
@@ -185,6 +315,27 @@ export default function AuthModal({ isOpen, onClose, onOpenLegal, onSuccessLogin
                   <Loader2 className="w-5 h-5 text-[#4F46E5] animate-spin" />
                 </div>
               </div>
+            ) : resetSent ? (
+              <div className="p-6 rounded-2xl bg-[#EEF2FF] border border-[#E0E7FF] text-center space-y-3 animate-fadeIn">
+                <div className="w-12 h-12 rounded-full bg-indigo-100 text-[#4F46E5] flex items-center justify-center mx-auto">
+                  <Mail className="w-6 h-6" />
+                </div>
+                <h4 className="font-bold text-[#1A1816]">Instruções enviadas</h4>
+                <p className="text-xs text-[#5C5955] leading-relaxed">
+                  Se existir uma conta cadastrada para <strong>{email}</strong>, enviaremos um link para redefinir sua senha.
+                </p>
+                <button
+                  type="button"
+                  onClick={() => {
+                    setResetSent(false);
+                    setMode('login');
+                    setErrorMessage('');
+                  }}
+                  className="px-5 py-2.5 rounded-xl bg-[#4F46E5] text-white text-xs font-semibold hover:bg-[#4338CA] transition-colors cursor-pointer"
+                >
+                  Voltar ao Login
+                </button>
+              </div>
             ) : submitted ? (
               <div className="p-6 rounded-2xl bg-[#EEF2FF] border border-[#E0E7FF] text-center space-y-3 animate-fadeIn">
                 <div className="w-12 h-12 rounded-full bg-emerald-100 text-emerald-700 flex items-center justify-center mx-auto">
@@ -193,7 +344,7 @@ export default function AuthModal({ isOpen, onClose, onOpenLegal, onSuccessLogin
                 <h4 className="font-bold text-[#1A1816]">Confirme seu e-mail</h4>
                 <p className="text-xs text-[#5C5955] leading-relaxed">
                   Enviamos um link de confirmação para <strong>{email || 'seu e-mail'}</strong>. 
-                  Acesse sua caixa de entrada (verifique também a pasta de <strong>Spam</strong> ou <strong>Lixo Eletrônico</strong>) e clique no link para ativar sua conta.
+                  Acesse sua caixa de entrada e clique no link para ativar sua conta.
                 </p>
 
                 {resendSuccess && (
@@ -217,10 +368,10 @@ export default function AuthModal({ isOpen, onClose, onOpenLegal, onSuccessLogin
                     type="button"
                     onClick={() => {
                       setSubmitted(false);
-                      setIsLogin(true);
+                      setMode('login');
                       setErrorMessage('');
                     }}
-                    className="px-5 py-2.5 rounded-xl bg-[#4F46E5] text-white text-xs font-semibold hover:bg-[#B34018] transition-colors cursor-pointer"
+                    className="px-5 py-2.5 rounded-xl bg-[#4F46E5] text-white text-xs font-semibold hover:bg-[#4338CA] transition-colors cursor-pointer"
                   >
                     Já confirmei, Fazer Login
                   </button>
@@ -228,25 +379,8 @@ export default function AuthModal({ isOpen, onClose, onOpenLegal, onSuccessLogin
               </div>
             ) : (
               <form onSubmit={handleSubmit} className="space-y-4">
-                {/* Acesso de Administrador (Visível exclusivamente quando você digita seu e-mail de admin) */}
-                {(email.trim().toLowerCase() === 'afiliadopebas@gmail.com' || (typeof window !== 'undefined' && window.location.search.includes('admin'))) && (
-                  <div className="p-3 rounded-xl bg-amber-50 border border-amber-200 text-amber-900 text-xs flex items-center justify-between gap-2 animate-fadeIn">
-                    <div className="flex items-center gap-1.5 font-medium">
-                      <Sparkles className="w-4 h-4 text-amber-600 shrink-0" />
-                      <span>Conta de Administrador detectada</span>
-                    </div>
-                    <button
-                      type="button"
-                      onClick={handleAdminBypass}
-                      className="px-3 py-1.5 rounded-lg bg-[#1A1816] text-white text-xs font-bold hover:bg-[#4F46E5] transition-colors cursor-pointer"
-                    >
-                      Acesso Imediato
-                    </button>
-                  </div>
-                )}
-
                 {errorMessage && (
-                  <div className="p-3.5 rounded-xl bg-red-50 border border-red-200 text-red-800 text-xs flex flex-col gap-2">
+                  <div role="alert" className="p-3.5 rounded-xl bg-red-50 border border-red-200 text-red-800 text-xs flex flex-col gap-2">
                     <div className="flex items-start gap-2">
                       <AlertCircle className="w-4 h-4 shrink-0 text-red-600 mt-0.5" />
                       <span className="leading-relaxed">{errorMessage}</span>
@@ -275,14 +409,15 @@ export default function AuthModal({ isOpen, onClose, onOpenLegal, onSuccessLogin
                   </div>
                 )}
 
-                {!isLogin && (
+                {mode === 'signup' && (
                   <div>
-                    <label className="block text-xs font-semibold text-[#1A1816] mb-1">
+                    <label htmlFor="auth-company-input" className="block text-xs font-semibold text-[#1A1816] mb-1">
                       Nome da Empresa
                     </label>
                     <input
+                      id="auth-company-input"
                       type="text"
-                      placeholder="Ex: Clínica Sorriso"
+                      placeholder="Ex: Clínica Exemplo"
                       value={empresa}
                       onChange={(e) => setEmpresa(e.target.value)}
                       required
@@ -292,10 +427,11 @@ export default function AuthModal({ isOpen, onClose, onOpenLegal, onSuccessLogin
                 )}
 
                 <div>
-                  <label className="block text-xs font-semibold text-[#1A1816] mb-1">
+                  <label htmlFor="auth-email-input" className="block text-xs font-semibold text-[#1A1816] mb-1">
                     E-mail Comercial
                   </label>
                   <input
+                    id="auth-email-input"
                     type="email"
                     placeholder="voce@empresa.com.br"
                     value={email}
@@ -305,49 +441,90 @@ export default function AuthModal({ isOpen, onClose, onOpenLegal, onSuccessLogin
                   />
                 </div>
 
-                <div>
-                  <label className="block text-xs font-semibold text-[#1A1816] mb-1">
-                    Senha
-                  </label>
-                  <input
-                    type="password"
-                    placeholder="••••••••"
-                    value={senha}
-                    onChange={(e) => setSenha(e.target.value)}
-                    required
-                    className="w-full px-3.5 py-2.5 rounded-xl border border-[#D0CBC0] text-sm focus:outline-none focus:border-[#4F46E5]"
-                  />
-                </div>
+                {!isReset && (
+                  <div>
+                    <div className="flex items-center justify-between mb-1">
+                      <label htmlFor="auth-password-input" className="block text-xs font-semibold text-[#1A1816]">
+                        Senha {mode === 'signup' ? '(mínimo 8 caracteres)' : ''}
+                      </label>
+                      {isLogin && (
+                        <button
+                          type="button"
+                          onClick={() => {
+                            setMode('reset');
+                            setErrorMessage('');
+                            setIsEmailNotConfirmed(false);
+                          }}
+                          className="text-[11px] font-semibold text-[#4F46E5] hover:underline cursor-pointer"
+                        >
+                          Esqueci minha senha
+                        </button>
+                      )}
+                    </div>
+                    <input
+                      id="auth-password-input"
+                      type="password"
+                      placeholder="••••••••"
+                      value={senha}
+                      onChange={(e) => setSenha(e.target.value)}
+                      required
+                      minLength={mode === 'signup' ? 8 : undefined}
+                      className="w-full px-3.5 py-2.5 rounded-xl border border-[#D0CBC0] text-sm focus:outline-none focus:border-[#4F46E5]"
+                    />
+                  </div>
+                )}
 
                 <button
                   type="submit"
                   disabled={loading}
-                  className="w-full py-3 rounded-xl bg-[#4F46E5] text-white text-sm font-bold hover:bg-[#B34018] transition-colors mt-2 flex items-center justify-center gap-2 cursor-pointer disabled:opacity-70"
+                  className="w-full py-3 rounded-xl bg-[#4F46E5] text-white text-sm font-bold hover:bg-[#4338CA] transition-colors mt-2 flex items-center justify-center gap-2 cursor-pointer disabled:opacity-70"
                 >
                   {loading ? (
                     <>
                       <Loader2 className="w-4 h-4 animate-spin" />
-                      <span>{isLogin ? 'Entrando...' : 'Criando conta...'}</span>
+                      <span>
+                        {isReset ? 'Enviando...' : isLogin ? 'Entrando...' : 'Criando conta...'}
+                      </span>
                     </>
                   ) : (
-                    <span>{isLogin ? 'Entrar na Plataforma' : 'Criar Conta →'}</span>
+                    <span>
+                      {isReset
+                        ? 'Enviar link de recuperação'
+                        : isLogin
+                        ? 'Entrar na Plataforma'
+                        : 'Criar Conta'}
+                    </span>
                   )}
+                  {!loading && <ArrowRight className="w-4 h-4" />}
                 </button>
               </form>
             )}
           </div>
 
-          <div className="pt-6 border-t border-[#F0EDE8] text-center text-xs text-[#736F69] space-y-2">
-            <div>
-              {isLogin ? (
+          <div className="pt-6 border-t border-[#F0EDE8] text-center text-xs text-[#736F69] space-y-2 mt-4">
+            <div className="flex items-center justify-center gap-3 flex-wrap">
+              {isReset ? (
+                <button
+                  type="button"
+                  onClick={() => {
+                    setMode('login');
+                    setErrorMessage('');
+                    setResetSent(false);
+                  }}
+                  className="font-bold text-[#4F46E5] hover:underline cursor-pointer"
+                >
+                  Voltar para Login
+                </button>
+              ) : isLogin ? (
                 <span>
                   Ainda não tem conta?{' '}
-                  <button 
+                  <button
+                    type="button"
                     onClick={() => {
-                      setIsLogin(false);
+                      setMode('signup');
                       setErrorMessage('');
                       setIsEmailNotConfirmed(false);
-                    }} 
+                    }}
                     className="font-bold text-[#4F46E5] hover:underline cursor-pointer"
                   >
                     Criar conta
@@ -356,12 +533,13 @@ export default function AuthModal({ isOpen, onClose, onOpenLegal, onSuccessLogin
               ) : (
                 <span>
                   Já tem uma conta?{' '}
-                  <button 
+                  <button
+                    type="button"
                     onClick={() => {
-                      setIsLogin(true);
+                      setMode('login');
                       setErrorMessage('');
                       setIsEmailNotConfirmed(false);
-                    }} 
+                    }}
                     className="font-bold text-[#4F46E5] hover:underline cursor-pointer"
                   >
                     Entrar
@@ -372,15 +550,17 @@ export default function AuthModal({ isOpen, onClose, onOpenLegal, onSuccessLogin
 
             <p className="text-[11px] text-[#A6A29A]">
               Ao continuar, você concorda com nossos{' '}
-              <button 
-                onClick={() => { onClose(); onOpenLegal('termos'); }}
+              <button
+                type="button"
+                onClick={() => { onClose(); onOpenLegal?.('termos'); }}
                 className="underline hover:text-[#1A1816] cursor-pointer"
               >
                 Termos
               </button>{' '}
               e{' '}
-              <button 
-                onClick={() => { onClose(); onOpenLegal('privacidade'); }}
+              <button
+                type="button"
+                onClick={() => { onClose(); onOpenLegal?.('privacidade'); }}
                 className="underline hover:text-[#1A1816] cursor-pointer"
               >
                 Política de Privacidade

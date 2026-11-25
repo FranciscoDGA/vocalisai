@@ -16,7 +16,7 @@ export default function GuaranteesSection() {
             <span className="font-serif-title italic text-[#4F46E5]">garante.</span>
           </h2>
           <p className="mt-4 text-base sm:text-lg text-[#5C5955] leading-relaxed">
-            Sem pegadinhas, sem contratos de fidelidade forçada e com total segurança jurídica.
+            Sem pegadinhas e com condições comerciais apresentadas previamente antes da contratação.
           </p>
         </div>
 

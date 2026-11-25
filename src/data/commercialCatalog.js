@@ -6,8 +6,10 @@
  *    CTAs e painéis devem consumir exclusivamente este catálogo via `commercialCatalogUtils.js`.
  * 2. Nenhum campo com status `'pendente'` ou `'indisponivel'` deve ter `value` preenchido
  *    ou ser exibido na interface como fato confirmado.
- * 3. Valores observados na auditoria inicial ficam registrados apenas em `observedValue`
- *    com `status: 'pendente'` até confirmação explícita do proprietário.
+ * 3. A promoção mensal de 3 meses NUNCA é combinada com o desconto da modalidade anual
+ *    sem aprovação comercial explícita (`stackingWithAnnualDiscount: true`).
+ * 4. Um plano só recebe `status: 'confirmada'` quando todas as suas condições essenciais
+ *    (preço, uso, limites, excedentes, política de limite, funcionalidades e checkout) estão confirmadas.
  */
 
 export const INFO_STATUS = Object.freeze({
@@ -26,6 +28,31 @@ export const PROMOTION_BILLING_SCOPES = Object.freeze({
   MESES_INICIAIS: 'meses_iniciais',
 });
 
+export const PRICING_ROUNDING_RULE = Object.freeze({
+  method: 'Math.round',
+  precision: 'integer_brl',
+  description: 'Arredondamento para o inteiro em Reais (BRL) mais próximo via Math.round.',
+});
+
+export function applyDiscountWithRounding(baseAmount, discountPercentage) {
+  if (typeof baseAmount !== 'number' || !Number.isFinite(baseAmount)) return null;
+  if (typeof discountPercentage !== 'number' || !Number.isFinite(discountPercentage)) return null;
+  return Math.round(baseAmount * (1 - discountPercentage / 100));
+}
+
+export function calculateEffectiveDiscountPercent(regularAmount, discountedAmount) {
+  if (
+    typeof regularAmount !== 'number' ||
+    typeof discountedAmount !== 'number' ||
+    !Number.isFinite(regularAmount) ||
+    !Number.isFinite(discountedAmount) ||
+    regularAmount <= 0
+  ) {
+    return null;
+  }
+  return Math.round(((regularAmount - discountedAmount) / regularAmount) * 100);
+}
+
 export function confirmedField(value, meta = {}) {
   return {
     status: INFO_STATUS.CONFIRMADA,
@@ -36,7 +63,11 @@ export function confirmedField(value, meta = {}) {
   };
 }
 
-export function pendingField(observedValue = null, note = 'Pendente de confirmação pelo proprietário.', meta = {}) {
+export function pendingField(
+  observedValue = null,
+  note = 'Pendente de confirmação pelo proprietário.',
+  meta = {}
+) {
   return {
     status: INFO_STATUS.PENDENTE,
     value: null,
@@ -46,7 +77,10 @@ export function pendingField(observedValue = null, note = 'Pendente de confirma�
   };
 }
 
-export function unavailableField(note = 'Indisponível / não aplicável a este canal ou plano.', meta = {}) {
+export function unavailableField(
+  note = 'Indisponível / não aplicável a este canal ou plano.',
+  meta = {}
+) {
   return {
     status: INFO_STATUS.INDISPONIVEL,
     value: null,
@@ -62,19 +96,22 @@ function buildChannelFeatureMatrix(definitions, valuesByPlan) {
       key: def.key,
       category: def.category,
       label: def.label,
-      ...(valuesByPlan.solo?.[def.key] || pendingField(null, 'Funcionalidade pendente de confirmação pelo proprietário.')),
+      ...(valuesByPlan.solo?.[def.key] ||
+        pendingField(null, 'Funcionalidade pendente de confirmação pelo proprietário.')),
     })),
     team: definitions.map((def) => ({
       key: def.key,
       category: def.category,
       label: def.label,
-      ...(valuesByPlan.team?.[def.key] || pendingField(null, 'Funcionalidade pendente de confirmação pelo proprietário.')),
+      ...(valuesByPlan.team?.[def.key] ||
+        pendingField(null, 'Funcionalidade pendente de confirmação pelo proprietário.')),
     })),
     scale: definitions.map((def) => ({
       key: def.key,
       category: def.category,
       label: def.label,
-      ...(valuesByPlan.scale?.[def.key] || pendingField(null, 'Funcionalidade pendente de confirmação pelo proprietário.')),
+      ...(valuesByPlan.scale?.[def.key] ||
+        pendingField(null, 'Funcionalidade pendente de confirmação pelo proprietário.')),
     })),
   };
 }
@@ -141,10 +178,27 @@ function buildPlan({
   const hasConfirmedPricing =
     typeof regularMonthlyConfirmed === 'number' && typeof promotionalMonthlyConfirmed === 'number';
   const hasConfirmedAnnual =
-    annualConfirmed &&
-    typeof annualConfirmed.regularMonthlyEquivalent === 'number' &&
-    typeof annualConfirmed.promotionalMonthlyEquivalent === 'number' &&
-    typeof annualConfirmed.totalAnnualAmount === 'number';
+    annualConfirmed && typeof annualConfirmed.regularMonthlyEquivalent === 'number';
+
+  const computedAnnualTotal = hasConfirmedAnnual
+    ? annualConfirmed.regularMonthlyEquivalent * 12
+    : null;
+  const computedAnnualDiscountPct =
+    hasConfirmedAnnual && typeof regularMonthlyConfirmed === 'number'
+      ? calculateEffectiveDiscountPercent(
+          regularMonthlyConfirmed,
+          annualConfirmed.regularMonthlyEquivalent
+        )
+      : null;
+
+  const limitValues = Object.values(limits || {});
+  const featureValues = Array.isArray(features) ? features : [];
+  const hasPendingEssentials =
+    !hasConfirmedPricing ||
+    usageUnitDefinition?.status === INFO_STATUS.PENDENTE ||
+    overagesAndAddons?.extraUsage?.status === INFO_STATUS.PENDENTE ||
+    limitValues.some((f) => f?.status === INFO_STATUS.PENDENTE) ||
+    featureValues.every((f) => f?.status !== INFO_STATUS.CONFIRMADA);
 
   return {
     channelId,
@@ -156,7 +210,8 @@ function buildPlan({
     badge: badgeText
       ? confirmedField(badgeText)
       : pendingField(null, 'Selo de destaque comercial não aplicável.'),
-    status: hasConfirmedPricing ? INFO_STATUS.CONFIRMADA : INFO_STATUS.PENDENTE,
+    // Regra 10: não marca o plano inteiro como 'confirmada' enquanto houver condições essenciais pendentes
+    status: hasPendingEssentials ? INFO_STATUS.PENDENTE : INFO_STATUS.CONFIRMADA,
     pricing: {
       status: hasConfirmedPricing ? INFO_STATUS.CONFIRMADA : INFO_STATUS.PENDENTE,
       regularMonthly: hasConfirmedPricing
@@ -173,7 +228,8 @@ function buildPlan({
             durationMonths: confirmedField(promoDurationMonths),
             durationDescription: confirmedField(`nos ${promoDurationMonths} primeiros meses`),
             billingScope: confirmedField(PROMOTION_BILLING_SCOPES.MESES_INICIAIS),
-            stackingWithAnnualDiscount: confirmedField(Boolean(hasConfirmedAnnual)),
+            // Nunca combina promoção mensal de 3 meses com desconto anual sem aprovação explícita
+            stackingWithAnnualDiscount: confirmedField(false),
             validUntil: confirmedField(promoValidUntil),
           }
         : {
@@ -193,7 +249,7 @@ function buildPlan({
             billingMethod: confirmedField('Assinatura mensal recorrente'),
             description: confirmedField(
               id === 'scale'
-                ? `Depois R$ ${regularMonthlyConfirmed.toLocaleString('pt-BR')}/mês · desconto aplicado na proposta`
+                ? `Depois R$ ${regularMonthlyConfirmed.toLocaleString('pt-BR')}/mês · proposta mensal recorrente`
                 : `Depois R$ ${regularMonthlyConfirmed.toLocaleString('pt-BR')}/mês`
             ),
           }
@@ -210,25 +266,27 @@ function buildPlan({
             ? confirmedField(true)
             : pendingField(null, 'Disponibilidade da modalidade mensal pendente de confirmação.'),
           billingCycle: 'mensal',
-          checkoutUrl: pendingField(null, 'Link de checkout mensal oficial pendente de confirmação e revisão.'),
+          checkoutUrl: pendingField(null, 'Checkout online desativado até validação comercial e jurídica completa.'),
         },
         annual: hasConfirmedAnnual
           ? {
               status: INFO_STATUS.CONFIRMADA,
               available: confirmedField(true),
               billingCycle: 'anual',
-              chargeType: confirmedField(ANNUAL_CHARGE_TYPES.ANTECIPADO, {
+              chargeType: confirmedField(annualConfirmed.chargeType || ANNUAL_CHARGE_TYPES.ANTECIPADO, {
                 allowedValues: [ANNUAL_CHARGE_TYPES.ANTECIPADO, ANNUAL_CHARGE_TYPES.PARCELADO],
               }),
               regularMonthlyEquivalent: confirmedField(annualConfirmed.regularMonthlyEquivalent),
-              promotionalMonthlyEquivalent: confirmedField(annualConfirmed.promotionalMonthlyEquivalent),
-              totalAnnualAmount: confirmedField(annualConfirmed.totalAnnualAmount),
-              discountPercentage: confirmedField(20),
-              checkoutUrl: pendingField(null, 'Link de checkout anual oficial pendente de confirmação.'),
+              promotionalMonthlyEquivalent: unavailableField(
+                'A promoção mensal de 3 meses não é cumulativa com o plano anual.'
+              ),
+              totalAnnualAmount: confirmedField(computedAnnualTotal),
+              discountPercentage: confirmedField(computedAnnualDiscountPct),
+              checkoutUrl: pendingField(null, 'Checkout anual online desativado até confirmação comercial completa.'),
             }
           : {
               status: INFO_STATUS.PENDENTE,
-              available: pendingField(null, 'Modalidade anual ainda não confirmada (apenas assinatura mensal ativa).'),
+              available: pendingField(null, 'Modalidade anual ainda não confirmada.'),
               billingCycle: 'anual',
               chargeType: pendingField(
                 null,
@@ -239,7 +297,7 @@ function buildPlan({
               promotionalMonthlyEquivalent: pendingField(null, 'Equivalente promocional do plano anual pendente de confirmação.'),
               totalAnnualAmount: pendingField(null, 'Valor total do ciclo anual pendente de confirmação.'),
               discountPercentage: pendingField(null, 'Percentual de desconto anual pendente de confirmação.'),
-              checkoutUrl: pendingField(null, 'Link de checkout anual oficial pendente de confirmação.'),
+              checkoutUrl: pendingField(null, 'Checkout anual online desativado até confirmação comercial completa.'),
             },
       },
     },
@@ -249,17 +307,18 @@ function buildPlan({
     overagesAndAddons,
     features,
     cta: {
-      label: ctaLabel || (id === 'scale' ? 'Configurar plano' : `Começar com o ${name}`),
-      action: 'demo',
+      label: ctaLabel || (id === 'scale' ? 'Solicitar proposta' : `Selecionar ${name}`),
+      action: 'plan_request',
     },
   };
 }
 
 export const COMMERCIAL_CATALOG = {
   metadata: {
-    version: '1.1.0',
+    version: '1.2.0',
     currency: 'BRL',
-    lastAuditDate: '2026-11-20',
+    lastAuditDate: '2026-11-25',
+    roundingRule: PRICING_ROUNDING_RULE,
     sourcePolicy:
       'Fonte única oficial de preços, promoções, modalidades, limites, excedentes e funcionalidades comerciais da Vocalis AI.',
   },
@@ -301,7 +360,7 @@ export const COMMERCIAL_CATALOG = {
       termKeys: ['minuto', 'ligacao'],
       limitReachedPolicy: pendingField(
         null,
-        'Regra real do que acontece quando o limite mensal de telefonia acaba (exibida somente quando confirmada).'
+        'Regra real do que acontece quando o limite mensal de telefonia acaba está pendente de confirmação comercial.'
       ),
       usageUnitDefinition: {
         unit: 'minuto',
@@ -314,13 +373,13 @@ export const COMMERCIAL_CATALOG = {
           channelName: 'Assistente telefônico IA',
           id: 'solo',
           name: 'Solo',
-          tagline: 'Até 20 ligações por dia.',
+          tagline: 'Referência de até 20 ligações por dia.',
           highlight: false,
           regularMonthlyConfirmed: 719,
           promotionalMonthlyConfirmed: 503,
-          annualConfirmed: { regularMonthlyEquivalent: 599, promotionalMonthlyEquivalent: 419, totalAnnualAmount: 6648.9 },
+          annualConfirmed: { regularMonthlyEquivalent: 599 },
           includedUsage: {
-            minutes: confirmedField('1.000 minutos/mês (equiv. R$ 0,72/min)'),
+            minutes: confirmedField('1.000 minutos/mês (equiv. R$ 0,72/min no mensal padrão)'),
             calls: confirmedField('Até 20 ligações/dia (média ilustrativa)'),
             conversations: unavailableField('Canal de telefonia contabiliza por minutos/chamadas, não por conversas.'),
             messages: unavailableField('Canal de telefonia não contabiliza pacotes de mensagens de texto.'),
@@ -330,7 +389,7 @@ export const COMMERCIAL_CATALOG = {
             simultaneousCalls: confirmedField('1 chamada simultânea'),
             includedNumbers: confirmedField('1 número de telefone'),
             includedUsers: confirmedField('1 usuário'),
-            includedAssistants: confirmedField('Assistentes ilimitados'),
+            includedAssistants: pendingField(null, 'Limite de quantidade de assistentes por plano pendente de confirmação comercial e técnica.'),
           },
           overagesAndAddons: {
             extraUsage: pendingField(null, 'Valor de minutos excedentes pendente de confirmação.'),
@@ -346,14 +405,14 @@ export const COMMERCIAL_CATALOG = {
           channelName: 'Assistente telefônico IA',
           id: 'team',
           name: 'Team',
-          tagline: 'De 20 a 100 ligações por dia.',
+          tagline: 'Referência de 20 a 100 ligações por dia.',
           highlight: true,
           badgeText: 'Mais escolhido',
           regularMonthlyConfirmed: 2159,
           promotionalMonthlyConfirmed: 1511,
-          annualConfirmed: { regularMonthlyEquivalent: 1799, promotionalMonthlyEquivalent: 1259, totalAnnualAmount: 19968.9 },
+          annualConfirmed: { regularMonthlyEquivalent: 1799 },
           includedUsage: {
-            minutes: confirmedField('3.600 minutos/mês (equiv. R$ 0,60/min)'),
+            minutes: confirmedField('3.600 minutos/mês (equiv. R$ 0,60/min no mensal padrão)'),
             calls: confirmedField('De 20 a 100 ligações/dia (média ilustrativa)'),
             conversations: unavailableField('Canal de telefonia contabiliza por minutos/chamadas, não por conversas.'),
             messages: unavailableField('Canal de telefonia não contabiliza pacotes de mensagens de texto.'),
@@ -362,8 +421,8 @@ export const COMMERCIAL_CATALOG = {
           limits: {
             simultaneousCalls: confirmedField('3 chamadas simultâneas'),
             includedNumbers: confirmedField('3 números de telefone'),
-            includedUsers: confirmedField('Usuários ilimitados'),
-            includedAssistants: confirmedField('Assistentes ilimitados'),
+            includedUsers: pendingField(null, 'Limite de usuários por plano pendente de confirmação comercial e técnica.'),
+            includedAssistants: pendingField(null, 'Limite de quantidade de assistentes por plano pendente de confirmação comercial e técnica.'),
           },
           overagesAndAddons: {
             extraUsage: pendingField(null, 'Valor de minutos excedentes pendente de confirmação.'),
@@ -379,11 +438,11 @@ export const COMMERCIAL_CATALOG = {
           channelName: 'Assistente telefônico IA',
           id: 'scale',
           name: 'Scale',
-          tagline: 'Mais de 100 ligações por dia.',
+          tagline: 'Mais de 100 ligações por dia (sob proposta).',
           highlight: false,
           regularMonthlyConfirmed: 3599,
           promotionalMonthlyConfirmed: 2519,
-          annualConfirmed: { regularMonthlyEquivalent: 3239, promotionalMonthlyEquivalent: 2267, totalAnnualAmount: 35952.9 },
+          annualConfirmed: { regularMonthlyEquivalent: 3239 },
           includedUsage: {
             minutes: confirmedField('A partir de 6.000 minutos/mês'),
             calls: confirmedField('Mais de 100 ligações/dia (sob medida)'),
@@ -392,10 +451,10 @@ export const COMMERCIAL_CATALOG = {
           },
           usageUnitDefinition: pendingField(null, 'Definição oficial de "minuto" em chamadas telefônicas pendente de confirmação.'),
           limits: {
-            simultaneousCalls: confirmedField('Chamadas simultâneas ilimitadas (sob proposta)'),
+            simultaneousCalls: pendingField(null, 'Capacidade simultânea sob proposta e viabilidade técnica (pendente de confirmação).'),
             includedNumbers: confirmedField('Números de telefone sob medida'),
-            includedUsers: confirmedField('Usuários ilimitados'),
-            includedAssistants: confirmedField('Assistentes ilimitados'),
+            includedUsers: pendingField(null, 'Limite de usuários sob proposta comercial (pendente de confirmação).'),
+            includedAssistants: pendingField(null, 'Limite de assistentes sob proposta comercial (pendente de confirmação).'),
           },
           overagesAndAddons: {
             extraUsage: pendingField(null, 'Valor de minutos excedentes pendente de confirmação.'),
@@ -418,7 +477,7 @@ export const COMMERCIAL_CATALOG = {
       termKeys: ['conversa', 'mensagem'],
       limitReachedPolicy: pendingField(
         null,
-        'Regra real do que acontece quando o limite mensal de WhatsApp acaba (exibida somente quando confirmada).'
+        'Regra real do que acontece quando o limite mensal de WhatsApp acaba está pendente de confirmação comercial.'
       ),
       usageUnitDefinition: {
         unit: 'conversa',
@@ -435,7 +494,7 @@ export const COMMERCIAL_CATALOG = {
           highlight: false,
           regularMonthlyConfirmed: 499,
           promotionalMonthlyConfirmed: 349,
-          annualConfirmed: { regularMonthlyEquivalent: 399, promotionalMonthlyEquivalent: 279, totalAnnualAmount: 4428.9 },
+          annualConfirmed: { regularMonthlyEquivalent: 399 },
           includedUsage: {
             minutes: unavailableField('Canal WhatsApp contabiliza por conversas/mensagens, não por minutos telefônicos.'),
             calls: unavailableField('Canal WhatsApp não inclui ligações telefônicas PSTN.'),
@@ -447,7 +506,7 @@ export const COMMERCIAL_CATALOG = {
             simultaneousCalls: unavailableField('Não aplicável ao canal de mensagens WhatsApp.'),
             includedNumbers: confirmedField('1 número de WhatsApp'),
             includedUsers: confirmedField('1 usuário'),
-            includedAssistants: confirmedField('Assistentes ilimitados'),
+            includedAssistants: pendingField(null, 'Limite de quantidade de assistentes por plano pendente de confirmação comercial e técnica.'),
           },
           overagesAndAddons: {
             extraUsage: pendingField(null, 'Valor por conversas ou mensagens excedentes pendente de confirmação.'),
@@ -468,7 +527,7 @@ export const COMMERCIAL_CATALOG = {
           badgeText: 'Mais escolhido',
           regularMonthlyConfirmed: 1999,
           promotionalMonthlyConfirmed: 1399,
-          annualConfirmed: { regularMonthlyEquivalent: 1599, promotionalMonthlyEquivalent: 1119, totalAnnualAmount: 17748.9 },
+          annualConfirmed: { regularMonthlyEquivalent: 1599 },
           includedUsage: {
             minutes: unavailableField('Canal WhatsApp contabiliza por conversas/mensagens, não por minutos telefônicos.'),
             calls: unavailableField('Canal WhatsApp não inclui ligações telefônicas PSTN.'),
@@ -479,8 +538,8 @@ export const COMMERCIAL_CATALOG = {
           limits: {
             simultaneousCalls: unavailableField('Não aplicável ao canal de mensagens WhatsApp.'),
             includedNumbers: confirmedField('3 números de WhatsApp'),
-            includedUsers: confirmedField('Usuários ilimitados'),
-            includedAssistants: confirmedField('Assistentes ilimitados'),
+            includedUsers: pendingField(null, 'Limite de usuários por plano pendente de confirmação comercial e técnica.'),
+            includedAssistants: pendingField(null, 'Limite de quantidade de assistentes por plano pendente de confirmação comercial e técnica.'),
           },
           overagesAndAddons: {
             extraUsage: pendingField(null, 'Valor por conversas ou mensagens excedentes pendente de confirmação.'),
@@ -496,11 +555,11 @@ export const COMMERCIAL_CATALOG = {
           channelName: 'IA de WhatsApp',
           id: 'scale',
           name: 'Scale',
-          tagline: 'Ideal a partir de 5.000 conversas/mês.',
+          tagline: 'Ideal a partir de 5.000 conversas/mês (sob proposta).',
           highlight: false,
           regularMonthlyConfirmed: 4499,
           promotionalMonthlyConfirmed: 3149,
-          annualConfirmed: { regularMonthlyEquivalent: 3599, promotionalMonthlyEquivalent: 2519, totalAnnualAmount: 39948.9 },
+          annualConfirmed: { regularMonthlyEquivalent: 3599 },
           includedUsage: {
             minutes: unavailableField('Canal WhatsApp contabiliza por conversas/mensagens, não por minutos telefônicos.'),
             calls: unavailableField('Canal WhatsApp não inclui ligações telefônicas PSTN.'),
@@ -511,8 +570,8 @@ export const COMMERCIAL_CATALOG = {
           limits: {
             simultaneousCalls: unavailableField('Não aplicável ao canal de mensagens WhatsApp.'),
             includedNumbers: confirmedField('Números de WhatsApp personalizados'),
-            includedUsers: confirmedField('Usuários ilimitados'),
-            includedAssistants: confirmedField('Assistentes ilimitados'),
+            includedUsers: pendingField(null, 'Limite de usuários sob proposta comercial (pendente de confirmação).'),
+            includedAssistants: pendingField(null, 'Limite de assistentes sob proposta comercial (pendente de confirmação).'),
           },
           overagesAndAddons: {
             extraUsage: pendingField(null, 'Valor por conversas ou mensagens excedentes pendente de confirmação.'),
@@ -535,7 +594,7 @@ export const COMMERCIAL_CATALOG = {
       termKeys: ['conversa', 'mensagem'],
       limitReachedPolicy: pendingField(
         null,
-        'Regra real do que acontece quando o limite mensal de Webchat acaba (exibida somente quando confirmada).'
+        'Regra real do que acontece quando o limite mensal de Webchat acaba está pendente de confirmação comercial.'
       ),
       usageUnitDefinition: {
         unit: 'conversa',
@@ -552,7 +611,7 @@ export const COMMERCIAL_CATALOG = {
           highlight: false,
           regularMonthlyConfirmed: 299,
           promotionalMonthlyConfirmed: 209,
-          annualConfirmed: { regularMonthlyEquivalent: 249, promotionalMonthlyEquivalent: 174, totalAnnualAmount: 2763.9 },
+          annualConfirmed: { regularMonthlyEquivalent: 249 },
           includedUsage: {
             minutes: unavailableField('Canal Webchat contabiliza por conversas/mensagens no site.'),
             calls: unavailableField('Canal Webchat não inclui chamadas telefônicas PSTN.'),
@@ -564,7 +623,7 @@ export const COMMERCIAL_CATALOG = {
             simultaneousCalls: unavailableField('Não aplicável ao canal de chat em site.'),
             includedNumbers: unavailableField('Canal Webchat não utiliza linha telefônica ou número WhatsApp.'),
             includedUsers: confirmedField('1 usuário'),
-            includedAssistants: confirmedField('Webchats de IA ilimitados'),
+            includedAssistants: pendingField(null, 'Limite de widgets/assistentes por plano pendente de confirmação comercial e técnica.'),
           },
           overagesAndAddons: {
             extraUsage: pendingField(null, 'Valor de conversas/mensagens excedentes no Webchat pendente de confirmação.'),
@@ -585,7 +644,7 @@ export const COMMERCIAL_CATALOG = {
           badgeText: 'Mais escolhido',
           regularMonthlyConfirmed: 899,
           promotionalMonthlyConfirmed: 629,
-          annualConfirmed: { regularMonthlyEquivalent: 749, promotionalMonthlyEquivalent: 524, totalAnnualAmount: 8313.9 },
+          annualConfirmed: { regularMonthlyEquivalent: 749 },
           includedUsage: {
             minutes: unavailableField('Canal Webchat contabiliza por conversas/mensagens no site.'),
             calls: unavailableField('Canal Webchat não inclui chamadas telefônicas PSTN.'),
@@ -596,8 +655,8 @@ export const COMMERCIAL_CATALOG = {
           limits: {
             simultaneousCalls: unavailableField('Não aplicável ao canal de chat em site.'),
             includedNumbers: unavailableField('Canal Webchat não utiliza linha telefônica ou número WhatsApp.'),
-            includedUsers: confirmedField('Usuários ilimitados'),
-            includedAssistants: confirmedField('Webchats de IA ilimitados'),
+            includedUsers: pendingField(null, 'Limite de usuários por plano pendente de confirmação comercial e técnica.'),
+            includedAssistants: pendingField(null, 'Limite de widgets/assistentes por plano pendente de confirmação comercial e técnica.'),
           },
           overagesAndAddons: {
             extraUsage: pendingField(null, 'Valor de conversas/mensagens excedentes no Webchat pendente de confirmação.'),
@@ -613,11 +672,11 @@ export const COMMERCIAL_CATALOG = {
           channelName: 'Webchat de IA',
           id: 'scale',
           name: 'Scale',
-          tagline: 'Ideal a partir de 2.000+ conversas/mês.',
+          tagline: 'Ideal a partir de 2.000+ conversas/mês (sob proposta).',
           highlight: false,
           regularMonthlyConfirmed: 2999,
           promotionalMonthlyConfirmed: 2099,
-          annualConfirmed: { regularMonthlyEquivalent: 2699, promotionalMonthlyEquivalent: 1889, totalAnnualAmount: 29958.9 },
+          annualConfirmed: { regularMonthlyEquivalent: 2699 },
           includedUsage: {
             minutes: unavailableField('Canal Webchat contabiliza por conversas/mensagens no site.'),
             calls: unavailableField('Canal Webchat não inclui chamadas telefônicas PSTN.'),
@@ -628,8 +687,8 @@ export const COMMERCIAL_CATALOG = {
           limits: {
             simultaneousCalls: unavailableField('Não aplicável ao canal de chat em site.'),
             includedNumbers: unavailableField('Canal Webchat não utiliza linha telefônica ou número WhatsApp.'),
-            includedUsers: confirmedField('Usuários ilimitados'),
-            includedAssistants: confirmedField('Webchats de IA ilimitados'),
+            includedUsers: pendingField(null, 'Limite de usuários sob proposta comercial (pendente de confirmação).'),
+            includedAssistants: pendingField(null, 'Limite de widgets/assistentes sob proposta comercial (pendente de confirmação).'),
           },
           overagesAndAddons: {
             extraUsage: pendingField(null, 'Valor de conversas/mensagens excedentes no Webchat pendente de confirmação.'),

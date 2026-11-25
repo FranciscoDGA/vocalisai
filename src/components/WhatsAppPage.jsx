@@ -9,6 +9,7 @@ import { COMMERCIAL_CATALOG, INFO_STATUS } from '../data/commercialCatalog';
 import {
   getPlanCardViewModel,
   getChannelAnnualAvailability,
+  getChannelAnnualToggleBadge,
   getChannelUsageTerms,
   getChannelLimitReachedPolicy,
 } from '../utils/commercialCatalogUtils';
@@ -17,6 +18,7 @@ import { speakFemalePt } from '../utils/voiceUtils';
 export default function WhatsAppPage({
   onOpenDemo,
   onOpenAuth,
+  onSelectPlan,
   onNavigateHome,
   catalog = COMMERCIAL_CATALOG,
 }) {
@@ -34,8 +36,7 @@ export default function WhatsAppPage({
   const waUsageTerms = getChannelUsageTerms('whatsapp', catalog);
   const waLimitPolicy = getChannelLimitReachedPolicy('whatsapp', catalog);
   const waAnnualDiscountBadge = waAnnualAvailability.isConfirmedAvailable
-    ? getPlanCardViewModel('whatsapp', waPlans[0].id, 'anual', catalog)?.pricing
-        ?.annualDiscountBadge || null
+    ? getChannelAnnualToggleBadge('whatsapp', catalog)
     : null;
 
   const faqs = [
@@ -213,8 +214,10 @@ export default function WhatsAppPage({
                   
                   <div className="flex items-center gap-3 bg-[#111b21] p-2 rounded-xl">
                     <button 
+                      type="button"
+                      aria-label={audioPlaying ? 'Pausar áudio ilustrativo' : 'Reproduzir áudio ilustrativo'}
                       onClick={handlePlayVoiceSample}
-                      className="w-8 h-8 rounded-full bg-[#00a884] text-white flex items-center justify-center shrink-0 hover:scale-105 transition-transform"
+                      className="w-8 h-8 rounded-full bg-[#00a884] text-white flex items-center justify-center shrink-0 hover:scale-105 transition-transform cursor-pointer"
                     >
                       {audioPlaying ? <Pause className="w-3.5 h-3.5 fill-current" /> : <Play className="w-3.5 h-3.5 fill-current ml-0.5" />}
                     </button>
@@ -287,7 +290,7 @@ export default function WhatsAppPage({
                   Retirado da oferta pública principal
                 </span>
                 <p className="text-[#5C5955] leading-relaxed">
-                  Existe apenas como protótipo experimental local para testes de envio outbound via QR Code (`localhost:8080`). Depende de sessão local contínua, não garante estabilidade ou entrega e apresenta risco de desconexão e restrição/banimento do número pela Meta — aguardando decisão do proprietário.
+                  Existe apenas como protótipo experimental local para testes de envio outbound via QR Code (uso estrito em desenvolvimento). Depende de sessão local contínua, não garante estabilidade ou entrega e apresenta risco de desconexão e restrição/banimento do número pela Meta — aguardando decisão do proprietário.
                 </p>
               </div>
 
@@ -319,7 +322,7 @@ export default function WhatsAppPage({
               
               <div className="flex items-center justify-between pb-4 border-b border-stone-100">
                 <h3 className="text-base font-bold text-[#1A1816]">Criar assistente</h3>
-                <span className="text-stone-400 text-xs cursor-pointer">✕</span>
+                <span className="text-stone-400 text-xs select-none" aria-hidden="true">✕</span>
               </div>
 
               <div className="py-4 space-y-4">
@@ -377,10 +380,15 @@ export default function WhatsAppPage({
               </div>
 
               <div className="pt-3 border-t border-stone-100 flex items-center justify-end gap-2 text-xs font-semibold">
-                <button className="px-4 py-2 rounded-xl text-stone-500 hover:bg-stone-50">
-                  Cancelar
+                <button
+                  type="button"
+                  onClick={() => setCustomAssistantName('')}
+                  className="px-4 py-2 rounded-xl text-stone-500 hover:bg-stone-50"
+                >
+                  Limpar
                 </button>
                 <button 
+                  type="button"
                   onClick={onOpenAuth}
                   className="px-5 py-2 rounded-xl bg-[#11100F] text-white hover:bg-black transition-colors"
                 >
@@ -448,13 +456,13 @@ export default function WhatsAppPage({
                     <span>Mensagem de voz (0:24)</span>
                   </div>
                   <div className="bg-white p-2.5 rounded-xl text-stone-800 border border-stone-200">
-                    Entendido! Como você mencionou no áudio que prefere atendimento matutino, agendei a consulta com a Dra. Mariana para sexta às 9h!
+                    Entendido! Registrei sua preferência ilustrativa para atendimento matutino na sexta às 9h, sujeita à confirmação da recepção.
                   </div>
                 </div>
 
                 <h3 className="text-xl font-bold text-[#1A1816] mb-2">Reconhece áudio na conversa</h3>
                 <p className="text-xs sm:text-sm text-[#5C5955] leading-relaxed">
-                  Clientes adoram mandar áudios longos. A Vocalis escuta, compreende o contexto e responde de forma clara em texto ou voz.
+                  Clientes costumam enviar áudios. A IA pode ser configurada para transcrever e responder em texto ou áudio conforme os recursos do plano contratado.
                 </p>
               </div>
             </div>
@@ -464,10 +472,10 @@ export default function WhatsAppPage({
               <div>
                 <div className="bg-[#FAF9F5] rounded-2xl p-4 border border-[#EBE8E2] mb-6 space-y-2.5 text-xs font-sans">
                   <div className="bg-[#E7F8F0] p-2.5 rounded-xl text-stone-800 ml-auto max-w-[85%] border border-emerald-100">
-                    Vocês aceitam o convênio Bradesco Saúde Top Nacional?
+                    Vocês aceitam o Convênio Exemplo?
                   </div>
                   <div className="bg-white p-2.5 rounded-xl text-stone-800 border border-stone-200">
-                    Sim! Aceitamos o Bradesco Top Nacional para consultas e exames na unidade Jardins. Posso agendar a sua triagem para esta quinta?
+                    Sim! Conforme as regras cadastradas pela clínica exemplo, aceitamos o Convênio Exemplo para consultas de rotina. Posso encaminhar sua solicitação de horário?
                   </div>
                 </div>
 
@@ -499,10 +507,11 @@ export default function WhatsAppPage({
 
               <div className="space-y-4 pt-4">
                 {steps.map((st, i) => (
-                  <div 
+                  <button
+                    type="button"
                     key={i}
                     onClick={() => setActiveStep(i)}
-                    className={`p-5 rounded-2xl border transition-all cursor-pointer ${
+                    className={`w-full text-left p-5 rounded-2xl border transition-all cursor-pointer ${
                       activeStep === i 
                         ? 'bg-[#EEF2FF] border-[#4F46E5]/30 shadow-sm' 
                         : 'bg-white border-stone-200 hover:border-stone-300'
@@ -514,7 +523,7 @@ export default function WhatsAppPage({
                     </div>
                     <h4 className="text-base font-bold text-[#1A1816] mb-1">{st.title}</h4>
                     <p className="text-xs sm:text-sm text-[#5C5955] leading-relaxed">{st.desc}</p>
-                  </div>
+                  </button>
                 ))}
               </div>
             </div>
@@ -658,16 +667,16 @@ export default function WhatsAppPage({
                   )}
 
                   <div>
-                    <div className="flex items-center justify-between gap-2">
+                    <div className="flex items-center justify-between gap-2 flex-wrap">
                       <h3 className="text-xl font-bold text-[#1A1816]">{card.name}</h3>
                       <span
                         className={`text-[10px] font-bold px-2 py-0.5 rounded-full ${
-                          pricing.status === INFO_STATUS.CONFIRMADA
+                          pricing.status === INFO_STATUS.CONFIRMADA && pricing.isPlanFullyConfirmed
                             ? 'bg-emerald-50 text-emerald-700'
                             : 'bg-amber-50 text-amber-800'
                         }`}
                       >
-                        {pricing.statusLabel}
+                        {pricing.readinessLabel}
                       </span>
                     </div>
                     <p className="text-xs text-[#5C5955] mt-1">{card.tagline}</p>
@@ -687,17 +696,20 @@ export default function WhatsAppPage({
                           {pricing.displayPrice}
                         </span>
                         {pricing.hasConfirmedPrice && (
-                          <span className="text-xs text-[#8C8881]">/mês</span>
+                          <span className="text-xs text-[#8C8881]">
+                            {effectiveCycle === 'anual' ? '/mês (equiv. anual)' : '/mês'}
+                          </span>
                         )}
                       </div>
                       <p className="text-[11px] text-[#5C5955] font-medium mt-1">
                         {pricing.afterPromoLabel}
                       </p>
-                      {effectiveCycle === 'anual' && pricing.annualChargeTypeLabel && (
-                        <p className="text-[11px] text-[#4F46E5] font-medium mt-1">
-                          {pricing.annualChargeTypeLabel}
+                      {effectiveCycle === 'anual' && pricing.totalAnnualLabel && (
+                        <p className="text-[11px] text-[#4F46E5] font-semibold mt-1">
+                          Total anual antecipado (12 meses): {pricing.totalAnnualLabel}
                         </p>
                       )}
+                      <p className="text-[10px] text-[#736F69] mt-1">{pricing.renewalLabel}</p>
                     </div>
 
                     <button
@@ -705,10 +717,25 @@ export default function WhatsAppPage({
                       onClick={() => {
                         if (card.cta.action === 'checkout' && card.cta.url) {
                           window.open(card.cta.url, '_blank', 'noopener,noreferrer');
-                        } else if (onOpenDemo) {
-                          onOpenDemo();
+                          return;
+                        }
+                        const selection = {
+                          channelId: card.channelId,
+                          channelName: card.channelName,
+                          planId: card.id,
+                          planName: card.name,
+                          billingCycle: effectiveCycle,
+                          displayPrice: pricing.displayPrice,
+                          totalAnnualLabel: pricing.totalAnnualLabel,
+                          afterPromoLabel: pricing.afterPromoLabel,
+                          billingPeriodicityLabel: pricing.billingPeriodicityLabel,
+                        };
+                        if (onSelectPlan) {
+                          onSelectPlan(selection);
                         } else if (onOpenAuth) {
                           onOpenAuth();
+                        } else if (onOpenDemo) {
+                          onOpenDemo();
                         }
                       }}
                       className={`w-full py-3 rounded-full text-xs font-bold transition-all shadow-sm flex items-center justify-center gap-2 cursor-pointer ${
@@ -754,12 +781,10 @@ export default function WhatsAppPage({
                 <span className="text-[#5C5955]">{term.text}</span>
               </div>
             ))}
-            {waLimitPolicy.isConfirmed && (
-              <div className="sm:col-span-2 p-4 rounded-2xl bg-white border border-[#E7E4DC]">
-                <strong className="text-[#1A1816] block mb-1">Quando o limite acaba</strong>
-                <span className="text-[#5C5955]">{waLimitPolicy.text}</span>
-              </div>
-            )}
+            <div className="sm:col-span-2 p-4 rounded-2xl bg-white border border-[#E7E4DC]">
+              <strong className="text-[#1A1816] block mb-1">Quando o limite acaba</strong>
+              <span className="text-[#5C5955]">{waLimitPolicy.text}</span>
+            </div>
           </div>
 
           <div className="text-center mt-10">

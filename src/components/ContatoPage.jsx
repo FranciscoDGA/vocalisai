@@ -16,9 +16,11 @@ import {
   X,
   Sparkles,
   Building2,
-  ShieldCheck
+  ShieldCheck,
+  AlertCircle
 } from 'lucide-react';
 import { BRAND } from '../data/content';
+import { saveLead } from '../utils/supabaseClient';
 
 export default function ContatoPage({ onOpenDemo, onOpenAuth, onNavigate }) {
   const [activeFaq, setActiveFaq] = useState(null);
@@ -34,6 +36,8 @@ export default function ContatoPage({ onOpenDemo, onOpenAuth, onNavigate }) {
     message: ''
   });
   const [submitted, setSubmitted] = useState(false);
+  const [submitting, setSubmitting] = useState(false);
+  const [submitError, setSubmitError] = useState('');
 
   const handleCopyEmail = () => {
     navigator.clipboard.writeText('contato@vocalis.ai');
@@ -47,14 +51,37 @@ export default function ContatoPage({ onOpenDemo, onOpenAuth, onNavigate }) {
     setTimeout(() => setCopiedPhone(false), 2000);
   };
 
-  const handleSubmitForm = (e) => {
+  const handleSubmitForm = async (e) => {
     e.preventDefault();
     if (!formData.name || !formData.email) return;
-    setSubmitted(true);
+    setSubmitError('');
+    setSubmitting(true);
+    try {
+      const res = await saveLead({
+        phone: formData.phone || 'Nao informado (Contato)',
+        niche: contactType === 'parceiro' ? 'Parceria Comercial' : 'Contato Comercial',
+        notes: `ContatoPage (${contactType || 'geral'}): ${formData.name} · Empresa: ${formData.company || 'N/A'} · Email: ${formData.email} · Msg: ${formData.message || 'N/A'}`,
+      });
+      if (res?.success) {
+        setSubmitted(true);
+      } else {
+        setSubmitError(
+          'Não foi possível registrar sua mensagem no servidor neste momento. Envie diretamente para contato@vocalis.ai ou via WhatsApp (94) 98442-3948.'
+        );
+      }
+    } catch {
+      setSubmitError(
+        'Erro ao enviar sua solicitação. Utilize contato@vocalis.ai ou WhatsApp (94) 98442-3948.'
+      );
+    } finally {
+      setSubmitting(false);
+    }
   };
 
   const handleResetForm = () => {
     setSubmitted(false);
+    setSubmitting(false);
+    setSubmitError('');
     setFormData({
       name: '',
       email: '',
@@ -422,12 +449,20 @@ export default function ContatoPage({ onOpenDemo, onOpenAuth, onNavigate }) {
                     Ao enviar, os dados informados (nome, e-mail, telefone/WhatsApp e mensagem) serão utilizados para retorno da equipe comercial ou de parcerias sobre sua solicitação, conforme a Política de Privacidade.
                   </p>
 
+                  {submitError && (
+                    <div role="alert" className="p-3 rounded-xl bg-rose-50 border border-rose-200 text-rose-800 text-xs flex items-start gap-2">
+                      <AlertCircle className="w-4 h-4 text-rose-600 shrink-0 mt-0.5" />
+                      <span>{submitError}</span>
+                    </div>
+                  )}
+
                   <button
                     type="submit"
-                    className="w-full py-3 rounded-full bg-[#1A1816] hover:bg-[#302D2A] text-white text-xs font-bold transition-all shadow-md cursor-pointer flex items-center justify-center gap-2 mt-4"
+                    disabled={submitting}
+                    className="w-full py-3 rounded-full bg-[#1A1816] hover:bg-[#302D2A] text-white text-xs font-bold transition-all shadow-md cursor-pointer flex items-center justify-center gap-2 mt-4 disabled:opacity-60"
                   >
                     <Send className="w-3.5 h-3.5" />
-                    <span>Solicitar contato agora</span>
+                    <span>{submitting ? 'Enviando solicitação...' : 'Solicitar contato agora'}</span>
                   </button>
                 </form>
               </div>

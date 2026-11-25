@@ -48,106 +48,106 @@ export default function PlatformPresentationSlider({ isOpen, onClose }) {
             <div className="w-10 h-10 rounded-xl bg-indigo-500/20 text-indigo-400 flex items-center justify-center font-bold mb-3">
               <Layers className="w-5 h-5" />
             </div>
-            <h4 className="font-bold text-sm mb-1">Integrações Configuráveis</h4>
-            <p className="text-xs text-stone-300 leading-relaxed">
-              Possibilidade de integrar agenda, geração de Pix e envios no WhatsApp conforme as integrações habilitadas no plano.
-            </p>
-          </div>
-        </div>
-      )
-    },
-    {
-      id: 'create-assistant',
-      badge: 'PASSO A PASSO TÉCNICO',
-      title: 'Como Criar um Assistente em 3 Passos Simples',
-      subtitle: 'Sem linhas de código complexas: você pode criar e testar agentes para qualquer nicho de mercado.',
-      theme: 'light',
-      content: (
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-5 mt-6">
-          <div className="p-5 rounded-2xl bg-[#FAF9F5] border border-[#E7E4DC] relative">
-            <div className="w-8 h-8 rounded-full bg-[#1A1816] text-white flex items-center justify-center text-xs font-bold mb-3">
-              1
+              <h4 className="font-bold text-sm mb-1">Integrações Configuráveis</h4>
+              <p className="text-xs text-stone-300 leading-relaxed">
+                Possibilidade de integrar agendas, webhooks e fluxos de atendimento conforme as integrações habilitadas no plano.
+              </p>
             </div>
-            <h4 className="font-bold text-sm text-[#1A1816] mb-1.5">Escolha o Canal & Nicho</h4>
-            <p className="text-xs text-[#5C5955] leading-relaxed">
-              Selecione se o agente atenderá Telefone, WhatsApp ou Webchat. Use templates prontos para <strong>Clínica</strong>, <strong>Imobiliária</strong>, <strong>Advocacia</strong> ou crie um do zero.
-            </p>
           </div>
+        )
+      },
+      {
+        id: 'create-assistant',
+        badge: 'PASSO A PASSO TÉCNICO',
+        title: 'Como Criar um Assistente em 3 Passos Simples',
+        subtitle: 'Fluxo estruturado para configurar regras, tom de voz e base de conhecimento da sua empresa.',
+        theme: 'light',
+        content: (
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-5 mt-6">
+            <div className="p-5 rounded-2xl bg-[#FAF9F5] border border-[#E7E4DC] relative">
+              <div className="w-8 h-8 rounded-full bg-[#1A1816] text-white flex items-center justify-center text-xs font-bold mb-3">
+                1
+              </div>
+              <h4 className="font-bold text-sm text-[#1A1816] mb-1.5">Escolha o Canal & Nicho</h4>
+              <p className="text-xs text-[#5C5955] leading-relaxed">
+                Selecione se o agente atenderá Telefone, WhatsApp ou Webchat. Use modelos ilustrativos para <strong>Clínica</strong>, <strong>Imobiliária</strong>, <strong>Advocacia</strong> ou crie um do zero.
+              </p>
+            </div>
 
-          <div className="p-5 rounded-2xl bg-[#FAF9F5] border border-[#E7E4DC] relative">
-            <div className="w-8 h-8 rounded-full bg-[#4F46E5] text-white flex items-center justify-center text-xs font-bold mb-3">
-              2
+            <div className="p-5 rounded-2xl bg-[#FAF9F5] border border-[#E7E4DC] relative">
+              <div className="w-8 h-8 rounded-full bg-[#4F46E5] text-white flex items-center justify-center text-xs font-bold mb-3">
+                2
+              </div>
+              <h4 className="font-bold text-sm text-[#1A1816] mb-1.5">Defina a Voz e Regras</h4>
+              <p className="text-xs text-[#5C5955] leading-relaxed">
+                Escolha um perfil de voz demonstrativo e defina horários, perguntas frequentes e regras aprovadas pelo responsável da empresa.
+              </p>
             </div>
-            <h4 className="font-bold text-sm text-[#1A1816] mb-1.5">Defina a Voz e Regras</h4>
-            <p className="text-xs text-[#5C5955] leading-relaxed">
-              Escolha a voz da Clara, da Roberta ou grave 60 segundos no microfone para clonar a voz do próprio médico ou advogado. Insira preços e horários autorizados.
-            </p>
-          </div>
 
-          <div className="p-5 rounded-2xl bg-[#FAF9F5] border border-[#E7E4DC] relative">
-            <div className="w-8 h-8 rounded-full bg-emerald-600 text-white flex items-center justify-center text-xs font-bold mb-3">
-              3
+            <div className="p-5 rounded-2xl bg-[#FAF9F5] border border-[#E7E4DC] relative">
+              <div className="w-8 h-8 rounded-full bg-emerald-600 text-white flex items-center justify-center text-xs font-bold mb-3">
+                3
+              </div>
+              <h4 className="font-bold text-sm text-[#1A1816] mb-1.5">Cadastro & Implantação Assistida</h4>
+              <p className="text-xs text-[#5C5955] leading-relaxed">
+                O assistente fica salvo no cadastro da conta autenticada; a ativação real de telefonia e WhatsApp oficial depende de onboarding comercial e provedores configurados.
+              </p>
             </div>
-            <h4 className="font-bold text-sm text-[#1A1816] mb-1.5">Sincronização & Ativação</h4>
-            <p className="text-xs text-[#5C5955] leading-relaxed">
-              O assistente é salvo no Supabase e sincronizado com a telefonia da Vapi. Conecte o número de DDD desejado e o agente já começa a atender chamadas reais.
-            </p>
           </div>
-        </div>
-      )
-    },
-    {
-      id: 'demo-mode',
-      badge: 'TESTES SEM CUSTO / MODO SIMULAÇÃO',
-      title: 'Como Testar Tudo Mesmo Sem Vapi ou UazAPI Configuradas',
-      subtitle: 'A plataforma possui modo de demonstração autônomo com IA nativa para você validar antes de gastar 1 centavo.',
-      theme: 'light',
-      content: (
-        <div className="bg-[#FAF9F5] rounded-2xl border border-[#E7E4DC] p-6 mt-6 space-y-4">
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-            <div className="flex items-start gap-3 p-3.5 bg-white rounded-xl border border-[#EDEAE3]">
-              <CheckCircle2 className="w-5 h-5 text-emerald-600 shrink-0 mt-0.5" />
-              <div>
-                <h5 className="font-bold text-xs text-[#1A1816]">Simulação Completa no Navegador</h5>
-                <p className="text-[11px] text-[#736F69] mt-0.5">
-                  O modal de simulação ilustrativa funciona no navegador usando microfone e sintetizador de voz do sistema operacional.
-                </p>
+        )
+      },
+      {
+        id: 'demo-mode',
+        badge: 'SIMULAÇÃO NO NAVEGADOR',
+        title: 'Como Funciona o Ambiente de Demonstração Pública',
+        subtitle: 'Explore os fluxos ilustrativos no navegador sem acionar chamadas, cobranças ou mensagens reais.',
+        theme: 'light',
+        content: (
+          <div className="bg-[#FAF9F5] rounded-2xl border border-[#E7E4DC] p-6 mt-6 space-y-4">
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+              <div className="flex items-start gap-3 p-3.5 bg-white rounded-xl border border-[#EDEAE3]">
+                <CheckCircle2 className="w-5 h-5 text-emerald-600 shrink-0 mt-0.5" />
+                <div>
+                  <h5 className="font-bold text-xs text-[#1A1816]">Simulação Completa no Navegador</h5>
+                  <p className="text-[11px] text-[#736F69] mt-0.5">
+                    O modal de simulação ilustrativa funciona no navegador usando entrada de texto/voz e sintetizador compatível.
+                  </p>
+                </div>
+              </div>
+
+              <div className="flex items-start gap-3 p-3.5 bg-white rounded-xl border border-[#EDEAE3]">
+                <CheckCircle2 className="w-5 h-5 text-emerald-600 shrink-0 mt-0.5" />
+                <div>
+                  <h5 className="font-bold text-xs text-[#1A1816]">Respostas Controladas por Catálogo</h5>
+                  <p className="text-[11px] text-[#736F69] mt-0.5">
+                    O chat público responde com base na fonte única comercial e nas diretrizes de segurança, sem expor chaves no navegador.
+                  </p>
+                </div>
+              </div>
+
+              <div className="flex items-start gap-3 p-3.5 bg-white rounded-xl border border-[#EDEAE3]">
+                <CheckCircle2 className="w-5 h-5 text-emerald-600 shrink-0 mt-0.5" />
+                <div>
+                  <h5 className="font-bold text-xs text-[#1A1816]">WhatsApp em Modo Demonstração</h5>
+                  <p className="text-[11px] text-[#736F69] mt-0.5">
+                    O site público exibe prévia ilustrativa de WhatsApp sem disparo real; a operação comercial usa integração oficial sob consulta.
+                  </p>
+                </div>
+              </div>
+
+              <div className="flex items-start gap-3 p-3.5 bg-white rounded-xl border border-[#EDEAE3]">
+                <CheckCircle2 className="w-5 h-5 text-emerald-600 shrink-0 mt-0.5" />
+                <div>
+                  <h5 className="font-bold text-xs text-[#1A1816]">Solicitações de Contato</h5>
+                  <p className="text-[11px] text-[#736F69] mt-0.5">
+                    Apenas formulários explícitos de contato/demonstração enviam solicitação para retorno da nossa equipe comercial.
+                  </p>
+                </div>
               </div>
             </div>
-
-            <div className="flex items-start gap-3 p-3.5 bg-white rounded-xl border border-[#EDEAE3]">
-              <CheckCircle2 className="w-5 h-5 text-emerald-600 shrink-0 mt-0.5" />
-              <div>
-                <h5 className="font-bold text-xs text-[#1A1816]">Gemini AI Ativo para Respostas</h5>
-                <p className="text-[11px] text-[#736F69] mt-0.5">
-                  A assistente pensa e responde usando o Google Gemini integrado, entendendo perfeitamente o contexto do negócio sem você precisar de telefonia externa.
-                </p>
-              </div>
-            </div>
-
-            <div className="flex items-start gap-3 p-3.5 bg-white rounded-xl border border-[#EDEAE3]">
-              <CheckCircle2 className="w-5 h-5 text-emerald-600 shrink-0 mt-0.5" />
-              <div>
-                <h5 className="font-bold text-xs text-[#1A1816]">WhatsApp em Modo Demonstração</h5>
-                <p className="text-[11px] text-[#736F69] mt-0.5">
-                  Se a UazAPI não estiver configurada no .env, o sistema aciona a notificação deslizante e o modal de WhatsApp com o Pix de R$ 1,00 para o lead ver o efeito visual.
-                </p>
-              </div>
-            </div>
-
-            <div className="flex items-start gap-3 p-3.5 bg-white rounded-xl border border-[#EDEAE3]">
-              <CheckCircle2 className="w-5 h-5 text-emerald-600 shrink-0 mt-0.5" />
-              <div>
-                <h5 className="font-bold text-xs text-[#1A1816]">Gravação & Banco Supabase Real</h5>
-                <p className="text-[11px] text-[#736F69] mt-0.5">
-                  Todos os leads que colocam o telefone na Landing Page são salvos automaticamente no seu banco de dados Supabase para você fazer o acompanhamento.
-                </p>
-              </div>
-            </div>
           </div>
-        </div>
-      )
-    },
+        )
+      },
     {
       id: 'meeting-script',
       badge: 'ROTEIRO COMERCIAL B2B',

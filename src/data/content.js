@@ -339,9 +339,11 @@ export const COMPARISONS = [
   },
 ];
 
+export const SOCIAL_LINKS = [];
+
 export const PRIVACY_POLICY = {
   title: 'Política de privacidade',
-  subtitle: 'Como a Vocalis coleta, usa, compartilha e protege dados pessoais, conforme a LGPD (itens operacionais e jurídicos sinalizados como pendentes de confirmação).',
+  subtitle: 'Informações sobre coleta, uso, compartilhamento e proteção de dados pessoais (itens operacionais e jurídicos em validação).',
   company: 'VOCALIS TECNOLOGIA LTDA (PENDENTE DE CONFIRMAÇÃO)',
   updatedAt: 'Revisão técnica em andamento — pendente de validação jurídica',
   sections: [

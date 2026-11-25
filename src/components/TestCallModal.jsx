@@ -6,7 +6,8 @@ import {
 } from 'lucide-react';
 import { BRAND } from '../data/content';
 import { formatPhoneMask, formatPhoneForVoice } from '../utils/phoneUtils';
-import { speakRobertaVoice as speakFemalePt, stopRobertaVoice as stopSpeech } from '../utils/geminiAudioService';
+import { speakFemalePt, stopSpeech } from '../utils/voiceUtils';
+import { formatDuration } from '../utils/durationUtils';
 import { askRobertaAI } from '../utils/aiService';
 import { getCommercialActivationOptionLabel } from '../utils/commercialCatalogUtils';
 
@@ -16,7 +17,7 @@ export default function TestCallModal({ isOpen, phoneNumber, countryCode = '+55'
   const [currentStep, setCurrentStep] = useState(0);
   const [userNiche, setUserNiche] = useState('');
   const [userPain, setUserPain] = useState('');
-  const [userName, setUserName] = useState('Francisco');
+  const [userName, setUserName] = useState('Visitante');
   const [isSpeaking, setIsSpeaking] = useState(false);
   const [isThinking, setIsThinking] = useState(false);
   const [callLog, setCallLog] = useState([]);
@@ -41,9 +42,9 @@ export default function TestCallModal({ isOpen, phoneNumber, countryCode = '+55'
     isListeningMicRef.current = isListeningMic;
   }, [isListeningMic]);
 
-  // Normalização do telefone para exibição visual e pronúncia fonética
-  const formattedDisplayPhone = formatPhoneMask(phoneNumber) || '(94) 98447-8168';
-  const spokenPhone = formatPhoneForVoice(phoneNumber || '94984478168');
+  // Normalização do telefone fictício para exibição visual na simulação
+  const formattedDisplayPhone = formatPhoneMask(phoneNumber) || '(00) 00000-0000';
+  const spokenPhone = formatPhoneForVoice(phoneNumber || '00000000000');
 
   // Auto-scroll para última mensagem do chat
   useEffect(() => {
@@ -556,12 +557,6 @@ export default function TestCallModal({ isOpen, phoneNumber, countryCode = '+55'
     speakText(firstStep.spokenText);
   };
 
-  const formatDuration = (sec) => {
-    const m = String(Math.floor(sec / 60)).padStart(2, '0');
-    const s = String(sec % 60).padStart(2, '0');
-    return `${m}:${s}`;
-  };
-
   const handleCopyPix = () => {
     navigator.clipboard?.writeText('00020126580014br.gov.bcb.pix0136d8f23491-test-4b92-91f1-pixvocalis52040000530398654041.005802BR5925VOCALIS AI AGENCY OS6009SAO PAULO62070503***6304E8A1');
     setPixCopied(true);
@@ -571,7 +566,7 @@ export default function TestCallModal({ isOpen, phoneNumber, countryCode = '+55'
   if (!isOpen) return null;
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-4 bg-black/80 backdrop-blur-md animate-fadeIn">
+    <div role="dialog" aria-modal="true" aria-label="Simulação ilustrativa de chamada" className="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-4 bg-black/80 backdrop-blur-md animate-fadeIn">
       
       {/* Toast flutuante de WhatsApp simultâneo chegando durante a chamada */}
       {whatsappToastOpen && (
@@ -625,6 +620,8 @@ export default function TestCallModal({ isOpen, phoneNumber, countryCode = '+55'
               Vocalis AI
             </span>
             <button 
+              type="button"
+              aria-label="Fechar simulação"
               onClick={onClose}
               className="w-7 h-7 rounded-full bg-stone-800 flex items-center justify-center text-stone-400 hover:text-white transition-colors cursor-pointer"
             >
@@ -649,13 +646,13 @@ export default function TestCallModal({ isOpen, phoneNumber, countryCode = '+55'
           </div>
 
           <h3 className="text-base sm:text-lg font-bold text-white mt-1 flex items-center justify-center gap-2">
-            <span>Roberta · SDR & Consultora Executiva de IA</span>
+            <span>Roberta · Simulação Ilustrativa de IA</span>
             <span className="text-[10px] font-mono px-2 py-0.5 rounded bg-emerald-500/20 text-emerald-400 border border-emerald-500/30">
-              Voz Neural HD
+              Voz no Navegador
             </span>
           </h3>
           <p className="text-xs text-stone-400 font-mono mt-0.5">
-            Em ligação com: {countryCode} {formattedDisplayPhone}
+            Simulação referente a: {countryCode} {formattedDisplayPhone}
           </p>
 
           {/* Active speech waveform bar */}

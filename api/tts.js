@@ -1,5 +1,7 @@
-// Vercel Serverless Function: Síntese de Voz Neural do Google Gemini (WAV)
-// Converte texto em fala humana fluida e natural sem custo de ElevenLabs
+// Vercel Serverless Function: Síntese de Voz Neural via Gemini (proxy seguro)
+import { applyCorsHeaders, checkRateLimit } from './_security.js';
+
+const ALLOWED_VOICES = new Set(['Kore', 'Fenrir', 'Puck', 'Aoede']);
 
 function pcmToWav(pcmBuffer, sampleRate = 24000) {
   const numChannels = 1;
@@ -14,7 +16,7 @@ function pcmToWav(pcmBuffer, sampleRate = 24000) {
   header.write('WAVE', 8);
   header.write('fmt ', 12);
   header.writeUInt32LE(16, 16);
-  header.writeUInt16LE(1, 20); // PCM linear
+  header.writeUInt16LE(1, 20);
   header.writeUInt16LE(numChannels, 22);
   header.writeUInt32LE(sampleRate, 24);
   header.writeUInt32LE(byteRate, 28);
@@ -27,23 +29,38 @@ function pcmToWav(pcmBuffer, sampleRate = 24000) {
 }
 
 export default async function handler(req, res) {
-  res.setHeader('Access-Control-Allow-Credentials', true);
-  res.setHeader('Access-Control-Allow-Origin', '*');
-  res.setHeader('Access-Control-Allow-Methods', 'GET,POST,OPTIONS');
-  res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization');
+  const originAllowed = applyCorsHeaders(req, res, 'POST,OPTIONS', 'Content-Type, Authorization');
 
   if (req.method === 'OPTIONS') {
-    return res.status(200).end();
+    return res.status(originAllowed ? 200 : 403).end();
+  }
+
+  if (!originAllowed) {
+    return res.status(403).json({ success: false, error: 'Origem não autorizada.' });
+  }
+
+  if (req.method !== 'POST') {
+    return res.status(405).json({ success: false, error: 'Método não permitido. Utilize POST.' });
+  }
+
+  const rateCheck = checkRateLimit(req, 'tts', 20, 60_000);
+  if (!rateCheck.allowed) {
+    res.setHeader('Retry-After', String(rateCheck.retryAfterSeconds));
+    return res.status(429).json({ success: false, error: 'Limite temporário de requisições excedido.' });
   }
 
   const apiKey = process.env.GEMINI_API_KEY || process.env.VITE_GEMINI_API_KEY;
   if (!apiKey) {
-    return res.status(500).json({ error: 'Chave GEMINI_API_KEY não configurada' });
+    return res.status(503).json({ success: false, error: 'Serviço de síntese neural indisponível no momento.' });
   }
 
-  const body = req.method === 'POST' ? req.body : req.query;
-  const text = body?.text || req.query?.text || 'Olá, sou a Roberta da Vocalis AI.';
-  const voiceName = body?.voice || req.query?.voice || 'Kore';
+  const body = req.body && typeof req.body === 'object' ? req.body : {};
+  const rawText = typeof body.text === 'string' ? body.text.trim() : '';
+  const voiceName = ALLOWED_VOICES.has(body.voice) ? body.voice : 'Kore';
+
+  if (!rawText) {
+    return res.status(400).json({ success: false, error: 'Informe um texto válido para síntese.' });
+  }
 
   try {
     const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-preview-tts:generateContent?key=${apiKey}`;
@@ -51,49 +68,40 @@ export default async function handler(req, res) {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
-        contents: [{ parts: [{ text: text.slice(0, 500) }] }],
+        contents: [{ parts: [{ text: rawText.slice(0, 500) }] }],
         generationConfig: {
           responseModalities: ['AUDIO'],
           speechConfig: {
             voiceConfig: {
               prebuiltVoiceConfig: {
-                voiceName
-              }
-            }
-          }
-        }
-      })
+                voiceName,
+              },
+            },
+          },
+        },
+      }),
     });
 
     if (!response.ok) {
-      const err = await response.text();
-      return res.status(response.status).json({ error: err });
+      return res.status(502).json({ success: false, error: 'Falha ao sintetizar áudio no provedor.' });
     }
 
     const data = await response.json();
     const inlineData = data.candidates?.[0]?.content?.parts?.[0]?.inlineData;
 
     if (!inlineData?.data) {
-      return res.status(500).json({ error: 'Nenhum áudio retornado pelo modelo' });
+      return res.status(502).json({ success: false, error: 'Resposta de áudio indisponível no provedor.' });
     }
 
     const pcmBuffer = Buffer.from(inlineData.data, 'base64');
     const wavBuffer = pcmToWav(pcmBuffer, 24000);
 
-    // Se solicitado formato binário direto de áudio (para tocar via <audio src="...">)
-    if (req.query?.format === 'audio' || req.headers?.accept?.includes('audio/')) {
-      res.setHeader('Content-Type', 'audio/wav');
-      res.setHeader('Cache-Control', 'public, max-age=86400, s-maxage=86400');
-      return res.status(200).send(wavBuffer);
-    }
-
-    // Retorna JSON com o base64 do WAV
     return res.status(200).json({
       success: true,
       audioBase64: `data:audio/wav;base64,${wavBuffer.toString('base64')}`,
-      durationEstimateMs: Math.round((pcmBuffer.length / (24000 * 2)) * 1000)
+      durationEstimateMs: Math.round((pcmBuffer.length / (24000 * 2)) * 1000),
     });
-  } catch (error) {
-    return res.status(500).json({ error: error.message || 'Erro ao sintetizar áudio' });
+  } catch {
+    return res.status(500).json({ success: false, error: 'Erro interno ao sintetizar áudio.' });
   }
 }

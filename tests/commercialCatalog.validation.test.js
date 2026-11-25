@@ -4,6 +4,9 @@ import {
   INFO_STATUS,
   ANNUAL_CHARGE_TYPES,
   PROMOTION_BILLING_SCOPES,
+  PRICING_ROUNDING_RULE,
+  applyDiscountWithRounding,
+  calculateEffectiveDiscountPercent,
   confirmedField,
   pendingField,
 } from '../src/data/commercialCatalog';
@@ -72,31 +75,71 @@ describe('Fonte única de dados comerciais — validações estruturais e regras
     expect(result.errors).toEqual([]);
   });
 
-  it('mantém os valores observados na auditoria apenas como pendentes (nunca como value público confirmado)', () => {
+  it('confirma preços e modalidades anuais aprovadas mantendo limites, excedentes e termos pendentes até confirmação do proprietário', () => {
     const telSolo = COMMERCIAL_CATALOG.channels.telefone.plans.find((p) => p.id === 'solo');
     const waSolo = COMMERCIAL_CATALOG.channels.whatsapp.plans.find((p) => p.id === 'solo');
     const webSolo = COMMERCIAL_CATALOG.channels.webchat.plans.find((p) => p.id === 'solo');
 
-    expect(telSolo.pricing.promotionalMonthly.status).toBe(INFO_STATUS.PENDENTE);
-    expect(telSolo.pricing.promotionalMonthly.value).toBeNull();
-    expect(telSolo.pricing.promotionalMonthly.observedValue).toBe(503);
-    expect(telSolo.pricing.regularMonthly.observedValue).toBe(719);
-    expect(telSolo.pricing.promotion.durationMonths.observedValue).toBe(3);
+    // Preços mensais e anuais confirmados sem acúmulo com promo de 3 meses
+    expect(telSolo.pricing.promotionalMonthly.status).toBe(INFO_STATUS.CONFIRMADA);
+    expect(telSolo.pricing.promotionalMonthly.value).toBe(503);
+    expect(telSolo.pricing.regularMonthly.value).toBe(719);
+    expect(telSolo.pricing.promotion.durationMonths.value).toBe(3);
+    expect(telSolo.pricing.promotion.stackingWithAnnualDiscount.value).toBe(false);
+    expect(telSolo.pricing.modalities.annual.regularMonthlyEquivalent.value).toBe(599);
+    expect(telSolo.pricing.modalities.annual.totalAnnualAmount.value).toBe(7188);
+    expect(telSolo.pricing.modalities.annual.discountPercentage.value).toBe(17);
 
-    expect(waSolo.pricing.promotionalMonthly.status).toBe(INFO_STATUS.PENDENTE);
-    expect(waSolo.pricing.promotionalMonthly.value).toBeNull();
-    expect(waSolo.pricing.promotionalMonthly.observedValue).toBe(349);
-    expect(waSolo.pricing.regularMonthly.observedValue).toBe(499);
-    expect(waSolo.pricing.promotion.durationMonths.observedValue).toBe(3);
+    expect(waSolo.pricing.promotionalMonthly.value).toBe(349);
+    expect(waSolo.pricing.regularMonthly.value).toBe(499);
+    expect(waSolo.pricing.modalities.annual.regularMonthlyEquivalent.value).toBe(399);
+    expect(waSolo.pricing.modalities.annual.totalAnnualAmount.value).toBe(4788);
+    expect(waSolo.pricing.modalities.annual.discountPercentage.value).toBe(20);
+    expect(waSolo.pricing.modalities.annual.promotionalMonthlyEquivalent.status).toBe(INFO_STATUS.INDISPONIVEL);
 
-    expect(webSolo.pricing.promotionalMonthly.status).toBe(INFO_STATUS.PENDENTE);
-    expect(webSolo.pricing.promotionalMonthly.value).toBeNull();
-    expect(webSolo.pricing.promotionalMonthly.observedValue).toBe(209);
-    expect(webSolo.pricing.regularMonthly.observedValue).toBe(299);
-    expect(webSolo.pricing.promotion.durationMonths.observedValue).toBe(3);
+    expect(webSolo.pricing.promotionalMonthly.value).toBe(209);
+    expect(webSolo.pricing.regularMonthly.value).toBe(299);
+    expect(webSolo.pricing.modalities.annual.regularMonthlyEquivalent.value).toBe(249);
+    expect(webSolo.pricing.modalities.annual.totalAnnualAmount.value).toBe(2988);
+    expect(webSolo.pricing.modalities.annual.discountPercentage.value).toBe(17);
+
+    // Plano completo segue PENDENTE enquanto franquias, excedentes e SLA não estão confirmados
+    expect(telSolo.status).toBe(INFO_STATUS.PENDENTE);
+    expect(waSolo.status).toBe(INFO_STATUS.PENDENTE);
+    expect(webSolo.status).toBe(INFO_STATUS.PENDENTE);
   });
 
-  it('garante que todos os canais têm definições de termos e política de limite atingido como pendentes por padrão', () => {
+  it('valida regra de arredondamento, expiração de promoção e cálculo de total anual', () => {
+    expect(PRICING_ROUNDING_RULE.description).toMatch(/inteiro.*mais próximo/i);
+    expect(applyDiscountWithRounding(719, 30)).toBe(503);
+    expect(applyDiscountWithRounding(499, 30)).toBe(349);
+    expect(applyDiscountWithRounding(299, 30)).toBe(209);
+    expect(calculateEffectiveDiscountPercent(719, 599)).toBe(17);
+    expect(calculateEffectiveDiscountPercent(499, 399)).toBe(20);
+
+    // Antes do fim da validade (2026-12-31), promoção ativa; após expiração, aplica valor padrão
+    const waActive = getPlanPricingSummary('whatsapp', 'solo', 'monthly', COMMERCIAL_CATALOG, {
+      referenceDate: '2026-12-31',
+    });
+    expect(waActive.hasActiveConfirmedPromo).toBe(true);
+    expect(waActive.numericPrice).toBe(349);
+
+    const waExpired = getPlanPricingSummary('whatsapp', 'solo', 'monthly', COMMERCIAL_CATALOG, {
+      referenceDate: '2027-01-01',
+    });
+    expect(waExpired.hasActiveConfirmedPromo).toBe(false);
+    expect(waExpired.numericPrice).toBe(499);
+
+    // Modalidade anual de WhatsApp Solo não mistura "Assinatura mensal recorrente" nem R$ 349
+    const waAnnual = getPlanPricingSummary('whatsapp', 'solo', 'yearly', COMMERCIAL_CATALOG);
+    expect(waAnnual.numericPrice).toBe(399);
+    expect(waAnnual.hasActiveConfirmedPromo).toBe(false);
+    expect(waAnnual.totalAnnualLabel).toContain('4.788');
+    expect(waAnnual.afterPromoLabel).toContain('Cobrança anual antecipada');
+    expect(waAnnual.afterPromoLabel).not.toContain('Assinatura mensal recorrente');
+  });
+
+  it('garante definições por canal, política de limite atingido e modalidade anual coerentes', () => {
     const telTerms = getChannelUsageTerms('telefone', COMMERCIAL_CATALOG);
     const waTerms = getChannelUsageTerms('whatsapp', COMMERCIAL_CATALOG);
     const webTerms = getChannelUsageTerms('webchat', COMMERCIAL_CATALOG);
@@ -107,9 +150,15 @@ describe('Fonte única de dados comerciais — validações estruturais e regras
 
     ['telefone', 'whatsapp', 'webchat'].forEach((cid) => {
       expect(getChannelLimitReachedPolicy(cid, COMMERCIAL_CATALOG).isConfirmed).toBe(false);
-      expect(getVisibleOverageRowDefsForChannel(cid, COMMERCIAL_CATALOG)).toEqual([]);
-      expect(getChannelAnnualAvailability(cid, COMMERCIAL_CATALOG).isConfirmedAvailable).toBe(false);
+      expect(getChannelAnnualAvailability(cid, COMMERCIAL_CATALOG).isConfirmedAvailable).toBe(true);
     });
+    expect(getVisibleOverageRowDefsForChannel('telefone', COMMERCIAL_CATALOG).map((d) => d.key)).toEqual([
+      'extraNumbers',
+    ]);
+    expect(getVisibleOverageRowDefsForChannel('whatsapp', COMMERCIAL_CATALOG).map((d) => d.key)).toEqual([
+      'extraNumbers',
+    ]);
+    expect(getVisibleOverageRowDefsForChannel('webchat', COMMERCIAL_CATALOG)).toEqual([]);
   });
 
   it('detecta promoção sem data de validade, sem duração ou com conflito entre "primeira fatura" e meses', () => {
@@ -185,6 +234,7 @@ describe('Fonte única de dados comerciais — validações estruturais e regras
     const solo = brokenAnnual.channels.telefone.plans[0];
     solo.pricing.modalities.annual.status = INFO_STATUS.CONFIRMADA;
     solo.pricing.modalities.annual.available = confirmedField(true);
+    solo.pricing.modalities.annual.chargeType = pendingField(null);
     solo.pricing.modalities.annual.regularMonthlyEquivalent = confirmedField(600);
     solo.pricing.modalities.annual.totalAnnualAmount = confirmedField(7200);
 
@@ -206,7 +256,7 @@ describe('Fonte única de dados comerciais — validações estruturais e regras
     const simRow = tamperedTable.sections
       .flatMap((s) => s.items)
       .find((item) => item.key === 'simultaneousCalls');
-    simRow.solo = { ...simRow.solo, status: INFO_STATUS.CONFIRMADA, text: '1 chamada simultânea' };
+    simRow.solo = { ...simRow.solo, status: INFO_STATUS.CONFIRMADA, text: '99 chamadas simultâneas (divergente)' };
 
     const brokenParity = validateCardComparisonParity(
       'telefone',
@@ -238,8 +288,10 @@ describe('Fonte única de dados comerciais — validações estruturais e regras
 
   it('nunca exibe campo pendente como fato nos helpers e detecta vazamentos quando simulados', () => {
     const telCard = getPlanCardViewModel('telefone', 'solo', 'monthly');
-    expect(telCard.pricing.hasConfirmedPrice).toBe(false);
-    expect(telCard.pricing.displayPrice).toBe('Sob consulta');
+    expect(telCard.pricing.hasConfirmedPrice).toBe(true);
+    expect(telCard.pricing.displayPrice).toContain('503');
+    expect(telCard.pricing.isPlanFullyConfirmed).toBe(false);
+    expect(telCard.pricing.readinessLabel).toContain('Sob validação');
     expect(formatCommercialField({ status: INFO_STATUS.PENDENTE, value: null, observedValue: 503 }).text).toBe(
       'Pendente de confirmação'
     );
@@ -258,11 +310,11 @@ describe('Fonte única de dados comerciais — validações estruturais e regras
     expect(cleanCheck.violations).toEqual([]);
 
     const leakedCheck = detectPendingShownAsFact(
-      'Plano Telefonia Solo por R$ 503/mês na sua primeira fatura e Anual (-20% OFF).',
+      'Plano Telefonia Solo na sua primeira fatura sem custo adicional.',
       COMMERCIAL_CATALOG
     );
     expect(leakedCheck.valid).toBe(false);
-    expect(leakedCheck.violations.length).toBeGreaterThanOrEqual(3);
+    expect(leakedCheck.violations.length).toBeGreaterThanOrEqual(1);
   });
 
   it('propaga alterações confirmadas na fonte única de forma idêntica para cartão, comparação, Beatriz e entrada', () => {
@@ -274,6 +326,7 @@ describe('Fonte única de dados comerciais — validações estruturais e regras
     solo.pricing.modalities.annual.chargeType = confirmedField(ANNUAL_CHARGE_TYPES.PARCELADO);
     solo.pricing.modalities.annual.regularMonthlyEquivalent = confirmedField(600);
     solo.pricing.modalities.annual.totalAnnualAmount = confirmedField(7200);
+    solo.pricing.modalities.annual.discountPercentage = confirmedField(17);
 
     expect(validateCommercialCatalog(confirmedClone).valid).toBe(true);
     expect(validateCardComparisonParity('telefone', 'monthly', confirmedClone).valid).toBe(true);
@@ -283,17 +336,20 @@ describe('Fonte única de dados comerciais — validações estruturais e regras
     const beatrizReply = buildBeatrizCommercialReply('preço telefone', confirmedClone);
     const robertaReply = buildRobertaCommercialReply(confirmedClone);
     const entryLabel = getCommercialEntryLabel('telefone', confirmedClone);
+    const lowestEntryLabel = getCommercialEntryLabel(null, confirmedClone);
 
     expect(card.pricing.displayPrice).toMatch(/503/);
     expect(card.pricing.promoScopeLabel).toBe('Nos primeiros 3 meses');
     expect(table.columns[0].pricing.displayPrice).toBe(card.pricing.displayPrice);
-    expect(beatrizReply).toContain('503');
     expect(beatrizReply).toContain('31/12/2026');
     expect(beatrizReply).toContain('719');
-    expect(robertaReply).toContain('503');
+    expect(robertaReply).toContain('Webchat Solo');
+    expect(robertaReply).toContain('209');
     expect(entryLabel).toContain('503');
+    expect(lowestEntryLabel).toContain('Webchat Solo');
+    expect(lowestEntryLabel).toContain('209');
 
     expect(detectPendingShownAsFact(beatrizReply, confirmedClone).valid).toBe(true);
-    expect(detectPendingShownAsFact('WhatsApp Solo por R$ 349/mês', confirmedClone).valid).toBe(false);
+    expect(detectPendingShownAsFact('Atendimentos ilimitados por 0 reais', confirmedClone).valid).toBe(false);
   });
 });

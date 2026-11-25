@@ -68,13 +68,16 @@ describe('Auditoria por canal: WhatsApp, Telefone e Webchat', () => {
     expect(waText).not.toContain('Seu cliente mandou mensagem, já foi respondido');
     cleanup();
 
-    const dashRender = render(<WhatsAppConnectorDashboard userPhone="559484423948" />);
+    const dashRender = render(<WhatsAppConnectorDashboard userPhone="" isDemoMode={true} />);
     const dashText = dashRender.container.textContent || '';
 
-    expect(dashText).toContain('Protótipo Experimental Local');
-    expect(dashText).toContain('retirada da oferta comercial pública principal');
-    expect(dashText).not.toContain('Sessão SalvaPermanente');
-    expect(dashText).not.toContain('Não precisa escanear novamente');
+    expect(dashText).toContain('Conexão WhatsApp Business (Meta Cloud API)');
+    expect(dashText).toContain('Modo Demonstração — Sem Conexão Externa');
+    expect(dashText).not.toContain('localhost:8080');
+    expect(dashText).not.toContain('iniciar-whatsapp.bat');
+    expect(dashText).not.toContain('npm run server:wa');
+    expect(dashText).not.toContain('559484423948');
+    expect(globalThis.fetch).not.toHaveBeenCalled();
   });
 
   it('Páginas de soluções telefônicas rotulam formulário como simulação ilustrativa e citam terceiros/limites do catálogo', () => {

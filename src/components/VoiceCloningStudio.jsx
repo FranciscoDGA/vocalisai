@@ -4,6 +4,7 @@ import {
   Volume2, ShieldCheck, AlertCircle, Headphones, Zap, Download, X
 } from 'lucide-react';
 import { speakText, stopSpeech } from '../utils/voiceUtils';
+import { formatDuration } from '../utils/durationUtils';
 
 export default function VoiceCloningStudio({ isOpen, onClose, onSaveVoice }) {
   const [profileType, setProfileType] = useState('medico'); // 'medico' | 'advogado' | 'comercial' | 'personalizado'
@@ -269,7 +270,7 @@ export default function VoiceCloningStudio({ isOpen, onClose, onSaveVoice }) {
 
           {/* Timer Display */}
           <div className="text-3xl font-mono font-bold tracking-widest mb-1 text-white z-10">
-            00:{recordingSeconds < 10 ? `0${recordingSeconds}` : recordingSeconds}
+            {formatDuration(recordingSeconds)}
             <span className="text-xs text-[#A8A29E] font-sans ml-2">/ 01:00</span>
           </div>
 

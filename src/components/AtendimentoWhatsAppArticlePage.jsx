@@ -41,16 +41,16 @@ export default function AtendimentoWhatsAppArticlePage({ onNavigateHome, onOpenL
       a: 'O bot tradicional funciona como uma URA de árvore rígida (digite 1 para vendas, 2 para suporte). Se o cliente fizer uma pergunta fora do roteiro ou enviar áudio, o bot trava. O agente de IA conversacional compreende linguagem natural, interpreta áudios, consulta o catálogo ou CRM em tempo real e responde humanamente com empatia e contexto.'
     },
     {
-      q: 'O agente de IA pode alucinar ou inventar descontos que não existem?',
-      a: 'Com a arquitetura moderna de Guardrails e RAG (Retrieval-Augmented Generation), o modelo é instruído e travado para responder estritamente com base nos dados oficiais da sua empresa. Se o cliente pedir algo fora das diretrizes, a IA faz o transbordo elegante para o atendente humano responsável.'
+      q: 'A IA pode gerar respostas imprevistas ou descontos não autorizados?',
+      a: 'Os modelos são orientados por instruções de escopo e base de conhecimento cadastrada pela empresa para reduzir respostas fora do previsto, mas não são infalíveis; revisões periódicas e transbordo humano são recomendados em temas sensíveis ou comerciais.'
     },
     {
       q: 'Preciso da API Oficial da Meta para usar IA no WhatsApp?',
-      a: 'Sim, fortemente recomendada! A WhatsApp Business Cloud API Oficial garante imunidade a banimentos de número, múltiplos atendentes simultâneos no mesmo número, suporte a botões interativos e selo de verificação da marca.'
+      a: 'Sim, para operação comercial em conformidade. A WhatsApp Business Cloud API Oficial reduz riscos operacionais em comparação a integrações não oficiais e permite múltiplos atendentes e recursos oficiais da Meta, sujeitos às políticas e tarifas vigentes da própria Meta (sem garantir ausência total de restrições se políticas forem violadas).'
     },
     {
-      q: 'A IA no WhatsApp consegue ouvir e mandar mensagens de áudio?',
-      a: 'Sim! Com os módulos de Speech-to-Text (STT) e Text-to-Speech (TTS) neural integrados ao Vocalis AI, o agente ouve o áudio do cliente em segundos e pode responder em texto ou com uma voz humana realista e acolhedora.'
+      q: 'A IA no WhatsApp consegue processar e responder mensagens de áudio?',
+      a: 'Dependendo do plano e da arquitetura configurada na implantação, fluxos de transcrição (STT) e síntese de voz (TTS) podem interpretar e responder áudios; tempos de resposta variam conforme a carga da rede e os provedores.'
     }
   ];
 
@@ -83,7 +83,7 @@ export default function AtendimentoWhatsAppArticlePage({ onNavigateHome, onOpenL
           </h1>
 
           <p className="text-lg sm:text-xl text-slate-300 leading-relaxed font-light">
-            Como substituir menus numéricos irritantes por agentes inteligentes capazes de qualificar leads, agendar consultas e fechar vendas no WhatsApp 24/7 sem risco de banimento.
+            Como estruturar assistentes conversacionais com a API Oficial da Meta para qualificar contatos, encaminhar atendimentos e organizar agendamentos no WhatsApp respeitando limites operacionais e regras da plataforma.
           </p>
         </header>
 
@@ -117,11 +117,11 @@ export default function AtendimentoWhatsAppArticlePage({ onNavigateHome, onOpenL
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4 pt-2">
               <div className="p-4 rounded-xl bg-slate-800/50 border border-slate-700/50">
                 <h3 className="font-semibold text-white text-base mb-1">1. API Oficial da Meta (Cloud API)</h3>
-                <p className="text-sm text-slate-300">Garante estabilidade, múltiplos acessos simultâneos e blindagem contra bloqueios de chips piratas.</p>
+                <p className="text-sm text-slate-300">Via oficial aprovada pela Meta (sujeita às políticas de uso, aprovação de conta e eventuais taxas por categoria de mensagem cobradas pela própria Meta).</p>
               </div>
               <div className="p-4 rounded-xl bg-slate-800/50 border border-slate-700/50">
-                <h3 className="font-semibold text-white text-base mb-1">2. Base de Conhecimento RAG</h3>
-                <p className="text-sm text-slate-300">A IA consulta PDFs, tabelas de preço e catálogo da sua empresa para nunca inventar informações falsas.</p>
+                <h3 className="font-semibold text-white text-base mb-1">2. Base de Conhecimento Configurável</h3>
+                <p className="text-sm text-slate-300">O assistente utiliza documentos, tabelas de preço e diretrizes cadastradas pela empresa para orientar as respostas, exigindo revisão periódica.</p>
               </div>
               <div className="p-4 rounded-xl bg-slate-800/50 border border-slate-700/50">
                 <h3 className="font-semibold text-white text-base mb-1">3. Transbordo Humano Inteligente</h3>
@@ -149,24 +149,24 @@ export default function AtendimentoWhatsAppArticlePage({ onNavigateHome, onOpenL
                 </thead>
                 <tbody className="divide-y divide-slate-800/70">
                   <tr>
-                    <td className="p-3 font-medium text-white">Tempo Médio de 1ª Resposta</td>
-                    <td className="p-3 text-red-400">18 a 45 minutos</td>
-                    <td className="p-3 text-emerald-400 font-semibold">Menos de 3 segundos</td>
+                    <td className="p-3 font-medium text-white">Tempo de 1ª Resposta</td>
+                    <td className="p-3 text-slate-400">Depende da fila da equipe humana</td>
+                    <td className="p-3 text-emerald-400 font-semibold">Automatizada (varia conforme rede e provedor)</td>
                   </tr>
                   <tr>
-                    <td className="p-3 font-medium text-white">Disponibilidade Noturna &amp; Fim de Semana</td>
-                    <td className="p-3 text-slate-400">Inativo ou com hora extra cara</td>
-                    <td className="p-3 text-emerald-400 font-semibold">24 horas por dia, 7 dias por semana</td>
+                    <td className="p-3 font-medium text-white">Horário de Atendimento</td>
+                    <td className="p-3 text-slate-400">Horário comercial da equipe</td>
+                    <td className="p-3 text-emerald-400 font-semibold">Disponibilidade contínua conforme plano configurado</td>
                   </tr>
                   <tr>
-                    <td className="p-3 font-medium text-white">Capacidade Simultânea de Conversas</td>
-                    <td className="p-3 text-slate-400">3 a 5 clientes por operador</td>
-                    <td className="p-3 text-emerald-400 font-semibold">Ilimitada (10.000+ simultâneos)</td>
+                    <td className="p-3 font-medium text-white">Concorrência</td>
+                    <td className="p-3 text-slate-400">Atendimento por operador</td>
+                    <td className="p-3 text-emerald-400 font-semibold">Conforme plano contratado e limites da Meta API</td>
                   </tr>
                   <tr>
-                    <td className="p-3 font-medium text-white">Interpretação e Envio de Áudio</td>
-                    <td className="p-3 text-slate-400">Operador precisa parar para ouvir</td>
-                    <td className="p-3 text-emerald-400 font-semibold">Transcrição e resposta em milissegundos</td>
+                    <td className="p-3 font-medium text-white">Suporte a Áudio</td>
+                    <td className="p-3 text-slate-400">Escuta e resposta manual</td>
+                    <td className="p-3 text-emerald-400 font-semibold">Conforme módulos habilitados na implantação</td>
                   </tr>
                 </tbody>
               </table>

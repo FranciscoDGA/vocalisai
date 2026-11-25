@@ -1,5 +1,6 @@
 import express from 'express';
 import cors from 'cors';
+import crypto from 'node:crypto';
 import path from 'path';
 import { fileURLToPath } from 'url';
 import fs from 'fs';
@@ -18,9 +19,24 @@ const __dirname = path.dirname(__filename);
 
 const app = express();
 const PORT = process.env.PORT || 8080;
-const API_KEY = process.env.API_KEY || 'minha_chave_mestra_secreta_123';
+const HOST = '127.0.0.1';
+const API_KEY = process.env.WHATSAPP_LOCAL_API_KEY || crypto.randomBytes(24).toString('hex');
+if (!process.env.WHATSAPP_LOCAL_API_KEY) {
+  console.info('[WhatsApp Engine] WHATSAPP_LOCAL_API_KEY não definida; gerada chave efêmera local apenas para esta sessão.');
+}
 
-app.use(cors());
+const ALLOWED_LOCAL_ORIGINS = new Set(['http://localhost:5173', 'http://127.0.0.1:5173']);
+app.use(
+  cors({
+    origin(origin, callback) {
+      if (!origin || ALLOWED_LOCAL_ORIGINS.has(origin)) {
+        callback(null, true);
+        return;
+      }
+      callback(new Error('Origem não autorizada pelo protótipo local'));
+    },
+  })
+);
 app.use(express.json());
 
 // Estado global da conexão
@@ -111,12 +127,16 @@ startWhatsApp();
 // Rotas da API (Compatível com Evolution API / UazAPI)
 // ==========================================
 
-// Middleware simples de autenticação (opcional - se passar apikey)
+// Middleware obrigatório de autenticação local via header apikey / Authorization Bearer
 const authMiddleware = (req, res, next) => {
-  const reqKey = req.headers['apikey'] || req.headers['authorization']?.replace('Bearer ', '');
-  if (reqKey && reqKey !== API_KEY) {
-    // Permite conexões locais para simplificar testes
-    console.info(`[Auth] Chave recebida: ${reqKey}`);
+  const reqKey = req.headers['apikey'] || req.headers['authorization']?.replace(/^Bearer\s+/i, '');
+  if (!reqKey || typeof reqKey !== 'string') {
+    return res.status(401).json({ success: false, error: 'Chave de autenticação local ausente.' });
+  }
+  const bufA = Buffer.from(reqKey, 'utf8');
+  const bufB = Buffer.from(API_KEY, 'utf8');
+  if (bufA.length !== bufB.length || !crypto.timingSafeEqual(bufA, bufB)) {
+    return res.status(401).json({ success: false, error: 'Chave de autenticação local inválida.' });
   }
   next();
 };
@@ -418,8 +438,8 @@ async function handleSendAudio(req, res) {
 app.post('/message/sendWhatsAppAudio/:instance', authMiddleware, handleSendAudio);
 app.post('/message/sendWhatsAppAudio', authMiddleware, handleSendAudio);
 
-// Inicia o servidor HTTP
-app.listen(PORT, () => {
-  console.log(`\n🚀 Vocalis WhatsApp Engine rodando na porta ${PORT}!`);
-  console.log(`👉 Conecte seu WhatsApp pelo navegador em: http://localhost:${PORT}/instance/connect/vocalis\n`);
+// Inicia o servidor HTTP exclusivamente em loopback local (127.0.0.1)
+app.listen(PORT, HOST, () => {
+  console.log(`\n🚀 Vocalis WhatsApp Engine (uso restrito a desenvolvimento local) em http://${HOST}:${PORT}`);
+  console.log(`👉 Conecte em desenvolvimento pelo navegador: http://${HOST}:${PORT}/instance/connect/vocalis\n`);
 });

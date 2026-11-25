@@ -1,12 +1,12 @@
-import React, { useState } from 'react';
-import { X, Phone, CheckCircle2, Sparkles, Building, Mail, User, PhoneCall, Volume2 } from 'lucide-react';
+import React, { useState, useEffect } from 'react';
+import { X, Phone, CheckCircle2, Sparkles, Building, Mail, User, PhoneCall, Volume2, AlertCircle, Loader2 } from 'lucide-react';
 import confetti from 'canvas-confetti';
 import { BRAND, SPECIALIST_CONTACT } from '../data/content';
 import { formatPhoneMask } from '../utils/phoneUtils';
 import { speakFemalePt } from '../utils/voiceUtils';
 import { saveLead } from '../utils/supabaseClient';
 
-export default function DemoModal({ isOpen, onClose }) {
+export default function DemoModal({ isOpen, onClose, selectedPlan = null }) {
   const [formData, setFormData] = useState({
     name: '',
     phone: '',
@@ -17,52 +17,92 @@ export default function DemoModal({ isOpen, onClose }) {
   });
 
   const [submitted, setSubmitted] = useState(false);
+  const [submitting, setSubmitting] = useState(false);
+  const [submitError, setSubmitError] = useState('');
   const [isCallingBrowser, setIsCallingBrowser] = useState(false);
+
+  useEffect(() => {
+    if (!isOpen) return;
+    const handleKeyDown = (event) => {
+      if (event.key === 'Escape') {
+        onClose?.();
+      }
+    };
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, [isOpen, onClose]);
 
   if (!isOpen) return null;
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    setSubmitted(true);
+    setSubmitError('');
+    setSubmitting(true);
 
-    // Salva o lead no Supabase
-    saveLead({
-      phone: formData.phone,
-      niche: formData.niche,
-      notes: `Lead DemoModal: ${formData.name} · Empresa: ${formData.company || 'N/A'} · Email: ${formData.email || 'N/A'}`
-    });
+    const planSummary = selectedPlan
+      ? ` · Plano: ${selectedPlan.channelName || selectedPlan.channelId} ${selectedPlan.planName} (${selectedPlan.billingCycle})`
+      : '';
 
-    // Trigger confetti
     try {
-      confetti({
-        particleCount: 100,
-        spread: 70,
-        origin: { y: 0.6 }
+      const res = await saveLead({
+        phone: formData.phone,
+        niche: formData.niche,
+        notes: `Lead DemoModal: ${formData.name} · Empresa: ${formData.company || 'N/A'} · Email: ${formData.email || 'N/A'}${planSummary}`,
       });
-    } catch (err) {
-      console.log('Confetti error', err);
-    }
 
-    if (formData.testType === 'browser') {
-      setIsCallingBrowser(true);
-      const text = `Olá ${formData.name || 'amigo'}! Aqui é a assistente inteligente da Vocalis. Que satisfação demonstrar nosso atendimento para a sua empresa no segmento de ${formData.niche}. Como posso agendar seu teste completo?`;
-      speakFemalePt(
-        text,
-        () => setIsCallingBrowser(true),
-        () => setIsCallingBrowser(false),
-        () => setIsCallingBrowser(false)
+      if (!res?.success) {
+        setSubmitError(
+          'Não foi possível registrar sua solicitação no servidor neste momento. Você pode tentar novamente ou falar diretamente com nossa equipe.'
+        );
+        return;
+      }
+
+      setSubmitted(true);
+
+      try {
+        confetti({
+          particleCount: 100,
+          spread: 70,
+          origin: { y: 0.6 },
+        });
+      } catch {
+        // ignore animation error in headless/reduced environments
+      }
+
+      if (formData.testType === 'browser') {
+        setIsCallingBrowser(true);
+        const text = `Olá ${formData.name || 'visitante'}! Aqui é a assistente inteligente da Vocalis. Esta é uma simulação ilustrativa no navegador para o segmento de ${formData.niche}.`;
+        speakFemalePt(
+          text,
+          () => setIsCallingBrowser(true),
+          () => setIsCallingBrowser(false),
+          () => setIsCallingBrowser(false)
+        );
+      }
+    } catch {
+      setSubmitError(
+        'Erro ao enviar sua solicitação. Tente novamente ou utilize nossos canais diretos abaixo.'
       );
+    } finally {
+      setSubmitting(false);
     }
   };
 
   const handleReset = () => {
     setSubmitted(false);
+    setSubmitting(false);
+    setSubmitError('');
     setIsCallingBrowser(false);
     onClose();
   };
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-md animate-fadeIn">
+    <div
+      role="dialog"
+      aria-modal="true"
+      aria-label="Solicitar Demonstração Vocalis AI"
+      className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-md animate-fadeIn"
+    >
       <div className="relative w-full max-w-lg rounded-3xl bg-[#12141f] border border-white/10 p-6 sm:p-8 shadow-2xl overflow-hidden font-sans">
         
         {/* Glow behind modal */}
@@ -70,7 +110,9 @@ export default function DemoModal({ isOpen, onClose }) {
 
         {/* Close Button */}
         <button
+          type="button"
           onClick={handleReset}
+          aria-label="Fechar janela de demonstração"
           className="absolute top-5 right-5 p-2 rounded-xl text-slate-400 hover:text-white hover:bg-white/10 transition-colors cursor-pointer"
         >
           <X className="w-5 h-5" />
@@ -90,6 +132,17 @@ export default function DemoModal({ isOpen, onClose }) {
               <p className="text-xs sm:text-sm text-slate-400">
                 Preencha seus dados para ouvir uma simulação ilustrativa no navegador ou solicitar contato da nossa equipe.
               </p>
+              {selectedPlan && (
+                <div className="p-2.5 rounded-xl bg-white/5 border border-white/10 text-[11px] text-[#A5B4FC]">
+                  Interesse selecionado: <strong>{selectedPlan.channelName || selectedPlan.channelId} — {selectedPlan.planName}</strong> ({selectedPlan.billingCycle === 'yearly' || selectedPlan.billingCycle === 'anual' ? 'Anual' : 'Mensal'})
+                </div>
+              )}
+              {submitError && (
+                <div role="alert" className="p-3 rounded-xl bg-rose-950/80 border border-rose-500/40 text-rose-200 text-xs flex items-start gap-2">
+                  <AlertCircle className="w-4 h-4 text-rose-400 shrink-0 mt-0.5" />
+                  <span>{submitError}</span>
+                </div>
+              )}
             </div>
 
             {/* Form */}
@@ -195,10 +248,11 @@ export default function DemoModal({ isOpen, onClose }) {
               <div className="pt-4">
                 <button
                   type="submit"
-                  className="w-full py-3.5 rounded-xl bg-gradient-to-r from-[#4F46E5] to-[#E06336] text-white font-bold text-sm shadow-xl shadow-[#4F46E5]/25 hover:brightness-110 active:scale-[0.98] transition-all flex items-center justify-center gap-2 cursor-pointer"
+                  disabled={submitting}
+                  className="w-full py-3.5 rounded-xl bg-gradient-to-r from-[#4F46E5] to-[#6366F1] text-white font-bold text-sm shadow-xl shadow-[#4F46E5]/25 hover:brightness-110 active:scale-[0.98] transition-all flex items-center justify-center gap-2 cursor-pointer disabled:opacity-60"
                 >
-                  <Sparkles className="w-4 h-4" />
-                  <span>Enviar e Iniciar Simulação</span>
+                  {submitting ? <Loader2 className="w-4 h-4 animate-spin" /> : <Sparkles className="w-4 h-4" />}
+                  <span>{submitting ? 'Enviando solicitação...' : 'Enviar e Iniciar Simulação'}</span>
                 </button>
               </div>
 
@@ -232,9 +286,9 @@ export default function DemoModal({ isOpen, onClose }) {
 
             <div className="flex flex-col sm:flex-row gap-3 justify-center items-center">
               <a
-                href={SPECIALIST_CONTACT.getWhatsAppUrl(`Olá Francisco! Meu nome é ${formData.name || ''} da empresa ${formData.company || ''} (${formData.niche}). Gostaria de agendar a demonstração da Vocalis AI.`)}
+                href={SPECIALIST_CONTACT.getWhatsAppUrl(`Olá equipe Vocalis! Meu nome é ${formData.name || ''} da empresa ${formData.company || ''} (${formData.niche}). Gostaria de agendar a demonstração da Vocalis AI.`)}
                 target="_blank"
-                rel="noreferrer"
+                rel="noopener noreferrer"
                 className="w-full sm:w-auto px-6 py-2.5 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white font-bold text-xs transition-colors flex items-center justify-center gap-2 cursor-pointer shadow-lg shadow-emerald-600/30"
               >
                 <span>Falar no WhatsApp do Especialista</span>

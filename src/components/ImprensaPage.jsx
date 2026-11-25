@@ -13,15 +13,18 @@ import {
   Copy,
   Check,
   Building,
-  Image as ImageIcon
+  Image as ImageIcon,
+  AlertCircle
 } from 'lucide-react';
 import { BRAND } from '../data/content';
+import { saveLead } from '../utils/supabaseClient';
 
 export default function ImprensaPage({ onOpenDemo, onOpenAuth, onNavigateHome }) {
   const [isPressModalOpen, setIsPressModalOpen] = useState(false);
   const [isMediaKitModalOpen, setIsMediaKitModalOpen] = useState(false);
   const [selectedRelease, setSelectedRelease] = useState(null);
   const [copiedEmail, setCopiedEmail] = useState(false);
+  const [mediaKitNotice, setMediaKitNotice] = useState('');
 
   const [pressForm, setPressForm] = useState({
     name: '',
@@ -32,6 +35,8 @@ export default function ImprensaPage({ onOpenDemo, onOpenAuth, onNavigateHome })
     deadline: ''
   });
   const [pressSubmitted, setPressSubmitted] = useState(false);
+  const [pressSubmitting, setPressSubmitting] = useState(false);
+  const [pressError, setPressError] = useState('');
 
   const pressReleases = [
     {
@@ -58,14 +63,35 @@ export default function ImprensaPage({ onOpenDemo, onOpenAuth, onNavigateHome })
     setTimeout(() => setCopiedEmail(false), 2000);
   };
 
-  const handleSubmitPressForm = (e) => {
+  const handleSubmitPressForm = async (e) => {
     e.preventDefault();
     if (!pressForm.name || !pressForm.email || !pressForm.outlet) return;
-    setPressSubmitted(true);
+    setPressError('');
+    setPressSubmitting(true);
+    try {
+      const res = await saveLead({
+        phone: pressForm.phone || 'Nao informado (Imprensa)',
+        niche: `Imprensa · ${pressForm.outlet}`,
+        notes: `Imprensa: ${pressForm.name} · Veículo: ${pressForm.outlet} · Email: ${pressForm.email} · Prazo: ${pressForm.deadline || 'N/A'} · Pauta: ${pressForm.topic || 'N/A'}`,
+      });
+      if (res?.success) {
+        setPressSubmitted(true);
+      } else {
+        setPressError(
+          'Não foi possível registrar seu pedido de imprensa no servidor neste momento. Envie diretamente para imprensa@vocalis.ai.'
+        );
+      }
+    } catch {
+      setPressError('Erro ao enviar pedido de imprensa. Escreva diretamente para imprensa@vocalis.ai.');
+    } finally {
+      setPressSubmitting(false);
+    }
   };
 
   const handleResetPressForm = () => {
     setPressSubmitted(false);
+    setPressSubmitting(false);
+    setPressError('');
     setPressForm({
       name: '',
       outlet: '',
@@ -380,12 +406,20 @@ export default function ImprensaPage({ onOpenDemo, onOpenAuth, onNavigateHome })
                     />
                   </div>
 
+                  {pressError && (
+                    <div role="alert" className="p-3 rounded-xl bg-rose-50 border border-rose-200 text-rose-800 text-xs flex items-start gap-2">
+                      <AlertCircle className="w-4 h-4 text-rose-600 shrink-0 mt-0.5" />
+                      <span>{pressError}</span>
+                    </div>
+                  )}
+
                   <button
                     type="submit"
-                    className="w-full py-3 rounded-full bg-[#1A1816] hover:bg-[#302D2A] text-white text-xs font-bold transition-all shadow-md cursor-pointer flex items-center justify-center gap-2 mt-4"
+                    disabled={pressSubmitting}
+                    className="w-full py-3 rounded-full bg-[#1A1816] hover:bg-[#302D2A] text-white text-xs font-bold transition-all shadow-md cursor-pointer flex items-center justify-center gap-2 mt-4 disabled:opacity-60"
                   >
                     <Send className="w-3.5 h-3.5" />
-                    <span>Enviar solicitação de imprensa</span>
+                    <span>{pressSubmitting ? 'Enviando solicitação...' : 'Enviar solicitação de imprensa'}</span>
                   </button>
                 </form>
               </div>
@@ -456,10 +490,11 @@ export default function ImprensaPage({ onOpenDemo, onOpenAuth, onNavigateHome })
                   </div>
                 </div>
                 <button
-                  onClick={() => alert('Download do pacote de logos iniciado!')}
+                  type="button"
+                  onClick={() => setMediaKitNotice('Pacote de logotipos disponibilizado mediante solicitação para contato@vocalis.ai.')}
                   className="px-3 py-1.5 rounded-lg bg-white border border-[#D5D2C9] text-xs font-semibold text-[#1A1816] hover:bg-[#EEF2FF] transition-colors cursor-pointer shadow-2xs"
                 >
-                  Baixar .ZIP
+                  Solicitar
                 </button>
               </div>
 
@@ -474,17 +509,23 @@ export default function ImprensaPage({ onOpenDemo, onOpenAuth, onNavigateHome })
                       Capturas de Tela do Produto & Fotos Institucionais
                     </div>
                     <div className="text-[11px] text-[#736F69]">
-                      Painel de voz, interface de WhatsApp e fotos dos fundadores
+                      Painel de voz, interface de WhatsApp e materiais de divulgação
                     </div>
                   </div>
                 </div>
                 <button
-                  onClick={() => alert('Download do pacote de imagens iniciado!')}
+                  type="button"
+                  onClick={() => setMediaKitNotice('Pacote de imagens disponibilizado mediante solicitação para contato@vocalis.ai.')}
                   className="px-3 py-1.5 rounded-lg bg-white border border-[#D5D2C9] text-xs font-semibold text-[#1A1816] hover:bg-[#EEF2FF] transition-colors cursor-pointer shadow-2xs"
                 >
-                  Baixar .ZIP
+                  Solicitar
                 </button>
               </div>
+              {mediaKitNotice && (
+                <div role="status" className="p-3 rounded-xl bg-amber-50 border border-amber-200 text-amber-950 text-xs">
+                  {mediaKitNotice}
+                </div>
+              )}
             </div>
 
             {/* Colors Guidelines */}

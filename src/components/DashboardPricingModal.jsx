@@ -1,9 +1,10 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { X, Check, Clock, User } from 'lucide-react';
 import { COMMERCIAL_CATALOG, INFO_STATUS } from '../data/commercialCatalog';
 import {
   getPlanCardViewModel,
   getChannelAnnualAvailability,
+  getChannelAnnualToggleBadge,
   getChannelUsageTerms,
   getChannelLimitReachedPolicy,
 } from '../utils/commercialCatalogUtils';
@@ -12,10 +13,20 @@ export default function DashboardPricingModal({
   isOpen,
   onClose,
   onOpenDemo,
+  onSelectPlan,
   catalog = COMMERCIAL_CATALOG,
 }) {
   const [activeChannel, setActiveChannel] = useState('telefone'); // 'telefone' | 'whatsapp' | 'webchat'
   const [isYearly, setIsYearly] = useState(false);
+
+  useEffect(() => {
+    if (!isOpen) return;
+    const onKeyDown = (e) => {
+      if (e.key === 'Escape') onClose?.();
+    };
+    window.addEventListener('keydown', onKeyDown);
+    return () => window.removeEventListener('keydown', onKeyDown);
+  }, [isOpen, onClose]);
 
   if (!isOpen) return null;
 
@@ -29,8 +40,7 @@ export default function DashboardPricingModal({
   const limitReachedPolicy = getChannelLimitReachedPolicy(activeChannel, catalog);
 
   const annualDiscountBadge = annualAvailability.isConfirmedAvailable
-    ? getPlanCardViewModel(activeChannel, planCards[0].id, 'yearly', catalog)?.pricing
-        ?.annualDiscountBadge || null
+    ? getChannelAnnualToggleBadge(activeChannel, catalog)
     : null;
 
   const handleSelectPlan = (card) => {
@@ -38,11 +48,31 @@ export default function DashboardPricingModal({
       window.open(card.cta.url, '_blank', 'noopener,noreferrer');
       return;
     }
+
+    const selection = {
+      channelId: card.channelId || activeChannel,
+      channelName: card.channelName || channel.name,
+      planId: card.id,
+      planName: card.name,
+      billingCycle: billingCycle === 'yearly' ? 'anual' : 'mensal',
+      displayPrice: card.pricing?.displayPrice,
+      totalAnnualLabel: card.pricing?.totalAnnualLabel,
+      afterPromoLabel: card.pricing?.afterPromoLabel,
+      billingPeriodicityLabel: card.pricing?.billingPeriodicityLabel,
+    };
+
+    if (onSelectPlan) {
+      onClose?.();
+      onSelectPlan(selection);
+      return;
+    }
+
     if (onOpenDemo) {
-      onClose();
+      onClose?.();
       onOpenDemo();
       return;
     }
+
     const periodText = billingCycle === 'yearly' ? 'Anual' : 'Mensal';
     const msg = `Olá! Gostaria de consultar as condições do plano ${card.name} (${card.channelName}) na modalidade ${periodText}.`;
     const url = `https://api.whatsapp.com/send?phone=5594984423948&text=${encodeURIComponent(msg)}`;
@@ -50,7 +80,13 @@ export default function DashboardPricingModal({
   };
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-6 bg-black/60 backdrop-blur-sm animate-fadeIn overflow-y-auto">
+    <div
+      role="dialog"
+      aria-modal="true"
+      aria-label="Planos e condições comerciais"
+      className="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-6 bg-black/60 backdrop-blur-sm animate-fadeIn overflow-y-auto"
+      onClick={onClose}
+    >
       <div
         className="bg-white rounded-3xl max-w-5xl w-full shadow-2xl border border-[#E7E4DC] p-6 sm:p-8 relative my-auto"
         onClick={(e) => e.stopPropagation()}
@@ -67,7 +103,7 @@ export default function DashboardPricingModal({
         {/* Header: Logo + Channel Switcher Pills */}
         <div className="flex flex-col sm:flex-row items-center justify-between gap-4 mb-6 pt-1">
           <div className="flex items-center gap-2.5">
-            <div className="flex items-center gap-[3px] h-5">
+            <div className="flex items-center gap-[3px] h-5" aria-hidden="true">
               <span className="w-[3px] h-3.5 bg-[#4F46E5] rounded-full"></span>
               <span className="w-[3px] h-5 bg-[#4F46E5] rounded-full"></span>
               <span className="w-[3px] h-3 bg-[#4F46E5] rounded-full"></span>
@@ -119,12 +155,12 @@ export default function DashboardPricingModal({
         {/* Source notice */}
         <div className="mb-6 px-4 py-3 rounded-2xl bg-amber-50 border border-amber-200 flex items-center justify-center gap-2.5 text-center sm:text-left">
           <div className="w-5 h-5 rounded-full bg-amber-600 text-white flex items-center justify-center shrink-0">
-            <Clock className="w-3.5 h-3.5" />
+            <Clock className="w-3.5 h-3.5" aria-hidden="true" />
           </div>
           <div className="text-xs text-amber-950">
             <strong>Fonte única de condições comerciais</strong>{' '}
             <span className="opacity-85 block sm:inline">
-              Métricas exclusivas de {channel.name}; itens ainda não confirmados ficam sinalizados como pendentes.
+              Métricas exclusivas de {channel.name}; itens ainda não confirmados ficam sinalizados como pendentes (sem cobrança automática no site).
             </span>
           </div>
         </div>
@@ -137,6 +173,7 @@ export default function DashboardPricingModal({
               <button
                 type="button"
                 aria-label="Alternar modalidade anual"
+                aria-pressed={isYearly}
                 onClick={() => setIsYearly(!isYearly)}
                 className={`w-9 h-5 rounded-full transition-colors relative p-0.5 cursor-pointer ${
                   isYearly ? 'bg-[#4F46E5]' : 'bg-[#D0CBC0]'
@@ -150,7 +187,7 @@ export default function DashboardPricingModal({
               </button>
               <span className="text-xs text-[#5C5955]">Anual</span>
               {annualDiscountBadge && (
-                <span className="px-1.5 py-0.5 rounded bg-emerald-100 text-emerald-800 text-[10px] font-bold">
+                <span className="px-1.5 py-0.5 rounded bg-indigo-50 text-[#4F46E5] text-[10px] font-bold">
                   {annualDiscountBadge}
                 </span>
               )}
@@ -184,16 +221,16 @@ export default function DashboardPricingModal({
                 )}
 
                 <div>
-                  <div className="flex items-center justify-between gap-2">
+                  <div className="flex items-center justify-between gap-2 flex-wrap">
                     <h3 className="text-2xl font-bold text-[#1A1816]">{card.name}</h3>
                     <span
                       className={`text-[10px] font-bold px-2 py-0.5 rounded-full ${
-                        pricing.status === INFO_STATUS.CONFIRMADA
+                        pricing.status === INFO_STATUS.CONFIRMADA && pricing.isPlanFullyConfirmed
                           ? 'bg-emerald-50 text-emerald-700'
                           : 'bg-amber-50 text-amber-800'
                       }`}
                     >
-                      {pricing.statusLabel}
+                      {pricing.readinessLabel}
                     </span>
                   </div>
                   <p className="text-xs text-[#736F69] mt-1">{card.tagline}</p>
@@ -216,13 +253,18 @@ export default function DashboardPricingModal({
                         {pricing.displayPrice}
                       </span>
                       {pricing.hasConfirmedPrice && (
-                        <span className="text-xs text-[#736F69]">/ mês</span>
+                        <span className="text-xs text-[#736F69]">
+                          {billingCycle === 'yearly' ? '/ mês (equiv. anual)' : '/ mês'}
+                        </span>
                       )}
                     </div>
-                    <p className="text-[11px] text-[#8C8881] mt-1">{pricing.afterPromoLabel}</p>
-                    {billingCycle === 'yearly' && pricing.annualChargeTypeLabel && (
-                      <p className="text-[11px] text-[#4F46E5] mt-1">{pricing.annualChargeTypeLabel}</p>
+                    <p className="text-[11px] text-[#5C5955] mt-1">{pricing.afterPromoLabel}</p>
+                    {billingCycle === 'yearly' && pricing.totalAnnualLabel && (
+                      <p className="text-[11px] text-[#4F46E5] font-semibold mt-1">
+                        Total anual antecipado (12 meses): {pricing.totalAnnualLabel}
+                      </p>
                     )}
+                    <p className="text-[10px] text-[#8C8881] mt-1">{pricing.renewalLabel}</p>
                   </div>
 
                   {/* CTA Button */}
@@ -247,7 +289,7 @@ export default function DashboardPricingModal({
                       {[...card.includedRows, ...card.limitRows, ...card.visibleOverageRows].map((row) => (
                         <li key={row.key} className="flex items-start gap-2">
                           <div className="w-4 h-4 rounded-full border border-[#D0CBC0] flex items-center justify-center shrink-0 mt-0.5">
-                            <Check className="w-2.5 h-2.5 text-[#1A1816]" />
+                            <Check className="w-2.5 h-2.5 text-[#1A1816]" aria-hidden="true" />
                           </div>
                           <div className="leading-tight">
                             <span className="text-[#1A1816] font-medium block">{row.label}</span>
@@ -263,7 +305,7 @@ export default function DashboardPricingModal({
           })}
         </div>
 
-        {/* Usage terms & optional limit-reached policy */}
+        {/* Usage terms & limit-reached policy */}
         <div className="mt-6 pt-4 border-t border-[#F0EDE8] grid grid-cols-1 sm:grid-cols-2 gap-3 text-xs">
           {usageTerms.map((term) => (
             <div key={term.key} className="p-3 rounded-xl bg-[#FAF9F5] border border-[#E7E4DC]">
@@ -271,12 +313,10 @@ export default function DashboardPricingModal({
               <span className="text-[11px] text-[#5C5955]">{term.text}</span>
             </div>
           ))}
-          {limitReachedPolicy.isConfirmed && (
-            <div className="sm:col-span-2 p-3 rounded-xl bg-[#FAF9F5] border border-[#E7E4DC]">
-              <strong className="text-[#1A1816] block">Quando o limite acaba</strong>
-              <span className="text-[11px] text-[#5C5955]">{limitReachedPolicy.text}</span>
-            </div>
-          )}
+          <div className="sm:col-span-2 p-3 rounded-xl bg-[#FAF9F5] border border-[#E7E4DC]">
+            <strong className="text-[#1A1816] block">Quando o limite acaba</strong>
+            <span className="text-[11px] text-[#5C5955]">{limitReachedPolicy.text}</span>
+          </div>
         </div>
 
         {/* Bottom Bar: Demo Button */}
@@ -285,13 +325,13 @@ export default function DashboardPricingModal({
             type="button"
             onClick={() => {
               if (onOpenDemo) {
-                onClose();
+                onClose?.();
                 onOpenDemo();
               }
             }}
             className="inline-flex items-center gap-2 px-5 py-2.5 rounded-full border border-[#D0CBC0] hover:border-[#1A1816] bg-white text-xs font-bold text-[#1A1816] hover:bg-[#FAF9F5] transition-all shadow-sm cursor-pointer"
           >
-            <User className="w-3.5 h-3.5 text-[#736F69]" />
+            <User className="w-3.5 h-3.5 text-[#736F69]" aria-hidden="true" />
             <span>Reservar uma demonstração gratuita</span>
           </button>
         </div>

@@ -1,29 +1,38 @@
-// Vercel Serverless Function: Geração de Token Efêmero do Gemini Live (Google)
-// Permite que o navegador abra WebSockets diretamente com o Gemini Live
-// SEM expor a chave de API mestra do usuário no código do cliente.
+// Vercel Serverless Function: Geração de Token Efêmero do Gemini Live (somente usuário autenticado)
+import { applyCorsHeaders, checkRateLimit, verifySupabaseBearerToken } from './_security.js';
 
 export default async function handler(req, res) {
-  // Configuração de CORS para permitir chamadas do próprio app
-  res.setHeader('Access-Control-Allow-Credentials', true);
-  res.setHeader('Access-Control-Allow-Origin', '*');
-  res.setHeader('Access-Control-Allow-Methods', 'GET,OPTIONS,POST');
-  res.setHeader(
-    'Access-Control-Allow-Headers',
-    'X-CSRF-Token, X-Requested-With, Accept, Accept-Version, Content-Length, Content-MD5, Content-Type, Date, X-Api-Version'
-  );
+  const originAllowed = applyCorsHeaders(req, res, 'POST,OPTIONS', 'Content-Type, Authorization');
 
   if (req.method === 'OPTIONS') {
-    res.status(200).end();
-    return;
+    return res.status(originAllowed ? 200 : 403).end();
+  }
+
+  if (!originAllowed) {
+    return res.status(403).json({ success: false, error: 'Origem não autorizada.' });
+  }
+
+  if (req.method !== 'POST') {
+    return res.status(405).json({ success: false, error: 'Método não permitido. Utilize POST.' });
+  }
+
+  const rateCheck = checkRateLimit(req, 'gemini-token', 10, 60_000);
+  if (!rateCheck.allowed) {
+    res.setHeader('Retry-After', String(rateCheck.retryAfterSeconds));
+    return res.status(429).json({ success: false, error: 'Limite temporário de requisições excedido.' });
+  }
+
+  const authResult = await verifySupabaseBearerToken(req);
+  if (!authResult.authenticated) {
+    return res.status(authResult.status).json({ success: false, error: authResult.error });
   }
 
   try {
     const apiKey = process.env.GEMINI_API_KEY || process.env.VITE_GEMINI_API_KEY;
-
     if (!apiKey) {
-      return res.status(500).json({
+      return res.status(503).json({
         success: false,
-        error: 'Chave GEMINI_API_KEY não configurada no ambiente da aplicação.'
+        error: 'Serviço de voz em tempo real não configurado no servidor.',
       });
     }
 
@@ -35,32 +44,30 @@ export default async function handler(req, res) {
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           uses: 1,
-          expireTime: new Date(now + 30 * 60e3).toISOString(), // 30 minutos
-          newSessionExpireTime: new Date(now + 2 * 60e3).toISOString() // 2 minutos para estabelecer
-        })
+          expireTime: new Date(now + 30 * 60e3).toISOString(),
+          newSessionExpireTime: new Date(now + 2 * 60e3).toISOString(),
+        }),
       }
     );
 
     if (!response.ok) {
-      const errText = await response.text();
-      return res.status(response.status).json({
+      return res.status(502).json({
         success: false,
-        error: `Erro ao obter token do Gemini: ${errText}`
+        error: 'Não foi possível gerar sessão efêmera de áudio no provedor.',
       });
     }
 
     const data = await response.json();
-
     return res.status(200).json({
       success: true,
       token: data.name,
       model: 'gemini-3.8-live',
-      voice: 'Kore'
+      voice: 'Kore',
     });
-  } catch (error) {
+  } catch {
     return res.status(500).json({
       success: false,
-      error: error.message || 'Erro interno ao gerar sessão de áudio'
+      error: 'Erro interno ao gerar sessão de áudio.',
     });
   }
 }

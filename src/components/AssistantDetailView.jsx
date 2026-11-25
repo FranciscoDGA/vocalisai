@@ -8,12 +8,12 @@ import {
   Clock, Trash2, UserCheck, Bell, PhoneForwarded, Users,
   ChevronsLeft, ChevronsUpDown, Copy
 } from 'lucide-react';
-import { createVapiAssistant, updateVapiAssistant, triggerOutboundCall } from '../utils/vapiService';
 import { buildBeatrizCommercialReply } from '../utils/commercialCatalogUtils';
 
 export default function AssistantDetailView({ 
   assistant, 
   allAssistants = [], 
+  isDemoMode = true,
   onBack, 
   onSelectAssistant, 
   onOpenCreateModal, 
@@ -29,9 +29,9 @@ export default function AssistantDetailView({
   const [addSourceDropdownOpen, setAddSourceDropdownOpen] = useState(false);
   const [activeStatus, setActiveStatus] = useState(true);
 
-  // Vapi Real-Time Sync State
-  const [vapiId, setVapiId] = useState(assistant?.vapi_assistant_id || null);
-  const [syncStatus, setSyncStatus] = useState(assistant?.vapi_assistant_id ? 'synced' : 'idle');
+  // Sync / Persistence State
+  const [vapiId, setVapiId] = useState(!isDemoMode ? assistant?.vapi_assistant_id || null : null);
+  const [syncStatus, setSyncStatus] = useState('idle');
   const [syncFeedback, setSyncFeedback] = useState('');
   const [copiedVapiId, setCopiedVapiId] = useState(false);
   const [testPhone, setTestPhone] = useState('');
@@ -47,16 +47,16 @@ export default function AssistantDetailView({
   const [notificacoesModalOpen, setNotificacoesModalOpen] = useState(false);
 
   // Form State - Geral (Básico)
-  const [name, setName] = useState(assistant?.name || 'Francisco Gomes');
+  const [name, setName] = useState(assistant?.name || 'Assistente (Exemplo)');
   const [type, setType] = useState(assistant?.type || 'hibrido'); // 'chat' | 'voz' | 'hibrido'
   const [selectedVoice, setSelectedVoice] = useState({ name: 'Camila', gender: 'Feminino', accent: 'Português', avatar: 'C' });
   const [language, setLanguage] = useState('Português (Brasil)');
   const [timeout, setTimeoutVal] = useState('1 hora');
   const [sellerProfile, setSellerProfile] = useState(false);
 
-  // Mensagens iniciais (Novo card do Chat + Ligação)
+  // Mensagens iniciais
   const [welcomeMessageActive, setWelcomeMessageActive] = useState(true);
-  const [welcomeMessage, setWelcomeMessage] = useState(`Olá, aqui é a ${name} da Q&C STORES. Como posso te ajudar?`);
+  const [welcomeMessage, setWelcomeMessage] = useState(`Olá, aqui é ${assistant?.name || 'Clara'} da Empresa Modelo. Como posso ajudar?`);
 
   // Gestão de conversas
   const [entradaConversa, setEntradaConversa] = useState('A IA atende todas as conversas'); // 'ia' | 'equipe' | 'condicao'
@@ -99,7 +99,7 @@ export default function AssistantDetailView({
   };
 
   const [promptText, setPromptText] = useState(
-    assistant?.prompt || getPromptForType(assistant?.type || 'hibrido', assistant?.name || 'Francisco Gomes')
+    assistant?.prompt || getPromptForType(assistant?.type || 'hibrido', assistant?.name || 'Assistente (Exemplo)')
   );
 
   // Form State - Técnico (12 cards exatos do Print 2 de Técnico)
@@ -151,7 +151,7 @@ export default function AssistantDetailView({
     setChatTyping(true);
 
     setTimeout(() => {
-      let reply = `Com certeza! Entendi perfeitamente sua dúvida sobre "${userMsg}". Como sou uma assistente completa de Chat + Ligação, posso tanto te responder por aqui no WhatsApp quanto te ligar agora mesmo se preferir!`;
+      let reply = `Esta é uma simulação ilustrativa no navegador para sua dúvida sobre "${userMsg}". O chat de prévia não envia mensagens de WhatsApp nem realiza ligações telefônicas reais.`;
       const lowerMsg = userMsg.toLowerCase();
       if (
         lowerMsg.includes('preço') ||
@@ -183,57 +183,22 @@ export default function AssistantDetailView({
     if (assistant) {
       setName(assistant.name || 'Assistente');
       setType(assistant.type || 'hibrido');
-      setVapiId(assistant.vapi_assistant_id || null);
-      setSyncStatus(assistant.vapi_assistant_id ? 'synced' : 'idle');
+      setVapiId(!isDemoMode ? assistant.vapi_assistant_id || null : null);
+      setSyncStatus('idle');
       if (assistant.prompt) setPromptText(assistant.prompt);
     }
-  }, [assistant]);
+  }, [assistant, isDemoMode]);
 
-  // Handler para Salvar Alterações e Sincronizar com a Vapi & Supabase
+  // Handler honesto para prévia local (demo) ou gravação em conta autenticada
   const handleSaveAndSync = async () => {
     setSyncStatus('syncing');
-    setSyncFeedback('Sincronizando com a Vapi...');
+    setSyncFeedback(
+      isDemoMode
+        ? 'Aplicando prévia na sessão demonstrativa...'
+        : 'Salvando configuração na sua conta...'
+    );
 
     try {
-      let currentVapiId = vapiId;
-
-      if (currentVapiId) {
-        // Atualiza na Vapi
-        const updateRes = await updateVapiAssistant(currentVapiId, {
-          name,
-          systemPrompt: promptText,
-          firstMessage: welcomeMessageActive ? welcomeMessage : undefined,
-          voiceId: 'Clara'
-        });
-
-        if (!updateRes.success) {
-          console.warn('Falha no update da Vapi, tentando criar assistente:', updateRes.error);
-          const createRes = await createVapiAssistant({
-            name,
-            systemPrompt: promptText,
-            firstMessage: welcomeMessage,
-            voiceId: 'Clara'
-          });
-          if (createRes.success && createRes.assistantId) {
-            currentVapiId = createRes.assistantId;
-            setVapiId(currentVapiId);
-          }
-        }
-      } else {
-        // Cria na Vapi
-        const createRes = await createVapiAssistant({
-          name,
-          systemPrompt: promptText,
-          firstMessage: welcomeMessage,
-          voiceId: 'Clara'
-        });
-
-        if (createRes.success && createRes.assistantId) {
-          currentVapiId = createRes.assistantId;
-          setVapiId(currentVapiId);
-        }
-      }
-
       if (onUpdateAssistant) {
         await onUpdateAssistant({
           id: assistant.id,
@@ -241,54 +206,36 @@ export default function AssistantDetailView({
           type,
           prompt: promptText,
           voice: selectedVoice.name,
-          channel: type === 'voz' ? 'Telefone (11) 4003-9821' : type === 'chat' ? 'WhatsApp Oficial' : 'Telefone + WhatsApp',
-          vapi_assistant_id: currentVapiId
+          channel:
+            type === 'voz'
+              ? 'Telefonia (sob configuração)'
+              : type === 'chat'
+              ? 'WhatsApp (Meta Cloud API sob consulta)'
+              : 'Webchat no Site',
+          vapi_assistant_id: null,
         });
       }
 
-      setSyncStatus('synced');
-      setSyncFeedback('Assistente salvo e sincronizado com a telefonia Vapi!');
-      setTimeout(() => setSyncFeedback(''), 4000);
+      setSyncStatus(isDemoMode ? 'idle' : 'synced');
+      setSyncFeedback(
+        isDemoMode
+          ? 'Prévia aplicada apenas localmente no modo demonstração — nenhum dado foi enviado a servidores ou provedores externos.'
+          : 'Assistente salvo no cadastro da conta. Ativação de telefonia real requer provisionamento assistido em servidor.'
+      );
+      setTimeout(() => setSyncFeedback(''), 5000);
     } catch (err) {
-      console.error('Erro ao sincronizar:', err);
       setSyncStatus('error');
-      setSyncFeedback('Erro ao sincronizar: ' + err.message);
-    }
-  };
-
-  const handleCopyVapiId = () => {
-    if (vapiId) {
-      navigator.clipboard.writeText(vapiId);
-      setCopiedVapiId(true);
-      setTimeout(() => setCopiedVapiId(false), 2000);
+      setSyncFeedback('Não foi possível salvar: ' + (err?.message || 'erro inesperado'));
     }
   };
 
   const handleDirectTestCall = async (e) => {
     e.preventDefault();
-    const cleanNumber = testPhone.replace(/\D/g, '');
-    if (cleanNumber.length < 10) {
-      setCallFeedback('Digite um número de celular válido com DDD.');
-      return;
-    }
-
-    setCallingState(true);
-    setCallFeedback('Discando através da Vapi com este assistente...');
-
-    try {
-      const res = await triggerOutboundCall(testPhone, '+55', vapiId);
-      setCallingState(false);
-      if (res.success) {
-        setCallFeedback('✅ Ligação disparada com sucesso! Seu telefone vai tocar em instantes.');
-      } else {
-        setCallFeedback(`Aviso Vapi: ${res.error || 'Verifique seus créditos na conta Vapi.'}`);
-      }
-    } catch (err) {
-      setCallingState(false);
-      setCallFeedback('Erro ao disparar chamada: ' + err.message);
-    }
-
-    setTimeout(() => setCallFeedback(''), 8000);
+    setCallingState(false);
+    setCallFeedback(
+      'Este painel público não dispara chamadas telefônicas reais pelo navegador. Solicite uma demonstração assistida com a equipe.'
+    );
+    setTimeout(() => setCallFeedback(''), 6000);
   };
 
   return (
@@ -424,38 +371,25 @@ export default function AssistantDetailView({
          ======================================================== */}
       <div className="flex-1 p-6 sm:p-10 overflow-y-auto pb-28 bg-white min-h-screen">
 
-        {/* ========================================================
-            BARRA FIXA DE SINCRONIZAÇÃO EM TEMPO REAL COM A VAPI
-           ======================================================== */}
+        {/* BARRA FIXA DE STATUS (DEMO VS CONTA AUTENTICADA) */}
         <div className="mb-6 p-4 rounded-2xl bg-[#FAF9F5] border border-[#E7E4DC] flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 shadow-xs">
           <div className="flex items-center gap-3">
             <div className={`w-3 h-3 rounded-full shrink-0 ${
-              vapiId ? 'bg-emerald-500 animate-pulse' : 'bg-amber-400'
+              isDemoMode ? 'bg-amber-400' : 'bg-indigo-500'
             }`} />
             <div>
-              <div className="flex items-center gap-2">
+              <div className="flex items-center gap-2 flex-wrap">
                 <span className="text-xs font-bold text-[#1A1816]">{name}</span>
-                <span className={`text-[10px] font-semibold px-2 py-0.5 rounded-full ${
-                  vapiId ? 'bg-emerald-50 text-emerald-700 border border-emerald-200' : 'bg-amber-50 text-amber-700 border border-amber-200'
-                }`}>
-                  {vapiId ? 'Sincronizado na Telefonia Vapi' : 'Pendente de sincronização'}
+                <span className="text-[10px] font-semibold px-2 py-0.5 rounded-full bg-amber-50 text-amber-800 border border-amber-200">
+                  {isDemoMode ? 'Modo Demonstração (Dados Fictícios)' : 'Configuração em Conta (Telefonia Sob Consulta)'}
                 </span>
               </div>
               <div className="flex items-center gap-2 mt-0.5">
-                {vapiId ? (
-                  <button 
-                    type="button"
-                    onClick={handleCopyVapiId}
-                    className="text-[11px] font-mono text-[#736F69] hover:text-[#1A1816] flex items-center gap-1 cursor-pointer"
-                    title="Clique para copiar o ID Vapi"
-                  >
-                    <span>ID: {vapiId}</span>
-                    <Copy className="w-3 h-3" />
-                    {copiedVapiId && <span className="text-emerald-600 font-sans font-bold">Copiado!</span>}
-                  </button>
-                ) : (
-                  <span className="text-[11px] text-[#736F69]">Clique em salvar para sincronizar com a Vapi</span>
-                )}
+                <span className="text-[11px] text-[#736F69]">
+                  {isDemoMode
+                    ? 'Alterações aqui são apenas ilustrativas na sessão atual.'
+                    : 'Edições salvas no cadastro; ativação telefônica requer onboarding comercial.'}
+                </span>
               </div>
             </div>
           </div>
@@ -470,12 +404,12 @@ export default function AssistantDetailView({
               {syncStatus === 'syncing' ? (
                 <>
                   <RefreshCw className="w-3.5 h-3.5 animate-spin" />
-                  <span>Sincronizando...</span>
+                  <span>Salvando...</span>
                 </>
               ) : (
                 <>
                   <Sparkles className="w-3.5 h-3.5 text-[#A5B4FC]" />
-                  <span>Salvar & Sincronizar na Vapi</span>
+                  <span>{isDemoMode ? 'Aplicar Prévia Local (Demo)' : 'Salvar na Conta'}</span>
                 </>
               )}
             </button>
@@ -741,92 +675,92 @@ export default function AssistantDetailView({
                   <span className="text-xs font-bold text-[#1A1816] mt-3">Conectar contatos</span>
                 </div>
 
-                {/* 2. Transferir ligações (Novo do Chat + Ligação) */}
-                <div className="p-4 rounded-2xl border border-[#E7E4DC] border-dashed bg-white flex flex-col justify-between min-h-[95px] hover:border-[#D0CBC0] transition-colors cursor-pointer">
-                  <div className="flex items-center justify-between">
-                    <div className="w-7 h-7 rounded-lg bg-gray-50 text-[#736F69] flex items-center justify-center">
+                {/* 2. Transferir ligações */}
+                <div className="p-4 rounded-2xl border border-[#E7E4DC] border-dashed bg-[#FAF9F5]/60 flex flex-col justify-between min-h-[95px]">
+                  <div className="flex items-center justify-between gap-2">
+                    <div className="w-7 h-7 rounded-lg bg-white text-[#736F69] flex items-center justify-center border border-[#E7E4DC]">
                       <PhoneForwarded className="w-4 h-4" />
                     </div>
-                    <span className="w-5 h-5 rounded-full border border-[#D0CBC0] text-[#736F69] flex items-center justify-center text-xs">
-                      +
+                    <span className="px-2 py-0.5 rounded-full border border-[#E7E4DC] bg-white text-[#736F69] text-[10px] font-semibold">
+                      Sob consulta
                     </span>
                   </div>
                   <span className="text-xs font-semibold text-[#5C5955] mt-3">Transferir ligações</span>
                 </div>
 
                 {/* 3. Enviar e-mail */}
-                <div className="p-4 rounded-2xl border border-[#E7E4DC] border-dashed bg-white flex flex-col justify-between min-h-[95px] hover:border-[#D0CBC0] transition-colors cursor-pointer">
-                  <div className="flex items-center justify-between">
-                    <div className="w-7 h-7 rounded-lg bg-gray-50 text-[#736F69] flex items-center justify-center">
+                <div className="p-4 rounded-2xl border border-[#E7E4DC] border-dashed bg-[#FAF9F5]/60 flex flex-col justify-between min-h-[95px]">
+                  <div className="flex items-center justify-between gap-2">
+                    <div className="w-7 h-7 rounded-lg bg-white text-[#736F69] flex items-center justify-center border border-[#E7E4DC]">
                       <Mail className="w-4 h-4" />
                     </div>
-                    <span className="w-5 h-5 rounded-full border border-[#D0CBC0] text-[#736F69] flex items-center justify-center text-xs">
-                      +
+                    <span className="px-2 py-0.5 rounded-full border border-[#E7E4DC] bg-white text-[#736F69] text-[10px] font-semibold">
+                      Em desenvolvimento
                     </span>
                   </div>
                   <span className="text-xs font-semibold text-[#5C5955] mt-3">Enviar e-mail</span>
                 </div>
 
-                {/* 4. Enviar WhatsApp (Novo do Chat + Ligação) */}
-                <div className="p-4 rounded-2xl border border-[#E7E4DC] border-dashed bg-white flex flex-col justify-between min-h-[95px] hover:border-[#D0CBC0] transition-colors cursor-pointer">
-                  <div className="flex items-center justify-between">
-                    <div className="w-7 h-7 rounded-lg bg-gray-50 text-[#736F69] flex items-center justify-center">
+                {/* 4. Enviar WhatsApp */}
+                <div className="p-4 rounded-2xl border border-[#E7E4DC] border-dashed bg-[#FAF9F5]/60 flex flex-col justify-between min-h-[95px]">
+                  <div className="flex items-center justify-between gap-2">
+                    <div className="w-7 h-7 rounded-lg bg-white text-[#736F69] flex items-center justify-center border border-[#E7E4DC]">
                       <MessageSquare className="w-4 h-4" />
                     </div>
-                    <span className="w-5 h-5 rounded-full border border-[#D0CBC0] text-[#736F69] flex items-center justify-center text-xs">
-                      +
+                    <span className="px-2 py-0.5 rounded-full border border-[#E7E4DC] bg-white text-[#736F69] text-[10px] font-semibold">
+                      Sob consulta
                     </span>
                   </div>
                   <span className="text-xs font-semibold text-[#5C5955] mt-3">Enviar WhatsApp</span>
                 </div>
 
                 {/* 5. Agendar compromissos */}
-                <div className="p-4 rounded-2xl border border-[#E7E4DC] border-dashed bg-white flex flex-col justify-between min-h-[95px] hover:border-[#D0CBC0] transition-colors cursor-pointer">
-                  <div className="flex items-center justify-between">
-                    <div className="w-7 h-7 rounded-lg bg-gray-50 text-[#736F69] flex items-center justify-center">
+                <div className="p-4 rounded-2xl border border-[#E7E4DC] border-dashed bg-[#FAF9F5]/60 flex flex-col justify-between min-h-[95px]">
+                  <div className="flex items-center justify-between gap-2">
+                    <div className="w-7 h-7 rounded-lg bg-white text-[#736F69] flex items-center justify-center border border-[#E7E4DC]">
                       <Calendar className="w-4 h-4" />
                     </div>
-                    <span className="w-5 h-5 rounded-full border border-[#D0CBC0] text-[#736F69] flex items-center justify-center text-xs">
-                      +
+                    <span className="px-2 py-0.5 rounded-full border border-[#E7E4DC] bg-white text-[#736F69] text-[10px] font-semibold">
+                      Em desenvolvimento
                     </span>
                   </div>
                   <span className="text-xs font-semibold text-[#5C5955] mt-3">Agendar compromissos</span>
                 </div>
 
                 {/* 6. Pesquisa na web */}
-                <div className="p-4 rounded-2xl border border-[#E7E4DC] border-dashed bg-white flex flex-col justify-between min-h-[95px] hover:border-[#D0CBC0] transition-colors cursor-pointer">
-                  <div className="flex items-center justify-between">
-                    <div className="w-7 h-7 rounded-lg bg-gray-50 text-[#736F69] flex items-center justify-center">
+                <div className="p-4 rounded-2xl border border-[#E7E4DC] border-dashed bg-[#FAF9F5]/60 flex flex-col justify-between min-h-[95px]">
+                  <div className="flex items-center justify-between gap-2">
+                    <div className="w-7 h-7 rounded-lg bg-white text-[#736F69] flex items-center justify-center border border-[#E7E4DC]">
                       <Globe className="w-4 h-4" />
                     </div>
-                    <span className="w-5 h-5 rounded-full border border-[#D0CBC0] text-[#736F69] flex items-center justify-center text-xs">
-                      +
+                    <span className="px-2 py-0.5 rounded-full border border-[#E7E4DC] bg-white text-[#736F69] text-[10px] font-semibold">
+                      Em desenvolvimento
                     </span>
                   </div>
                   <span className="text-xs font-semibold text-[#5C5955] mt-3">Pesquisa na web</span>
                 </div>
 
                 {/* 7. Integrações */}
-                <div className="p-4 rounded-2xl border border-[#E7E4DC] border-dashed bg-white flex flex-col justify-between min-h-[95px] hover:border-[#D0CBC0] transition-colors cursor-pointer">
-                  <div className="flex items-center justify-between">
-                    <div className="w-7 h-7 rounded-lg bg-gray-50 text-[#736F69] flex items-center justify-center">
+                <div className="p-4 rounded-2xl border border-[#E7E4DC] border-dashed bg-[#FAF9F5]/60 flex flex-col justify-between min-h-[95px]">
+                  <div className="flex items-center justify-between gap-2">
+                    <div className="w-7 h-7 rounded-lg bg-white text-[#736F69] flex items-center justify-center border border-[#E7E4DC]">
                       <Plug className="w-4 h-4" />
                     </div>
-                    <span className="w-5 h-5 rounded-full border border-[#D0CBC0] text-[#736F69] flex items-center justify-center text-xs">
-                      +
+                    <span className="px-2 py-0.5 rounded-full border border-[#E7E4DC] bg-white text-[#736F69] text-[10px] font-semibold">
+                      Sob consulta
                     </span>
                   </div>
                   <span className="text-xs font-semibold text-[#5C5955] mt-3">Integrações</span>
                 </div>
 
                 {/* 8. Webhooks */}
-                <div className="p-4 rounded-2xl border border-[#E7E4DC] border-dashed bg-white flex flex-col justify-between min-h-[95px] hover:border-[#D0CBC0] transition-colors cursor-pointer">
-                  <div className="flex items-center justify-between">
-                    <div className="w-7 h-7 rounded-lg bg-gray-50 text-[#736F69] flex items-center justify-center">
+                <div className="p-4 rounded-2xl border border-[#E7E4DC] border-dashed bg-[#FAF9F5]/60 flex flex-col justify-between min-h-[95px]">
+                  <div className="flex items-center justify-between gap-2">
+                    <div className="w-7 h-7 rounded-lg bg-white text-[#736F69] flex items-center justify-center border border-[#E7E4DC]">
                       <Sparkles className="w-4 h-4" />
                     </div>
-                    <span className="w-5 h-5 rounded-full border border-[#D0CBC0] text-[#736F69] flex items-center justify-center text-xs">
-                      +
+                    <span className="px-2 py-0.5 rounded-full border border-[#E7E4DC] bg-white text-[#736F69] text-[10px] font-semibold">
+                      Em desenvolvimento
                     </span>
                   </div>
                   <span className="text-xs font-semibold text-[#5C5955] mt-3">Webhooks</span>
@@ -1130,7 +1064,7 @@ export default function AssistantDetailView({
                 onChange={(e) => setPromptText(e.target.value)}
                 rows={14}
                 className="w-full text-sm text-[#1A1816] placeholder-[#8C8881] focus:outline-none resize-none leading-relaxed"
-                placeholder="Ex: Você é a Francisco Gomes – uma assistente de chat e telefone..."
+                placeholder="Ex: Você é a Clara – uma assistente virtual configurada para atendimento..."
               />
               <div className="pt-2 text-right border-t border-[#F0EDE8]">
                 <span className="text-[11px] text-[#8C8881]">
@@ -1142,13 +1076,13 @@ export default function AssistantDetailView({
         )}
 
         {/* ========================================================
-            SUB-TAB 5: TÉCNICO (Réplica 1:1 Completa Prints 1 e 2 de Técnico)
+            SUB-TAB 5: TÉCNICO
            ======================================================== */}
         {subTab === 'tecnico' && (
           <div className="max-w-3xl space-y-4 animate-fadeIn pb-12">
             <h2 className="text-2xl font-bold text-[#1A1816]">Técnico</h2>
 
-            {/* CARD ESPECIAL: Conexão Direta com Telefonia Vapi AI */}
+            {/* CARD ESPECIAL: Telefonia e Voz em Servidor */}
             <div className="p-5 rounded-2xl border-2 border-[#4F46E5]/20 bg-gradient-to-br from-[#FFFBF8] to-[#EEF2FF] space-y-4 shadow-sm">
               <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-3 border-b border-[#F0E6DC]">
                 <div className="flex items-center gap-3">
@@ -1156,68 +1090,57 @@ export default function AssistantDetailView({
                     <Phone className="w-4 h-4" />
                   </div>
                   <div>
-                    <h3 className="text-xs font-bold text-[#1A1816]">Motor de Voz & Telefonia Neural (Vapi AI)</h3>
-                    <p className="text-[11px] text-[#736F69]">Sincronização configurável de baixa latência</p>
+                    <h3 className="text-xs font-bold text-[#1A1816]">Arquitetura de Voz & Telefonia (Em Servidor)</h3>
+                    <p className="text-[11px] text-[#736F69]">Ativação via backend comercial (sem chave privada no navegador)</p>
                   </div>
                 </div>
                 <div className="flex items-center gap-2">
-                  <span className={`px-2.5 py-1 rounded-full text-[10px] font-bold flex items-center gap-1.5 ${
-                    vapiId ? 'bg-emerald-100 text-emerald-800' : 'bg-amber-100 text-amber-800'
-                  }`}>
-                    <span className={`w-1.5 h-1.5 rounded-full ${vapiId ? 'bg-emerald-600 animate-pulse' : 'bg-amber-600'}`} />
-                    {vapiId ? 'Conectado à Vapi' : 'Pendente de sincronização'}
+                  <span className="px-2.5 py-1 rounded-full text-[10px] font-bold flex items-center gap-1.5 bg-amber-100 text-amber-800">
+                    <span className="w-1.5 h-1.5 rounded-full bg-amber-600" />
+                    {isDemoMode ? 'Simulação Demo (Sem Telefonia Real)' : 'Pendente de Ativação em Servidor'}
                   </span>
                 </div>
               </div>
 
-              {/* Grid de Parâmetros Técnicos Vapi */}
+              {/* Grid de Parâmetros Técnicos */}
               <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 text-xs">
                 <div className="p-3 rounded-xl bg-white border border-[#E7E4DC]">
                   <span className="text-[10px] font-bold text-[#8C8881] block uppercase">Transcritor (STT)</span>
-                  <span className="font-semibold text-[#1A1816] mt-0.5 block">Deepgram Nova-2</span>
+                  <span className="font-semibold text-[#1A1816] mt-0.5 block">Configurável em servidor</span>
                   <span className="text-[10px] text-[#736F69]">Português Brasileiro (pt-BR)</span>
                 </div>
 
                 <div className="p-3 rounded-xl bg-white border border-[#E7E4DC]">
                   <span className="text-[10px] font-bold text-[#8C8881] block uppercase">Modelo Cognitivo (LLM)</span>
-                  <span className="font-semibold text-[#1A1816] mt-0.5 block">OpenAI GPT-4o Mini</span>
-                  <span className="text-[10px] text-[#736F69]">Modo Stream Ativo</span>
+                  <span className="font-semibold text-[#1A1816] mt-0.5 block">Definido na implantação</span>
+                  <span className="text-[10px] text-[#736F69]">Conforme plano contratado</span>
                 </div>
 
                 <div className="p-3 rounded-xl bg-white border border-[#E7E4DC]">
                   <span className="text-[10px] font-bold text-[#8C8881] block uppercase">Voz Neural (TTS)</span>
-                  <span className="font-semibold text-[#1A1816] mt-0.5 block">Vapi Neural (Clara)</span>
-                  <span className="text-[10px] text-[#736F69]">Entonação Humanizada</span>
+                  <span className="font-semibold text-[#1A1816] mt-0.5 block">Voz sintética PT-BR</span>
+                  <span className="text-[10px] text-[#736F69]">Depende do provedor ativo</span>
                 </div>
               </div>
 
-              {/* Teste de Chamada Outbound Real com este Assistente */}
+              {/* Aviso sobre teste telefônico */}
               <form onSubmit={handleDirectTestCall} className="pt-2 flex flex-col sm:flex-row items-stretch sm:items-center gap-2">
                 <div className="flex-1 relative">
                   <input
                     type="tel"
                     value={testPhone}
                     onChange={(e) => setTestPhone(e.target.value)}
-                    placeholder="Seu celular: (11) 98765-4321"
+                    placeholder="Seu celular para solicitação: (11) 98765-4321"
                     className="w-full px-3.5 py-2.5 rounded-xl border border-[#D0CBC0] bg-white text-xs font-medium text-[#1A1816] focus:outline-none focus:border-[#4F46E5]"
                   />
                 </div>
                 <button
                   type="submit"
                   disabled={callingState}
-                  className="px-4 py-2.5 rounded-xl bg-[#4F46E5] hover:bg-[#B34018] text-white text-xs font-bold transition-all flex items-center justify-center gap-2 cursor-pointer shadow-sm disabled:opacity-60"
+                  className="px-4 py-2.5 rounded-xl bg-[#4F46E5] hover:bg-[#4338CA] text-white text-xs font-bold transition-all flex items-center justify-center gap-2 cursor-pointer shadow-sm disabled:opacity-60"
                 >
-                  {callingState ? (
-                    <>
-                      <RefreshCw className="w-3.5 h-3.5 animate-spin" />
-                      <span>Discando...</span>
-                    </>
-                  ) : (
-                    <>
-                      <Phone className="w-3.5 h-3.5" />
-                      <span>Testar Ligação Agora</span>
-                    </>
-                  )}
+                  <Phone className="w-3.5 h-3.5" />
+                  <span>Ver disponibilidade de chamada</span>
                 </button>
               </form>
 
@@ -1357,7 +1280,7 @@ export default function AssistantDetailView({
                   type="text" 
                   value={technicalTerms}
                   onChange={(e) => setTechnicalTerms(e.target.value)}
-                  placeholder="Ex: Omnichannel, Francisco, Vocalis..."
+                  placeholder="Ex: Omnichannel, Atendimento, Vocalis..."
                   className="w-full px-3 py-2 rounded-xl border border-[#D0CBC0] text-xs text-[#1A1816] focus:outline-none focus:border-[#1A1816]"
                 />
               </div>

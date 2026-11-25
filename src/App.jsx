@@ -44,24 +44,62 @@ const SobrePage = lazy(() => import('./components/SobrePage'));
 const MelhorIaWhatsAppArticlePage = lazy(() => import('./components/MelhorIaWhatsAppArticlePage'));
 const AtendimentoWhatsAppArticlePage = lazy(() => import('./components/AtendimentoWhatsAppArticlePage'));
 
+const SELECTED_PLAN_STORAGE_KEY = 'vocalis_selected_plan';
+
 const PAGE_TO_PATH = {
   home: '/',
+  precos: '/precos',
+  whatsapp: '/whatsapp',
+  webchat: '/webchat',
+  sobre: '/sobre',
+  contato: '/contato',
+  integracoes: '/integracoes',
+  'central-ajuda': '/central-ajuda',
+  parceiros: '/parceiros',
+  carreiras: '/carreiras',
+  imprensa: '/imprensa',
+  webinars: '/webinars',
+  'agente-suporte': '/agente-suporte',
+  agendamentos: '/agendamentos',
+  'recepcionista-virtual': '/recepcionista-virtual',
+  'atendedor-automatico': '/atendedor-automatico',
+  'equipe-externa': '/equipe-externa',
+  dashboard: '/dashboard',
   'blog-melhor-ia-whatsapp': '/blog/melhor-ia-para-atendimento-whatsapp',
   'blog-atendimento-automatico-whatsapp': '/blog/atendimento-automatico-whatsapp-inteligencia-artificial',
 };
 
+function getLegalDocFromPathname(pathname) {
+  const normalized = (pathname || '/').replace(/\/+$/, '') || '/';
+  if (normalized === '/privacidade') return 'privacidade';
+  if (normalized === '/termos') return 'termos';
+  if (normalized === '/exclusao') return 'exclusao';
+  return null;
+}
+
 function getPageFromPathname(pathname) {
   const normalized = (pathname || '/').replace(/\/+$/, '') || '/';
-  if (normalized === '/blog/melhor-ia-para-atendimento-whatsapp') {
-    return 'blog-melhor-ia-whatsapp';
-  }
   if (
     normalized === '/blog/atendimento-automatico-whatsapp-inteligencia-artificial' ||
     normalized === '/blog/como-automatizar-atendimento-whatsapp-com-ia'
   ) {
     return 'blog-atendimento-automatico-whatsapp';
   }
+  const matchedEntry = Object.entries(PAGE_TO_PATH).find(([, path]) => path === normalized);
+  if (matchedEntry) {
+    return matchedEntry[0];
+  }
   return 'home';
+}
+
+function readStoredSelectedPlan() {
+  if (typeof window === 'undefined') return null;
+  try {
+    const raw = window.sessionStorage?.getItem(SELECTED_PLAN_STORAGE_KEY);
+    return raw ? JSON.parse(raw) : null;
+  } catch {
+    return null;
+  }
 }
 
 // Lazy-loaded modals
@@ -85,18 +123,36 @@ function PageFallback() {
 }
 
 export default function App() {
+  const initialLegalDoc =
+    typeof window !== 'undefined' ? getLegalDocFromPathname(window.location.pathname) : null;
+
   const [currentPage, setCurrentPage] = useState(() =>
     typeof window !== 'undefined' ? getPageFromPathname(window.location.pathname) : 'home'
   ); // 'home' | 'dashboard' | 'parceiros' | 'whatsapp' | 'blog-melhor-ia-whatsapp' | ...
   const [currentUser, setCurrentUser] = useState(null);
+  const [selectedPlan, setSelectedPlan] = useState(() => readStoredSelectedPlan());
   const [demoModalOpen, setDemoModalOpen] = useState(false);
   const [authModalOpen, setAuthModalOpen] = useState(false);
+  const [authModalMode, setAuthModalMode] = useState('signup');
   const [legalModalOpen, setLegalModalOpen] = useState(false);
   const [legalInitialTab, setLegalInitialTab] = useState('privacidade');
-  const [docsPortalOpen, setDocsPortalOpen] = useState(false);
-  const [docsInitialDoc, setDocsInitialDoc] = useState('privacidade');
+  const [docsPortalOpen, setDocsPortalOpen] = useState(Boolean(initialLegalDoc));
+  const [docsInitialDoc, setDocsInitialDoc] = useState(initialLegalDoc || 'privacidade');
   const [presentationOpen, setPresentationOpen] = useState(false);
   const [dossierModalOpen, setDossierModalOpen] = useState(false);
+
+  useEffect(() => {
+    if (typeof window === 'undefined') return;
+    try {
+      if (selectedPlan) {
+        window.sessionStorage?.setItem(SELECTED_PLAN_STORAGE_KEY, JSON.stringify(selectedPlan));
+      } else {
+        window.sessionStorage?.removeItem(SELECTED_PLAN_STORAGE_KEY);
+      }
+    } catch {
+      // ignore storage errors
+    }
+  }, [selectedPlan]);
 
   useEffect(() => {
     // Carrega usuário da sessão atual ao iniciar
@@ -119,13 +175,24 @@ export default function App() {
   const handleLogout = async () => {
     await signOutUser();
     setCurrentUser(null);
-    setCurrentPage('home');
+    handleNavigate('home');
   };
 
   const handleLoginSuccess = (user) => {
     setCurrentUser(user);
-    setCurrentPage('dashboard');
-    window.scrollTo({ top: 0, behavior: 'smooth' });
+    handleNavigate('dashboard');
+  };
+
+  const handleOpenAuth = (mode = 'signup') => {
+    setAuthModalMode(mode);
+    setAuthModalOpen(true);
+  };
+
+  const handleSelectPlan = (selection) => {
+    if (!selection) return;
+    setSelectedPlan(selection);
+    setAuthModalMode('signup');
+    setAuthModalOpen(true);
   };
 
   const handleOpenLegal = (tab = 'privacidade') => {
@@ -140,6 +207,11 @@ export default function App() {
 
   useEffect(() => {
     const handlePopState = () => {
+      const nextLegal = getLegalDocFromPathname(window.location.pathname);
+      if (nextLegal) {
+        setDocsInitialDoc(nextLegal);
+        setDocsPortalOpen(true);
+      }
       setCurrentPage(getPageFromPathname(window.location.pathname));
     };
     window.addEventListener('popstate', handlePopState);
@@ -229,8 +301,9 @@ export default function App() {
             <InsideDashboardSection 
               onOpenDemo={() => setDemoModalOpen(true)}
               onOpenLegal={handleOpenLegal}
-              onOpenAuth={() => setAuthModalOpen(true)}
+              onOpenAuth={() => handleOpenAuth('signup')}
               onOpenDocs={handleOpenDocs}
+              onSelectPlan={handleSelectPlan}
             />
           </Suspense>
 
@@ -288,23 +361,59 @@ export default function App() {
         /* Secondary lazy routes wrapped in Suspense */
         <Suspense fallback={<PageFallback />}>
           {currentPage === 'dashboard' ? (
-            <main className="flex-1 w-full max-w-full overflow-x-hidden min-w-0 animate-fadeIn">
-              <InsideDashboardSection 
-                isStandalone={true}
-                currentUser={currentUser}
-                onLogout={handleLogout}
-                onNavigateHome={() => handleNavigate('home')}
-                onOpenDemo={() => setDemoModalOpen(true)}
-                onOpenLegal={handleOpenLegal}
-                onOpenAuth={() => setAuthModalOpen(true)}
-                onOpenDocs={handleOpenDocs}
-              />
-            </main>
+            currentUser ? (
+              <main className="flex-1 w-full max-w-full overflow-x-hidden min-w-0 animate-fadeIn">
+                <InsideDashboardSection 
+                  isStandalone={true}
+                  currentUser={currentUser}
+                  onLogout={handleLogout}
+                  onNavigateHome={() => handleNavigate('home')}
+                  onOpenDemo={() => setDemoModalOpen(true)}
+                  onOpenLegal={handleOpenLegal}
+                  onOpenAuth={() => handleOpenAuth('login')}
+                  onOpenDocs={handleOpenDocs}
+                  onSelectPlan={handleSelectPlan}
+                />
+              </main>
+            ) : (
+              <main className="flex-1 w-full max-w-full overflow-x-hidden min-w-0 py-20 px-4">
+                <div
+                  data-testid="dashboard-auth-gate"
+                  className="max-w-lg mx-auto p-8 rounded-3xl bg-white border border-[#E7E4DC] shadow-sm text-center space-y-5"
+                >
+                  <span className="inline-block text-[11px] font-bold uppercase tracking-wider px-3 py-1 rounded-full bg-amber-50 text-amber-800 border border-amber-200">
+                    Área Privada da Conta
+                  </span>
+                  <h1 className="text-2xl font-bold text-[#1A1816]">
+                    Acesso restrito — faça login para acessar seu painel
+                  </h1>
+                  <p className="text-sm text-[#5C5955] leading-relaxed">
+                    Para acessar assistentes, registros e configurações reais da empresa, entre com uma conta autenticada. Para explorar a interface com dados fictícios, utilize a prévia demonstrativa na página inicial.
+                  </p>
+                  <div className="flex flex-col sm:flex-row items-center justify-center gap-3 pt-2">
+                    <button
+                      type="button"
+                      onClick={() => handleOpenAuth('login')}
+                      className="w-full sm:w-auto px-6 py-3 rounded-full bg-[#4F46E5] text-white text-xs font-bold hover:bg-[#4338CA] transition-colors cursor-pointer"
+                    >
+                      Entrar na minha conta
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() => handleNavigate('home')}
+                      className="w-full sm:w-auto px-6 py-3 rounded-full border border-[#D0CBC0] text-[#1A1816] text-xs font-bold hover:bg-[#FAF9F5] transition-colors cursor-pointer"
+                    >
+                      Voltar à página inicial
+                    </button>
+                  </div>
+                </div>
+              </main>
+            )
           ) : currentPage === 'parceiros' ? (
             <main className="flex-1 w-full max-w-full overflow-x-hidden min-w-0">
               <ParceirosPage 
                 onOpenDemo={() => setDemoModalOpen(true)}
-                onOpenAuth={() => setAuthModalOpen(true)}
+                onOpenAuth={() => handleOpenAuth('signup')}
                 onNavigateHome={() => handleNavigate('home')}
               />
             </main>
@@ -312,7 +421,8 @@ export default function App() {
             <main className="flex-1 w-full max-w-full overflow-x-hidden min-w-0">
               <WhatsAppPage 
                 onOpenDemo={() => setDemoModalOpen(true)}
-                onOpenAuth={() => setAuthModalOpen(true)}
+                onOpenAuth={() => handleOpenAuth('signup')}
+                onSelectPlan={handleSelectPlan}
                 onNavigateHome={() => handleNavigate('home')}
               />
             </main>
@@ -320,7 +430,8 @@ export default function App() {
             <main className="flex-1 w-full max-w-full overflow-x-hidden min-w-0">
               <WebchatPage 
                 onOpenDemo={() => setDemoModalOpen(true)}
-                onOpenAuth={() => setAuthModalOpen(true)}
+                onOpenAuth={() => handleOpenAuth('signup')}
+                onSelectPlan={handleSelectPlan}
                 onNavigateHome={() => handleNavigate('home')}
               />
             </main>
@@ -442,14 +553,15 @@ export default function App() {
             <main className="flex-1 w-full max-w-full overflow-x-hidden min-w-0 animate-fadeIn">
               {/* Página Dedicada de Preços & Planos (Exclusiva) */}
               <PricingSection 
-                onOpenAuth={() => setAuthModalOpen(true)}
+                onOpenAuth={() => handleOpenAuth('signup')}
                 onOpenDemo={() => setDemoModalOpen(true)}
+                onSelectPlan={handleSelectPlan}
               />
               <GuaranteesSection />
               <FaqSection />
               <CtaSection 
                 onOpenDemo={() => setDemoModalOpen(true)}
-                onOpenAuth={() => setAuthModalOpen(true)}
+                onOpenAuth={() => handleOpenAuth('signup')}
               />
             </main>
           ) : null}
@@ -507,6 +619,9 @@ export default function App() {
             onClose={() => setAuthModalOpen(false)} 
             onOpenLegal={handleOpenLegal}
             onSuccessLogin={handleLoginSuccess}
+            selectedPlan={selectedPlan}
+            onClearSelectedPlan={() => setSelectedPlan(null)}
+            initialMode={authModalMode}
           />
         </Suspense>
       )}
@@ -517,6 +632,7 @@ export default function App() {
           <DemoModal 
             isOpen={demoModalOpen} 
             onClose={() => setDemoModalOpen(false)} 
+            selectedPlan={selectedPlan}
           />
         </Suspense>
       )}

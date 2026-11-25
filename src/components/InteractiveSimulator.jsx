@@ -15,6 +15,7 @@ import {
   Database,
   ArrowRight
 } from 'lucide-react';
+import { formatDuration } from '../utils/durationUtils';
 
 export default function InteractiveSimulator({ onOpenDemo }) {
   const [activeTab, setActiveTab] = useState('phone'); // 'phone' | 'whatsapp'
@@ -41,12 +42,6 @@ export default function InteractiveSimulator({ onOpenDemo }) {
     }
     return () => clearInterval(interval);
   }, [callStatus]);
-
-  const formatTimer = (seconds) => {
-    const mins = Math.floor(seconds / 60);
-    const secs = seconds % 60;
-    return `${mins.toString().padStart(2, '0')}:${secs.toString().padStart(2, '0')}`;
-  };
 
   const handleSendMessage = (e) => {
     e.preventDefault();
@@ -141,7 +136,7 @@ export default function InteractiveSimulator({ onOpenDemo }) {
                       <h4 className="text-xl font-bold text-white">Vocalis Voice AI</h4>
                       <p className="text-xs text-orange-400 font-medium">Assistente Inteligente (0800)</p>
                       <p className="text-sm font-mono text-slate-400 pt-1">
-                        {callStatus === 'connected' ? formatTimer(callTimer) : 'Chamada Encerrada'}
+                        {callStatus === 'connected' ? formatDuration(callTimer) : 'Chamada Encerrada'}
                       </p>
                     </div>
 

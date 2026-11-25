@@ -137,35 +137,52 @@ describe('Integridade comercial e isolamento por canal na renderização dos com
     vi.useRealTimers();
   });
 
-  it('PricingSection exibe exclusivamente métricas e termos do canal selecionado sem opção anual não confirmada', () => {
+  it('PricingSection exibe exclusivamente métricas e termos do canal selecionado, alterna mensal/anual sem acumular promoções e oculta anual quando não confirmado', () => {
     const { container } = render(<PricingSection onOpenDemo={vi.fn()} onOpenAuth={vi.fn()} />);
 
-    // Estado inicial padrão: Telefonia com anual não confirmado
-    expect(screen.queryByRole('button', { name: 'Anual' })).toBeNull();
-    expect(screen.getByTestId('annual-unavailable-notice').textContent).toContain('Modalidade anual ainda não disponível');
-    expect(screen.queryByTestId('limit-reached-policy')).toBeNull();
+    // Catálogo oficial possui modalidade anual confirmada para Telefonia, WhatsApp e Webchat
+    const annualBtn = screen.getByRole('button', { name: /Anual/i });
+    const monthlyBtn = screen.getByRole('button', { name: 'Mensal' });
+    expect(annualBtn).toBeTruthy();
+    expect(monthlyBtn).toBeTruthy();
+    expect(screen.getByTestId('limit-reached-policy').textContent).toContain('Pendente de confirmação');
 
     // Aba Telefonia: deve conter Minutos, Ligações, Minuto, Ligação — NÃO Conversas/Mensagens
     const telTable = screen.getByTestId('pricing-comparison-table');
     const telCard = screen.getByTestId('plan-card-telefone-solo');
     expect(telCard.textContent).toContain('Minutos incluídos');
     expect(telCard.textContent).toContain('Ligações incluídas');
+    expect(telCard.textContent).toContain('503');
+    expect(telCard.textContent).toContain('719');
     expect(telTable.textContent).toContain('Minutos incluídos');
     expect(telTable.textContent).toContain('Chamadas simultâneas');
     expect(telTable.textContent).not.toContain('Conversas incluídas');
     expect(telTable.textContent).not.toContain('Mensagens incluídas');
-    expect(telCard.textContent).not.toContain('Adicionais, excedentes e integrações');
+    expect(telCard.textContent).toContain('+R$ 49/mês por número extra');
     expect(screen.getByTestId('usage-terms-section').textContent).toContain('Minuto');
     expect(screen.getByTestId('usage-terms-section').textContent).toContain('Ligação');
     expect(detectPendingShownAsFact(container.textContent, COMMERCIAL_CATALOG).violations).toEqual([]);
 
+    // Alternar para Anual em Telefonia: exibe 599 e total 7.188 sem misturar R$ 503 ou Assinatura mensal recorrente
+    fireEvent.click(annualBtn);
+    expect(telCard.textContent).toContain('599');
+    expect(telCard.textContent).toContain('7.188');
+    expect(telCard.textContent).toContain('Cobrança anual antecipada');
+    expect(telCard.textContent).not.toContain('503');
+    expect(telCard.textContent).not.toContain('Assinatura mensal recorrente');
+
+    // Retorna para Mensal
+    fireEvent.click(monthlyBtn);
+    expect(telCard.textContent).toContain('503');
+
     // Aba WhatsApp: deve conter Conversas/Mensagens/Números WhatsApp — ZERO Minutos/Ligações/Simultâneas
-    fireEvent.click(screen.getByRole('button', { name: COMMERCIAL_CATALOG.channels.whatsapp.name }));
+    fireEvent.click(screen.getByRole('tab', { name: COMMERCIAL_CATALOG.channels.whatsapp.name }));
     const waTable = screen.getByTestId('pricing-comparison-table');
     const waCard = screen.getByTestId('plan-card-whatsapp-solo');
     expect(waCard.textContent).toContain('Conversas incluídas');
     expect(waCard.textContent).toContain('Mensagens incluídas');
     expect(waCard.textContent).toContain('Números de WhatsApp incluídos');
+    expect(waCard.textContent).toContain('349');
     expect(waTable.textContent).toContain('Conversas incluídas');
     expect(waTable.textContent).not.toContain('Minutos incluídos');
     expect(waTable.textContent).not.toContain('Ligações incluídas');
@@ -175,12 +192,22 @@ describe('Integridade comercial e isolamento por canal na renderização dos com
     expect(screen.getByTestId('usage-terms-section').textContent).toContain('Mensagem');
     expect(detectPendingShownAsFact(container.textContent, COMMERCIAL_CATALOG).violations).toEqual([]);
 
+    // Anual WhatsApp Solo: 399/mês equiv. e R$ 4.788 antecipado, sem "Assinatura mensal recorrente"
+    fireEvent.click(screen.getByRole('button', { name: /Anual/i }));
+    expect(waCard.textContent).toContain('399');
+    expect(waCard.textContent).toContain('4.788');
+    expect(waCard.textContent).toContain('Cobrança anual antecipada');
+    expect(waCard.textContent).not.toContain('349');
+    expect(waCard.textContent).not.toContain('Assinatura mensal recorrente');
+    fireEvent.click(screen.getByRole('button', { name: 'Mensal' }));
+
     // Aba Webchat: deve conter Conversas/Mensagens — ZERO Minutos/Ligações/Simultâneas/Números
-    fireEvent.click(screen.getByRole('button', { name: COMMERCIAL_CATALOG.channels.webchat.name }));
+    fireEvent.click(screen.getByRole('tab', { name: COMMERCIAL_CATALOG.channels.webchat.name }));
     const webTable = screen.getByTestId('pricing-comparison-table');
     const webCard = screen.getByTestId('plan-card-webchat-solo');
     expect(webCard.textContent).toContain('Conversas incluídas');
     expect(webCard.textContent).toContain('Mensagens incluídas');
+    expect(webCard.textContent).toContain('209');
     expect(webTable.textContent).toContain('Conversas incluídas');
     expect(webTable.textContent).not.toContain('Minutos incluídos');
     expect(webTable.textContent).not.toContain('Ligações incluídas');
@@ -190,7 +217,7 @@ describe('Integridade comercial e isolamento por canal na renderização dos com
 
     // Confere paridade total em todos os canais
     ['telefone', 'whatsapp', 'webchat'].forEach((cid) => {
-      fireEvent.click(screen.getByRole('button', { name: COMMERCIAL_CATALOG.channels[cid].name }));
+      fireEvent.click(screen.getByRole('tab', { name: COMMERCIAL_CATALOG.channels[cid].name }));
       const table = getChannelComparisonTable(cid, 'monthly', COMMERCIAL_CATALOG);
       const tableEl = screen.getByTestId('pricing-comparison-table');
       expect(tableEl.textContent).toContain(`Comparar planos — ${table.channelName}`);
@@ -209,6 +236,17 @@ describe('Integridade comercial e isolamento por canal na renderização dos com
         });
       });
     });
+
+    // Quando catálogo tem modalidade anual pendente, PricingSection oculta botão Anual e exibe aviso
+    cleanup();
+    const noAnnualCatalog = JSON.parse(JSON.stringify(COMMERCIAL_CATALOG));
+    noAnnualCatalog.channels.telefone.plans.forEach((p) => {
+      p.pricing.modalities.annual.status = INFO_STATUS.PENDENTE;
+      p.pricing.modalities.annual.available = { status: INFO_STATUS.PENDENTE, value: null, observedValue: null };
+    });
+    render(<PricingSection onOpenDemo={vi.fn()} onOpenAuth={vi.fn()} catalog={noAnnualCatalog} />);
+    expect(screen.queryByRole('button', { name: /Anual/i })).toBeNull();
+    expect(screen.getByTestId('annual-unavailable-notice').textContent).toContain('Modalidade anual ainda não disponível');
   });
 
   it('PricingSection propaga promoção, pós-promoção, termos, limite atingido, adicional confirmado e não acumula anual com promoção mensal', () => {
@@ -250,8 +288,9 @@ describe('Integridade comercial e isolamento por canal na renderização dos com
     expect(telTable.textContent).toContain('600');
     expect(telTable.textContent).not.toContain('503');
 
-    // Alternar para aba WhatsApp muda completamente os valores e recursos para WhatsApp
-    fireEvent.click(screen.getByRole('button', { name: confirmedCatalog.channels.whatsapp.name }));
+    // Alternar para aba WhatsApp muda completamente os valores e recursos para WhatsApp (e volta ao Mensal para validar promo 349)
+    fireEvent.click(screen.getByRole('tab', { name: confirmedCatalog.channels.whatsapp.name }));
+    fireEvent.click(screen.getByRole('button', { name: 'Mensal' }));
     const waSoloCard = screen.getByTestId('plan-card-whatsapp-solo');
     const waTable = screen.getByTestId('pricing-comparison-table');
     expect(waSoloCard.textContent).toContain('349');
@@ -264,33 +303,38 @@ describe('Integridade comercial e isolamento por canal na renderização dos com
     expect(detectPendingShownAsFact(container.textContent, confirmedCatalog).violations).toEqual([]);
   });
 
-  it('DashboardPricingModal, WhatsAppPage e WebchatPage isolam métricas por canal e ocultam anual não confirmado', () => {
+  it('DashboardPricingModal, WhatsAppPage e WebchatPage isolam métricas por canal e respeitam modalidade anual confirmada', () => {
     const modalRender = render(<DashboardPricingModal isOpen={true} onClose={vi.fn()} onOpenDemo={vi.fn()} />);
-    expect(screen.queryByRole('button', { name: 'Alternar modalidade anual' })).toBeNull();
-    expect(modalRender.container.textContent).toContain('Modalidade anual ainda não disponível');
+    const annualToggle = screen.getByRole('button', { name: 'Alternar modalidade anual' });
+    expect(annualToggle).toBeTruthy();
     expect(detectPendingShownAsFact(modalRender.container.textContent, COMMERCIAL_CATALOG).violations).toEqual([]);
+
+    fireEvent.click(annualToggle);
+    expect(modalRender.container.textContent).toMatch(/Total anual antecipado \(12 meses\):\s*R\$\s*7\.188/);
 
     fireEvent.click(screen.getByRole('button', { name: 'WhatsApp IA' }));
     expect(modalRender.container.textContent).toContain('Conversas incluídas');
+    expect(modalRender.container.textContent).toContain('4.788');
     expect(modalRender.container.textContent).not.toContain('Minutos incluídos');
     expect(modalRender.container.textContent).not.toContain('Chamadas simultâneas');
 
     fireEvent.click(screen.getByRole('button', { name: 'Webchat / Chatbot de IA' }));
     expect(modalRender.container.textContent).toContain('Conversas incluídas');
+    expect(modalRender.container.textContent).toContain('2.988');
     expect(modalRender.container.textContent).not.toContain('Minutos incluídos');
-    expect(modalRender.container.textContent).not.toContain('Números incluídos');
+    expect(modalRender.container.textContent).not.toContain('Números de WhatsApp');
     cleanup();
 
     const waRender = render(<WhatsAppPage onOpenDemo={vi.fn()} onOpenAuth={vi.fn()} />);
-    expect(waRender.container.textContent).toContain('Modalidade anual ainda não disponível');
     expect(waRender.container.textContent).toContain('Conversas incluídas');
+    expect(waRender.container.textContent).toContain('349');
     expect(waRender.container.textContent).not.toContain('Minutos incluídos');
     expect(detectPendingShownAsFact(waRender.container.textContent, COMMERCIAL_CATALOG).violations).toEqual([]);
     cleanup();
 
     const webRender = render(<WebchatPage onOpenDemo={vi.fn()} onOpenAuth={vi.fn()} />);
-    expect(webRender.container.textContent).toContain('Modalidade anual ainda não disponível');
     expect(webRender.container.textContent).toContain('Conversas incluídas');
+    expect(webRender.container.textContent).toContain('209');
     expect(webRender.container.textContent).not.toContain('Minutos incluídos');
     expect(detectPendingShownAsFact(webRender.container.textContent, COMMERCIAL_CATALOG).violations).toEqual([]);
   });
@@ -309,7 +353,7 @@ describe('Integridade comercial e isolamento por canal na renderização dos com
     });
   });
 
-  it('WebchatWidget (Beatriz) responde perguntas comerciais com base na fonte única sem vazar preços pendentes', () => {
+  it('WebchatWidget (Beatriz) responde perguntas comerciais e sobre excedentes com base na fonte única sem vazar pendentes', () => {
     vi.useFakeTimers();
     const { container } = render(<WebchatWidget onOpenDemo={vi.fn()} onOpenAuth={vi.fn()} />);
 
@@ -320,8 +364,27 @@ describe('Integridade comercial e isolamento por canal na renderização dos com
       vi.advanceTimersByTime(1000);
     });
 
-    expect(container.textContent).toContain('pendentes de confirmação oficial');
+    expect(container.textContent).toContain('pendentes de confirmação comercial');
     expect(detectPendingShownAsFact(container.textContent, COMMERCIAL_CATALOG).violations).toEqual([]);
+
+    // Pergunta específica: valor do WhatsApp e o que acontece ao ultrapassar o limite
+    const input = screen.getByPlaceholderText('Pergunte à Beatriz...');
+    fireEvent.change(input, {
+      target: { value: 'Qual o valor do plano de WhatsApp e o que acontece após ultrapassar o limite?' },
+    });
+    fireEvent.submit(input.closest('form'));
+
+    act(() => {
+      vi.advanceTimersByTime(1000);
+    });
+
+    const fullText = container.textContent || '';
+    expect(fullText).toContain('349');
+    expect(fullText).toContain('499');
+    expect(fullText).toContain('4.788');
+    expect(fullText).toContain('ultrapassar o limite está pendente de confirmação comercial');
+    expect(fullText).toContain('excedente também está pendente de confirmação comercial');
+    expect(detectPendingShownAsFact(fullText, COMMERCIAL_CATALOG).violations).toEqual([]);
   });
 });
 

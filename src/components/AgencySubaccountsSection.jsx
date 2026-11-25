@@ -6,17 +6,20 @@ import {
 } from 'lucide-react';
 import { getAgencyPlanOptions } from '../utils/commercialCatalogUtils';
 
-export default function AgencySubaccountsSection({ onSwitchWorkspace }) {
+export default function AgencySubaccountsSection({ isDemoMode = true, onSwitchWorkspace }) {
   const [searchQuery, setSearchQuery] = useState('');
   const [statusFilter, setStatusFilter] = useState('all'); // all | active | onboarding | paused
   const [createModalOpen, setCreateModalOpen] = useState(false);
   const [selectedSubaccount, setSelectedSubaccount] = useState(null);
+  const [agencyNotice, setAgencyNotice] = useState('');
   const agencyPlanOptions = getAgencyPlanOptions();
   const findAgencyOption = (planId) =>
     agencyPlanOptions.find((opt) => opt.id === planId) || agencyPlanOptions[0];
 
-  // Subcontas fictícias ilustrativas conectadas à fonte única
-  const [subaccounts, setSubaccounts] = useState([
+  // Subcontas fictícias ilustrativas conectadas à fonte única (isoladas de contas autenticadas)
+  const [subaccounts, setSubaccounts] = useState(() =>
+    isDemoMode
+      ? [
     {
       id: 'sub_01',
       name: 'Clínica Modelo Odonto (Exemplo Fictício)',
@@ -77,7 +80,9 @@ export default function AgencySubaccountsSection({ onSwitchWorkspace }) {
       status: 'onboarding',
       createdAt: '12/11/2026'
     }
-  ]);
+  ]
+      : []
+  );
 
   // Form states for new subaccount
   const [newClientName, setNewClientName] = useState('');
@@ -95,6 +100,7 @@ export default function AgencySubaccountsSection({ onSwitchWorkspace }) {
   });
 
   const totalMinutes = subaccounts.reduce((acc, curr) => acc + curr.minutesUsed, 0);
+  const totalAssistants = subaccounts.reduce((acc, curr) => acc + (curr.assistantsCount || 0), 0);
   const totalProfit = 'Sob consulta (em confirmação)';
 
   const handleCreateSubaccount = (e) => {
@@ -104,18 +110,18 @@ export default function AgencySubaccountsSection({ onSwitchWorkspace }) {
     const selectedOpt = findAgencyOption(newPlan);
     const newSub = {
       id: `sub_${Date.now()}`,
-      name: newClientName,
+      name: `${newClientName} (Prévia)`,
       responsible: newResponsible || 'Responsável',
       segment: newSegment,
       subdomain: newSubdomain ? `${newSubdomain}.suaagencia.com.br` : `${newClientName.toLowerCase().replace(/\s+/g, '')}.suaagencia.com.br`,
       phone: '+55 (DDD) Pendente',
       assistantsCount: 1,
       minutesUsed: 0,
-      minutesLimit: 0,
+      minutesLimit: 100,
       monthlyPlan: selectedOpt?.optionLabel || 'Plano em confirmação',
       profitMargin: selectedOpt?.suggestedMarginText || 'Pendente de confirmação',
       status: 'onboarding',
-      createdAt: 'Hoje'
+      createdAt: 'Prévia local'
     };
 
     setSubaccounts([newSub, ...subaccounts]);
@@ -123,6 +129,7 @@ export default function AgencySubaccountsSection({ onSwitchWorkspace }) {
     setNewClientName('');
     setNewResponsible('');
     setNewSubdomain('');
+    setAgencyNotice('Subconta adicionada apenas como prévia local na interface. O provisionamento multi-tenant real requer contratação.');
   };
 
   return (
@@ -186,13 +193,20 @@ export default function AgencySubaccountsSection({ onSwitchWorkspace }) {
 
         <div className="bg-white p-5 rounded-2xl border border-[#E7E4DC] shadow-xs">
           <div className="flex items-center justify-between text-[#736F69] mb-2">
-            <span className="text-[11px] font-bold uppercase tracking-wider">Assistentes Ativos</span>
+            <span className="text-[11px] font-bold uppercase tracking-wider">Assistentes no Exemplo</span>
             <Layers className="w-4 h-4 text-[#4F46E5]" />
           </div>
-          <div className="text-2xl font-bold text-[#1A1816]">7 Robôs</div>
-          <div className="text-[11px] text-[#736F69] mt-1">Voz + WhatsApp integrados</div>
+          <div className="text-2xl font-bold text-[#1A1816]">{totalAssistants}</div>
+          <div className="text-[11px] text-[#736F69] mt-1">{isDemoMode ? 'Dados fictícios (simulação)' : 'Subcontas da conta'}</div>
         </div>
       </div>
+
+      {agencyNotice && (
+        <div role="status" className="p-3.5 rounded-2xl bg-amber-50 border border-amber-200 text-amber-950 text-xs flex items-center justify-between gap-3">
+          <span>{agencyNotice}</span>
+          <button type="button" onClick={() => setAgencyNotice('')} className="font-bold cursor-pointer" aria-label="Fechar aviso">✕</button>
+        </div>
+      )}
 
       {/* Tabela de Subcontas */}
       <div className="bg-white rounded-2xl border border-[#E7E4DC] shadow-xs overflow-hidden">
@@ -298,13 +312,17 @@ export default function AgencySubaccountsSection({ onSwitchWorkspace }) {
                   {/* Ações */}
                   <div className="flex items-center gap-2">
                     <button 
+                      type="button"
                       onClick={() => {
-                        if (onSwitchWorkspace) onSwitchWorkspace(sub);
-                        alert(`Contexto alternado para o workspace de: ${sub.name}`);
+                        setAgencyNotice(
+                          isDemoMode
+                            ? `Prévia demonstrativa: troca de subconta (${sub.name}) disponível apenas no painel multi-tenant contratado.`
+                            : `Provisionamento multi-tenant para ${sub.name} em desenvolvimento.`
+                        );
                       }}
                       className="px-3 py-1.5 rounded-lg bg-[#FAF9F5] hover:bg-[#EFECE6] border border-[#D0CBC0] text-xs font-semibold text-[#1A1816] flex items-center gap-1 transition-colors cursor-pointer"
                     >
-                      <span>Acessar Painel</span>
+                      <span>Ver prévia</span>
                       <ArrowUpRight className="w-3.5 h-3.5 text-[#736F69]" />
                     </button>
                   </div>

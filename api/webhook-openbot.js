@@ -1,28 +1,44 @@
-// Vercel Serverless Function: Webhook Inbound do OpenBot para a Vocalis AI
-// Recebe tarefas, acionamentos e mensagens dos agentes do OpenBot
+// Vercel Serverless Function: Webhook Inbound do OpenBot (autenticado por segredo)
+import { applyCorsHeaders, checkRateLimit, safeCompareSecret } from './_security.js';
 
 export default async function handler(req, res) {
-  res.setHeader('Access-Control-Allow-Credentials', true);
-  res.setHeader('Access-Control-Allow-Origin', '*');
-  res.setHeader('Access-Control-Allow-Methods', 'POST,OPTIONS');
-  res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization, X-OpenBot-Token');
+  const originAllowed = applyCorsHeaders(req, res, 'POST,OPTIONS', 'Content-Type, Authorization, X-OpenBot-Token');
 
   if (req.method === 'OPTIONS') {
-    return res.status(200).end();
+    return res.status(originAllowed ? 200 : 403).end();
+  }
+
+  if (!originAllowed) {
+    return res.status(403).json({ success: false, error: 'Origem não autorizada.' });
   }
 
   if (req.method !== 'POST') {
-    return res.status(405).json({ error: 'Apenas POST é permitido' });
+    return res.status(405).json({ success: false, error: 'Apenas POST é permitido.' });
   }
 
-  const payload = req.body || {};
-  console.log('[OpenBot Webhook] Evento recebido:', payload.event || 'desconhecido');
+  const rateCheck = checkRateLimit(req, 'webhook-openbot', 30, 60_000);
+  if (!rateCheck.allowed) {
+    res.setHeader('Retry-After', String(rateCheck.retryAfterSeconds));
+    return res.status(429).json({ success: false, error: 'Limite de requisições excedido.' });
+  }
 
-  return res.status(200).json({
-    received: true,
-    status: 'processed',
+  const expectedSecret = process.env.OPENBOT_WEBHOOK_SECRET;
+  if (!expectedSecret) {
+    return res.status(503).json({
+      received: false,
+      error: 'Webhook desativado: variável OPENBOT_WEBHOOK_SECRET não configurada no servidor.',
+    });
+  }
+
+  const providedToken = req.headers?.['x-openbot-token'] || '';
+  if (!safeCompareSecret(String(providedToken), expectedSecret)) {
+    return res.status(401).json({ received: false, error: 'Assinatura/token inválido.' });
+  }
+
+  return res.status(501).json({
+    received: false,
+    implemented: false,
     timestamp: new Date().toISOString(),
-    event: payload.event || 'custom_task',
-    message: 'Evento processado com sucesso pelo ecossistema Vocalis AI.'
+    message: 'Webhook autenticado, porém o processamento assíncrono em produção ainda está em desenvolvimento.',
   });
 }

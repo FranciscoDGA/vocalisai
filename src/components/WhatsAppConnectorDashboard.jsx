@@ -7,8 +7,19 @@ import {
 import { sendWhatsAppMessage, sendWhatsAppAudio } from '../utils/uazapiClient';
 import { getProviderCostSummary } from '../utils/commercialCatalogUtils';
 
-export default function WhatsAppConnectorDashboard({ userPhone = '559484423948' }) {
-  const [serverStatus, setServerStatus] = useState('checking'); // checking, connected, qr_ready, offline
+export default function WhatsAppConnectorDashboard({
+  userPhone = '',
+  isDemoMode = true,
+  isAuthenticatedAccount = false,
+}) {
+  const isLocalDevRuntime =
+    typeof window !== 'undefined' &&
+    Boolean(import.meta.env?.DEV) &&
+    ['localhost', '127.0.0.1'].includes(window.location.hostname) &&
+    !isDemoMode &&
+    isAuthenticatedAccount;
+
+  const [serverStatus, setServerStatus] = useState(isLocalDevRuntime ? 'checking' : 'unavailable');
   const [connectedNumber, setConnectedNumber] = useState('');
   const [qrCodeImg, setQrCodeImg] = useState(null);
   const [refreshing, setRefreshing] = useState(false);
@@ -24,6 +35,10 @@ export default function WhatsAppConnectorDashboard({ userPhone = '559484423948' 
   const [audioResult, setAudioResult] = useState(null);
 
   const checkStatus = async () => {
+    if (!isLocalDevRuntime) {
+      setServerStatus('unavailable');
+      return;
+    }
     try {
       const res = await fetch('http://localhost:8080/api/status', {
         headers: { 'Cache-Control': 'no-cache' }
@@ -47,10 +62,14 @@ export default function WhatsAppConnectorDashboard({ userPhone = '559484423948' 
   };
 
   useEffect(() => {
+    if (!isLocalDevRuntime) {
+      setServerStatus('unavailable');
+      return undefined;
+    }
     checkStatus();
     const interval = setInterval(checkStatus, 3000);
     return () => clearInterval(interval);
-  }, []);
+  }, [isLocalDevRuntime]);
 
   const handleManualRefresh = async () => {
     setRefreshing(true);
@@ -125,6 +144,45 @@ export default function WhatsAppConnectorDashboard({ userPhone = '559484423948' 
       setIsSendingAudio(false);
     }
   };
+
+  if (!isLocalDevRuntime) {
+    const providerCosts = getProviderCostSummary();
+    return (
+      <div className="space-y-6 animate-fadeIn max-w-4xl">
+        <div className="pb-4 border-b border-[#EBE8E2]">
+          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full text-[11px] font-bold bg-amber-50 text-amber-900 border border-amber-200 mb-2">
+            <span>{isDemoMode ? 'Modo Demonstração — Sem Conexão Externa' : 'Integração Indisponível para Autoatendimento'}</span>
+          </div>
+          <h2 className="text-2xl sm:text-3xl font-bold text-[#1A1816] tracking-tight">
+            Conexão WhatsApp Business (Meta Cloud API)
+          </h2>
+          <p className="text-xs sm:text-sm text-[#5C5955] mt-1">
+            Esta área não realiza conexões locais no navegador do visitante e não emula pareamento real.
+          </p>
+        </div>
+
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-xs">
+          <div className="p-5 rounded-2xl bg-white border border-[#E7E4DC] space-y-2">
+            <div className="font-bold text-[#1A1816]">Estado atual da integração</div>
+            <p className="text-[#5C5955] leading-relaxed">
+              {isDemoMode
+                ? 'Em demonstração pública, o WhatsApp exibido no painel é meramente ilustrativo. Nenhuma mensagem real é recebida ou disparada.'
+                : 'A vinculação de número oficial via Meta Cloud API / WhatsApp Business Platform é realizada mediante onboarding comercial assistido e validação de conta WABA.'}
+            </p>
+          </div>
+
+          <div className="p-5 rounded-2xl bg-white border border-[#E7E4DC] space-y-2">
+            <div className="font-bold text-[#1A1816]">Dependências e custos de terceiros</div>
+            <p className="text-[#5C5955] leading-relaxed">
+              Requer conta Meta Business verificada, número dedicado e aceite das políticas do WhatsApp Business Platform.{' '}
+              {providerCosts?.metaWhatsAppFee?.text ||
+                'Taxas por categoria de mensagem da Meta podem ser cobradas diretamente pela Meta conforme tabela vigente.'}
+            </p>
+          </div>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="space-y-6 animate-fadeIn max-w-5xl">
@@ -296,7 +354,7 @@ export default function WhatsAppConnectorDashboard({ userPhone = '559484423948' 
                   type="text"
                   value={testNumber}
                   onChange={(e) => setTestNumber(e.target.value)}
-                  placeholder="Ex: 5594984423948"
+                  placeholder="Ex: 5500900000101"
                   className="w-full px-3.5 py-2 rounded-xl border border-[#D0CBC0] text-xs font-mono focus:outline-none focus:border-[#4F46E5]"
                 />
               </div>
@@ -347,7 +405,7 @@ export default function WhatsAppConnectorDashboard({ userPhone = '559484423948' 
               </div>
 
               <p className="text-xs text-[#5C5955] leading-relaxed">
-                A Vocalis envia o áudio como se fosse gravado na hora com o <strong>microfone verde</strong> nativo do WhatsApp, simulando a presença *"Roberta está gravando áudio..."*.
+                Exemplo ilustrativo de envio de áudio em ambiente local autorizado de desenvolvimento.
               </p>
 
               <div className="p-3.5 rounded-2xl bg-[#FAF9F5] border border-[#EBE8E2] text-xs space-y-1">
