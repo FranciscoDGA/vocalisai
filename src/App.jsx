@@ -272,6 +272,7 @@ export default function App() {
           <LostRevenueCalculator 
             onOpenDemo={() => setDemoModalOpen(true)}
             onOpenAuth={() => setAuthModalOpen(true)}
+            onNavigate={handleNavigate}
           />
 
           {/* 5. Exemplos ilustrativos de roteiro por nicho */}

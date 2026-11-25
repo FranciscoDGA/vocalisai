@@ -113,8 +113,10 @@ describe('Auditoria de Fluxos, Segurança, Autenticação e Isolamento Demo vs P
   it('preserva canal, plano e periodicidade escolhidos do PricingSection até o AuthModal e limpa ao cancelar', async () => {
     render(<App />);
 
-    // Navegar para Preços pelo botão do cabeçalho
-    fireEvent.click(screen.getAllByRole('button', { name: 'Preços' })[0]);
+    // Verificar que o botão "Ver planos (...)" do simulador navega para /precos corretamente
+    const verPlanosBtn = screen.getByRole('button', { name: /Ver planos \(Webchat/i });
+    fireEvent.click(verPlanosBtn);
+    expect(window.location.pathname).toBe('/precos');
 
     // Mudar para aba IA de WhatsApp na seção de preços
     const waTab = await screen.findByRole('tab', { name: /IA de WhatsApp/i });

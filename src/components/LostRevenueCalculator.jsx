@@ -322,7 +322,7 @@ function SimulationParameterControl({
   );
 }
 
-export default function LostRevenueCalculator({ onOpenAuth, onOpenDemo }) {
+export default function LostRevenueCalculator({ onOpenAuth, onOpenDemo, onNavigate }) {
   const baseId = useId();
   const [formValues, setFormValues] = useState(DEFAULT_SIMULATION_EXAMPLES);
 
@@ -529,7 +529,7 @@ export default function LostRevenueCalculator({ onOpenAuth, onOpenDemo }) {
                 <div>
                   <button
                     type="button"
-                    onClick={onOpenDemo || onOpenAuth}
+                    onClick={onNavigate ? () => onNavigate('precos') : (onOpenDemo || onOpenAuth)}
                     className="w-full py-3.5 px-4 min-h-[44px] rounded-full bg-[#4F46E5] hover:bg-[#4338CA] text-white text-xs sm:text-sm font-bold shadow-lg shadow-indigo-500/30 transition-all flex items-center justify-center gap-2 cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white"
                   >
                     <span>{getCommercialCtaLabel('Consultar Planos e Condições')}</span>
