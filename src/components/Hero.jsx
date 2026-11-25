@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { 
   Play, MessageCircle, Mail, Check, ExternalLink 
 } from 'lucide-react';
-import { BRAND } from '../data/content';
+import { SPECIALIST_CONTACT } from '../data/content';
 import TestCallModal from './TestCallModal';
 import VoiceWaveformHeroCard from './VoiceWaveformHeroCard';
 
@@ -29,7 +29,7 @@ export default function Hero({ onOpenDemo, onOpenAuth, onNavigate }) {
     }
   };
 
-  const whatsappHref = BRAND.whatsappUrl(HUMAN_WHATSAPP_MESSAGE);
+  const whatsappHref = SPECIALIST_CONTACT.getWhatsAppUrl(HUMAN_WHATSAPP_MESSAGE);
 
   return (
     <section className="relative pt-12 pb-24 md:pt-16 md:pb-32 overflow-hidden bg-[#FAF9F5] font-sans">
